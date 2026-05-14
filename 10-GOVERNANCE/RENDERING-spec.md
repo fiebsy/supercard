@@ -111,6 +111,7 @@ Rendered HTML must:
 - Render at 393pt mobile width as the canonical view
 - Pass the screenshot test on every section
 - Carry the corner glyph on every section as a fixed-position element
+- **Label each section with the beat NAME only** — `HOOK`, `EVIDENCE`, `MECHANISM`, `COMPARISON`, `COUNTER`, `APPLICATION`, `CLOSE` (and `SOURCES`). The `Beat N` index and the `BLOCK-*` id are **authoring metadata**: they live in the markdown card (`30-CARDS/`) and are never rendered. A rendered card is a public, shareable artifact — it must not show the scaffolding it was built on.
 - Embed provenance as `<meta>` tags in the HTML `<head>`: `sc:source_file`, `sc:research_report`, `sc:renderer_version`, `sc:frozen_at_version`, `sc:rendered_at` (and `sc:source_commit`, `sc:content_hash` where available). `sc:research_report` closes the genealogy loop — the render points back through the card to the `60-RESEARCH/` report it descends from.
 
 ## Publishing (mandatory — ADR-0007)

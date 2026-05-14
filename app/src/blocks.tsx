@@ -5,6 +5,11 @@
  * standalone HTML renderer emits (see docs/cards/*.html and RENDERING-spec).
  * A card composes these; it never reaches for raw <div>s. Single emphasis,
  * strict grayscale, and the corner glyph are enforced here, not per-card.
+ *
+ * Section labels (eyebrows): the public render shows the beat NAME only —
+ * "Close", not "Beat 7 · Close", and never the BLOCK-* id. The beat index and
+ * block id are authoring metadata: they live in the markdown card (30-CARDS/)
+ * and in the JSX comments below, and are never rendered (RENDERING-spec).
  */
 import type { ReactNode } from "react";
 
@@ -20,27 +25,21 @@ type Beat =
   | "Beat 7 · Close"
   | "Sources";
 
-export function Eyebrow({ beat, block }: { beat: Beat; block?: string }) {
-  return (
-    <div className="eyebrow">
-      {beat}
-      {block ? <span className="block-tag"> {block}</span> : null}
-    </div>
-  );
+export function Eyebrow({ beat }: { beat: Beat }) {
+  // Strip the "Beat N · " authoring prefix — public render shows the name only.
+  return <div className="eyebrow">{beat.replace(/^Beat \d+ · /, "")}</div>;
 }
 
 export function Section({
   beat,
-  block,
   children,
 }: {
   beat: Beat;
-  block?: string;
   children: ReactNode;
 }) {
   return (
     <section>
-      <Eyebrow beat={beat} block={block} />
+      <Eyebrow beat={beat} />
       {children}
     </section>
   );
@@ -58,7 +57,7 @@ export function Hero({
   lede: ReactNode;
 }) {
   return (
-    <Section beat="Beat 1 · Hook" block="BLOCK-loft-card">
+    <Section beat="Beat 1 · Hook">
       <h1>{title}</h1>
       <div className="hero">
         <p className="hook">{hook}</p>
@@ -80,7 +79,7 @@ export function StandardText({
   children: ReactNode;
 }) {
   return (
-    <Section beat={beat} block="BLOCK-standard-text">
+    <Section beat={beat}>
       {heading ? <h2>{heading}</h2> : null}
       {children}
     </Section>
@@ -99,7 +98,7 @@ export function Definition({
   children: ReactNode;
 }) {
   return (
-    <Section beat={beat} block="BLOCK-definition">
+    <Section beat={beat}>
       <p>
         <span className="def-term">{term}</span> {children}
       </p>
@@ -113,19 +112,17 @@ type Step = { lead?: ReactNode; body: ReactNode };
 
 export function NumberedList({
   beat,
-  block,
   heading,
   steps,
   closer,
 }: {
   beat: Beat;
-  block: "BLOCK-numbered-principle" | "BLOCK-process-flow";
   heading?: string;
   steps: Step[];
   closer?: ReactNode;
 }) {
   return (
-    <Section beat={beat} block={block}>
+    <Section beat={beat}>
       {heading ? <h2>{heading}</h2> : null}
       <ol>
         {steps.map((s, i) => (
@@ -148,7 +145,6 @@ export function NumberedList({
 
 export function MarkerList({
   beat,
-  block,
   heading,
   marker,
   items,
@@ -156,7 +152,6 @@ export function MarkerList({
   closer,
 }: {
   beat: Beat;
-  block: "BLOCK-anti-pattern" | "BLOCK-checklist";
   heading?: string;
   marker: string;
   items: ReactNode[];
@@ -164,7 +159,7 @@ export function MarkerList({
   closer?: ReactNode;
 }) {
   return (
-    <Section beat={beat} block={block}>
+    <Section beat={beat}>
       {heading ? <h2>{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
       <ul>
@@ -186,7 +181,6 @@ type Row = { cells: ReactNode[]; focal?: boolean };
 
 export function DataTable({
   beat,
-  block,
   heading,
   className,
   head,
@@ -194,7 +188,6 @@ export function DataTable({
   closer,
 }: {
   beat: Beat;
-  block: "BLOCK-timeline" | "BLOCK-table" | "BLOCK-comparison";
   heading?: string;
   className?: string;
   head?: ReactNode[];
@@ -202,7 +195,7 @@ export function DataTable({
   closer?: ReactNode;
 }) {
   return (
-    <Section beat={beat} block={block}>
+    <Section beat={beat}>
       {heading ? <h2>{heading}</h2> : null}
       <table className={className}>
         {head ? (
@@ -245,7 +238,7 @@ export function Equation({
   closer?: ReactNode;
 }) {
   return (
-    <Section beat={beat} block="BLOCK-equation">
+    <Section beat={beat}>
       {heading ? <h2>{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
       <pre>{formula}</pre>
@@ -258,18 +251,18 @@ export function Equation({
 
 export function Quote({
   beat,
-  block,
+  variant,
   quote,
   children,
 }: {
   beat: Beat;
-  block: "BLOCK-quote-as-evidence" | "BLOCK-pull-quote";
+  variant: "evidence" | "pull";
   quote: ReactNode;
   children?: ReactNode;
 }) {
-  const pull = block === "BLOCK-pull-quote";
+  const pull = variant === "pull";
   return (
-    <Section beat={beat} block={block}>
+    <Section beat={beat}>
       <blockquote className={pull ? "pull" : undefined}>{quote}</blockquote>
       {children ? <p>{children}</p> : null}
     </Section>
@@ -306,7 +299,7 @@ export function KeyTakeaway({
   children?: ReactNode;
 }) {
   return (
-    <Section beat="Beat 7 · Close" block="BLOCK-key-takeaway">
+    <Section beat="Beat 7 · Close">
       <p className="takeaway">{takeaway}</p>
       {children ? <p>{children}</p> : null}
     </Section>

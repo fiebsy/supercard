@@ -64,7 +64,6 @@ export function GestaltPrinciples() {
       {/* Beat 2 — Evidence: timeline */}
       <DataTable
         beat="Beat 2 · Evidence"
-        block="BLOCK-timeline"
         className="timeline"
         heading="It built — and outlived — a school of psychology"
         rows={[
@@ -113,7 +112,7 @@ export function GestaltPrinciples() {
       {/* Beat 2 — Evidence: Koffka quote */}
       <Quote
         beat="Beat 2 · Evidence"
-        block="BLOCK-quote-as-evidence"
+        variant="evidence"
         quote={
           <>
             "The whole is <strong>other</strong> than the sum of its parts."
@@ -149,7 +148,6 @@ export function GestaltPrinciples() {
       {/* Beat 3 — Mechanism: process flow */}
       <NumberedList
         beat="Beat 3 · Mechanism"
-        block="BLOCK-process-flow"
         steps={[
           {
             lead: "Carve",
@@ -176,7 +174,6 @@ export function GestaltPrinciples() {
       {/* Beat 3 — Mechanism: classic grouping principles */}
       <NumberedList
         beat="Beat 3 · Mechanism"
-        block="BLOCK-numbered-principle"
         heading="The classic grouping principles"
         steps={[
           {
@@ -226,7 +223,6 @@ export function GestaltPrinciples() {
       {/* Beat 3 — Mechanism: modern additions */}
       <DataTable
         beat="Beat 3 · Mechanism"
-        block="BLOCK-table"
         heading="The set is open, not fixed"
         head={["Principle", "What it adds", "Added"]}
         rows={[
@@ -293,7 +289,6 @@ export function GestaltPrinciples() {
       {/* Beat 4 — Comparison: Gestalt vs structuralism */}
       <DataTable
         beat="Beat 4 · Comparison"
-        block="BLOCK-comparison"
         heading="Two accounts of how perception works"
         head={["", "Structuralism", "Gestalt"]}
         rows={[
@@ -344,7 +339,6 @@ export function GestaltPrinciples() {
       {/* Beat 5 — Counter: anti-pattern */}
       <MarkerList
         beat="Beat 5 · Counter"
-        block="BLOCK-anti-pattern"
         heading="Where the Gestalt account is weak"
         marker="✕"
         items={[
@@ -381,7 +375,7 @@ export function GestaltPrinciples() {
       {/* Beat 5 — Counter: the theory that broke */}
       <Quote
         beat="Beat 5 · Counter"
-        block="BLOCK-quote-as-evidence"
+        variant="evidence"
         quote="Disrupt the cortex with gold foil, mica, and wire — and pattern perception still works."
       >
         <>
@@ -409,7 +403,6 @@ export function GestaltPrinciples() {
       {/* Beat 6 — Application: checklist */}
       <MarkerList
         beat="Beat 6 · Application"
-        block="BLOCK-checklist"
         marker="☐"
         items={[
           <>
@@ -438,7 +431,6 @@ export function GestaltPrinciples() {
       {/* Beat 6 — Application: examples table */}
       <DataTable
         beat="Beat 6 · Application"
-        block="BLOCK-table"
         heading="The principles, already everywhere"
         head={["You see", "The principle at work"]}
         rows={[
@@ -483,7 +475,7 @@ export function GestaltPrinciples() {
       {/* Beat 7 — Close: pull-quote */}
       <Quote
         beat="Beat 7 · Close"
-        block="BLOCK-pull-quote"
+        variant="pull"
         quote={
           <>
             "The whole is <strong>other</strong> than the sum of its parts."

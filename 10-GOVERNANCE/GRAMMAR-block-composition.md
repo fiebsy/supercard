@@ -33,6 +33,8 @@ Every Supercard moves through some subset of these beats, in order:
 
 Never run more than 3 long sections in a row. Section dividers mark beat boundaries only — chapter breaks, not paragraph breaks. Above 25 blocks → split into a multi-part Supercard.
 
+**Beats are authoring scaffolding, not public labels.** The markdown card names each section by beat *and* block type (`Beat 7 · Close` / `BLOCK-pull-quote`) — that is authoring metadata, and it stays in the markdown. The *rendered* card labels each section with the beat **name only** (`CLOSE`); it never shows the `Beat N` index or the `BLOCK-*` id. A render is a shareable artifact — see `RENDERING-spec` § Output contract.
+
 ## The decision tree (shape-first, text last)
 
 For each section's content, run this in order. Stop at the first match.
