@@ -7,7 +7,7 @@
 | era | atlas |
 | version | 3.0.0 |
 | owner | derick |
-| updated | 2026-04-29 |
+| updated | 2026-05-14 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
@@ -31,8 +31,10 @@ A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artif
 6. Search `30-CARDS/` and `90-ARCHIVE/` for related prior cards
 7. Read the most-recent 5 entries of `STEWARDS-LOG-2026` for current direction
 8. Compose the card using only Core/Stable blocks (Experimental requires explicit ask)
-9. Save to `30-CARDS/` as `CARD-{YYYY}-{slug}--draft` with a Metadata table at the top
-10. Render HTML as a Claude artifact for immediate screenshot
+9. Save to `30-CARDS/` as `CARD-{YYYY}-{slug}--draft` with a Metadata table at the top, including the `research_report` it descends from
+10. Render the HTML and publish it to `docs/cards/` + the `docs/index.html` gallery, then push — the card is viewable online (ADR-0007)
+
+The breakdown — the deep-research report — is the first durable artifact: it lives in `60-RESEARCH/` and is registered in `INDEX-research-reports.md`. Check that registry before researching, so a topic is never researched twice (ADR-0006).
 
 **To migrate a V2 card to V3:**
 
@@ -60,7 +62,9 @@ A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artif
 - **`30-CARDS/`** — active V3 Supercards
 - **`40-LAB/`** — experiments + RFC proposals + audit reports
 - **`50-TEMPLATES/`** — golden templates for new artifacts
+- **`60-RESEARCH/`** — the deep-research-report store: breakdowns + `INDEX-research-reports` registry (ADR-0006)
 - **`90-ARCHIVE/`** — frozen V1/V2 era + retired V3 minor versions
+- **`docs/`** — published renders: the gallery + one HTML per card, viewable online (ADR-0007)
 
 ## Naming grammar (non-negotiable)
 
@@ -87,6 +91,12 @@ grep -rli '<topic-keyword>' 30-CARDS/ 90-ARCHIVE/
 
 # Published cards only
 ls 30-CARDS/CARD-*--published.md
+
+# Has this topic already been researched? (check before any new research)
+grep -i '<topic-keyword>' 60-RESEARCH/INDEX-research-reports.md
+
+# Published renders
+ls docs/cards/
 ```
 
 ## ADR ledger
@@ -100,6 +110,8 @@ ls 30-CARDS/CARD-*--published.md
 | 0003 | Content frozen at authored version | Accepted | 2026-04-29 |
 | 0004 | Git repository as the canonical home | Proposed | 2026-05-14 |
 | 0005 | Mode-driven card assembly pipeline | Proposed | 2026-05-14 |
+| 0006 | Dedicated research-report store (`60-RESEARCH/`) | Accepted | 2026-05-14 |
+| 0007 | Render and publish by default | Accepted | 2026-05-14 |
 
 ## Versioning at a glance
 
@@ -121,3 +133,5 @@ ls 30-CARDS/CARD-*--published.md
 - Block library → `00-INDEX/INDEX-block-library`
 - ADRs → `10-GOVERNANCE/ADR/`
 - Templates → `50-TEMPLATES/`
+- Research reports → `60-RESEARCH/` (registry: `INDEX-research-reports`)
+- Published renders → `docs/` (gallery: `docs/index.html`)

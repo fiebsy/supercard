@@ -7,11 +7,21 @@
 | era | atlas |
 | version | 3.0.0 |
 | owner | derick |
-| updated | 2026-04-29 |
+| updated | 2026-05-14 |
 
 The design diary. Append-only, newest at top. Captures **the noticing** — patterns observed, temptations resisted, blocks that almost made it in, shifts in taste. Distinct from the CHANGELOG (what changed) and ADRs (why a single thing was decided).
 
 Append entries via SupercardOps `logStewardEntry()` or directly.
+
+---
+
+## 2026-05-14 — derick — [foundation]
+
+**Context.** The pipeline named the breakdown the source of truth (ADR-0005) but parked it in `40-LAB/`, the drawer labelled "experiments" — no home, no registry, no way to know a topic had already been researched. And rendering was Stage 5, *optional*: cards shipped as markdown nobody had looked at, and the one render in `docs/` had nowhere for a second card to go. Two gaps in the most-used path: where research *lives*, and how the user actually *sees* the result.
+
+**Action.** Gave research a real address — `60-RESEARCH/`, with a registry (`INDEX-research-reports`) that makes "has this been researched?" a one-grep question and makes duplication a pipeline-gated mistake (ADR-0006). Rewrote `TEMPLATE-breakdown` from a thin 7-beat stub into an extensive deep-research-report spec — research brief, research log, full apparatus (rated source register, quotes bank, numbers bank, contested claims, open questions, confidence) — so the report can inform a drafting agent it will never meet. Made render-and-publish mandatory (ADR-0007): every request now ends with an HTML card in `docs/cards/` and a gallery entry, viewable online. Wrote `BREAKDOWN-spaced-repetition` as the worked-example genealogy of the sample card.
+
+**Follow-up.** The registry and the gallery are both hand-maintained indexes — watch for drift; if it recurs, that's signal for a validator (or CI) rather than more discipline. The breakdown template is deliberately heavy — if authors start skipping its apparatus sections, that's signal the floor is set too high for `summary`-mode requests and the template may need a tiered "light vs. full" split.
 
 ---
 

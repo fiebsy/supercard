@@ -7,9 +7,9 @@
 | era | atlas |
 | version | 3.0.0 |
 | owner | derick |
-| updated | 2026-04-29 |
+| updated | 2026-05-14 |
 
-How a Supercard source becomes a rendered HTML artifact. Tokens, type scale, spacing, shadows, canvas.
+How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
 ---
 
@@ -111,4 +111,15 @@ Rendered HTML must:
 - Render at 393pt mobile width as the canonical view
 - Pass the screenshot test on every section
 - Carry the corner glyph on every section as a fixed-position element
-- Embed `source_file`, `source_commit`, `renderer_version`, `rendered_at`, `content_hash` as `<meta>` tags in the HTML `<head>`
+- Embed provenance as `<meta>` tags in the HTML `<head>`: `sc:source_file`, `sc:research_report`, `sc:renderer_version`, `sc:frozen_at_version`, `sc:rendered_at` (and `sc:source_commit`, `sc:content_hash` where available). `sc:research_report` closes the genealogy loop — the render points back through the card to the `60-RESEARCH/` report it descends from.
+
+## Publishing (mandatory — ADR-0007)
+
+Rendering is not optional. Every card request renders **and publishes**:
+
+- The render is written to `docs/cards/CARD-{YYYY-MM-DD}-{slug}.html` — one standalone file per card. Multi-part `deep-dive` cards each get `...-part-N.html`.
+- An entry is added to the `docs/index.html` **gallery** (newest at top), linking the new render.
+- The `docs/` changes are committed and pushed. `docs/` is served as the pages site, so the card becomes a live URL — this is the "view it online" deliverable.
+- Renders are **views, never sources** — never hand-edited. Re-render from the markdown card (the frozen-at-version canonical source, ADR-0003) instead.
+
+See `docs/README.md` for the published-site structure.

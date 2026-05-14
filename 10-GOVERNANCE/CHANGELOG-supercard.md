@@ -7,7 +7,7 @@
 | era | atlas |
 | version | 3.0.0 |
 | owner | derick |
-| updated | 2026-04-29 |
+| updated | 2026-05-14 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
 
@@ -20,6 +20,16 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 - PIPELINE doc — the dynamic card assembly pipeline (research → breakdown → card) with four request modes: summary, briefing, deep-dive, reference
 - `TEMPLATE-breakdown` — the uncompressed-report intermediate artifact
 - `supercard` Claude Code skill — runs the assembly pipeline end to end
+- ADR-0006 — dedicated research-report store: `60-RESEARCH/` folder + `INDEX-research-reports` registry. Breakdowns move out of `40-LAB/`; the pipeline checks the registry before researching, so a topic is never researched twice
+- ADR-0007 — render and publish by default: every card request renders to `docs/cards/` and is listed in the `docs/index.html` gallery; "view it online" is now a pipeline deliverable, not an optional last step
+- `60-RESEARCH/` — the research store, with `README`, the registry, and a worked-example `BREAKDOWN-spaced-repetition` (the genealogy of the sample card)
+- `docs/` restructured into a published-pages site — gallery `index.html` + `cards/` subfolder + `docs/README.md`
+
+### Changed
+
+- `TEMPLATE-breakdown` rewritten as an extensive deep-research-report spec: research brief, research log, executive synthesis, the 7 beats, and a full research apparatus (source register with reliability ratings, key quotes bank, numbers & data bank, contested claims, open questions, confidence assessment, card derivation log)
+- PIPELINE, RENDERING-spec, the `supercard` skill, INDEX, README, `00-SETUP`, and the `40-LAB/` / `30-CARDS/` READMEs updated to the `60-RESEARCH/` store and the mandatory render-and-publish stage
+- Card templates and the sample card now carry `research_report` and `render` frontmatter, making the `research → breakdown → card → render` genealogy navigable from either end
 
 ### Experimental
 
