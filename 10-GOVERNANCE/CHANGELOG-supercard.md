@@ -47,8 +47,8 @@ Initial V3 release. Generational rebrand from V2.
 - Loft shadow system (flat / subtle / lofted) with 1–3 elevated elements cap
 - SF Pro Rounded as primary typeface, SF Mono for code/equations
 - Strict grayscale six-step ramp (0%, 6%, 12%, 30%, 60%, 100%)
-- Drive-resident governance: ADRs, stewards' log, RFCs, CHANGELOG
-- SupercardOps Apps Script (template generation, validators, archival, indexing)
+- Repository-resident governance: ADRs, stewards' log, RFCs, CHANGELOG
+- SupercardOps tooling (template generation, validators, archival, indexing)
 - GitHub Actions + Pandoc rendering pipeline (planned, not yet built)
 - Screenshot test as publication gate
 

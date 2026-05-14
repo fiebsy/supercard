@@ -43,7 +43,7 @@ A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artif
 
 **To audit cards for drift:**
 
-1. List `'30-CARDS-folder-id' in parents and modifiedTime > '<N-days-ago>'`
+1. List recently-changed cards: `git log --since='<N days ago>' --name-only -- 30-CARDS/`
 2. Grade each against PRINCIPLES + last 10 stewards' log entries
 3. Save report as `AUDIT-{date}--draft` in `40-LAB/`
 
@@ -74,24 +74,19 @@ A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artif
 
 ```
 # All Core blocks
-mimeType = 'application/vnd.google-apps.document'
-  and name contains 'BLOCK-'
-  and name contains '--core'
-  and trashed = false
+ls 20-BLOCKS/BLOCK-*--core.md
 
 # Recent governance changes
-'<governance-folder-id>' in parents
-  and modifiedTime > '2026-04-01T00:00:00'
+git log --since='2026-04-01' --name-only -- 10-GOVERNANCE/
 
 # Accepted ADRs
-name contains 'ADR-' and fullText contains 'Status: Accepted'
+grep -rl 'status | Accepted' 10-GOVERNANCE/ADR/
 
 # Related prior cards by topic
-fullText contains '<topic-keyword>'
-  and ('<cards-folder-id>' in parents or '<archive-folder-id>' in parents)
+grep -rli '<topic-keyword>' 30-CARDS/ 90-ARCHIVE/
 
 # Published cards only
-name contains 'CARD-' and name contains '--published'
+ls 30-CARDS/CARD-*--published.md
 ```
 
 ## ADR ledger
@@ -103,6 +98,8 @@ name contains 'CARD-' and name contains '--published'
 | 0001 | Adopt named eras with SemVer (V3 = Atlas) | Accepted | 2026-04-29 |
 | 0002 | Four-tier lifecycle: Core / Stable / Experimental / Deprecated | Accepted | 2026-04-29 |
 | 0003 | Content frozen at authored version | Accepted | 2026-04-29 |
+| 0004 | Git repository as the canonical home | Proposed | 2026-05-14 |
+| 0005 | Mode-driven card assembly pipeline | Proposed | 2026-05-14 |
 
 ## Versioning at a glance
 

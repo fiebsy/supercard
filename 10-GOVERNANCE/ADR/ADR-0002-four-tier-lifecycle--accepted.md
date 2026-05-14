@@ -39,7 +39,7 @@ Tier is expressed three ways:
 
 1. In the block doc's frontmatter `lifecycle: core|stable|experimental|deprecated`
 2. In the block doc's filename status suffix `--core`, `--stable`, etc.
-3. As `appProperties.sc_lifecycle` stamped by the SupercardOps validator
+3. As an `sc_lifecycle` check enforced by the SupercardOps validator in CI
 
 ## Consequences
 

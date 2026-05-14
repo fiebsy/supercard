@@ -27,7 +27,7 @@ Append entries via SupercardOps `logStewardEntry()` or directly.
 
 ## 2026-04-29 — derick — [foundation]
 
-**Context.** V3 system goes live today. Three foundational ADRs accepted (named eras, four-tier lifecycle, frozen-at-authored-version). Folder structure created in Drive. SupercardOps Apps Script installed. INDEX pinned to a Claude Project.
+**Context.** V3 system goes live today. Three foundational ADRs accepted (named eras, four-tier lifecycle, frozen-at-authored-version). Folder structure created. SupercardOps tooling stubbed. INDEX established as the canonical entry point.
 
 **Action.** Day-1 setup complete. Beginning the 38-block authoring pass. Will document each block as a separate doc in `20-BLOCKS/` with full Composition / Rationale / Precedents / Common Mistakes / Shape Test sections.
 
