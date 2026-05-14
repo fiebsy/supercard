@@ -26,6 +26,7 @@ breakdowns must agree.
 | id | topic | slug | mode(s) | status | sources | cards derived | created | updated |
 |---|---|---|---|---|---|---|---|---|
 | BREAKDOWN-spaced-repetition | Spaced repetition as a learning method | spaced-repetition | briefing | active | 6 | CARD-2026-05-14-spaced-repetition | 2026-05-14 | 2026-05-14 |
+| BREAKDOWN-gestalt-principles | The Gestalt principles of perceptual organization | gestalt-principles | deep-dive | active | 10 | CARD-2026-05-14-gestalt-principles | 2026-05-14 | 2026-05-14 |
 
 ---
 

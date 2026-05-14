@@ -1,0 +1,361 @@
+/*
+ * Supercard V3 — render tokens and block styles.
+ * Ported verbatim from RENDERING-spec and the standalone HTML renders in
+ * docs/cards/, so a React-rendered card is pixel-identical to its HTML twin.
+ * Strict grayscale, SF Pro Rounded, 393pt mobile canvas, 16pt grid.
+ */
+
+:root {
+  --w: #ffffff;
+  --g-06: rgba(0, 0, 0, 0.06);
+  --g-12: rgba(0, 0, 0, 0.12);
+  --g-30: rgba(0, 0, 0, 0.3);
+  --g-60: rgba(0, 0, 0, 0.6);
+  --k: #000000;
+  --ink: #111111;
+  --ink-2: #333333;
+  --ink-3: #555555;
+  --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system,
+    BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --s-1: 8px;
+  --s-2: 12px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-lofted: 0 2px 4px rgba(0, 0, 0, 0.04), 0 12px 32px rgba(0, 0, 0, 0.06),
+    0 32px 80px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background: #e8e8e8;
+  font-family: var(--rounded);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+.canvas {
+  width: 393px;
+  margin: 0 auto;
+  background: var(--w);
+  min-height: 100vh;
+  padding: 0 16px var(--s-8);
+}
+
+section {
+  padding: var(--s-6) 0 var(--s-3);
+  border-bottom: 0.5px solid var(--g-06);
+}
+section:last-of-type {
+  border-bottom: none;
+}
+
+.eyebrow {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--g-60);
+  margin-bottom: var(--s-3);
+}
+.block-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g-30);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  margin-bottom: var(--s-3);
+}
+h2 {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin-bottom: var(--s-2);
+}
+
+p {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: -0.008em;
+  color: var(--ink-2);
+  margin-bottom: var(--s-2);
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+strong {
+  font-weight: 700;
+  color: var(--k);
+}
+em {
+  font-style: italic;
+}
+.lede {
+  color: var(--ink);
+}
+
+/* Beat 1 — lofted hero */
+.hero {
+  background: var(--w);
+  border-radius: 16px;
+  padding: var(--s-4);
+  box-shadow: var(--shadow-lofted);
+  margin: var(--s-2) 0 var(--s-3);
+}
+.hero .hook {
+  font-size: 19px;
+  line-height: 26px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+ol,
+ul {
+  margin: 0 0 var(--s-2) 0;
+  padding: 0;
+  list-style: none;
+}
+li {
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: -0.008em;
+  color: var(--ink-2);
+  padding: var(--s-1) 0;
+  border-bottom: 0.5px solid var(--g-06);
+  display: flex;
+  gap: var(--s-2);
+}
+li:last-child {
+  border-bottom: none;
+}
+.marker {
+  font-variant-numeric: tabular-nums;
+  color: var(--g-30);
+  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 18px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--s-2) 0;
+  font-size: 15px;
+}
+th,
+td {
+  text-align: left;
+  padding: var(--s-2) var(--s-1);
+  border-bottom: 0.5px solid var(--g-12);
+  line-height: 20px;
+  color: var(--ink-2);
+  vertical-align: top;
+}
+th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--g-60);
+  font-weight: 600;
+}
+td:first-child {
+  color: var(--g-60);
+}
+tr.focal td {
+  color: var(--k);
+}
+tr.focal td strong {
+  color: var(--k);
+}
+table.timeline td:first-child {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--g-30);
+}
+
+/* definition block */
+.def-term {
+  font-weight: 700;
+  color: var(--k);
+}
+
+/* equation / code block */
+pre {
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--k);
+  background: rgba(0, 0, 0, 0.03);
+  border: 0.5px solid var(--g-06);
+  border-radius: 8px;
+  padding: var(--s-2) var(--s-3);
+  margin: var(--s-2) 0;
+  overflow-x: auto;
+}
+
+/* quote-as-evidence + pull-quote */
+blockquote {
+  font-size: 19px;
+  line-height: 26px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  border-left: 2px solid var(--k);
+  padding-left: var(--s-3);
+  margin: var(--s-1) 0 var(--s-3);
+}
+blockquote.pull {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+/* section divider — beat boundary, not paragraph break */
+section.divider {
+  padding: var(--s-7) 0 var(--s-4);
+  border-bottom: 0.5px solid var(--g-06);
+}
+section.divider .rule {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--g-30);
+  margin-bottom: var(--s-2);
+}
+section.divider h2 {
+  margin-bottom: var(--s-2);
+}
+
+.takeaway {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+.sources li {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--g-60);
+  display: list-item;
+  padding-left: 0;
+  list-style: none;
+}
+.sources {
+  padding-left: var(--s-3);
+}
+.sources li::before {
+  content: "—";
+  color: var(--g-30);
+  margin-right: var(--s-1);
+}
+
+/* corner glyph — present on every section's screenshot */
+.glyph {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(calc(196px - 100% - 4px));
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--g-30);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  padding: 4px 7px;
+  border-radius: 6px;
+  border: 0.5px solid var(--g-06);
+  user-select: none;
+}
+
+/* gallery — mirrors docs/index.html */
+.gallery-lede {
+  font-size: 17px;
+  line-height: 24px;
+  color: var(--ink-2);
+  margin-bottom: var(--s-6);
+}
+.section-label {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--g-60);
+  margin: var(--s-5) 0 var(--s-2);
+}
+a.card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 0.5px solid var(--g-06);
+  border-radius: 16px;
+  padding: var(--s-4);
+  margin-bottom: var(--s-2);
+  box-shadow: var(--shadow-subtle);
+  background: var(--w);
+}
+a.card-link:hover {
+  border-color: var(--g-12);
+}
+.card-title {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin-bottom: var(--s-1);
+}
+.card-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g-30);
+}
+.card-desc {
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--ink-3);
+  margin-top: var(--s-1);
+}
+.back-link {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g-60);
+  text-decoration: none;
+  padding: var(--s-5) 0 0;
+}
+.back-link:hover {
+  color: var(--k);
+}

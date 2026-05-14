@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestalt Principles — Supercard</title>
+<meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-gestalt-principles--draft.md">
+<meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-gestalt-principles.md">
+<meta name="sc:renderer_version" content="v3.0">
+<meta name="sc:frozen_at_version" content="3.0.0">
+<meta name="sc:rendered_at" content="2026-05-14">
+<style>
+  :root {
+    --w: #FFFFFF;
+    --g-06: rgba(0,0,0,0.06);
+    --g-12: rgba(0,0,0,0.12);
+    --g-30: rgba(0,0,0,0.30);
+    --g-60: rgba(0,0,0,0.60);
+    --k: #000000;
+    --ink: #111111;
+    --ink-2: #333333;
+    --ink-3: #555555;
+    --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --s-1: 8px;  --s-2: 12px; --s-3: 16px; --s-4: 24px;
+    --s-5: 32px; --s-6: 48px; --s-7: 64px; --s-8: 96px;
+    --shadow-lofted: 0 2px 4px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.04);
+    --shadow-subtle: 0 1px 2px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #E8E8E8;
+    font-family: var(--rounded);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    width: 393px;
+    margin: 0 auto;
+    background: var(--w);
+    min-height: 100vh;
+    padding: 0 16px var(--s-8);
+  }
+
+  section {
+    padding: var(--s-6) 0 var(--s-3);
+    border-bottom: 0.5px solid var(--g-06);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  .eyebrow {
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--g-60);
+    margin-bottom: var(--s-3);
+  }
+  .block-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--g-30);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: 40px;
+    line-height: 44px;
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    margin-bottom: var(--s-3);
+  }
+  h2 {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    margin-bottom: var(--s-2);
+  }
+
+  p {
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 400;
+    letter-spacing: -0.008em;
+    color: var(--ink-2);
+    margin-bottom: var(--s-2);
+  }
+  p:last-child { margin-bottom: 0; }
+
+  strong { font-weight: 700; color: var(--k); }
+  em { font-style: italic; }
+  .lede { color: var(--ink); }
+
+  /* Beat 1 — lofted hero */
+  .hero {
+    background: var(--w);
+    border-radius: 16px;
+    padding: var(--s-4);
+    box-shadow: var(--shadow-lofted);
+    margin: var(--s-2) 0 var(--s-3);
+  }
+  .hero .hook {
+    font-size: 19px;
+    line-height: 26px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+
+  ol, ul { margin: 0 0 var(--s-2) 0; padding: 0; list-style: none; }
+  li {
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: -0.008em;
+    color: var(--ink-2);
+    padding: var(--s-1) 0;
+    border-bottom: 0.5px solid var(--g-06);
+    display: flex;
+    gap: var(--s-2);
+  }
+  li:last-child { border-bottom: none; }
+  .marker {
+    font-variant-numeric: tabular-nums;
+    color: var(--g-30);
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 18px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--s-2) 0;
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    padding: var(--s-2) var(--s-1);
+    border-bottom: 0.5px solid var(--g-12);
+    line-height: 20px;
+    color: var(--ink-2);
+    vertical-align: top;
+  }
+  th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--g-60);
+    font-weight: 600;
+  }
+  td:first-child { color: var(--g-60); }
+  tr.focal td { color: var(--k); }
+  tr.focal td strong { color: var(--k); }
+  /* timeline year column — tabular, deemphasized */
+  table.timeline td:first-child {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--g-30);
+  }
+
+  /* definition block */
+  .def-term {
+    font-weight: 700;
+    color: var(--k);
+  }
+
+  /* equation / code block */
+  pre {
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--k);
+    background: rgba(0,0,0,0.03);
+    border: 0.5px solid var(--g-06);
+    border-radius: 8px;
+    padding: var(--s-2) var(--s-3);
+    margin: var(--s-2) 0;
+    overflow-x: auto;
+  }
+
+  /* quote-as-evidence + pull-quote */
+  blockquote {
+    font-size: 19px;
+    line-height: 26px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    border-left: 2px solid var(--k);
+    padding-left: var(--s-3);
+    margin: var(--s-1) 0 var(--s-3);
+  }
+  blockquote.pull {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+  }
+
+  /* section divider — beat boundary, not paragraph break */
+  section.divider {
+    padding: var(--s-7) 0 var(--s-4);
+    border-bottom: 0.5px solid var(--g-06);
+  }
+  section.divider .rule {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--g-30);
+    margin-bottom: var(--s-2);
+  }
+  section.divider h2 { margin-bottom: var(--s-2); }
+
+  .takeaway {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+
+  .attrib { font-size: 13px; line-height: 18px; color: var(--g-60); }
+
+  .sources li, .notes li { font-size: 13px; line-height: 18px; color: var(--g-60); }
+  .sources li, .notes li { display: list-item; padding-left: 0; }
+  .sources, .notes { padding-left: var(--s-3); }
+  .sources li { list-style: none; }
+  .sources li::before { content: "—"; color: var(--g-30); margin-right: var(--s-1); }
+
+  /* corner glyph — present on every section's screenshot */
+  .glyph {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(calc(196px - 100% - 4px));
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--g-30);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+    padding: 4px 7px;
+    border-radius: 6px;
+    border: 0.5px solid var(--g-06);
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+
+    <!-- Beat 1 — Hook -->
+    <section>
+      <div class="eyebrow">Beat 1 · Hook <span class="block-tag">BLOCK-loft-card</span></div>
+      <h1>Gestalt Principles</h1>
+      <div class="hero">
+        <p class="hook">You never see raw pixels. Before you are aware of looking, your visual system has already grouped, split, and completed the scene into objects — and the Gestalt principles are <strong>the catalogue of rules it uses</strong>.</p>
+      </div>
+      <p class="lede">Three German psychologists asked why a row of dots looks like <em>a row</em> and not like <em>dots</em>. The answer became the working grammar of perception — and of design.</p>
+    </section>
+
+    <!-- Beat 2 — Evidence: phi phenomenon -->
+    <section>
+      <div class="eyebrow">Beat 2 · Evidence <span class="block-tag">BLOCK-standard-text</span></div>
+      <p>In 1912, Max Wertheimer flashed two lights in alternation and people saw <strong>one light moving</strong> — motion where nothing moved. The percept was a whole that existed in no part.</p>
+      <p>That experiment, the <em>phi phenomenon</em>, launched Gestalt psychology: the claim that perception builds wholes first, and the parts come after.</p>
+    </section>
+
+    <!-- Beat 2 — Evidence: timeline -->
+    <section>
+      <div class="eyebrow">Beat 2 · Evidence <span class="block-tag">BLOCK-timeline</span></div>
+      <h2>It built — and outlived — a school of psychology</h2>
+      <table class="timeline">
+        <tbody>
+          <tr><td>1912</td><td>Wertheimer's phi-phenomenon paper — Gestalt psychology begins</td></tr>
+          <tr><td>1923</td><td>Wertheimer formalizes the laws of perceptual organization</td></tr>
+          <tr><td>1935</td><td>Koffka's <em>Principles of Gestalt Psychology</em></td></tr>
+          <tr><td>1933→</td><td>Founders flee Nazi Germany; the school scatters</td></tr>
+          <tr><td>1950s</td><td>Köhler's brain-field theory refuted — Gestalt fades as a movement</td></tr>
+          <tr class="focal"><td>2012</td><td><strong>The principles are vindicated, the theory is not</strong> — <em>Psychological Bulletin</em> centennial review</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Beat 2 — Evidence: Koffka quote -->
+    <section>
+      <div class="eyebrow">Beat 2 · Evidence <span class="block-tag">BLOCK-quote-as-evidence</span></div>
+      <blockquote>"The whole is <strong>other</strong> than the sum of its parts."</blockquote>
+      <p>— Kurt Koffka, <em>Principles of Gestalt Psychology</em>, 1935. Not <em>"greater"</em> — Koffka corrected that himself. The whole is not <em>more</em> of the parts; it is something <em>qualitatively different</em>. "This is not a principle of addition."</p>
+    </section>
+
+    <!-- Section divider — Mechanism -->
+    <section class="divider">
+      <div class="rule">— Mechanism —</div>
+      <h2>How it works</h2>
+      <p>One master law, the classic grouping principles, the figure/ground act, the modern additions, and the one principle turned into math.</p>
+    </section>
+
+    <!-- Beat 3 — Mechanism: Prägnanz -->
+    <section>
+      <div class="eyebrow">Beat 3 · Mechanism <span class="block-tag">BLOCK-definition</span></div>
+      <p><span class="def-term">Prägnanz</span> — the law every other Gestalt principle sits under. Given any stimulus, perception settles into the <strong>simplest, most regular, most stable</strong> organization the conditions allow.</p>
+      <p>Each specific principle is just a particular way the visual system pursues that "good form."</p>
+    </section>
+
+    <!-- Beat 3 — Mechanism: process-flow -->
+    <section>
+      <div class="eyebrow">Beat 3 · Mechanism <span class="block-tag">BLOCK-process-flow</span></div>
+      <ol>
+        <li><span class="marker">1</span><span><strong>Carve</strong> — the image is first split into uniform, connected regions.</span></li>
+        <li><span class="marker">2</span><span><strong>Assign</strong> — each region is judged figure or ground: object, or backdrop.</span></li>
+        <li><span class="marker">3</span><span><strong>Group</strong> — the surviving elements are clustered by the grouping principles.</span></li>
+      </ol>
+      <p>Palmer &amp; Rock's insight: grouping isn't first. The system <strong>partitions the image before it groups anything</strong> — and that partition can override the rest.</p>
+    </section>
+
+    <!-- Beat 3 — Mechanism: classic grouping principles -->
+    <section>
+      <div class="eyebrow">Beat 3 · Mechanism <span class="block-tag">BLOCK-numbered-principle</span></div>
+      <h2>The classic grouping principles</h2>
+      <ol>
+        <li><span class="marker">1</span><span><strong>Proximity</strong> — elements close together are read as one group.</span></li>
+        <li><span class="marker">2</span><span><strong>Similarity</strong> — elements sharing color, size, or shape are grouped.</span></li>
+        <li><span class="marker">3</span><span><strong>Common fate</strong> — elements moving together are grouped.</span></li>
+        <li><span class="marker">4</span><span><strong>Good continuation</strong> — elements on a smooth path are grouped; the eye prefers continuity over abrupt change.</span></li>
+        <li><span class="marker">5</span><span><strong>Closure</strong> — incomplete figures are perceived as whole.</span></li>
+        <li><span class="marker">6</span><span><strong>Symmetry / order</strong> — regular, symmetrical arrangements are grouped and preferred.</span></li>
+      </ol>
+      <p>These are tendencies, <strong>not an algorithm</strong> — they describe what the system does, not a recipe that yields one answer.</p>
+    </section>
+
+    <!-- Beat 3 — Mechanism: figure/ground -->
+    <section>
+      <div class="eyebrow">Beat 3 · Mechanism <span class="block-tag">BLOCK-definition</span></div>
+      <p><span class="def-term">Figure/ground</span> — distinct from grouping. Grouping decides which elements clump; figure/ground decides which region is <strong>the object</strong> — it owns the contour, has shape, sits in front — and which is mere backdrop.</p>
+      <p>Reversible images like Rubin's vase show the assignment is an active, unstable <em>decision</em>, not a given.</p>
+    </section>
+
+    <!-- Beat 3 — Mechanism: modern additions -->
+    <section>
+      <div class="eyebrow">Beat 3 · Mechanism <span class="block-tag">BLOCK-table</span></div>
+      <h2>The set is open, not fixed</h2>
+      <table>
+        <thead>
+          <tr><th>Principle</th><th>What it adds</th><th>Added</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Common region</td><td>elements inside a shared boundary group — even against proximity</td><td>1992</td></tr>
+          <tr><td>Uniform connectedness</td><td>a uniform, connected region groups — and can override proximity and similarity</td><td>1994</td></tr>
+          <tr><td>Element connectedness</td><td>physically joined elements group</td><td>1994</td></tr>
+          <tr><td>Synchrony</td><td>elements changing at the same instant group — common fate, generalized</td><td>modern</td></tr>
+        </tbody>
+      </table>
+      <p>There is <strong>no canonical count</strong> of Gestalt principles — the set has grown for a century and is still growing.</p>
+    </section>
+
+    <!-- Beat 3 — Mechanism: equation -->
+    <section>
+      <div class="eyebrow">Beat 3 · Mechanism <span class="block-tag">BLOCK-equation</span></div>
+      <h2>The one principle turned into math</h2>
+      <p>For proximity, grouping is fully predicted by <em>relative</em> distance:</p>
+      <pre>log-odds = k · log(d&#8321; / d&#8322;)</pre>
+      <p>In an ambiguous dot lattice, the odds of seeing one grouping over a competitor depend <strong>only on the ratio of the competing distances</strong> — not absolute spacing, not overall symmetry. The vague Victorian "near things group" became a precise, fitted law (Kubovy &amp; Wagemans, 1995).</p>
+    </section>
+
+    <!-- Beat 4 — Comparison: Gestalt vs structuralism -->
+    <section>
+      <div class="eyebrow">Beat 4 · Comparison <span class="block-tag">BLOCK-comparison</span></div>
+      <h2>Two accounts of how perception works</h2>
+      <table>
+        <thead>
+          <tr><th></th><th>Structuralism</th><th>Gestalt</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Unit of mind</td><td>atomic sensations</td><td>structured wholes</td></tr>
+          <tr><td>Perception is</td><td>addition</td><td>organization</td></tr>
+          <tr class="focal"><td>The phi test</td><td>can't explain it</td><td><strong>predicts it</strong></td></tr>
+          <tr><td>Determines what</td><td>parts → whole</td><td>whole → parts</td></tr>
+        </tbody>
+      </table>
+      <p>The phi phenomenon was the wedge: you <strong>cannot build "motion" by adding two static flashes</strong>. The whole had to come first.</p>
+    </section>
+
+    <!-- Beat 4 — Comparison: principles against principles -->
+    <section>
+      <div class="eyebrow">Beat 4 · Comparison <span class="block-tag">BLOCK-standard-text</span></div>
+      <p>The principles <strong>compete and combine</strong> — a layout can pit proximity against similarity against common region, and the percept is whatever organization fits best. For proximity and similarity, that combination is quantifiably <em>additive</em>.</p>
+      <p>And mind the name collision: Gestalt <em>therapy</em> (Perls, 1940s) borrowed the word but has no line back to this perceptual research — different field entirely.</p>
+    </section>
+
+    <!-- Section divider — Counter -->
+    <section class="divider">
+      <div class="rule">— Counter —</div>
+      <h2>The honest steelman</h2>
+      <p>What failed, what stayed vague, and why "principles" is the right word and "theory" is not.</p>
+    </section>
+
+    <!-- Beat 5 — Counter: anti-pattern -->
+    <section>
+      <div class="eyebrow">Beat 5 · Counter <span class="block-tag">BLOCK-anti-pattern</span></div>
+      <h2>Where the Gestalt account is weak</h2>
+      <ul>
+        <li><span class="marker">✕</span><span><strong>The explanatory theory failed.</strong> Köhler claimed grouping reflected electrical <em>fields</em> in the brain. Lashley (1951) and Sperry (1955) disrupted cortical current flow — and shape perception survived.</span></li>
+        <li><span class="marker">✕</span><span><strong>"Mere demonstrations."</strong> The classic principles were established by compelling pictures, not measurement — descriptive rules with no predictive model for decades.</span></li>
+        <li><span class="marker">✕</span><span><strong>The laws are vague and they conflict.</strong> "Similar things group" — how similar? on which dimension? against proximity, which wins? No joint algorithm.</span></li>
+        <li><span class="marker">✕</span><span><strong>The list just grows.</strong> A set of "laws" that expands with every new demo risks being a taxonomy, not a theory.</span></li>
+      </ul>
+      <p>The honest verdict: the Gestalt principles are <strong>robust descriptions, not a finished explanation</strong> — and that is still enormously useful.</p>
+    </section>
+
+    <!-- Beat 5 — Counter: the theory that broke -->
+    <section>
+      <div class="eyebrow">Beat 5 · Counter <span class="block-tag">BLOCK-quote-as-evidence</span></div>
+      <blockquote>Disrupt the cortex with gold foil, mica, and wire — and pattern perception still works.</blockquote>
+      <p>That is the gist of Lashley (1951) and Sperry (1955): the experiments that <strong>refuted Köhler's brain-field theory</strong> and pushed Gestalt psychology out of the mainstream. The phenomena outlived the mechanism that was meant to explain them.</p>
+    </section>
+
+    <!-- Beat 6 — Application: the bridge -->
+    <section>
+      <div class="eyebrow">Beat 6 · Application <span class="block-tag">BLOCK-standard-text</span></div>
+      <h2>Why a designer should care</h2>
+      <p>Because the principles run pre-attentively and involuntarily, a designer who arranges proximity, similarity, common region, and continuity isn't decorating — they're supplying inputs to a fixed perceptual machine.</p>
+      <p>Layout <em>is</em> applied Gestalt. You are not persuading the viewer; you are <strong>programming what they group</strong>.</p>
+    </section>
+
+    <!-- Beat 6 — Application: checklist -->
+    <section>
+      <div class="eyebrow">Beat 6 · Application <span class="block-tag">BLOCK-checklist</span></div>
+      <ul>
+        <li><span class="marker">☐</span><span>Group with <strong>whitespace</strong> before you reach for boxes or lines — proximity is the cheapest grouping tool</span></li>
+        <li><span class="marker">☐</span><span>Use a shared boundary (a card) only when you mean "these are one unit" — common region is a strong, expensive signal</span></li>
+        <li><span class="marker">☐</span><span>Align to a grid — continuity makes the eye follow an invisible line; misalignment reads as broken</span></li>
+        <li><span class="marker">☐</span><span>Watch for an <em>unintended</em> principle winning — e.g. everything one color, and similarity overrides the grouping you wanted</span></li>
+        <li><span class="marker">☐</span><span>Don't fight the machine — equal spacing everywhere destroys grouping and forces the user to read every element alone</span></li>
+      </ul>
+    </section>
+
+    <!-- Beat 6 — Application: examples table -->
+    <section>
+      <div class="eyebrow">Beat 6 · Application <span class="block-tag">BLOCK-table</span></div>
+      <h2>The principles, already everywhere</h2>
+      <table>
+        <thead>
+          <tr><th>You see</th><th>The principle at work</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>The FedEx arrow in the negative space</td><td>closure + figure/ground</td></tr>
+          <tr><td>The WWF panda built from incomplete shapes</td><td>closure</td></tr>
+          <tr><td>A card making scattered elements read as one</td><td>common region</td></tr>
+          <tr><td>A grid that feels ordered</td><td>good continuation</td></tr>
+          <tr><td>A row of items sliding away together on delete</td><td>common fate</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Beat 7 — Close: key takeaway -->
+    <section>
+      <div class="eyebrow">Beat 7 · Close <span class="block-tag">BLOCK-key-takeaway</span></div>
+      <p class="takeaway"><strong>The Gestalt principles aren't design tips — they're the perceptual machine design runs on.</strong></p>
+      <p>Perception organizes before you do; the principles are the rules of that organization — descriptive, replicable, and yours to design with.</p>
+    </section>
+
+    <!-- Beat 7 — Close: pull-quote -->
+    <section>
+      <div class="eyebrow">Beat 7 · Close <span class="block-tag">BLOCK-pull-quote</span></div>
+      <blockquote class="pull">"The whole is <strong>other</strong> than the sum of its parts."</blockquote>
+      <p>The school that proved it is gone. The phenomenon it named is in everything you've ever looked at — and the designer's job is to choose <em>which whole</em>.</p>
+    </section>
+
+    <!-- Sources -->
+    <section>
+      <div class="eyebrow">Sources</div>
+      <ul class="sources">
+        <li>Wagemans, J. et al. — "A century of Gestalt psychology in visual perception: I." — <em>Psychological Bulletin</em>, 2012</li>
+        <li>Wertheimer, M. — "Laws of organization in perceptual forms" — 1923</li>
+        <li>Wertheimer, M. — "Experimental studies on the seeing of motion" (the phi phenomenon) — 1912</li>
+        <li>Koffka, K. — <em>Principles of Gestalt Psychology</em> — 1935</li>
+        <li>Kubovy, M. &amp; Wagemans, J. — "Grouping by proximity and multistability in dot lattices" — 1995</li>
+        <li>Palmer, S.E. &amp; Rock, I. — "Rethinking perceptual organization: uniform connectedness" — 1994</li>
+      </ul>
+    </section>
+
+  </div>
+  <div class="glyph">◆ supercard · v3.0 atlas</div>
+</body>
+</html>

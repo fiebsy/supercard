@@ -123,3 +123,31 @@ Rendering is not optional. Every card request renders **and publishes**:
 - Renders are **views, never sources** — never hand-edited. Re-render from the markdown card (the frozen-at-version canonical source, ADR-0003) instead.
 
 See `docs/README.md` for the published-site structure.
+
+## Two render paths
+
+A card has one canonical source — the markdown in `30-CARDS/` — and **two**
+render paths. Both are views; both are re-derived from the markdown, never
+hand-edited.
+
+| | HTML path | React path |
+|---|---|---|
+| Artifact | `docs/cards/CARD-{date}-{slug}.html` — one standalone file, all resources inlined | `app/src/cards/{slug}.tsx` — a component composed from block primitives |
+| Needs the codebase? | **No.** Reproducible from this spec alone — an agent working from read-only guidance can produce it without a checkout. | **Yes.** Requires the `app/` Vite project. |
+| Hosted on | GitHub Pages (`docs/`) | Vercel (`app/dist`, via `vercel.json`) |
+| Gallery | `docs/index.html` | `app/src/cards/registry.tsx` + `app/src/Gallery.tsx` |
+
+**The HTML path is the floor.** It is mandatory on every card request (ADR-0007)
+and is the one that must stay reproducible from the spec with no codebase. The
+React path is the bonus an agent *with* repo access can also produce.
+
+**Pixel parity is the contract.** `app/src/supercard.css` is ported verbatim
+from this spec's tokens and from the HTML renders, so a React-rendered card and
+its standalone HTML twin are the same card at the same pixels. The block
+components in `app/src/blocks.tsx` are keyed one-to-one to `INDEX-block-library`
+ids and emit the same markup the HTML renderer does.
+
+**Both paths ship from one deployment.** The `app/` build copies `docs/` into
+`app/dist/html/`, so the Vercel deployment serves the React gallery at `/` and
+the canonical standalone HTML twins at `/html/cards/CARD-...html`. See
+`app/README.md`.
