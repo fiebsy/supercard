@@ -35,6 +35,9 @@ If you're a new Claude session, read in this order before any card work:
 
 For deeper questions: `LENGTHS`, `RENDERING`, the ADRs, `CHANGELOG`.
 
+To see the grammar in practice, read the worked sample card:
+[`30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md`](30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md).
+
 ## Naming grammar (non-negotiable)
 
 `{TYPE}-{slug-or-id}--{status}`
