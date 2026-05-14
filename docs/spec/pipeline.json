@@ -4,7 +4,7 @@
   "spec": "supercard",
   "version": "3.0.0",
   "era": "atlas",
-  "spec_revision": "da520dbc8ce2",
+  "spec_revision": "df6fc7ddf077",
   "summary": "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; six constraint gates must all pass.",
   "source": "10-GOVERNANCE/PIPELINE-card-assembly.md",
   "provenance": [

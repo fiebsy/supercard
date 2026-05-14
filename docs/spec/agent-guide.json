@@ -4,7 +4,7 @@
   "spec": "supercard",
   "version": "3.0.0",
   "era": "atlas",
-  "spec_revision": "da520dbc8ce2",
+  "spec_revision": "df6fc7ddf077",
   "summary": "The operating manual. Read this first if your job is to produce a Supercard. It tells you the disclosure protocol, which layers to fetch for which task, and the end-to-end build loop with its exit gates.",
   "source": "00-INDEX/INDEX-supercard-v3.md",
   "provenance": [
@@ -12,7 +12,7 @@
       "file": "00-INDEX/INDEX-supercard-v3.md",
       "updated": "2026-05-14",
       "version": "3.0.0",
-      "sha256": "ed683dbcedf9e9913c93266aa355f2f13b90c1654cd820076ce4139c996fb2d9"
+      "sha256": "19cdaecf9d712f0d14b1c804f77b79922d31b56ea27997aa7d83bb66f930bbc0"
     },
     {
       "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",

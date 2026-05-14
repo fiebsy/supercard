@@ -4,7 +4,7 @@
   "spec": "supercard",
   "version": "3.0.0",
   "era": "atlas",
-  "spec_revision": "da520dbc8ce2",
+  "spec_revision": "df6fc7ddf077",
   "summary": "Every block across 6 families with its lifecycle tier and length compatibility. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
   "source": "00-INDEX/INDEX-block-library.md",
   "provenance": [

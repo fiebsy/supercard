@@ -4,7 +4,7 @@
   "spec": "supercard",
   "version": "3.0.0",
   "era": "atlas",
-  "spec_revision": "da520dbc8ce2",
+  "spec_revision": "df6fc7ddf077",
   "summary": "How a card's markdown becomes a published artifact. The HTML path is the floor: a standalone file, all resources inlined, reproducible from this spec with NO codebase. The React path is the bonus for an agent with repo access.",
   "source": "10-GOVERNANCE/RENDERING-spec.md",
   "provenance": [

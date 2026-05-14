@@ -4,7 +4,7 @@
   "spec": "supercard",
   "version": "3.0.0",
   "era": "atlas",
-  "spec_revision": "da520dbc8ce2",
+  "spec_revision": "df6fc7ddf077",
   "summary": "The seven-beat narrative spine (Hook → Evidence → Mechanism → Comparison → Counter → Application → Close), the shape-first/text-last decision tree for picking a block per section, and the adjacency rules. GRAMMAR says how to assemble what PRINCIPLES defines.",
   "source": "10-GOVERNANCE/GRAMMAR-block-composition.md",
   "provenance": [
