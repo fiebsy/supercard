@@ -18,12 +18,14 @@ versioned, and rendered.
 | Folder | Contents |
 |---|---|
 | `00-INDEX/` | Canonical entry point, block library index, session setup |
-| `10-GOVERNANCE/` | Principles, grammar, lengths, rendering, changelog, stewards' log, ADRs |
+| `10-GOVERNANCE/` | Principles, grammar, lengths, rendering, pipeline, changelog, stewards' log, ADRs |
 | `20-BLOCKS/` | The 38 individual block specs (one file each) — to be authored |
 | `30-CARDS/` | Active V3 Supercards |
 | `40-LAB/` | Experiments, RFC proposals, audit reports |
 | `50-TEMPLATES/` | Golden templates for new artifacts |
+| `60-RESEARCH/` | The deep-research-report store — breakdowns + their registry (ADR-0006) |
 | `90-ARCHIVE/` | Frozen V1/V2 era + retired V3 minor versions |
+| `docs/` | Published Supercard renders — the gallery + one HTML per card, viewable online (ADR-0007) |
 
 ## Start here
 
@@ -36,7 +38,16 @@ If you're a new Claude session, read in this order before any card work:
 For deeper questions: `LENGTHS`, `RENDERING`, the ADRs, `CHANGELOG`.
 
 To see the grammar in practice, read the worked sample card:
-[`30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md`](30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md).
+[`30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md`](30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md),
+its deep-research report
+[`60-RESEARCH/BREAKDOWN-spaced-repetition.md`](60-RESEARCH/BREAKDOWN-spaced-repetition.md),
+and its published render at [`docs/cards/`](docs/).
+
+To build a card from a topic, run the assembly pipeline
+([`10-GOVERNANCE/PIPELINE-card-assembly.md`](10-GOVERNANCE/PIPELINE-card-assembly.md))
+or invoke the `supercard` skill: it researches, writes the breakdown to
+`60-RESEARCH/`, converts it to a card, then renders and publishes the HTML to
+`docs/` so you can view it online.
 
 ## Naming grammar (non-negotiable)
 

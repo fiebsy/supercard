@@ -12,6 +12,8 @@
 | owner | {{OWNER}} |
 | created | {{CREATED}} |
 | status | draft |
+| research_report | 60-RESEARCH/BREAKDOWN-{{SLUG}}.md |
+| render | docs/cards/{{ID}}.html |
 | tags | |
 | supersedes | |
 | related | |

@@ -12,6 +12,8 @@
 | owner | derick |
 | created | 2026-05-14 |
 | status | draft |
+| research_report | 60-RESEARCH/BREAKDOWN-spaced-repetition.md |
+| render | docs/cards/CARD-2026-05-14-spaced-repetition.html |
 | tags | learning, memory, study-methods |
 | supersedes | |
 | related | |
@@ -19,7 +21,10 @@
 > **Reference sample.** This is a fully-authored Standard Supercard — a worked
 > example of the V3 grammar, not a template. Each beat names the block type it
 > uses (from `INDEX-block-library`) and carries exactly one emphasized phrase.
-> Read alongside `GRAMMAR-block-composition` to see the rules in practice.
+> Read alongside `GRAMMAR-block-composition` to see the rules in practice, and
+> alongside `60-RESEARCH/BREAKDOWN-spaced-repetition.md` — the deep-research
+> report this card is a constrained `briefing` *view* of — to see the genealogy
+> end to end.
 
 ---
 
