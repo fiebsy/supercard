@@ -35,7 +35,9 @@ If you're a new Claude session, read in this order before any card work:
 2. [`10-GOVERNANCE/PRINCIPLES-supercard-v3.md`](10-GOVERNANCE/PRINCIPLES-supercard-v3.md) — the 10 cognitive-prosthesis principles
 3. [`10-GOVERNANCE/GRAMMAR-block-composition.md`](10-GOVERNANCE/GRAMMAR-block-composition.md) — how blocks combine
 
-For deeper questions: `LENGTHS`, `RENDERING`, the ADRs, `CHANGELOG`.
+For deeper questions: `LENGTHS`, `RENDERING`, the ADRs, `CHANGELOG`. For the
+agent working convention — including the git workflow (commit straight to
+`main`, no PRs) — see [`CLAUDE.md`](CLAUDE.md).
 
 To see the grammar in practice, read the worked sample card:
 [`30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md`](30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md),

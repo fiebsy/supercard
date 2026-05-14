@@ -115,7 +115,7 @@ Rendering is **not optional** (ADR-0007). Every card request produces a publishe
 
 1. **Render** per `RENDERING-spec`: standalone HTML, 393pt mobile canvas, corner glyph on every section, all resources inlined. Write it to `docs/cards/CARD-{YYYY-MM-DD}-{slug}.html`. Embed the `<meta>` provenance — `source_file`, `research_report`, `renderer_version`, `frozen_at_version`, `rendered_at`.
 2. **Publish to the gallery.** Add an entry to `docs/index.html` (newest at top) linking the new render.
-3. **Push.** Commit the breakdown, the card, the registry update, and the `docs/` changes, then push. `docs/` is served as the pages site — the card is now a live URL. This is the "view it online" step.
+3. **Push.** Commit the breakdown, the card, the registry update, and the `docs/` changes, then push **directly to `main`** — no feature branch, no PR (see `CLAUDE.md`). `docs/` is served as the pages site — the card is now a live URL. This is the "view it online" step.
 
 The markdown card stays the canonical, frozen-at-version source (ADR-0003); the HTML is a *view* of it — regenerated, never hand-edited.
 
