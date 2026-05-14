@@ -10,14 +10,14 @@ The format is a grammar, not a length — identity holds from a 5-block summary 
 a 25-block synthesis because the type scale, gray ramp, 16pt grid, and
 header/footer pattern stay pixel-identical.
 
-This repo mirrors the canonical `/Supercard/` Google Drive hierarchy so the
-system can be built and versioned in code.
+This repo is the canonical home of the Supercard system — the place it is built,
+versioned, and rendered.
 
 ## Folder map
 
 | Folder | Contents |
 |---|---|
-| `00-INDEX/` | Canonical entry point + block library index + Claude project setup |
+| `00-INDEX/` | Canonical entry point, block library index, session setup |
 | `10-GOVERNANCE/` | Principles, grammar, lengths, rendering, changelog, stewards' log, ADRs |
 | `20-BLOCKS/` | The 38 individual block specs (one file each) — to be authored |
 | `30-CARDS/` | Active V3 Supercards |

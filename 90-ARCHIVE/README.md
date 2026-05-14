@@ -11,5 +11,6 @@ own era; V3 does not retroactively reformat them. Future V4 will move V3 content
 into `90-ARCHIVE/V3/` and continue at the canonical root.
 
 The legacy "Supercard Format — Specification v2.0" and "postcard-format-spec"
-documents live in the Drive archive (`/Supercard/90-ARCHIVE/`) and are
-intentionally not mirrored here — this repo tracks the canonical V3 system only.
+documents are intentionally not carried here — this repo tracks the canonical V3
+system only. Add them under `2025-V2/` if a future V2 → V3 migration needs them
+on hand.

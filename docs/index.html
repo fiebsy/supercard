@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spaced Repetition — Supercard</title>
+<meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md">
+<meta name="sc:renderer_version" content="v3.0">
+<meta name="sc:frozen_at_version" content="3.0.0">
+<meta name="sc:rendered_at" content="2026-05-14">
+<style>
+  :root {
+    --w: #FFFFFF;
+    --g-06: rgba(0,0,0,0.06);
+    --g-12: rgba(0,0,0,0.12);
+    --g-30: rgba(0,0,0,0.30);
+    --g-60: rgba(0,0,0,0.60);
+    --k: #000000;
+    --ink: #111111;
+    --ink-2: #333333;
+    --ink-3: #555555;
+    --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --s-1: 8px;  --s-2: 12px; --s-3: 16px; --s-4: 24px;
+    --s-5: 32px; --s-6: 48px; --s-7: 64px; --s-8: 96px;
+    --shadow-lofted: 0 2px 4px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #E8E8E8;
+    font-family: var(--rounded);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    width: 393px;
+    margin: 0 auto;
+    background: var(--w);
+    min-height: 100vh;
+    padding: 0 16px var(--s-8);
+  }
+
+  section {
+    padding: var(--s-6) 0 var(--s-3);
+    border-bottom: 0.5px solid var(--g-06);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  .eyebrow {
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--g-60);
+    margin-bottom: var(--s-3);
+  }
+  .block-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--g-30);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: 40px;
+    line-height: 44px;
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    margin-bottom: var(--s-3);
+  }
+  h2 {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    margin-bottom: var(--s-2);
+  }
+
+  p {
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 400;
+    letter-spacing: -0.008em;
+    color: var(--ink-2);
+    margin-bottom: var(--s-2);
+  }
+  p:last-child { margin-bottom: 0; }
+
+  strong { font-weight: 700; color: var(--k); }
+  .lede { color: var(--ink); }
+
+  /* Beat 1 — the single lofted element */
+  .hero {
+    background: var(--w);
+    border-radius: 16px;
+    padding: var(--s-4);
+    box-shadow: var(--shadow-lofted);
+    margin: var(--s-2) 0 var(--s-3);
+  }
+  .hero .hook {
+    font-size: 19px;
+    line-height: 26px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+
+  /* Beat 2 — stat callout */
+  .stat {
+    font-size: 56px;
+    line-height: 60px;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    font-variant-numeric: tabular-nums;
+    color: var(--k);
+    margin: var(--s-1) 0;
+  }
+
+  ol, ul { margin: 0 0 var(--s-2) 0; padding: 0; list-style: none; }
+  li {
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: -0.008em;
+    color: var(--ink-2);
+    padding: var(--s-1) 0;
+    border-bottom: 0.5px solid var(--g-06);
+    display: flex;
+    gap: var(--s-2);
+  }
+  li:last-child { border-bottom: none; }
+  .marker {
+    font-variant-numeric: tabular-nums;
+    color: var(--g-30);
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 18px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--s-2) 0;
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    padding: var(--s-2) var(--s-1);
+    border-bottom: 0.5px solid var(--g-12);
+    line-height: 20px;
+    color: var(--ink-2);
+  }
+  th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--g-60);
+    font-weight: 600;
+  }
+  td:first-child { color: var(--g-60); }
+  tr.focal td { color: var(--k); }
+  tr.focal td strong { color: var(--k); }
+
+  .takeaway {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+
+  .sources li, .notes li { font-size: 13px; line-height: 18px; color: var(--g-60); }
+  .sources li, .notes li { display: list-item; padding-left: 0; }
+  .sources, .notes { padding-left: var(--s-3); }
+  .sources li { list-style: none; }
+  .sources li::before { content: "—"; color: var(--g-30); margin-right: var(--s-1); }
+  .notes li { list-style: none; }
+  .notes li::before { content: "·"; color: var(--g-30); margin-right: var(--s-1); }
+
+  /* corner glyph — present on every section's screenshot */
+  .glyph {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(calc(196px - 100% - 4px));
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--g-30);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+    padding: 4px 7px;
+    border-radius: 6px;
+    border: 0.5px solid var(--g-06);
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+
+    <section>
+      <div class="eyebrow">Beat 1 · Hook <span class="block-tag">BLOCK-loft-card</span></div>
+      <h1>Spaced Repetition</h1>
+      <div class="hero">
+        <p class="hook">Reviewing material at widening intervals beats cramming — not by a little, by <strong>roughly double the long-term retention</strong> for the same total study time.</p>
+      </div>
+      <p class="lede">Spaced repetition schedules each review just before you'd forget, so every recall is effortful enough to strengthen the memory and cheap enough to be worth doing.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Beat 2 · Evidence <span class="block-tag">BLOCK-stat-callout</span></div>
+      <p>Without review, the forgetting curve is steep. People lose an estimated</p>
+      <div class="stat">~70%</div>
+      <p>of newly learned material within 24 hours. Spacing is the <strong>cheapest known intervention</strong> against that decay.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Beat 3 · Mechanism <span class="block-tag">BLOCK-numbered-principle</span></div>
+      <ol>
+        <li><span class="marker">1</span><span><strong>Learn</strong> — encode the item once. Encoding alone fades fast.</span></li>
+        <li><span class="marker">2</span><span><strong>Wait</strong> — let partial forgetting set in. The gap is the active ingredient.</span></li>
+        <li><span class="marker">3</span><span><strong>Recall</strong> — retrieve from memory, not recognition. The effort is what consolidates.</span></li>
+        <li><span class="marker">4</span><span><strong>Re-space</strong> — succeed, and the next interval widens; fail, and it shrinks.</span></li>
+      </ol>
+      <p>The lever is step 3: <strong>retrieval difficulty, timed to the edge of forgetting</strong>, is what converts a fragile trace into a durable one.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Beat 4 · Comparison <span class="block-tag">BLOCK-comparison</span></div>
+      <table>
+        <thead>
+          <tr><th></th><th>Massed (cramming)</th><th>Spaced</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Feels like</td><td>Fluent, confident</td><td>Effortful, uncertain</td></tr>
+          <tr><td>Short-term test</td><td>Strong</td><td>Slightly weaker</td></tr>
+          <tr class="focal"><td>Long-term test</td><td><strong>Collapses</strong></td><td><strong>Holds</strong></td></tr>
+          <tr><td>Total study time</td><td>Same</td><td>Same</td></tr>
+        </tbody>
+      </table>
+      <p>Cramming wins the rehearsal and loses the exam. The feeling of fluency is the trap — it is <strong>not evidence of durable learning</strong>.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Beat 5 · Counter <span class="block-tag">BLOCK-anti-pattern</span></div>
+      <p>Spaced repetition fails when it is run as a to-do list instead of a learning tool:</p>
+      <ul>
+        <li><span class="marker">✕</span><span><strong>Cards you don't understand</strong> — SRS schedules recall, it can't manufacture comprehension.</span></li>
+        <li><span class="marker">✕</span><span><strong>Over-long decks</strong> — a daily queue you can't clear becomes a guilt engine, and you quit.</span></li>
+        <li><span class="marker">✕</span><span><strong>Recognition dressed as recall</strong> — cloze deletions so easy the answer is obvious teach nothing.</span></li>
+      </ul>
+      <p>The system is only as good as the cards you feed it — <strong>authoring is the real work</strong>.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Beat 6 · Application <span class="block-tag">BLOCK-checklist</span></div>
+      <ul>
+        <li><span class="marker">☐</span><span>One idea per card — atomic, unambiguous, answerable from memory</span></li>
+        <li><span class="marker">☐</span><span>Write cards in your own words, after you understand the source</span></li>
+        <li><span class="marker">☐</span><span>Review daily, but cap new cards so the queue stays clearable</span></li>
+        <li><span class="marker">☐</span><span>Trust the algorithm's intervals — don't pre-review out of anxiety</span></li>
+        <li><span class="marker">☐</span><span><strong>Delete or rewrite any card you fail repeatedly</strong> — the card is the bug</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <div class="eyebrow">Beat 7 · Close <span class="block-tag">BLOCK-key-takeaway</span></div>
+      <p class="takeaway"><strong>Spacing doesn't make learning faster — it makes it stick.</strong></p>
+      <p>Same hours, same material; the difference is whether you still have it in six months.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">Sources</div>
+      <ul class="sources">
+        <li>Cepeda, N.J. et al. — "Distributed practice in verbal recall tasks" — <em>Psychological Bulletin</em>, 2006</li>
+        <li>Ebbinghaus, H. — <em>Memory: A Contribution to Experimental Psychology</em> — 1885</li>
+        <li>Roediger, H.L. &amp; Karpicke, J.D. — "The power of testing memory" — <em>Perspectives on Psychological Science</em>, 2006</li>
+      </ul>
+    </section>
+
+  </div>
+  <div class="glyph">◆ supercard · v3.0 atlas</div>
+</body>
+</html>

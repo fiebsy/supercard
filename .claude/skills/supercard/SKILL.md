@@ -24,8 +24,8 @@ Read, in order:
 Keep handy: `10-GOVERNANCE/LENGTHS-mini-standard-xl.md`,
 `10-GOVERNANCE/RENDERING-spec.md`, `00-INDEX/INDEX-block-library.md`.
 
-If this skill runs outside the Supercard repo, fetch those docs first from the
-`fiebsy/supercard` repo or the canonical `/Supercard/` Google Drive hierarchy.
+If this skill runs outside the Supercard repo, clone or fetch those docs first
+from the `fiebsy/supercard` repository.
 
 ## Modes
 

@@ -111,4 +111,4 @@ Rendered HTML must:
 - Render at 393pt mobile width as the canonical view
 - Pass the screenshot test on every section
 - Carry the corner glyph on every section as a fixed-position element
-- Tag the rendered file's appProperties with `source_file_id`, `source_revision_id`, `renderer_version`, `rendered_at`, `content_hash`
+- Embed `source_file`, `source_commit`, `renderer_version`, `rendered_at`, `content_hash` as `<meta>` tags in the HTML `<head>`
