@@ -79,5 +79,11 @@
     "principles",
     "grammar",
     "tokens"
+  ],
+  "see_also_urls": [
+    "https://supercard-seven.vercel.app/spec/pipeline.json",
+    "https://supercard-seven.vercel.app/spec/principles.json",
+    "https://supercard-seven.vercel.app/spec/grammar.json",
+    "https://supercard-seven.vercel.app/spec/tokens.json"
   ]
 }
