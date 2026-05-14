@@ -33,13 +33,17 @@ const CHECK = process.argv.includes("--check");
 // spec works wherever it is served from (the Vercel deployment serves it at
 // /spec/ — see vercel.json) without baking a hostname in. Set SPEC_BASE_URL to
 // emit absolute urls instead.
-const BASE_URL = (process.env.SPEC_BASE_URL || "").replace(/\/$/, "");
-const layerUrl = (layer) => (BASE_URL ? `${BASE_URL}/${layer}.json` : `${layer}.json`);
-
 // The public, canonical URL the spec is served from. Override with
 // SPEC_CANONICAL_URL if the deployment ever moves.
 const CANONICAL_URL =
   process.env.SPEC_CANONICAL_URL || "https://supercard-seven.vercel.app/spec/index.json";
+
+// Layer urls in the manifest are ABSOLUTE — derived from the canonical url, so
+// any agent that has index.json can fetch a layer directly without resolving a
+// relative path. SPEC_BASE_URL overrides; otherwise it is the canonical url's
+// directory.
+const BASE_URL = (process.env.SPEC_BASE_URL || CANONICAL_URL.replace(/\/[^/]*$/, "")).replace(/\/$/, "");
+const layerUrl = (layer) => `${BASE_URL}/${layer}.json`;
 
 // The drop-in instruction for any LLM/agent: this URL is the single source of
 // truth for anything "Supercard". Emitted into the manifest (usage_prompt) and
@@ -569,8 +573,8 @@ function buildAgentGuide() {
         what_is_a_supercard:
           "A screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis for ADHD readers. Every visible region must be self-sufficient: a stranger seeing only a cropped screenshot still gets one complete idea. The format is a grammar, not a length.",
         disclosure_protocol: [
-          "1. You are reading the manifest's agent-guide layer. Do not fetch every layer up front.",
-          "2. Identify your task, then fetch only the layers it needs (see task_routing below).",
+          "1. The manifest (index.json) lists every layer with its absolute URL in the 'layers' array. Fetch any layer directly from that URL — you are NOT limited to URLs pasted into a chat. If you need a layer, fetch it.",
+          "2. You are reading the agent-guide layer. Identify your task, then fetch only the layers it needs (see task_routing below). Do not fetch every layer up front.",
           "3. Each layer is self-sufficient and carries its own provenance + the full source markdown in doc_markdown.",
           "4. Re-fetch index.json and compare spec_revision before a run if you cached an earlier copy — a changed revision means a source doc moved.",
         ],
@@ -628,12 +632,12 @@ const manifest = {
   spec_revision: SPEC_REVISION,
   sources_updated_max: SOURCES_UPDATED_MAX,
   canonical_url: CANONICAL_URL,
-  base_url: BASE_URL || null,
+  base_url: BASE_URL,
   usage_prompt: USAGE_PROMPT_SHORT,
   summary:
     "The machine-readable Supercard specification, served as a progressive-disclosure JSON tree. A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact — a cognitive prosthesis. Fetch this manifest first, then drill into only the layers your task needs.",
   how_to_use:
-    "Start with the 'agent-guide' layer — it routes you to the layers your task needs and gives the end-to-end build loop. Do not fetch every layer up front. Each layer is self-sufficient and carries its own provenance.",
+    "Every layer's full absolute URL is in the 'layers' array below — fetch any of them directly; you are NOT limited to URLs handed to you in a chat. Start with the 'agent-guide' layer: it routes you to the layers your task needs and gives the end-to-end build loop. Drill only into the layers your task needs — do not fetch all of them up front. Each layer is self-sufficient and carries its own provenance.",
   start_here: ["agent-guide", "principles", "grammar"],
   layers: LAYERS.map((l) => ({
     id: l.layer,

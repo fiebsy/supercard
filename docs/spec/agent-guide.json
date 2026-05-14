@@ -24,8 +24,8 @@
   "data": {
     "what_is_a_supercard": "A screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis for ADHD readers. Every visible region must be self-sufficient: a stranger seeing only a cropped screenshot still gets one complete idea. The format is a grammar, not a length.",
     "disclosure_protocol": [
-      "1. You are reading the manifest's agent-guide layer. Do not fetch every layer up front.",
-      "2. Identify your task, then fetch only the layers it needs (see task_routing below).",
+      "1. The manifest (index.json) lists every layer with its absolute URL in the 'layers' array. Fetch any layer directly from that URL — you are NOT limited to URLs pasted into a chat. If you need a layer, fetch it.",
+      "2. You are reading the agent-guide layer. Identify your task, then fetch only the layers it needs (see task_routing below). Do not fetch every layer up front.",
       "3. Each layer is self-sufficient and carries its own provenance + the full source markdown in doc_markdown.",
       "4. Re-fetch index.json and compare spec_revision before a run if you cached an earlier copy — a changed revision means a source doc moved."
     ],
