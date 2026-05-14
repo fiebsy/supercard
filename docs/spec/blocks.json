@@ -1,0 +1,598 @@
+{
+  "layer": "blocks",
+  "title": "Block library — the 38 blocks",
+  "spec": "supercard",
+  "version": "3.0.0",
+  "era": "atlas",
+  "spec_revision": "da520dbc8ce2",
+  "summary": "Every block across 6 families with its lifecycle tier and length compatibility. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
+  "source": "00-INDEX/INDEX-block-library.md",
+  "provenance": [
+    {
+      "file": "00-INDEX/INDEX-block-library.md",
+      "updated": "2026-04-29",
+      "version": "3.0.0",
+      "sha256": "1338391169d175aeb74d75a4bcf55f1a8c78df21ba3e07e9ae107cbf56911d5b"
+    }
+  ],
+  "data": {
+    "count": 38,
+    "families": [
+      "numeric",
+      "comparative",
+      "sequential",
+      "definitional",
+      "distributional",
+      "editorial"
+    ],
+    "by_family": {
+      "numeric": [
+        "BLOCK-stat-callout",
+        "BLOCK-stat-grid",
+        "BLOCK-sparkline",
+        "BLOCK-gauge-progress",
+        "BLOCK-annotated-data-point"
+      ],
+      "comparative": [
+        "BLOCK-comparison",
+        "BLOCK-bar-chart",
+        "BLOCK-slope-chart",
+        "BLOCK-scatter-quadrant",
+        "BLOCK-dot-plot"
+      ],
+      "sequential": [
+        "BLOCK-timeline",
+        "BLOCK-process-flow",
+        "BLOCK-line-chart"
+      ],
+      "definitional": [
+        "BLOCK-definition",
+        "BLOCK-numbered-principle",
+        "BLOCK-equation",
+        "BLOCK-code"
+      ],
+      "distributional": [
+        "BLOCK-histogram",
+        "BLOCK-heatmap",
+        "BLOCK-waffle",
+        "BLOCK-small-multiples"
+      ],
+      "editorial": [
+        "BLOCK-standard-text",
+        "BLOCK-pull-quote",
+        "BLOCK-quote-as-evidence",
+        "BLOCK-flashcard-list",
+        "BLOCK-anti-pattern",
+        "BLOCK-checklist",
+        "BLOCK-annotated-visual",
+        "BLOCK-image-caption",
+        "BLOCK-table",
+        "BLOCK-faq",
+        "BLOCK-key-takeaway",
+        "BLOCK-section-divider",
+        "BLOCK-footnote-source",
+        "BLOCK-loft-card",
+        "BLOCK-area-chart",
+        "BLOCK-column-chart",
+        "BLOCK-bullet-chart"
+      ]
+    },
+    "by_lifecycle": {
+      "core": [
+        "BLOCK-stat-callout",
+        "BLOCK-comparison",
+        "BLOCK-process-flow",
+        "BLOCK-definition",
+        "BLOCK-numbered-principle",
+        "BLOCK-standard-text",
+        "BLOCK-anti-pattern",
+        "BLOCK-checklist",
+        "BLOCK-key-takeaway",
+        "BLOCK-loft-card"
+      ],
+      "stable": [
+        "BLOCK-stat-grid",
+        "BLOCK-sparkline",
+        "BLOCK-gauge-progress",
+        "BLOCK-annotated-data-point",
+        "BLOCK-bar-chart",
+        "BLOCK-slope-chart",
+        "BLOCK-scatter-quadrant",
+        "BLOCK-dot-plot",
+        "BLOCK-timeline",
+        "BLOCK-line-chart",
+        "BLOCK-equation",
+        "BLOCK-code",
+        "BLOCK-histogram",
+        "BLOCK-heatmap",
+        "BLOCK-waffle",
+        "BLOCK-small-multiples",
+        "BLOCK-pull-quote",
+        "BLOCK-quote-as-evidence",
+        "BLOCK-flashcard-list",
+        "BLOCK-annotated-visual",
+        "BLOCK-image-caption",
+        "BLOCK-table",
+        "BLOCK-faq",
+        "BLOCK-section-divider",
+        "BLOCK-footnote-source",
+        "BLOCK-area-chart",
+        "BLOCK-column-chart",
+        "BLOCK-bullet-chart"
+      ]
+    },
+    "blocks": [
+      {
+        "id": "BLOCK-stat-callout",
+        "name": "Stat callout",
+        "family": "numeric",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-stat-grid",
+        "name": "Stat grid",
+        "family": "numeric",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-sparkline",
+        "name": "Sparkline",
+        "family": "numeric",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-gauge-progress",
+        "name": "Gauge / progress",
+        "family": "numeric",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-annotated-data-point",
+        "name": "Annotated single data point",
+        "family": "numeric",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-comparison",
+        "name": "Comparison block",
+        "family": "comparative",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-bar-chart",
+        "name": "Bar chart",
+        "family": "comparative",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-slope-chart",
+        "name": "Slope / bump chart",
+        "family": "comparative",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-scatter-quadrant",
+        "name": "Scatter / quadrant",
+        "family": "comparative",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-dot-plot",
+        "name": "Dot plot",
+        "family": "comparative",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-timeline",
+        "name": "Timeline",
+        "family": "sequential",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-process-flow",
+        "name": "Process / flow",
+        "family": "sequential",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-line-chart",
+        "name": "Line chart",
+        "family": "sequential",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-definition",
+        "name": "Definition",
+        "family": "definitional",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-numbered-principle",
+        "name": "Numbered principle",
+        "family": "definitional",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-equation",
+        "name": "Equation",
+        "family": "definitional",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-code",
+        "name": "Code",
+        "family": "definitional",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-histogram",
+        "name": "Histogram / distribution",
+        "family": "distributional",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-heatmap",
+        "name": "Heatmap",
+        "family": "distributional",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-waffle",
+        "name": "Waffle",
+        "family": "distributional",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-small-multiples",
+        "name": "Small multiples",
+        "family": "distributional",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-standard-text",
+        "name": "Standard text",
+        "family": "editorial",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-pull-quote",
+        "name": "Pull quote",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-quote-as-evidence",
+        "name": "Quote-as-evidence",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-flashcard-list",
+        "name": "Flashcard list",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-anti-pattern",
+        "name": "Anti-pattern",
+        "family": "editorial",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-checklist",
+        "name": "Checklist",
+        "family": "editorial",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-annotated-visual",
+        "name": "Annotated visual",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-image-caption",
+        "name": "Image with caption",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-table",
+        "name": "Table",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-faq",
+        "name": "FAQ",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-key-takeaway",
+        "name": "Key takeaway / TL;DR",
+        "family": "editorial",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "mini",
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-section-divider",
+        "name": "Section divider",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-footnote-source",
+        "name": "Footnote / source aggregator",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-loft-card",
+        "name": "Loft-card",
+        "family": "editorial",
+        "lifecycle": "core",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-area-chart",
+        "name": "Area chart",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-column-chart",
+        "name": "Column chart",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-bullet-chart",
+        "name": "Bullet chart",
+        "family": "editorial",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-04-29"
+      }
+    ]
+  },
+  "see_also": [
+    "grammar",
+    "rendering"
+  ],
+  "doc_markdown": "# INDEX — Block Library\n\n| key | value |\n|---|---|\n| id | INDEX-block-library |\n| type | index |\n| era | atlas |\n| version | 3.0.0 |\n| owner | derick |\n| updated | 2026-04-29 |\n\nThe 38 V3 blocks across 6 families (Numeric, Comparative, Sequential,\nDefinitional, Distributional, Editorial). Source of truth for block lifecycle\nand length compatibility. Each block has (or will have) a full spec doc in\n`20-BLOCKS/`.\n\n| id | name | family | lifecycle | version | length_variants | supersedes | last_review |\n|---|---|---|---|---|---|---|---|\n| BLOCK-stat-callout | Stat callout | numeric | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-stat-grid | Stat grid | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-sparkline | Sparkline | numeric | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-gauge-progress | Gauge / progress | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-annotated-data-point | Annotated single data point | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-comparison | Comparison block | comparative | core | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-bar-chart | Bar chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-slope-chart | Slope / bump chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-scatter-quadrant | Scatter / quadrant | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-dot-plot | Dot plot | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-timeline | Timeline | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-process-flow | Process / flow | sequential | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-line-chart | Line chart | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-definition | Definition | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-numbered-principle | Numbered principle | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-equation | Equation | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-code | Code | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-histogram | Histogram / distribution | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-heatmap | Heatmap | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-waffle | Waffle | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-small-multiples | Small multiples | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-standard-text | Standard text | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-pull-quote | Pull quote | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-quote-as-evidence | Quote-as-evidence | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-flashcard-list | Flashcard list | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-anti-pattern | Anti-pattern | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-checklist | Checklist | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-annotated-visual | Annotated visual | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-image-caption | Image with caption | editorial | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-table | Table | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-faq | FAQ | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-key-takeaway | Key takeaway / TL;DR | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-section-divider | Section divider | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-footnote-source | Footnote / source aggregator | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-loft-card | Loft-card | editorial | core | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-area-chart | Area chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-column-chart | Column chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-bullet-chart | Bullet chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n"
+}

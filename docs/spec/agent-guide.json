@@ -1,0 +1,83 @@
+{
+  "layer": "agent-guide",
+  "title": "Agent guide — building a card from this URL alone",
+  "spec": "supercard",
+  "version": "3.0.0",
+  "era": "atlas",
+  "spec_revision": "da520dbc8ce2",
+  "summary": "The operating manual. Read this first if your job is to produce a Supercard. It tells you the disclosure protocol, which layers to fetch for which task, and the end-to-end build loop with its exit gates.",
+  "source": "00-INDEX/INDEX-supercard-v3.md",
+  "provenance": [
+    {
+      "file": "00-INDEX/INDEX-supercard-v3.md",
+      "updated": "2026-05-14",
+      "version": "3.0.0",
+      "sha256": "ed683dbcedf9e9913c93266aa355f2f13b90c1654cd820076ce4139c996fb2d9"
+    },
+    {
+      "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",
+      "updated": "2026-05-14",
+      "version": "3.0.0",
+      "sha256": "81180bd94884a427210d3623bcc9a4cbac687cd6915678d5591e164a3b566c3e"
+    }
+  ],
+  "data": {
+    "what_is_a_supercard": "A screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis for ADHD readers. Every visible region must be self-sufficient: a stranger seeing only a cropped screenshot still gets one complete idea. The format is a grammar, not a length.",
+    "disclosure_protocol": [
+      "1. You are reading the manifest's agent-guide layer. Do not fetch every layer up front.",
+      "2. Identify your task, then fetch only the layers it needs (see task_routing below).",
+      "3. Each layer is self-sufficient and carries its own provenance + the full source markdown in doc_markdown.",
+      "4. Re-fetch index.json and compare spec_revision before a run if you cached an earlier copy — a changed revision means a source doc moved."
+    ],
+    "task_routing": {
+      "build a card from a topic": [
+        "pipeline",
+        "grammar",
+        "lengths",
+        "blocks",
+        "tokens",
+        "rendering"
+      ],
+      "style or render a block": [
+        "tokens",
+        "rendering",
+        "blocks"
+      ],
+      "pick the right block for a section": [
+        "grammar",
+        "blocks"
+      ],
+      "judge whether something is a valid Supercard": [
+        "principles"
+      ],
+      "choose a length variant": [
+        "lengths",
+        "grammar"
+      ]
+    },
+    "build_loop": [
+      "Stage 0 — Parse the request: topic + mode (named or inferred). Confirm the mode in one line.",
+      "Stage 1 — Research: depth scales with mode; every fact carries a source and a confidence.",
+      "Stage 2 — Breakdown MD: the full uncompressed report, organized by the 7 beats, no length budget.",
+      "Stage 3 — Convert to Supercard MD: run the GRAMMAR decision tree per section; Core/Stable blocks only; single emphasis per block.",
+      "Stage 4 — Constraint gates: all six must pass (length budget, single emphasis, loft budget, redundancy filter, screenshot test, grayscale + type).",
+      "Stage 5 — Render and publish: standalone HTML at 393pt, corner glyph on every section, resources inlined. The HTML path is mandatory."
+    ],
+    "non_negotiables": [
+      "Screenshot autonomy: every visible region conveys one complete idea on its own.",
+      "Single emphasis per block: exactly one bold phrase / focal stat / callout.",
+      "Strict grayscale: black, white, and the six-step gray ramp. No color, ever.",
+      "SF Pro Rounded canonical typeface; SF Mono for code and equations.",
+      "1–3 lofted elements per card maximum (hero + at most 2).",
+      "The rendered card shows beat NAMES only — never the Beat N index or BLOCK-* ids."
+    ],
+    "canonical_repo": "https://github.com/fiebsy/supercard",
+    "note": "This JSON spec is a generated view of the markdown in that repo. The markdown is the source of truth (ADR-0003). To change the spec, change the markdown and regenerate — see _meta.regenerate in index.json."
+  },
+  "see_also": [
+    "pipeline",
+    "principles",
+    "grammar",
+    "tokens"
+  ]
+}

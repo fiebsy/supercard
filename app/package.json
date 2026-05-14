@@ -6,7 +6,9 @@
   "description": "React render path for Supercards — the repo-access counterpart to the standalone HTML in docs/. Deploys to Vercel.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && node scripts/copy-renders.mjs",
+    "spec": "node scripts/build-spec.mjs",
+    "spec:check": "node scripts/build-spec.mjs --check",
+    "build": "node scripts/build-spec.mjs && tsc && vite build && node scripts/copy-renders.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

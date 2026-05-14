@@ -3,5 +3,8 @@
   "framework": null,
   "installCommand": "npm --prefix app install",
   "buildCommand": "npm --prefix app run build",
-  "outputDirectory": "app/dist"
+  "outputDirectory": "app/dist",
+  "rewrites": [
+    { "source": "/spec/:path*", "destination": "/html/spec/:path*" }
+  ]
 }

@@ -1,0 +1,642 @@
+/*
+ * build-spec.mjs — generate the public, machine-readable Supercard spec.
+ *
+ * Reads the canonical markdown in 10-GOVERNANCE/ and 00-INDEX/ and emits a
+ * progressive-disclosure JSON tree into docs/spec/. The markdown stays the
+ * single source of truth (ADR-0003); this JSON is a generated *view* of it,
+ * exactly like the HTML renders are views of the card markdown.
+ *
+ *   docs/spec/index.json     — the entry point: a tiny manifest of layers.
+ *   docs/spec/<layer>.json   — one leaf per concern; fetch only what you need.
+ *
+ * An agent with no checkout can fetch index.json from the public URL, read the
+ * manifest, and drill into just the layers its task needs.
+ *
+ * Output is DETERMINISTIC — no wall-clock timestamps — so the CI drift-check
+ * can regenerate and diff. Run modes:
+ *
+ *   node scripts/build-spec.mjs           # write docs/spec/*.json
+ *   node scripts/build-spec.mjs --check   # verify docs/spec/ is in sync; exit 1 on drift
+ *
+ * SPEC_BASE_URL overrides the public base used in cross-layer links.
+ */
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve, relative } from "node:path";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const repo = resolve(here, "../..");
+const outDir = resolve(repo, "docs/spec");
+const CHECK = process.argv.includes("--check");
+// Domain-agnostic by default: the manifest's layer urls are relative, so the
+// spec works wherever it is served from (the Vercel deployment serves it at
+// /spec/ — see vercel.json) without baking a hostname in. Set SPEC_BASE_URL to
+// emit absolute urls instead.
+const BASE_URL = (process.env.SPEC_BASE_URL || "").replace(/\/$/, "");
+const layerUrl = (layer) => (BASE_URL ? `${BASE_URL}/${layer}.json` : `${layer}.json`);
+
+/* ------------------------------------------------------------------ *
+ * Markdown parsing helpers — small, deliberately generic.
+ * ------------------------------------------------------------------ */
+
+function readDoc(relPath) {
+  const abs = resolve(repo, relPath);
+  const raw = readFileSync(abs, "utf8");
+  return {
+    path: relPath,
+    raw,
+    sha256: createHash("sha256").update(raw).digest("hex"),
+    meta: parseMetaTable(raw),
+    tables: parseTables(raw),
+  };
+}
+
+// Every canonical doc opens with a `| key | value |` metadata table.
+function parseMetaTable(raw) {
+  const meta = {};
+  for (const row of tableRows(raw)) {
+    if (row.length === 2 && /^[a-z_]+$/.test(row[0])) meta[row[0]] = row[1];
+  }
+  return meta;
+}
+
+// All GitHub-flavoured tables in a doc, as { header: [...], rows: [[...]] }.
+function parseTables(raw) {
+  const tables = [];
+  let cur = null;
+  for (const line of raw.split("\n")) {
+    const isRow = /^\s*\|.*\|\s*$/.test(line);
+    if (isRow) {
+      const cells = splitRow(line);
+      if (/^:?-+:?$/.test(cells.join("").replace(/[\s|]/g, "")) || cells.every((c) => /^:?-+:?$/.test(c))) {
+        continue; // separator row
+      }
+      if (!cur) cur = { header: cells, rows: [] };
+      else cur.rows.push(cells);
+    } else if (cur) {
+      tables.push(cur);
+      cur = null;
+    }
+  }
+  if (cur) tables.push(cur);
+  return tables;
+}
+
+function* tableRows(raw) {
+  for (const line of raw.split("\n")) {
+    if (/^\s*\|.*\|\s*$/.test(line)) {
+      const cells = splitRow(line);
+      if (!cells.every((c) => /^:?-+:?$/.test(c))) yield cells;
+    }
+  }
+}
+
+function splitRow(line) {
+  return line.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+}
+
+// A table whose header cells match (case-insensitive) the given names.
+function findTable(doc, ...headerNames) {
+  const want = headerNames.map((h) => h.toLowerCase());
+  return doc.tables.find((t) => {
+    const have = t.header.map((h) => h.toLowerCase());
+    return want.every((w) => have.includes(w));
+  });
+}
+
+function rowsAsObjects(table) {
+  if (!table) return [];
+  const keys = table.header.map((h) => h.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, ""));
+  return table.rows.map((r) => Object.fromEntries(keys.map((k, i) => [k, r[i] ?? ""])));
+}
+
+// `## ` sections of a doc, as { title, body }.
+function sections(raw) {
+  const out = [];
+  let cur = null;
+  for (const line of raw.split("\n")) {
+    const m = /^##\s+(.+?)\s*$/.exec(line);
+    if (m) {
+      if (cur) out.push(cur);
+      cur = { title: m[1], lines: [] };
+    } else if (cur) cur.lines.push(line);
+  }
+  if (cur) out.push(cur);
+  return out.map((s) => ({ title: s.title, body: s.lines.join("\n").trim() }));
+}
+
+// `- **Label:** value` bullet lists.
+function parseLabelBullets(body) {
+  const out = {};
+  for (const line of body.split("\n")) {
+    const m = /^\s*-\s+\*\*(.+?):?\*\*\s*(.+?)\s*$/.exec(line);
+    if (m) out[m[1].replace(/:$/, "")] = m[2];
+  }
+  return out;
+}
+
+// `--token: value;` declarations inside fenced code blocks.
+function parseCssVars(raw) {
+  const vars = {};
+  for (const m of raw.matchAll(/^\s*(--[\w-]+)\s*:\s*([^;]+);/gm)) {
+    vars[m[1]] = m[2].trim().replace(/\s+/g, " ");
+  }
+  return vars;
+}
+
+const dash = (s) => (s || "").replace(/[−–—]/g, "-"); // unicode minus/dashes -> ascii
+
+/* ------------------------------------------------------------------ *
+ * Load the canonical sources.
+ * ------------------------------------------------------------------ */
+
+const SRC = {
+  index: readDoc("00-INDEX/INDEX-supercard-v3.md"),
+  principles: readDoc("10-GOVERNANCE/PRINCIPLES-supercard-v3.md"),
+  grammar: readDoc("10-GOVERNANCE/GRAMMAR-block-composition.md"),
+  lengths: readDoc("10-GOVERNANCE/LENGTHS-mini-standard-xl.md"),
+  blocks: readDoc("00-INDEX/INDEX-block-library.md"),
+  pipeline: readDoc("10-GOVERNANCE/PIPELINE-card-assembly.md"),
+  rendering: readDoc("10-GOVERNANCE/RENDERING-spec.md"),
+};
+
+const VERSION = SRC.index.meta.version || "3.0.0";
+const ERA = SRC.index.meta.era || "atlas";
+
+// Deterministic revision id: a hash of every source file's content. Changes
+// iff a source changes — which is exactly what the drift-check keys on.
+const SPEC_REVISION = createHash("sha256")
+  .update(Object.values(SRC).map((d) => `${d.path}:${d.sha256}`).join("\n"))
+  .digest("hex")
+  .slice(0, 12);
+
+const SOURCES_UPDATED_MAX = Object.values(SRC)
+  .map((d) => d.meta.updated)
+  .filter(Boolean)
+  .sort()
+  .pop();
+
+// Provenance block stamped into every leaf, so each file is self-sufficient.
+function provenanceOf(...docs) {
+  return docs.map((d) => ({
+    file: d.path,
+    updated: d.meta.updated || null,
+    version: d.meta.version || null,
+    sha256: d.sha256,
+  }));
+}
+
+function leaf(layer, title, summary, body) {
+  return {
+    layer,
+    title,
+    spec: "supercard",
+    version: VERSION,
+    era: ERA,
+    spec_revision: SPEC_REVISION,
+    summary,
+    ...body,
+  };
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: tokens — the "text style" spec. Pure machine-readable design tokens.
+ * ------------------------------------------------------------------ */
+
+function buildTokens() {
+  const d = SRC.rendering;
+  const secByTitle = (frag) => sections(d.raw).find((s) => s.title.toLowerCase().includes(frag));
+
+  const canvas = parseLabelBullets(secByTitle("canvas")?.body || "");
+
+  const grayRamp = rowsAsObjects(findTable(d, "Step", "Token", "Value", "Use")).map((r) => ({
+    step: r.step,
+    token: r.token,
+    value: r.value,
+    use: r.use,
+  }));
+
+  const typeScale = rowsAsObjects(findTable(d, "Role", "Size / leading", "Weight", "Tracking (em)")).map((r) => {
+    const [size, leading] = (r.size_leading || "").split("/").map((x) => x.trim());
+    const weightNum = (/(\d{3})/.exec(r.weight) || [])[1];
+    return {
+      role: r.role,
+      font_size_px: Number(size) || size,
+      line_height_px: Number(leading) || leading,
+      weight: r.weight,
+      weight_value: weightNum ? Number(weightNum) : null,
+      tracking_em: Number(dash(r.tracking_em)) || dash(r.tracking_em),
+    };
+  });
+
+  const spacing = rowsAsObjects(findTable(d, "Token", "px", "Use")).map((r) => ({
+    token: r.token,
+    px: Number(r.px) || r.px,
+    use: r.use,
+  }));
+
+  const cssVars = parseCssVars(d.raw);
+  const shadows = rowsAsObjects(findTable(d, "Token", "Use", "Lift")).map((r) => ({
+    token: r.token,
+    css: cssVars[`--shadow-${r.token}`] || (r.token === "flat" ? "none" : null),
+    use: r.use,
+    lift: r.lift,
+  }));
+
+  return leaf(
+    "tokens",
+    "Render tokens — the text-style spec",
+    "Machine-readable design tokens: canvas, the six-step gray ramp, the SF Pro Rounded type scale, the 8pt spacing scale, and the shadow system. Style any block from these values alone — no other ramp, no color, ever.",
+    {
+      source: SRC.rendering.path,
+      provenance: provenanceOf(SRC.rendering),
+      data: {
+        canvas,
+        font_stacks: {
+          rounded: cssVars["--rounded"] || null,
+          mono: cssVars["--mono"] || null,
+          note: "ui-rounded first — resolves to SF Pro Rounded on Apple platforms.",
+        },
+        gray_ramp: {
+          note: "The only ramp. Body text is #111111 (--ink), never pure black. Per-block layers: --ink-2 #333, --ink-3 #555, --ink-4 #888, --ink-5 #BBB.",
+          steps: grayRamp,
+        },
+        type_scale: typeScale,
+        spacing: { baseline: "8pt", tokens: spacing },
+        shadows: {
+          note: "Hard cap: 1–3 elevated elements per Supercard. Opacity ≤ 6% per stop. Y-offset ⅓ of blur. Pure black at low opacity — never tinted.",
+          tokens: shadows,
+        },
+      },
+      see_also: ["principles", "rendering", "grammar"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: principles — the 10 cognitive-prosthesis principles.
+ * ------------------------------------------------------------------ */
+
+function buildPrinciples() {
+  const d = SRC.principles;
+  const principles = [];
+  for (const s of sections(d.raw)) {
+    const m = /^(\d+)\.\s+(.+?)(?:\s*\((.+)\))?$/.exec(s.title);
+    if (!m) continue;
+    const why = /\*\*Why it matters\.?\*\*\s*([\s\S]*?)(?=\n\*\*How to apply|\n##|$)/.exec(s.body);
+    const how = /\*\*How to apply\.?\*\*\s*([\s\S]*?)(?=\n##|$)/.exec(s.body);
+    const intro = s.body.split(/\n\*\*Why it matters/)[0].trim();
+    principles.push({
+      n: Number(m[1]),
+      title: m[2].trim(),
+      qualifier: m[3] || null,
+      statement: intro,
+      why_it_matters: why ? why[1].trim() : null,
+      how_to_apply: how ? how[1].trim() : null,
+    });
+  }
+  return leaf(
+    "principles",
+    "Principles — the identity anchor",
+    "The 10 foundational principles. PRINCIPLES says what we're doing; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: { count: principles.length, principles },
+      see_also: ["grammar", "tokens"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: grammar — the 7-beat spine and the shape-first decision tree.
+ * ------------------------------------------------------------------ */
+
+function buildGrammar() {
+  const d = SRC.grammar;
+  const spine = sections(d.raw).find((s) => s.title.toLowerCase().includes("seven-beat"));
+  const beats = [];
+  if (spine) {
+    for (const line of spine.body.split("\n")) {
+      const m = /^\s*(\d+)\.\s+\*\*(.+?)\*\*\s*[—-]\s*(.+?)\s*$/.exec(line);
+      if (m) beats.push({ n: Number(m[1]), name: m[2].trim(), role: m[3].trim() });
+    }
+  }
+  return leaf(
+    "grammar",
+    "Grammar — how blocks compose",
+    "The seven-beat narrative spine (Hook → Evidence → Mechanism → Comparison → Counter → Application → Close), the shape-first/text-last decision tree for picking a block per section, and the adjacency rules. GRAMMAR says how to assemble what PRINCIPLES defines.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: {
+        seven_beat_spine: beats,
+        note: "Beats are authoring scaffolding. The rendered card labels each section with the beat NAME only — never the Beat N index or the BLOCK-* id. Full decision tree and adjacency rules are in doc_markdown.",
+      },
+      see_also: ["blocks", "lengths", "principles"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: lengths — the Mini / Standard / XL presentation variants.
+ * ------------------------------------------------------------------ */
+
+function buildLengths() {
+  const d = SRC.lengths;
+  const variants = rowsAsObjects(findTable(d, "Variant", "Density", "Purpose", "Total blocks")).map((r) => ({
+    variant: r.variant.replace(/\*/g, "").toLowerCase(),
+    density: r.density,
+    purpose: r.purpose,
+    total_blocks: r.total_blocks,
+  }));
+  const coverageTable = findTable(d, "Beat", "Mini", "Standard", "XL");
+  const beat_coverage = rowsAsObjects(coverageTable).map((r) => ({
+    beat: r.beat,
+    mini: r.mini,
+    standard: r.standard,
+    xl: r.xl,
+  }));
+  return leaf(
+    "lengths",
+    "Lengths — Mini / Standard / XL",
+    "Length is a prop, not a fork: same content model, same grammar, same identity — only emphasis, density, and depth vary. Standard is canonical; Mini and XL are derived views.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: { variants, beat_coverage },
+      see_also: ["grammar", "pipeline"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: blocks — the block library index (lifecycle + length compat).
+ * ------------------------------------------------------------------ */
+
+function buildBlocks() {
+  const d = SRC.blocks;
+  const table = findTable(d, "id", "name", "family", "lifecycle", "length_variants");
+  const blocks = rowsAsObjects(table).map((r) => ({
+    id: r.id,
+    name: r.name,
+    family: r.family,
+    lifecycle: r.lifecycle,
+    version: r.version,
+    length_variants: (r.length_variants || "").split(",").map((x) => x.trim()).filter(Boolean),
+    last_review: r.last_review || null,
+  }));
+  const byFamily = {};
+  const byLifecycle = {};
+  for (const b of blocks) {
+    (byFamily[b.family] ||= []).push(b.id);
+    (byLifecycle[b.lifecycle] ||= []).push(b.id);
+  }
+  return leaf(
+    "blocks",
+    "Block library — the 38 blocks",
+    "Every block across 6 families with its lifecycle tier and length compatibility. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: {
+        count: blocks.length,
+        families: Object.keys(byFamily),
+        by_family: byFamily,
+        by_lifecycle: byLifecycle,
+        blocks,
+      },
+      see_also: ["grammar", "rendering"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: pipeline — request → mode → research → breakdown → card → render.
+ * ------------------------------------------------------------------ */
+
+function buildPipeline() {
+  const d = SRC.pipeline;
+  const modes = rowsAsObjects(findTable(d, "Mode", "Intent", "Research depth", "Length bias", "Block bias", "Redundancy posture")).map((r) => ({
+    mode: r.mode.replace(/`/g, ""),
+    intent: r.intent,
+    research_depth: r.research_depth,
+    length_bias: r.length_bias,
+    block_bias: r.block_bias,
+    redundancy_posture: r.redundancy_posture,
+  }));
+  const gates = rowsAsObjects(findTable(d, "Gate", "Rule", "Source")).map((r) => ({
+    gate: r.gate,
+    rule: r.rule,
+    source: r.source,
+  }));
+  const stages = sections(d.raw)
+    .filter((s) => /^stage\s+\d/i.test(s.title))
+    .map((s) => ({ stage: s.title }));
+  return leaf(
+    "pipeline",
+    "Pipeline — request to published card",
+    "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; six constraint gates must all pass.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: {
+        flow: "Request → Mode → Check research store → Deep research → Breakdown MD → Supercard MD → Render → Publish",
+        modes,
+        stages,
+        constraint_gates: gates,
+      },
+      see_also: ["grammar", "lengths", "rendering", "agent-guide"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: rendering — the output contract and the two render paths.
+ * ------------------------------------------------------------------ */
+
+function buildRendering() {
+  const d = SRC.rendering;
+  const outputSec = sections(d.raw).find((s) => s.title.toLowerCase().includes("output contract"));
+  const output_contract = (outputSec?.body || "")
+    .split("\n")
+    .map((l) => /^\s*-\s+(.+)$/.exec(l))
+    .filter(Boolean)
+    .map((m) => m[1].replace(/\*\*/g, "").trim());
+  return leaf(
+    "rendering",
+    "Rendering — the output contract",
+    "How a card's markdown becomes a published artifact. The HTML path is the floor: a standalone file, all resources inlined, reproducible from this spec with NO codebase. The React path is the bonus for an agent with repo access.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: {
+        output_contract,
+        publish_target: "docs/cards/CARD-{YYYY-MM-DD}-{slug}.html + an entry in the docs/index.html gallery",
+        frozen_at_version: "Every card declares frozen_at_version; the renderer applies that version's rules and never auto-migrates.",
+        render_paths: {
+          html: "docs/cards/CARD-{date}-{slug}.html — standalone, no codebase needed. The floor (ADR-0007).",
+          react: "app/src/cards/{slug}.tsx — needs the app/ Vite project. The bonus.",
+        },
+      },
+      see_also: ["tokens", "pipeline", "blocks"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: agent-guide — the operating manual. How to use this spec to
+ * build a card end-to-end from the public URL alone.
+ * ------------------------------------------------------------------ */
+
+function buildAgentGuide() {
+  return leaf(
+    "agent-guide",
+    "Agent guide — building a card from this URL alone",
+    "The operating manual. Read this first if your job is to produce a Supercard. It tells you the disclosure protocol, which layers to fetch for which task, and the end-to-end build loop with its exit gates.",
+    {
+      source: "00-INDEX/INDEX-supercard-v3.md",
+      provenance: provenanceOf(SRC.index, SRC.pipeline),
+      data: {
+        what_is_a_supercard:
+          "A screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis for ADHD readers. Every visible region must be self-sufficient: a stranger seeing only a cropped screenshot still gets one complete idea. The format is a grammar, not a length.",
+        disclosure_protocol: [
+          "1. You are reading the manifest's agent-guide layer. Do not fetch every layer up front.",
+          "2. Identify your task, then fetch only the layers it needs (see task_routing below).",
+          "3. Each layer is self-sufficient and carries its own provenance + the full source markdown in doc_markdown.",
+          "4. Re-fetch index.json and compare spec_revision before a run if you cached an earlier copy — a changed revision means a source doc moved.",
+        ],
+        task_routing: {
+          "build a card from a topic": ["pipeline", "grammar", "lengths", "blocks", "tokens", "rendering"],
+          "style or render a block": ["tokens", "rendering", "blocks"],
+          "pick the right block for a section": ["grammar", "blocks"],
+          "judge whether something is a valid Supercard": ["principles"],
+          "choose a length variant": ["lengths", "grammar"],
+        },
+        build_loop: [
+          "Stage 0 — Parse the request: topic + mode (named or inferred). Confirm the mode in one line.",
+          "Stage 1 — Research: depth scales with mode; every fact carries a source and a confidence.",
+          "Stage 2 — Breakdown MD: the full uncompressed report, organized by the 7 beats, no length budget.",
+          "Stage 3 — Convert to Supercard MD: run the GRAMMAR decision tree per section; Core/Stable blocks only; single emphasis per block.",
+          "Stage 4 — Constraint gates: all six must pass (length budget, single emphasis, loft budget, redundancy filter, screenshot test, grayscale + type).",
+          "Stage 5 — Render and publish: standalone HTML at 393pt, corner glyph on every section, resources inlined. The HTML path is mandatory.",
+        ],
+        non_negotiables: [
+          "Screenshot autonomy: every visible region conveys one complete idea on its own.",
+          "Single emphasis per block: exactly one bold phrase / focal stat / callout.",
+          "Strict grayscale: black, white, and the six-step gray ramp. No color, ever.",
+          "SF Pro Rounded canonical typeface; SF Mono for code and equations.",
+          "1–3 lofted elements per card maximum (hero + at most 2).",
+          "The rendered card shows beat NAMES only — never the Beat N index or BLOCK-* ids.",
+        ],
+        canonical_repo: "https://github.com/fiebsy/supercard",
+        note: "This JSON spec is a generated view of the markdown in that repo. The markdown is the source of truth (ADR-0003). To change the spec, change the markdown and regenerate — see _meta.regenerate in index.json.",
+      },
+      see_also: ["pipeline", "principles", "grammar", "tokens"],
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Assemble all layers + the root manifest.
+ * ------------------------------------------------------------------ */
+
+const LAYERS = [
+  buildAgentGuide(),
+  buildTokens(),
+  buildPrinciples(),
+  buildGrammar(),
+  buildLengths(),
+  buildBlocks(),
+  buildPipeline(),
+  buildRendering(),
+];
+
+const manifest = {
+  spec: "supercard",
+  title: "Supercard V3 — public specification",
+  version: VERSION,
+  era: ERA,
+  spec_revision: SPEC_REVISION,
+  sources_updated_max: SOURCES_UPDATED_MAX,
+  base_url: BASE_URL || null,
+  summary:
+    "The machine-readable Supercard specification, served as a progressive-disclosure JSON tree. A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact — a cognitive prosthesis. Fetch this manifest first, then drill into only the layers your task needs.",
+  how_to_use:
+    "Start with the 'agent-guide' layer — it routes you to the layers your task needs and gives the end-to-end build loop. Do not fetch every layer up front. Each layer is self-sufficient and carries its own provenance.",
+  start_here: ["agent-guide", "principles", "grammar"],
+  layers: LAYERS.map((l) => ({
+    id: l.layer,
+    title: l.title,
+    url: layerUrl(l.layer),
+    file: `${l.layer}.json`,
+    summary: l.summary,
+    source: l.source,
+  })),
+  provenance: {
+    canonical_repo: "https://github.com/fiebsy/supercard",
+    note: "Generated view of the canonical markdown. The markdown is the source of truth (ADR-0003).",
+    sources: Object.values(SRC).map((d) => ({
+      file: d.path,
+      updated: d.meta.updated || null,
+      sha256: d.sha256,
+    })),
+  },
+  _meta: {
+    generator: "app/scripts/build-spec.mjs",
+    regenerate: "npm --prefix app run spec",
+    drift_check: "npm --prefix app run spec:check (also enforced in CI via .github/workflows/spec-drift.yml)",
+    deterministic: "Output has no wall-clock timestamps; spec_revision is a hash of the source markdown.",
+  },
+};
+
+/* ------------------------------------------------------------------ *
+ * Write, or check for drift.
+ * ------------------------------------------------------------------ */
+
+const files = [["index.json", manifest], ...LAYERS.map((l) => [`${l.layer}.json`, l])];
+
+function serialize(obj) {
+  return JSON.stringify(obj, null, 2) + "\n";
+}
+
+if (CHECK) {
+  const drift = [];
+  for (const [name, obj] of files) {
+    const path = resolve(outDir, name);
+    const want = serialize(obj);
+    const have = existsSync(path) ? readFileSync(path, "utf8") : null;
+    if (have !== want) drift.push(name);
+  }
+  // Also flag any stale leftover files in docs/spec/.
+  if (existsSync(outDir)) {
+    const known = new Set(files.map(([n]) => n));
+    for (const f of readdirSync(outDir)) {
+      if (f.endsWith(".json") && !known.has(f)) drift.push(`${f} (stale — no longer generated)`);
+    }
+  }
+  if (drift.length) {
+    console.error(`[build-spec] DRIFT — docs/spec/ is out of sync with the canonical markdown:`);
+    for (const f of drift) console.error(`  - ${f}`);
+    console.error(`\nA source doc in 10-GOVERNANCE/ or 00-INDEX/ changed without regenerating the spec.`);
+    console.error(`Fix: run  npm --prefix app run spec  and commit docs/spec/.`);
+    process.exit(1);
+  }
+  console.log(`[build-spec] docs/spec/ is in sync (revision ${SPEC_REVISION}).`);
+} else {
+  mkdirSync(outDir, { recursive: true });
+  for (const [name, obj] of files) {
+    writeFileSync(resolve(outDir, name), serialize(obj));
+  }
+  console.log(
+    `[build-spec] wrote ${files.length} files to ${relative(repo, outDir)}/ (revision ${SPEC_REVISION}, ${VERSION} "${ERA}")`
+  );
+}

@@ -135,3 +135,10 @@ ls docs/cards/
 - Templates → `50-TEMPLATES/`
 - Research reports → `60-RESEARCH/` (registry: `INDEX-research-reports`)
 - Published renders → `docs/` (gallery: `docs/index.html`)
+- Public machine-readable spec → `docs/spec/index.json`, served at `/spec/index.json` on the Vercel deployment
+
+## Public spec endpoint
+
+For an agent working from a URL with no checkout, the canonical docs above are also published as a progressive-disclosure JSON tree at `docs/spec/`. Fetch `spec/index.json` (the manifest), then drill into only the layers a task needs — `agent-guide`, `tokens`, `principles`, `grammar`, `lengths`, `blocks`, `pipeline`, `rendering`. The JSON is a *generated view* of the markdown in `10-GOVERNANCE/` and `00-INDEX/` (the markdown stays the source of truth, ADR-0003); `app/scripts/build-spec.mjs` regenerates it and the `spec-drift` GitHub Action fails CI if the two ever diverge.
+
+It is served publicly through the **Vercel deployment**, which can publish a private repo to a public URL — the repo itself stays private. The Vercel build copies `docs/` into the deployment and `vercel.json` rewrites `/spec/*` to it, so the manifest is reachable at `https://<your-vercel-domain>/spec/index.json`. The manifest's layer links are relative, so it works from whatever domain serves it.

@@ -1,0 +1,119 @@
+{
+  "layer": "pipeline",
+  "title": "Pipeline — request to published card",
+  "spec": "supercard",
+  "version": "3.0.0",
+  "era": "atlas",
+  "spec_revision": "da520dbc8ce2",
+  "summary": "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; six constraint gates must all pass.",
+  "source": "10-GOVERNANCE/PIPELINE-card-assembly.md",
+  "provenance": [
+    {
+      "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",
+      "updated": "2026-05-14",
+      "version": "3.0.0",
+      "sha256": "81180bd94884a427210d3623bcc9a4cbac687cd6915678d5591e164a3b566c3e"
+    }
+  ],
+  "data": {
+    "flow": "Request → Mode → Check research store → Deep research → Breakdown MD → Supercard MD → Render → Publish",
+    "modes": [
+      {
+        "mode": "summary",
+        "intent": "\"Give me the gist.\" Reductive quick breakdown of an event, book, or concept.",
+        "research_depth": "Light",
+        "length_bias": "Mini (5–8), sometimes Standard",
+        "block_bias": "key-takeaway, stat-callout, definition, checklist",
+        "redundancy_posture": "Aggressive — cut anything not load-bearing"
+      },
+      {
+        "mode": "briefing",
+        "intent": "\"Give me a complete, balanced understanding.\" The default.",
+        "research_depth": "Moderate",
+        "length_bias": "Standard (10–14)",
+        "block_bias": "Full 7-beat, ~one block per beat",
+        "redundancy_posture": "Standard"
+      },
+      {
+        "mode": "deep-dive",
+        "intent": "\"I want to fully understand this.\" Exhaustive but never repetitive.",
+        "research_depth": "Heavy",
+        "length_bias": "XL (18–25) or multi-part",
+        "block_bias": "All beats multi-block; Comparison + Counter mandatory",
+        "redundancy_posture": "Hardest — length comes from breadth of distinct content, never restatement"
+      },
+      {
+        "mode": "reference",
+        "intent": "\"Something I'll return to and navigate.\"",
+        "research_depth": "Heavy",
+        "length_bias": "XL or multi-part",
+        "block_bias": "table, FAQ, numbered-principle, section-divider, definition",
+        "redundancy_posture": "Standard, but parallel structural repetition is allowed where it aids navigation"
+      }
+    ],
+    "stages": [
+      {
+        "stage": "Stage 0 — Parse the request"
+      },
+      {
+        "stage": "Stage 1 — Check the research store, then research"
+      },
+      {
+        "stage": "Stage 2 — The breakdown MD (the deep research report)"
+      },
+      {
+        "stage": "Stage 3 — Convert breakdown → Supercard MD"
+      },
+      {
+        "stage": "Stage 4 — Constraint gates"
+      },
+      {
+        "stage": "Stage 5 — Render and publish (mandatory)"
+      }
+    ],
+    "constraint_gates": [
+      {
+        "gate": "Length budget",
+        "rule": "Block count within the mode's variant",
+        "source": "GRAMMAR length budgets"
+      },
+      {
+        "gate": "Single emphasis",
+        "rule": "Exactly one emphasized phrase per block",
+        "source": "PRINCIPLES 2"
+      },
+      {
+        "gate": "Loft budget",
+        "rule": "1–3 elevated elements; hero is one",
+        "source": "PRINCIPLES 4, GRAMMAR"
+      },
+      {
+        "gate": "Redundancy filter",
+        "rule": "Run at the mode's posture; hardest in `deep-dive`",
+        "source": "PRINCIPLES 9"
+      },
+      {
+        "gate": "Screenshot test",
+        "rule": "Five questions on every section, including the header",
+        "source": "GRAMMAR"
+      },
+      {
+        "gate": "Grayscale + type",
+        "rule": "Strict gray ramp, SF Pro Rounded stack",
+        "source": "PRINCIPLES 5–6, RENDERING"
+      },
+      {
+        "gate": "Frozen-at-version",
+        "rule": "Frontmatter declares `frozen_at_version`",
+        "source": "ADR-0003"
+      }
+    ]
+  },
+  "see_also": [
+    "grammar",
+    "lengths",
+    "rendering",
+    "agent-guide"
+  ],
+  "doc_markdown": "# PIPELINE — Card Assembly\n\n| key | value |\n|---|---|\n| id | PIPELINE-card-assembly |\n| type | governance |\n| era | atlas |\n| version | 3.0.0 |\n| owner | derick |\n| updated | 2026-05-14 |\n\nThe dynamic assembly pipeline. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble blocks*; this doc says *how to get from a request to a finished card* — research, the intermediate breakdown, mode-driven adaptation, and the published render.\n\n---\n\n## The shape of the pipeline\n\n```\nRequest → Mode → Check research store → Deep research → Breakdown MD\n        → Supercard MD → Render → Publish\n```\n\nThree durable artifacts:\n\n1. **`BREAKDOWN-{slug}.md`** — the full uncompressed deep-research report. All research, all content, organized by the 7 beats, sources inline and rated, **no length budget**. The source of truth. Lives in **`60-RESEARCH/`** and is registered in `60-RESEARCH/INDEX-research-reports.md` (ADR-0006).\n2. **`CARD-{YYYY-MM-DD}-{slug}--draft.md`** — the Supercard. A constrained *view* of the breakdown, shaped by the mode. Lives in `30-CARDS/`. Its frontmatter records the `research_report` it descends from.\n3. **`docs/cards/CARD-{YYYY-MM-DD}-{slug}.html`** — the rendered, published HTML. Produced on **every** request, not optionally (ADR-0007), and listed in the `docs/index.html` gallery so it can be viewed online.\n\n**The card is a view, not the source.** The breakdown holds everything; the card applies the mode's constraints to it. Re-run the conversion with a different mode and you get a different card from the same research — the breakdown is the asset, cards are views of it (PRINCIPLES 10, genealogy-as-asset).\n\n## Modes — the adaptability dimension\n\nA **mode** is the *intent* of the request. It is not a length — it *biases* research depth, length variant, block selection, and how hard the redundancy filter runs. The four below are the V3.0 set; the system is extensible — add a mode when a request shape recurs that none of these serve.\n\n| Mode | Intent | Research depth | Length bias | Block bias | Redundancy posture |\n|---|---|---|---|---|---|\n| `summary` | \"Give me the gist.\" Reductive quick breakdown of an event, book, or concept. | Light | Mini (5–8), sometimes Standard | key-takeaway, stat-callout, definition, checklist | Aggressive — cut anything not load-bearing |\n| `briefing` | \"Give me a complete, balanced understanding.\" The default. | Moderate | Standard (10–14) | Full 7-beat, ~one block per beat | Standard |\n| `deep-dive` | \"I want to fully understand this.\" Exhaustive but never repetitive. | Heavy | XL (18–25) or multi-part | All beats multi-block; Comparison + Counter mandatory | Hardest — length comes from breadth of distinct content, never restatement |\n| `reference` | \"Something I'll return to and navigate.\" | Heavy | XL or multi-part | table, FAQ, numbered-principle, section-divider, definition | Standard, but parallel structural repetition is allowed where it aids navigation |\n\n**On `deep-dive` and length.** GRAMMAR caps a single card at 25 blocks. `deep-dive` is the mode most likely to exceed that — when it does, **split into a multi-part series** (`CARD-...-part-1`, `-part-2`) sharing one breakdown. A longer card is never an excuse for a repetitive one: the defining property of `deep-dive` is *full understanding without redundancy or restatement*.\n\n**Inferring the mode.** If the user doesn't name one, infer it from the request verb:\n\n- \"summarize / TL;DR / quick / gist\" → `summary`\n- \"explain / brief me / break down\" → `briefing`\n- \"deep dive / fully understand / master / everything about\" → `deep-dive`\n- \"reference / cheat sheet / I'll come back to this\" → `reference`\n\nState the chosen mode back to the user in one line before proceeding.\n\n## Stage 0 — Parse the request\n\n- Identify the **topic** and the **mode** (named or inferred).\n- Identify the **source posture**: does the user supply sources, or should the pipeline research from scratch?\n- Confirm the mode with the user in one line.\n\n## Stage 1 — Check the research store, then research\n\n**First, check for an existing report.** Grep `60-RESEARCH/INDEX-research-reports.md` for the topic (ADR-0006). If a report already covers it:\n\n- **Extend or re-view it** — never re-research from scratch. Research is the most expensive step; silent duplication is the costliest failure.\n- If the existing report is sufficient, skip to Stage 3 and derive a new card from it under the requested mode.\n- If it needs more, open an extending pass: set the report's `status` to `extending`, add the new research, then return its `status` to `active`.\n\n**Otherwise, research.** Always research first — even in `summary` mode. `summary` means a reductive *output*, not a shallow *input*.\n\n- Gather in order: user-supplied sources first, then web research, then prior `60-RESEARCH/` reports and `30-CARDS/` / `90-ARCHIVE/` cards.\n- Depth scales with mode (see table), but the floor is always: enough to be correct and to hold a defensible position.\n- Every fact carries its source **and its confidence**. Unsourced claims do not survive to the breakdown.\n\n## Stage 2 — The breakdown MD (the deep research report)\n\nProduce `BREAKDOWN-{slug}.md` in **`60-RESEARCH/`** from `TEMPLATE-breakdown` (ADR-0006). This is the full deep-research report — uncompressed, and the most valuable durable artifact in the system.\n\n- Fill the **research brief** (§0) and **research log** (§1) so the methodology is inspectable and a later pass can extend it.\n- Organize the body by the 7 beats: Hook, Evidence, Mechanism, Comparison, Counter, Application, Close. Under each beat, dump **all** relevant content — every fact, stat, quote, mechanism, counter-argument — with sources inline as `[S#]` and confidence flagged where it is not high.\n- Complete the **research apparatus**: Source register (every source rated for reliability), Key quotes bank, Numbers & data bank, Contested claims, Open questions & gaps, Confidence assessment.\n- **No length budget. Maximize completeness.** No block decisions yet. This is the superset every card — and every drafting agent — draws from. If a fact is not in the report, it cannot reach a card. When in doubt, include it.\n- **Register it.** Add or update the report's row in `60-RESEARCH/INDEX-research-reports.md`. The registry and the breakdowns must agree.\n- This artifact is the genealogy: it is *why* the card says what it says.\n\n## Stage 3 — Convert breakdown → Supercard MD\n\nThis is where blocks get fetched. For each beat, for each unit of content:\n\n1. Run the **GRAMMAR decision tree** (shape-first, text last) → block type.\n2. Confirm the block supports the target length variant — check `length_variants` in `INDEX-block-library`.\n3. Confirm **lifecycle**: Core/Stable only, unless the user explicitly asked for Experimental.\n4. Apply the **mode's length bias** to decide how many blocks survive per beat.\n5. Author each block with **single emphasis** (one bold phrase).\n\nThe conversion is **lossy by design** — the breakdown holds everything, the card holds what the mode admits. `summary` drops most of the breakdown; `deep-dive` admits nearly all of it, across multiple cards if needed.\n\nWrite the result to `30-CARDS/CARD-{YYYY-MM-DD}-{slug}--draft.md` (or `-part-N` for a multi-part `deep-dive`), from the matching `TEMPLATE-supercard-*`. Set the card's `research_report` frontmatter to the breakdown it descends from, and append a **card derivation log** entry to that breakdown (what was admitted, what was dropped, why) — so the genealogy is navigable from both ends.\n\n## Stage 4 — Constraint gates\n\nBefore the card is done, every gate must pass. Any failure → fix, then re-run the gate.\n\n| Gate | Rule | Source |\n|---|---|---|\n| Length budget | Block count within the mode's variant | GRAMMAR length budgets |\n| Single emphasis | Exactly one emphasized phrase per block | PRINCIPLES 2 |\n| Loft budget | 1–3 elevated elements; hero is one | PRINCIPLES 4, GRAMMAR |\n| Redundancy filter | Run at the mode's posture; hardest in `deep-dive` | PRINCIPLES 9 |\n| Screenshot test | Five questions on every section, including the header | GRAMMAR |\n| Grayscale + type | Strict gray ramp, SF Pro Rounded stack | PRINCIPLES 5–6, RENDERING |\n| Frozen-at-version | Frontmatter declares `frozen_at_version` | ADR-0003 |\n\n## Stage 5 — Render and publish (mandatory)\n\nRendering is **not optional** (ADR-0007). Every card request produces a published HTML view — the user always gets the visual artifact, not just its markdown source.\n\n1. **Render** per `RENDERING-spec`: standalone HTML, 393pt mobile canvas, corner glyph on every section, all resources inlined. Write it to `docs/cards/CARD-{YYYY-MM-DD}-{slug}.html`. Embed the `<meta>` provenance — `source_file`, `research_report`, `renderer_version`, `frozen_at_version`, `rendered_at`.\n2. **Publish to the gallery.** Add an entry to `docs/index.html` (newest at top) linking the new render.\n3. **Push.** Commit the breakdown, the card, the registry update, and the `docs/` changes, then push **directly to `main`** — no feature branch, no PR (see `CLAUDE.md`). `docs/` is served as the pages site — the card is now a live URL. This is the \"view it online\" step.\n\nThe markdown card stays the canonical, frozen-at-version source (ADR-0003); the HTML is a *view* of it — regenerated, never hand-edited.\n\n## What you end up with\n\n- `60-RESEARCH/BREAKDOWN-{slug}.md` — the deep research report, kept and registered.\n- `60-RESEARCH/INDEX-research-reports.md` — registry row updated.\n- `30-CARDS/CARD-{date}-{slug}--draft.md` (or `-part-N`) — the card(s).\n- `docs/cards/CARD-{date}-{slug}.html` — the published render, in the gallery, viewable online.\n\nSame research, re-runnable: change the mode, re-run Stages 3–5, get a different card and render from the same report. The breakdown is the asset; cards are views; renders are how the views are seen.\n"
+}
