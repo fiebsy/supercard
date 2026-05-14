@@ -1,0 +1,59 @@
+# STEWARDS' LOG — 2026
+
+| key | value |
+|---|---|
+| id | STEWARDS-LOG-2026 |
+| type | governance |
+| era | atlas |
+| version | 3.0.0 |
+| owner | derick |
+| updated | 2026-04-29 |
+
+The design diary. Append-only, newest at top. Captures **the noticing** — patterns observed, temptations resisted, blocks that almost made it in, shifts in taste. Distinct from the CHANGELOG (what changed) and ADRs (why a single thing was decided).
+
+Append entries via SupercardOps `logStewardEntry()` or directly.
+
+---
+
+## 2026-04-29 — derick — [foundation]
+
+**Context.** V3 system goes live today. Three foundational ADRs accepted (named eras, four-tier lifecycle, frozen-at-authored-version). Folder structure created in Drive. SupercardOps Apps Script installed. INDEX pinned to a Claude Project.
+
+**Action.** Day-1 setup complete. Beginning the 38-block authoring pass. Will document each block as a separate doc in `20-BLOCKS/` with full Composition / Rationale / Precedents / Common Mistakes / Shape Test sections.
+
+**Follow-up.** First real V3 Supercard expected by end of Week 1. Will run audit workflow against it to validate the system actually catches drift.
+
+---
+
+*(future entries will append above this line)*
+
+---
+
+## How to use this log
+
+**When to write an entry.** When you notice something worth remembering: a pattern across cards, a block that's not pulling its weight, a temptation to add complexity, a shift in how you read your own work, a small judgment call that doesn't merit an ADR.
+
+**Entry shape.**
+
+```
+## YYYY-MM-DD — author — [tag]
+
+**Context.** What you noticed, where you were, what triggered it.
+
+**Action.** What you did, or didn't do, in response.
+
+**Follow-up.** (optional) What to revisit later.
+```
+
+**Common tags.**
+
+- `[foundation]` — system-level design moments
+- `[block]` — observations about a specific block
+- `[card]` — observations about a specific card
+- `[drift]` — caught yourself drifting from principles
+- `[temptation]` — almost added something; resisted
+- `[promotion]` — promoted a block from Experimental → Stable
+- `[rejection]` — rejected an idea (and why)
+- `[review]` — quarterly review notes
+
+**When to escalate.** If a log entry recurs across multiple weeks (the same temptation, the same drift, the same gap), it's signal that an ADR or block change is needed. Escalate to RFC in `40-LAB/`.
