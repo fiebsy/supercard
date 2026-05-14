@@ -15,6 +15,12 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 
 ## [Unreleased]
 
+### Added
+
+- PIPELINE doc — the dynamic card assembly pipeline (research → breakdown → card) with four request modes: summary, briefing, deep-dive, reference
+- `TEMPLATE-breakdown` — the uncompressed-report intermediate artifact
+- `supercard` Claude Code skill — runs the assembly pipeline end to end
+
 ### Experimental
 
 - (none yet)

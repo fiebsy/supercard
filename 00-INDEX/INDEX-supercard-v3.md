@@ -19,6 +19,8 @@ A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artif
 
 ## How Claude should use this system
 
+**The fast path:** for a topic-to-card build, run the dynamic assembly pipeline in `10-GOVERNANCE/PIPELINE-card-assembly.md` (or invoke the `supercard` skill). It handles research → breakdown → card with mode-driven adaptation. The steps below are the underlying manual process.
+
 **To build a new Supercard on topic X:**
 
 1. Read `PRINCIPLES-supercard-v3` (the cognitive-prosthesis principles)
@@ -53,7 +55,7 @@ A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artif
 ## Folder map
 
 - **`00-INDEX/`** — this doc + block library index
-- **`10-GOVERNANCE/`** — principles, grammar, lengths, rendering, changelog, stewards' log, ADRs
+- **`10-GOVERNANCE/`** — principles, grammar, lengths, rendering, pipeline, changelog, stewards' log, ADRs
 - **`20-BLOCKS/`** — 38 individual block specs (one doc each)
 - **`30-CARDS/`** — active V3 Supercards
 - **`40-LAB/`** — experiments + RFC proposals + audit reports
@@ -115,6 +117,7 @@ name contains 'CARD-' and name contains '--published'
 - Principles → `10-GOVERNANCE/PRINCIPLES-supercard-v3`
 - Grammar → `10-GOVERNANCE/GRAMMAR-block-composition`
 - Lengths → `10-GOVERNANCE/LENGTHS-mini-standard-xl`
+- Pipeline → `10-GOVERNANCE/PIPELINE-card-assembly`
 - Rendering → `10-GOVERNANCE/RENDERING-spec`
 - Changelog → `10-GOVERNANCE/CHANGELOG-supercard`
 - Stewards' log → `10-GOVERNANCE/STEWARDS-LOG-2026`

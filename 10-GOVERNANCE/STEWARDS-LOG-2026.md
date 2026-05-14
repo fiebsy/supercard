@@ -15,6 +15,16 @@ Append entries via SupercardOps `logStewardEntry()` or directly.
 
 ---
 
+## 2026-05-14 — derick — [foundation]
+
+**Context.** The system could describe a finished card but not the *act of building one* — research, structure, and block selection lived as fragments across INDEX, GRAMMAR, and LENGTHS. A request to "research X" or "summarize this book" had no single repeatable path.
+
+**Action.** Added the assembly pipeline (`PIPELINE-card-assembly`): Request → Mode → Deep research → Breakdown MD → Supercard MD. Introduced **modes** as the adaptability dimension — `summary` / `briefing` / `deep-dive` / `reference` — distinct from length; a mode biases research depth, length, block selection, and redundancy posture. Made the **breakdown MD** the uncompressed source of truth and the card a constrained *view* of it, so the same research can yield different cards. Shipped `TEMPLATE-breakdown` and a `supercard` skill.
+
+**Follow-up.** `deep-dive` deliberately allows multi-part cards past the 25-block cap — watch the first few to confirm splitting doesn't become an excuse for redundancy. If a fifth mode is needed, that's signal for an ADR formalizing the mode system.
+
+---
+
 ## 2026-04-29 — derick — [foundation]
 
 **Context.** V3 system goes live today. Three foundational ADRs accepted (named eras, four-tier lifecycle, frozen-at-authored-version). Folder structure created in Drive. SupercardOps Apps Script installed. INDEX pinned to a Claude Project.
