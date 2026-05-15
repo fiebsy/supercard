@@ -26,6 +26,7 @@
   --s-6: 48px;
   --s-7: 64px;
   --s-8: 96px;
+  --s-asterism-band: 32px;
   --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-lofted: 0 2px 4px rgba(0, 0, 0, 0.04), 0 12px 32px rgba(0, 0, 0, 0.06),
     0 32px 80px rgba(0, 0, 0, 0.04);
@@ -437,4 +438,83 @@ a.spec-link:hover {
   font-size: 11px;
   color: var(--g-60);
   word-break: break-all;
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.1 overrides — scoped to .canvas.v3-1 so V3.0 cards keep their metrics
+ * intact (frozen-at-version per ADR-0003). See RENDERING-spec § R-9–R-12.
+ * ----------------------------------------------------------------------- */
+
+.canvas.v3-1 p,
+.canvas.v3-1 li {
+  line-height: 26px;
+  letter-spacing: 0.03em;
+  word-spacing: 0.06em;
+  text-align: left;
+}
+
+.canvas.v3-1 p {
+  text-wrap: pretty;
+}
+
+.canvas.v3-1 em {
+  font-style: italic;
+}
+
+/* lead-clause — visually the same as <strong>, but tagged so the validator
+ * can confirm a prose block opens with one (G-7). */
+.canvas.v3-1 .lead {
+  font-weight: 700;
+  color: var(--k);
+}
+
+/* thought-group ramp inside prose blocks (G-8) */
+.canvas.v3-1 .thought-group + .thought-group {
+  margin-top: var(--s-1);
+}
+.canvas.v3-1 .thought-group + .sub-paragraph,
+.canvas.v3-1 .sub-paragraph + .thought-group,
+.canvas.v3-1 .sub-paragraph + .sub-paragraph {
+  margin-top: var(--s-3);
+}
+
+/* mid-beat asterism rest (G-10 / R-11) */
+.canvas.v3-1 .asterism {
+  display: block;
+  text-align: center;
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 400;
+  color: var(--k);
+  margin: var(--s-asterism-band) 0;
+  user-select: none;
+}
+
+/* beat micro-folio at top and bottom edges (R-10) */
+.canvas.v3-1 .micro-folio {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--g-60);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.canvas.v3-1 .micro-folio--top {
+  margin: var(--s-2) 0 var(--s-3);
+}
+.canvas.v3-1 .micro-folio--bottom {
+  margin: var(--s-4) 0 var(--s-3);
+}
+
+/* table takeaway-row (G-11) */
+.canvas.v3-1 tr.takeaway-row td {
+  font-weight: 600;
+  color: var(--k);
+  border-top: 0;
+  padding-top: var(--s-2);
+}
+.canvas.v3-1 tr.takeaway-row td strong {
+  color: var(--k);
 }
