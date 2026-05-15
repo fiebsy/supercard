@@ -106,9 +106,9 @@ Rationale: WCAG 2.2 SC 1.4.12 requires line-height ≥ 1.5× font-size — at 17
 
 ## R-10. Beat micro-folio (V3.1+)
 
-Every V3.1+ card MUST render a beat micro-folio at the **top edge** (12pt below the title) AND at the **bottom edge** (24pt above the card's bottom margin).
+Every V3.1+ card MUST render a beat micro-folio at the **top edge** of every beat (16pt above the beat's first block) AND at the **bottom edge** of the card (24pt above the card's bottom margin). The cover (R-13) carries the Beat 1 top-edge folio; bottoms of intermediate beats are marked by the section divider, not by a folio.
 
-Format: `BEAT N · BEAT-NAME · POSITION / TOTAL` — e.g., `BEAT 3 · MECHANISM · 4 / 7`.
+Format: `BEAT N · BEAT-NAME · POSITION / TOTAL` — e.g., `BEAT 3 · MECHANISM · 4 / 7`. Position uses tabular-nums and a single space on each side of the slash to keep the ratio scannable at 11pt.
 
 | Property | Value |
 |---|---|
@@ -121,7 +121,9 @@ Format: `BEAT N · BEAT-NAME · POSITION / TOTAL` — e.g., `BEAT 3 · MECHANISM
 | Color | gray at 60% opacity (`--g-60`) |
 | Separator | middle-dot `·` (U+00B7) |
 
-The micro-folio is the only element permitted at the top and bottom edges of the card and does NOT count against the 1–3 elevated-element cap — it is flat type, not chrome.
+The micro-folio is **the only label permitted at the top and bottom edges of the card** — no running brand mark, no mode badge, no page folio, no date strip, no context chips. The corner glyph is the second mark on the canvas; there is no third. The folio does NOT count against the 1–3 elevated-element cap — it is flat type, not chrome.
+
+**The folio replaces the section eyebrow on the first block of every beat.** When `BEAT 3 · MECHANISM · 4 / 7` is the top-edge label, restating `MECHANISM` as a separate eyebrow 12pt below it is duplication — the folio already carries the beat name with position context. The eyebrow is omitted on a beat's first block and remains only on subsequent blocks within the same beat (where the folio is offscreen).
 
 ## R-11. Asterism rendering (V3.1+)
 
@@ -136,12 +138,51 @@ V3.1+ cards are validated by `app/scripts/validate-v3-1.mjs` (invoked as `npm --
 | **Error** (exit 1) | A block contains ≥ 2 bolded runs |
 | **Error** (exit 1) | A `standard-text` block does not open with a bolded clause |
 | **Error** (exit 1) | A `table` with ≥ 4 data rows lacks a `**Takeaway**` row |
+| **Error** (exit 1) | The cover declares any header element other than the four named in R-13 (running folio, mode badge, context-chip strip, second eyebrow) |
+| **Error** (exit 1) | A beat's first block emits a section eyebrow that restates the beat name already shown by the adjacent top-edge micro-folio (R-10) |
 | **Warning** | A `standard-text` block exceeds 75 words or 4 sentences |
 | **Warning** | A beat has > 4 consecutive content blocks without an asterism or anchor |
 | **Warning** | A beat of ≥ 5 blocks is missing the `⁂` asterism after block 4 |
 | **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band |
+| **Warning** | The cover stack departs from R-13 spacing (16 / 32 / 12 / 24 / 48pt) by more than 4pt at any join |
 
 The validator is opt-in for V3.1+ cards only (it inspects `frozen_at_version` and skips older cards). It does not block `npm --prefix app run build`.
+
+## R-13. Cover discipline (V3.1+)
+
+The cover is the card's title block — the first ~200pt of vertical space. It sets every label discipline that follows. Apple's restraint applies here first: no element appears unless its absence would lose meaning, and every detail is on the spec.
+
+**Permitted elements, in this exact stacking order — no others:**
+
+1. **Top-edge micro-folio** (R-10) — `BEAT 1 · HOOK · 1 / 7`. Always present on V3.1+ cards.
+2. **Title** — display title role (40 / 44pt, semibold). 5 words preferred, 8 words hard cap; never a complete sentence.
+3. **Dek** — subtitle role (19 / 26pt, medium). 1 sentence preferred, 2 sentences hard cap. Carries the load that mode badges and context chips would otherwise carry — a briefing's date, jurisdiction, or status belongs *in* the dek prose, not in a label strip beside it.
+4. **Hero block** — the lofted Beat 1 anchor (loft-card / hook).
+
+**Forbidden in the cover (each is a common renderer drift):**
+
+| Anti-pattern | Why it fails |
+|---|---|
+| Running brand-mark folio (`SC · BRIEFING · 1 / 7`-style) at the top edge | Duplicates the corner glyph and the micro-folio. R-10 already declares the top edge sole-tenancy. |
+| Mode badge above or below the title (`BRIEFING`, `DEEP-DIVE`, `REFERENCE`) | The mode is carried by the corner glyph and by the URL — repeating it as cover chrome is restating identity, not adding meaning. |
+| Date eyebrow as a separate label (`BRIEFING · MAY 15, 2026`) | A bare date floating above the title gives a reader nothing to hold. If the card's claim is time-sensitive, write the date *into* the dek's first clause where it modifies a verb. |
+| Context-chip strip below the dek (`SUBJECT · JURISDICTION · STATUS`) | Three orphan chips force three separate parses; a single dek sentence integrates the same facts in one breath and earns its scroll. |
+| A second eyebrow restating the beat name shown by the micro-folio | Pure duplication — see R-10. |
+| Any element at the top edge other than the micro-folio | Sole-tenancy rule from R-10 — re-declared here because cover chrome is where renderers most often violate it. |
+
+**Cover spacing stack — exact, not "around":**
+
+| Join | Distance |
+|---|---|
+| Canvas top → micro-folio baseline | 16pt |
+| Micro-folio baseline → title cap-height | 32pt |
+| Title baseline → dek cap-height | 12pt |
+| Dek baseline → hero card top edge | 24pt |
+| Hero card bottom edge → first content section | 48pt (`--s-6`, beat boundary) |
+
+These five values are the cover. Any deviation greater than 4pt at a join is a warning (R-12); the renderer should snap to the canonical stack.
+
+**Why every item is justified:** the micro-folio carries beat identity (screenshot autonomy, principle 1); the title is the topic; the dek is the thesis; the hero is the one elevated anchor (principle 4). Four elements, each load-bearing, each on the spec — and no fifth.
 
 ## Block compatibility
 
@@ -168,7 +209,7 @@ Rendered HTML must:
 - Render at 393pt mobile width as the canonical view
 - Pass the screenshot test on every section
 - Carry the corner glyph on every section as a fixed-position element
-- **Label each section with the beat NAME only** — `HOOK`, `EVIDENCE`, `MECHANISM`, `COMPARISON`, `COUNTER`, `APPLICATION`, `CLOSE` (and `SOURCES`). The `Beat N` index and the `BLOCK-*` id are **authoring metadata**: they live in the markdown card (`30-CARDS/`) and are never rendered. A rendered card is a public, shareable artifact — it must not show the scaffolding it was built on.
+- **Label each section with the beat NAME only** — `HOOK`, `EVIDENCE`, `MECHANISM`, `COMPARISON`, `COUNTER`, `APPLICATION`, `CLOSE` (and `SOURCES`). The `Beat N` index and the `BLOCK-*` id are **authoring metadata**: they live in the markdown card (`30-CARDS/`) and are never rendered. A rendered card is a public, shareable artifact — it must not show the scaffolding it was built on. On V3.1+ cards, the section eyebrow is omitted on a beat's first block when the top-edge micro-folio is present (R-10) — the folio already names the beat, with position. The cover (R-13) declares which header elements are permitted; any other label is a renderer drift.
 - Embed provenance as `<meta>` tags in the HTML `<head>`: `sc:source_file`, `sc:research_report`, `sc:renderer_version`, `sc:frozen_at_version`, `sc:rendered_at` (and `sc:source_commit`, `sc:content_hash` where available). `sc:research_report` closes the genealogy loop — the render points back through the card to the `60-RESEARCH/` report it descends from.
 
 ## Publishing (mandatory — ADR-0007)

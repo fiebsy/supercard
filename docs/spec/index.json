@@ -3,7 +3,7 @@
   "title": "Supercard V3 — public specification",
   "version": "3.1.0",
   "era": "atlas",
-  "spec_revision": "41903cb48aa8",
+  "spec_revision": "0d044ee8d146",
   "sources_updated_max": "2026-05-15",
   "canonical_url": "https://berafoot.com/spec/index.json",
   "base_url": "https://berafoot.com/spec",
@@ -215,7 +215,7 @@
       {
         "file": "10-GOVERNANCE/GRAMMAR-block-composition.md",
         "updated": "2026-05-15",
-        "sha256": "f908b97b3fc8d107d83093e33f59ae3c3da3b08e09ce6d55dfd30a7c0f0c6861"
+        "sha256": "c26107fd8dcf7bfb99d24c8c32547979f042d489ba6fb1f5b9103b9271376935"
       },
       {
         "file": "10-GOVERNANCE/LENGTHS-mini-standard-xl.md",
@@ -235,7 +235,7 @@
       {
         "file": "10-GOVERNANCE/RENDERING-spec.md",
         "updated": "2026-05-15",
-        "sha256": "ce25c39da710b264969268d189a69aa7fe37ad1fb0aeaf777fbcd7cae071d156"
+        "sha256": "7cc200a7a4236b377c3f0b048882d8eb3de61c63592b5734b0f4631595e02d21"
       }
     ]
   },

@@ -4,7 +4,7 @@
   "spec": "supercard",
   "version": "3.1.0",
   "era": "atlas",
-  "spec_revision": "41903cb48aa8",
+  "spec_revision": "0d044ee8d146",
   "summary": "The 10 foundational principles. PRINCIPLES says what we're doing; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
   "source": "10-GOVERNANCE/PRINCIPLES-supercard-v3.md",
   "provenance": [

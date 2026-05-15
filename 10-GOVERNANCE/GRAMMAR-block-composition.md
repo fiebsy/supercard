@@ -193,3 +193,5 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Deep whitespace alone as a section break (V3.1+) | Reads as "page didn't finish loading" — mid-beat rests use the asterism, not raw whitespace |
 | Stacking ≥ 3 anchor blocks of the same type (V3.1+) | Checkerboard fatigue — the third anchor MUST switch type |
 | `standard-text` block exceeding 75 words (V3.1+) | Crosses chunk-collapse threshold — split into two blocks with their own lead-clauses |
+| Cover header elements outside R-13 (running brand-mark folio, mode badge, date eyebrow, context-chip strip, second eyebrow restating the micro-folio's beat name) (V3.1+) | Random labels load the cover with chrome instead of meaning — the cover permits exactly four elements (micro-folio, title, dek, hero), see RENDERING § R-13 |
+| Section eyebrow on a beat's first block when the top-edge micro-folio is present (V3.1+) | Pure duplication — the folio already says `BEAT 3 · MECHANISM · 4 / 7`; a separate `MECHANISM` eyebrow 12pt below adds no information (R-10) |

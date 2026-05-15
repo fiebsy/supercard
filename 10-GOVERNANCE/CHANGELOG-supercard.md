@@ -17,11 +17,14 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 
 ### Added
 
-- (none yet)
+- RENDERING § R-13 — Cover discipline (V3.1+): the cover permits exactly four elements (top-edge micro-folio, title, dek, hero) and pins their five spacing joins (16 / 32 / 12 / 24 / 48pt). Forbidden anti-patterns enumerated explicitly: running brand-mark folios (`SC · BRIEFING · 1 / 7`-style), mode badges, date eyebrows, context-chip strips, second eyebrows restating the micro-folio's beat name
+- RENDERING § R-10 — Strengthened: the top-edge micro-folio replaces the section eyebrow on a beat's first block (the folio already names the beat, with position — restating it 12pt below is duplication). Sole-tenancy at the top edge re-declared
+- RENDERING § R-12 — Two new error triggers (cover header outside R-13; section eyebrow duplicating the micro-folio) and one new warning (cover spacing departing from R-13 by > 4pt)
+- GRAMMAR — Two new anti-patterns mirroring R-13 / R-10 (cover header drift; first-block eyebrow duplicating the folio)
 
 ### Considered & rejected
 
-- (none yet — log decisions to *not* change here, per stewards' log convention)
+- Adding a "mode badge" slot to the cover (one of `BRIEFING` / `DEEP-DIVE` / `REFERENCE`). Rejected — mode is already carried by the corner glyph and the URL; a third surface restates identity instead of adding meaning, and the cover already has the dek to carry timeliness or scope
 
 ---
 
