@@ -252,7 +252,7 @@ function provenanceOf(...docs) {
 }
 
 function leaf(layer, title, summary, body) {
-  return {
+  const out = {
     layer,
     title,
     spec: "supercard",
@@ -262,6 +262,13 @@ function leaf(layer, title, summary, body) {
     summary,
     ...body,
   };
+  // Cross-layer links carry absolute urls too: an agent reading this leaf can
+  // fetch a see_also sibling directly, with no user intervention to resolve a
+  // relative path or paste a url into the chat.
+  if (Array.isArray(out.see_also)) {
+    out.see_also_urls = out.see_also.map(layerUrl);
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------------ *
@@ -637,7 +644,7 @@ const manifest = {
   summary:
     "The machine-readable Supercard specification, served as a progressive-disclosure JSON tree. A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact — a cognitive prosthesis. Fetch this manifest first, then drill into only the layers your task needs.",
   how_to_use:
-    "Every layer's full absolute URL is in the 'layers' array below — fetch any of them directly; you are NOT limited to URLs handed to you in a chat. Start with the 'agent-guide' layer: it routes you to the layers your task needs and gives the end-to-end build loop. Drill only into the layers your task needs — do not fetch all of them up front. Each layer is self-sufficient and carries its own provenance.",
+    "Every layer's full absolute URL is in the 'layers' array below (layers[].url) and is also collected in the top-level 'bootstrap_urls' array — fetch any of them directly. You are NOT limited to URLs handed to you in a chat, and you do NOT need user intervention to chain layers: index.json carries the absolute URL of every layer it references. Start with the 'agent-guide' layer: it routes you to the layers your task needs and gives the end-to-end build loop. Drill only into the layers your task needs — do not fetch all of them up front. Each layer is self-sufficient and carries its own provenance.",
   start_here: ["agent-guide", "principles", "grammar"],
   layers: LAYERS.map((l) => ({
     id: l.layer,
@@ -647,6 +654,10 @@ const manifest = {
     summary: l.summary,
     source: l.source,
   })),
+  // Belt-and-suspenders: every layer's absolute url, flattened to a top-level
+  // array so a fetcher that only scans top-level fields still sees them all.
+  // Derived from LAYERS — never hand-maintained.
+  bootstrap_urls: LAYERS.map((l) => layerUrl(l.layer)),
   provenance: {
     canonical_repo: "https://github.com/fiebsy/supercard",
     note: "Generated view of the canonical markdown. The markdown is the source of truth (ADR-0003).",
