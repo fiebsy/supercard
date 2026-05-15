@@ -5,9 +5,9 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.0.0 |
+| version | 3.1.0 |
 | owner | derick |
-| updated | 2026-04-29 |
+| updated | 2026-05-15 |
 
 How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*.
 
@@ -92,6 +92,58 @@ Before any block ships, ask: *what unique element does this add that's not in an
 
 If the answer is "nothing" or "restates the thesis," cut the block.
 
+## G-7. Bolded lead-clause on prose blocks (V3.1+)
+
+Every `standard-text`, `faq` answer, and `code` block opens with a 2–6-word **bolded clause** that names the block's thesis.
+
+- The lead-clause MUST be a noun phrase or imperative — never a hedge, never an interjection ("Well,", "So,", "It turns out").
+- The lead-clause **is** the block's single emphasis (principle 2). No second bold run may appear in the same block.
+- Italics are reserved for titles of works and foreign terms; never for emphasis (Rello & Baeza-Yates 2016 — italics are the worst-performing style for dyslexic and ADHD readers).
+- `code` blocks satisfy this rule via a one-line bolded gloss above the `<pre>` (e.g., **`What this snippet does.`**), not by bolding inside the code itself.
+
+## G-8. Thought-group ramp inside prose blocks (V3.1+)
+
+`standard-text` blocks MUST NOT exceed **75 words** or **4 sentences**. Inside a block, sentences group into thought-groups (1–3 sentences each) separated by whitespace alone — never by rules, bullets, or chrome.
+
+| Spacing token | Use |
+|---|---|
+| default line-height (26pt at 17pt body) | within a thought-group |
+| 8pt margin-block | between thought-groups |
+| 16pt margin-block | between sub-paragraphs |
+
+A block that needs more than 75 words MUST be split into two `standard-text` blocks separated by a 24pt inter-block gap; each block carries its own bolded lead-clause.
+
+## G-9. Density budget per beat (V3.1+)
+
+Every beat balances **anchor blocks** against **content blocks**:
+
+- **Anchor blocks** — stat-callout, pull-quote, key-takeaway, numbered-principle, table-with-takeaway-row.
+- **Content blocks** — standard-text, faq, code, table-without-takeaway.
+
+Rules:
+
+1. Anchor-to-content ratio per beat MUST sit between **1:2** and **1:4**.
+2. No more than **2 consecutive anchors of the same type**. The third anchor MUST switch type or be re-cast as content.
+3. No more than **4 consecutive content blocks**. The fifth MUST be an anchor OR a mid-beat asterism rest (G-10).
+
+## G-10. Mid-beat asterism rest (V3.1+)
+
+Beats containing **≥ 5 blocks** MUST insert a centered asterism (`⁂`, U+2042) after the 4th block, and again after every additional 4 blocks within the same beat.
+
+- The asterism is a literal text glyph at body size and body weight. No rule, no box, no tint, no transform.
+- Vertical band: **32pt above, 32pt below** the glyph.
+- Asterisms do NOT count as blocks for density-budget purposes (G-9).
+- Beats with **≤ 4 blocks** MUST NOT use an asterism — inter-beat dividers do that work.
+- Why a glyph and not deep whitespace alone: whitespace by itself is ambiguous to ADHD readers and can read as "the page didn't finish loading" (Wichary on dinkus typography). A glyph signals intent.
+
+## G-11. Table takeaway-row requirement (V3.1+)
+
+Any `table` block with **≥ 4 data rows** MUST end with a bolded **Takeaway** row stating the comparison's verdict in one clause.
+
+- The takeaway row is what promotes a `table` from content block to anchor block (G-9).
+- Tables with < 4 data rows MAY omit the takeaway row if the block's title or surrounding text already states the verdict.
+- Visually: weight 600, no top border on the row, bottom border present.
+
 ## Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -131,3 +183,13 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Process block for non-sequential steps | Implies false causality |
 | Section divider between every section | Should mark beats only |
 | Above 25 blocks in one Supercard | Split into multi-part |
+| Stat-callout without a verbal anchor (V3.1+) | A bare number can't be parsed under cognitive load — frame it in one sentence |
+| Three consecutive `standard-text` blocks in one beat (V3.1+) | Wall-of-text collapse — interrupt with an anchor or asterism |
+| Table of ≥ 4 rows without a takeaway row (V3.1+) | Readers extract no thesis from raw rows under scan — close with a bolded verdict |
+| Italics used for emphasis (V3.1+) | Italics are worst-performing for dyslexic/ADHD readers — emphasis is bold-only |
+| All-caps body runs longer than 4 words (V3.1+) | Disables word-shape recognition — restrict to micro-folio and ≤ 4-word kickers |
+| Justified text (V3.1+) | Uneven word-spacing rivers disrupt tracking — body MUST be left-aligned, ragged-right |
+| Two or more bolded runs in one block (V3.1+) | Destroys the single-emphasis signal — one bold per block, renderer errors |
+| Deep whitespace alone as a section break (V3.1+) | Reads as "page didn't finish loading" — mid-beat rests use the asterism, not raw whitespace |
+| Stacking ≥ 3 anchor blocks of the same type (V3.1+) | Checkerboard fatigue — the third anchor MUST switch type |
+| `standard-text` block exceeding 75 words (V3.1+) | Crosses chunk-collapse threshold — split into two blocks with their own lead-clauses |

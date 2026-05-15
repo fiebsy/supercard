@@ -5,9 +5,9 @@
 | id | INDEX-block-library |
 | type | index |
 | era | atlas |
-| version | 3.0.0 |
+| version | 3.1.0 |
 | owner | derick |
-| updated | 2026-04-29 |
+| updated | 2026-05-15 |
 
 The 38 V3 blocks across 6 families (Numeric, Comparative, Sequential,
 Definitional, Distributional, Editorial). Source of truth for block lifecycle
@@ -54,3 +54,48 @@ and length compatibility. Each block has (or will have) a full spec doc in
 | BLOCK-area-chart | Area chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-column-chart | Column chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-bullet-chart | Bullet chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-asterism-rest | Asterism rest (mid-beat) | editorial | core | 3.1.0 | standard,xl | | 2026-05-15 |
+
+## V3.1 rules (per block)
+
+Additive rules that apply to cards with `frozen_at_version: 3.1.0` or higher. V3.0 cards remain on V3.0 rules per ADR-0003.
+
+### BLOCK-standard-text (revised V3.1)
+
+- Word cap: **75** (a block exceeding this MUST be split into two)
+- Sentence cap: **4**
+- Lead-clause: **REQUIRED** — bolded 2–6-word noun phrase or imperative
+- Internal spacing: 8pt between thought-groups, 16pt between sub-paragraphs
+- Additional bold runs: **FORBIDDEN** (single emphasis per block; the lead-clause is it)
+- Italics: permitted **only** for titles of works and foreign terms (never for emphasis)
+
+### BLOCK-stat-callout (clarified V3.1)
+
+- Verbal anchor: **REQUIRED** — one sentence naming what the stat means and its direction
+- Bare numbers without a verbal frame are forbidden (cognitive-load failure per Sanchez & Wiley 2006)
+
+### BLOCK-pull-quote (clarified V3.1)
+
+- Chrome: forbidden — no rules, no quotemark boxes
+- Emphasis: a single oversized opening quotation glyph (U+201C) at 1.5× body size, weight 500
+- Attribution: **REQUIRED** at 11pt, 60% gray, weight 400
+
+### BLOCK-table (revised V3.1)
+
+- Takeaway row: **REQUIRED** for tables with ≥ 4 data rows (see GRAMMAR § G-11)
+- Visual: bolded bottom row, weight 600, no top border on the row
+- Tables with the takeaway row count as **anchor blocks** in density budgets (G-9); tables without it count as content
+
+### BLOCK-code (clarified V3.1)
+
+- Bolded gloss above the `<pre>`: **REQUIRED** — one-line bolded clause stating what the code does
+- The gloss is the block's single emphasis; no bold runs inside the code itself
+- Body weight inside `<pre>` is regular SF Mono; comments stay at body weight, not italic
+
+### BLOCK-asterism-rest (new V3.1)
+
+- Glyph: `⁂` (U+2042)
+- Size: body (17pt) / weight 400 / 100% ink
+- Spacing: 32pt margin-block above and below
+- Use: inserted by author OR auto-inserted by the renderer after every 4 content blocks within a beat of ≥ 5 blocks (see GRAMMAR § G-10)
+- Does not count as a block for density budgets (G-9) or for total-block counts (L-5)

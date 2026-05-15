@@ -5,9 +5,9 @@
 | id | PRINCIPLES-supercard-v3 |
 | type | governance |
 | era | atlas |
-| version | 3.0.0 |
+| version | 3.1.0 |
 | owner | derick |
-| updated | 2026-04-30 |
+| updated | 2026-05-15 |
 
 The 10 foundational principles of the Supercard format. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
 
@@ -93,6 +93,22 @@ The history of how a Supercard came to be — the ADRs, the stewards' log, the r
 
 **How to apply.** Every card declares `version` and `frozen_at_version`. Every card optionally declares `supersedes` and `related`. ADRs document why decisions were made. The stewards' log captures the *noticing* — patterns observed, temptations resisted. Treat the archive as the asset, not as cleanup to do later.
 
+## 11. Cognitive prosthesis, made operational (V3.1+)
+
+The ADHD framing in principle 1 isn't a vibe; it must translate into four MUST rules every V3.1+ card honours: (a) every block is scannable in under 4 seconds, (b) every beat is re-enterable from any of its blocks, (c) every cropped screenshot carries beat identity via the micro-folio, (d) every prose block frontloads its thesis in a bolded lead-clause.
+
+**Why it matters.** V3.0 stated the goal (cognitive prosthesis) but enforced it only at the principle level — single emphasis, redundancy filter, screenshot autonomy. That left room for long `standard-text` walls, undifferentiated multi-block beats in XL, and cards that scan beautifully on the hero and collapse two beats later. The operational rules close that gap without breaking the existing constraints.
+
+**How to apply.** The single-emphasis rule (principle 2) is unchanged. The bolded lead-clause **is** the block's one emphasis — no second bold runs in the same block. Long prose splits at the 75-word ceiling. Re-entry comes from the top-and-bottom micro-folio (`BEAT 3 · MECHANISM · 4 / 7`) on every card. See `GRAMMAR` § G-7 / G-8 and `RENDERING` § R-9 / R-10 for the rendering contract.
+
+## 12. First-pass extraction test (V3.1+)
+
+A reader who scans ONLY the bolded clauses of a card, top to bottom, must be able to reconstruct the card's thesis in one sentence. If the bold-only read fails, the card fails review.
+
+**Why it matters.** This is the discipline check on principle 11(d). It forces every bolded clause to do real work and exposes lead-clauses that hedge, restate, or filler their way through a block. Pernice's eye-tracking work (NN/g 2017, 2019) shows scanners enter at the leftmost 1–3 words of each line; that's exactly what this test optimizes for.
+
+**How to apply.** Run alongside the screenshot test (below), not after. Read only the bolded spans, top to bottom — title, hero takeaway, every lead-clause, every focal stat, every key-takeaway. They should compose a coherent thesis. If they don't, the lead-clauses aren't earning their bold.
+
 ---
 
 ## What these principles aren't
@@ -104,3 +120,20 @@ The history of how a Supercard came to be — the ADRs, the stewards' log, the r
 ## The screenshot test (the principle of principles)
 
 If you can only remember one rule from this doc, remember this: **every visible region must convey one complete idea, traceable back to the system via the corner glyph.** Everything else flows from that.
+
+## The ADHD scan-ability gate (V3.1+)
+
+Runs alongside the screenshot test on every V3.1+ card before publication. Ten questions, binary Y/N. Any "no" blocks the render.
+
+1. Does every `standard-text` block open with a bolded 2–6-word lead-clause?
+2. Does no block contain more than one bolded run?
+3. Does reading only the bold clauses top-to-bottom yield the card's thesis?
+4. Does no `standard-text` block exceed 75 words or 4 sentences?
+5. Does the anchor-to-content ratio per beat sit between 1:2 and 1:4?
+6. Does no beat contain more than 4 consecutive content blocks without an asterism or anchor break?
+7. Does every beat of ≥ 5 blocks contain at least one centered asterism (⁂)?
+8. Are top-edge and bottom-edge beat micro-folios present and tabular-aligned?
+9. Is every `stat-callout` accompanied by a verbal-anchor sentence, and every `table` of ≥ 4 rows closed by a bolded takeaway row?
+10. Does body text render at 17pt SF Pro Rounded, 26pt leading, +0.5pt tracking, left-aligned ragged-right, with no italic-for-emphasis runs?
+
+V3.0 cards are exempt — they're frozen at their authored version per ADR-0003. The gate applies only to cards with `frozen_at_version: 3.1.0` or higher.

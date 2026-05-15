@@ -5,9 +5,9 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.0.0 |
+| version | 3.1.0 |
 | owner | derick |
-| updated | 2026-05-14 |
+| updated | 2026-05-15 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
