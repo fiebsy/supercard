@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Supercard — Gallery</title>
+<title>Supercard v3 Atlas — gallery and public spec</title>
+<meta name="description" content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. Published cards plus the machine-readable v3 'Atlas' spec at /spec/index.json (GitHub raw mirror also available).">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://supercard-seven.vercel.app/html/index.html">
+<link rel="alternate" type="application/json" title="Supercard v3 — machine-readable spec (manifest)" href="/spec/index.json">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Supercard v3 Atlas — gallery and public spec">
+<meta property="og:description" content="Published Supercards plus the machine-readable v3 spec at /spec/index.json.">
+<meta property="og:url" content="https://supercard-seven.vercel.app/html/index.html">
 <meta name="sc:type" content="gallery">
 <meta name="sc:era" content="atlas">
 <meta name="sc:updated" content="2026-05-14">
@@ -111,6 +119,32 @@
     margin-top: var(--s-1);
   }
 
+  a.spec-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 0.5px solid var(--g-06);
+    border-radius: 16px;
+    padding: var(--s-4);
+    margin-bottom: var(--s-2);
+    background: var(--w);
+  }
+  a.spec-link:hover { border-color: var(--g-12); }
+  .spec-link-title {
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 600;
+    letter-spacing: -0.008em;
+    margin-bottom: var(--s-1);
+  }
+  .spec-link-url {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--g-60);
+    margin-top: var(--s-1);
+    word-break: break-all;
+  }
+
   p.empty {
     font-size: 15px;
     line-height: 21px;
@@ -148,6 +182,26 @@
       RENDERING-spec, then add an <a class="card-link"> entry below.
       Newest at top. See docs/README.md and ADR-0007.
     -->
+
+    <div class="section-label">Spec</div>
+
+    <a class="spec-link" href="/spec/index.json">
+      <div class="spec-link-title">Manifest — /spec/index.json</div>
+      <div class="card-desc">Progressive-disclosure JSON tree. Fetch the manifest first; it carries the absolute URL of every layer plus a GitHub-raw mirror for each.</div>
+      <div class="spec-link-url">supercard-seven.vercel.app/spec/index.json</div>
+    </a>
+
+    <a class="spec-link" href="https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json">
+      <div class="spec-link-title">GitHub raw mirror</div>
+      <div class="card-desc">Same content, always-indexed host. Use this if the Vercel URL isn't reachable from your environment.</div>
+      <div class="spec-link-url">raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json</div>
+    </a>
+
+    <a class="spec-link" href="/spec/PROMPT.md">
+      <div class="spec-link-title">Drop-in agent prompt</div>
+      <div class="card-desc">Paste into any LLM's system prompt so it always builds Supercards from the live spec.</div>
+      <div class="spec-link-url">supercard-seven.vercel.app/spec/PROMPT.md</div>
+    </a>
 
     <div class="section-label">Cards</div>
 
