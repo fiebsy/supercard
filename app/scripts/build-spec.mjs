@@ -36,7 +36,7 @@ const CHECK = process.argv.includes("--check");
 // The public, canonical URL the spec is served from. Override with
 // SPEC_CANONICAL_URL if the deployment ever moves.
 const CANONICAL_URL =
-  process.env.SPEC_CANONICAL_URL || "https://supercard-seven.vercel.app/spec/index.json";
+  process.env.SPEC_CANONICAL_URL || "https://berafoot.com/spec/index.json";
 
 // Layer urls in the manifest are ABSOLUTE — derived from the canonical url, so
 // any agent that has index.json can fetch a layer directly without resolving a
@@ -45,26 +45,24 @@ const CANONICAL_URL =
 const BASE_URL = (process.env.SPEC_BASE_URL || CANONICAL_URL.replace(/\/[^/]*$/, "")).replace(/\/$/, "");
 const layerUrl = (layer) => `${BASE_URL}/${layer}.json`;
 
-// Mirror bases — alternate URLs the spec is published from. The Vercel
-// deployment is primary; the GitHub raw mirror is the always-indexed,
-// no-JS fallback for agents that can't reach an un-indexed *.vercel.app or
-// are gated by URL-provenance rules (raw.githubusercontent.com is heavily
-// crawled and frequently surfaces via search). Both points serve the same
-// file content — docs/spec/*.json on `main`.
+// Mirror bases — alternate URLs the spec is published from. The custom
+// domain is canonical; the `*.vercel.app` URL stays live alongside it and
+// works as a fallback if the apex domain is unreachable from an agent's
+// environment. Both serve the same file content — docs/spec/*.json on
+// `main`.
 //
 // SPEC_MIRROR_BASES overrides as a `name|label|base` triple per line;
-// blank lines and lines starting with # are ignored. Defaults cover the
-// two we publish today.
+// blank lines and lines starting with # are ignored.
 const DEFAULT_MIRRORS = [
   {
-    name: "vercel",
-    label: "Primary deployment (Vercel)",
-    base: "https://supercard-seven.vercel.app/spec",
+    name: "berafoot",
+    label: "Primary deployment (custom domain)",
+    base: "https://berafoot.com/spec",
   },
   {
-    name: "github_raw",
-    label: "GitHub raw fallback — always indexed, no JS required",
-    base: "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec",
+    name: "vercel",
+    label: "Vercel-app fallback — same deployment, alternate host",
+    base: "https://supercard-seven.vercel.app/spec",
   },
 ];
 const MIRRORS = process.env.SPEC_MIRROR_BASES

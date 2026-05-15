@@ -24,25 +24,25 @@ export function Gallery() {
         <div className="spec-link-title">Manifest — /spec/index.json</div>
         <div className="card-desc">
           Progressive-disclosure JSON tree. Fetch the manifest first; it
-          carries the absolute URL of every layer plus a GitHub-raw mirror
-          for each.
+          carries the absolute URL of every layer plus a Vercel-app
+          fallback URL for each.
         </div>
         <div className="spec-link-url" style={{ marginTop: "8px" }}>
-          supercard-seven.vercel.app/spec/index.json
+          berafoot.com/spec/index.json
         </div>
       </a>
 
       <a
         className="spec-link"
-        href="https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json"
+        href="https://supercard-seven.vercel.app/spec/index.json"
       >
-        <div className="spec-link-title">GitHub raw mirror</div>
+        <div className="spec-link-title">Vercel-app fallback</div>
         <div className="card-desc">
-          Same content, always-indexed host. Use this if the Vercel URL
+          Same deployment, alternate host. Use this if the apex domain
           isn't reachable from your environment.
         </div>
         <div className="spec-link-url" style={{ marginTop: "8px" }}>
-          raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json
+          supercard-seven.vercel.app/spec/index.json
         </div>
       </a>
 
@@ -53,7 +53,7 @@ export function Gallery() {
           from the live spec.
         </div>
         <div className="spec-link-url" style={{ marginTop: "8px" }}>
-          supercard-seven.vercel.app/spec/PROMPT.md
+          berafoot.com/spec/PROMPT.md
         </div>
       </a>
 

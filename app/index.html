@@ -9,7 +9,7 @@
       content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. This site hosts the machine-readable v3 'Atlas' spec as a progressive-disclosure JSON tree at /spec/index.json, plus a gallery of published cards."
     />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://supercard-seven.vercel.app/" />
+    <link rel="canonical" href="https://berafoot.com/" />
     <link
       rel="alternate"
       type="application/json"
@@ -22,7 +22,7 @@
       property="og:description"
       content="Machine-readable Supercard v3 spec as a progressive-disclosure JSON tree. Fetch /spec/index.json to start."
     />
-    <meta property="og:url" content="https://supercard-seven.vercel.app/" />
+    <meta property="og:url" content="https://berafoot.com/" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Supercard v3 Atlas — public spec and gallery" />
     <meta
@@ -36,43 +36,39 @@
     <!--
       Static spec-discovery block, rendered BEFORE the React app mounts so
       crawlers and any agent that reads the raw HTML can see the spec URL
-      and its GitHub raw mirror without executing JS. The React app
-      mounts into <div id="root"> below and replaces only that subtree —
-      this <aside> stays in the DOM and is visually hidden once the app
-      paints (see #spec-discovery rule in supercard.css).
+      without executing JS. The React app mounts into <div id="root">
+      below and replaces only that subtree — this <aside> stays in the
+      DOM (see #spec-discovery rule in supercard.css).
     -->
     <aside id="spec-discovery">
-      <h1>Supercard v3 Atlas — public spec</h1>
+      <h1>Supercard v3 spec — Atlas manifest</h1>
       <p>
         Supercard is a screenshot-shareable, single-emphasis-per-block
         knowledge artifact — a cognitive prosthesis. The full
-        machine-readable specification is published as a
-        progressive-disclosure JSON tree.
+        machine-readable Supercard v3 specification is published here as
+        a progressive-disclosure JSON tree.
       </p>
       <p><strong>Start here:</strong></p>
       <ul>
         <li>
           Manifest (canonical):
-          <a href="/spec/index.json">/spec/index.json</a>
+          <a href="https://berafoot.com/spec/index.json"
+            >berafoot.com/spec/index.json</a
+          >
         </li>
         <li>
-          Manifest (GitHub raw mirror):
-          <a
-            href="https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json"
-            >raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json</a
+          Manifest (Vercel-app fallback):
+          <a href="https://supercard-seven.vercel.app/spec/index.json"
+            >supercard-seven.vercel.app/spec/index.json</a
           >
         </li>
         <li>Agent guide: <a href="/spec/agent-guide.json">/spec/agent-guide.json</a></li>
         <li>Drop-in prompt: <a href="/spec/PROMPT.md">/spec/PROMPT.md</a></li>
-        <li>
-          Canonical repo:
-          <a href="https://github.com/fiebsy/supercard">github.com/fiebsy/supercard</a>
-        </li>
       </ul>
       <p>
         Every layer's absolute URL is in the manifest's
         <code>layers[].url</code> and <code>bootstrap_urls</code>, with
-        GitHub-raw equivalents in <code>mirror_urls.by_layer</code>.
+        a Vercel-app fallback in <code>mirror_urls.by_layer</code>.
       </p>
     </aside>
     <div id="root"></div>

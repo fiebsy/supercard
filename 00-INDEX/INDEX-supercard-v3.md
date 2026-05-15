@@ -135,11 +135,11 @@ ls docs/cards/
 - Templates → `50-TEMPLATES/`
 - Research reports → `60-RESEARCH/` (registry: `INDEX-research-reports`)
 - Published renders → `docs/` (gallery: `docs/index.html`)
-- Public machine-readable spec → **https://supercard-seven.vercel.app/spec/index.json** (source: `docs/spec/`)
+- Public machine-readable spec → **https://berafoot.com/spec/index.json** (source: `docs/spec/`)
 
 ## Public spec endpoint
 
-The canonical entry point for any LLM or agent — **https://supercard-seven.vercel.app/spec/index.json**. For anything Supercard-related, this URL is the single source of truth; the drop-in instruction prompt for agents is at `docs/spec/PROMPT.md` (also served at `/spec/PROMPT.md`).
+The canonical entry point for any LLM or agent — **https://berafoot.com/spec/index.json**. For anything Supercard-related, this URL is the single source of truth; the drop-in instruction prompt for agents is at `docs/spec/PROMPT.md` (also served at `/spec/PROMPT.md`).
 
 For an agent working from a URL with no checkout, the canonical docs above are also published as a progressive-disclosure JSON tree at `docs/spec/`. Fetch `spec/index.json` (the manifest), then drill into only the layers a task needs — `agent-guide`, `tokens`, `principles`, `grammar`, `lengths`, `blocks`, `pipeline`, `rendering`. The JSON is a *generated view* of the markdown in `10-GOVERNANCE/` and `00-INDEX/` (the markdown stays the source of truth, ADR-0003); `app/scripts/build-spec.mjs` regenerates it and the `spec-drift` GitHub Action fails CI if the two ever diverge.
 
