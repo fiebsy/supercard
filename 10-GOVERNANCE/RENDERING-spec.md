@@ -5,9 +5,9 @@
 | id | RENDERING-spec |
 | type | governance |
 | era | atlas |
-| version | 3.0.0 |
+| version | 3.1.0 |
 | owner | derick |
-| updated | 2026-05-14 |
+| updated | 2026-05-15 |
 
 How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
@@ -86,6 +86,60 @@ CSS stack:
 | lofted | Hero card, key-stat anchor, loft-card block | ~8 dp |
 
 **Hard cap: 1–3 elevated elements per Supercard.** All opacity ≤ 6% per stop. Y-offset ⅓ of blur. Pure black at low opacity — never warm or cool gray (tinted shadows leak hue and break grayscale).
+
+## R-9. Type metrics (V3.1+)
+
+The base type scale above is V3.0's authoritative reference. V3.1+ cards (those declaring `frozen_at_version: 3.1.0` or higher) render with the following overrides on prose-bearing roles. Older cards remain on the V3.0 table per ADR-0003.
+
+| Role | V3.0 | V3.1+ |
+|---|---|---|
+| Body line-height | 24pt | **26pt** |
+| Body letter-spacing | −0.008em | **+0.03em** (≈ +0.5pt) |
+| Body word-spacing | (default) | **+0.06em** (≈ +1pt) |
+| Body alignment | (renderer default) | **left, ragged-right (never justified)** |
+| Italics for emphasis | (silent allow) | **forbidden** (italics only for titles / foreign terms) |
+| Weights permitted in body | 300–700 | **400 / 500 / 700 only** in prose; 300 reserved for the micro-folio (R-10) and dek |
+
+Rationale: WCAG 2.2 SC 1.4.12 requires line-height ≥ 1.5× font-size — at 17pt body that's ≥ 25.5pt. The V3.0 24pt setting was a hair under spec. SF Pro Rounded uses Display-cut glyphs at all sizes; Apple's default Display tracking (−0.43pt at 17pt) compresses Rounded's apertures at body size — the +0.5pt override restores aperture clarity. Measure stays 55–66 CPL preferred, 75 CPL maximum.
+
+## R-10. Beat micro-folio (V3.1+)
+
+Every V3.1+ card MUST render a beat micro-folio at the **top edge** (12pt below the title) AND at the **bottom edge** (24pt above the card's bottom margin).
+
+Format: `BEAT N · BEAT-NAME · POSITION / TOTAL` — e.g., `BEAT 3 · MECHANISM · 4 / 7`.
+
+| Property | Value |
+|---|---|
+| Typeface | SF Pro Rounded |
+| Size / line-height | 11 / 14pt |
+| Weight | 500 |
+| Case | UPPERCASE |
+| Letter-spacing | +0.08em |
+| Numerals | `font-variant-numeric: tabular-nums` |
+| Color | gray at 60% opacity (`--g-60`) |
+| Separator | middle-dot `·` (U+00B7) |
+
+The micro-folio is the only element permitted at the top and bottom edges of the card and does NOT count against the 1–3 elevated-element cap — it is flat type, not chrome.
+
+## R-11. Asterism rendering (V3.1+)
+
+Glyph: `⁂` (U+2042). Centered horizontally within the content column. Set at body size (17pt) and body weight (400), default ink (100% opacity). No rule above or below, no box, no background tint, no transformation. Vertical band: 32pt above and 32pt below the glyph. Use is governed by GRAMMAR § G-10.
+
+## R-12. Anti-pattern enforcement at validation time (V3.1+)
+
+V3.1+ cards are validated by `app/scripts/validate-v3-1.mjs` (invoked as `npm --prefix app run validate`). The validator parses the markdown card and surfaces:
+
+| Severity | Trigger |
+|---|---|
+| **Error** (exit 1) | A block contains ≥ 2 bolded runs |
+| **Error** (exit 1) | A `standard-text` block does not open with a bolded clause |
+| **Error** (exit 1) | A `table` with ≥ 4 data rows lacks a `**Takeaway**` row |
+| **Warning** | A `standard-text` block exceeds 75 words or 4 sentences |
+| **Warning** | A beat has > 4 consecutive content blocks without an asterism or anchor |
+| **Warning** | A beat of ≥ 5 blocks is missing the `⁂` asterism after block 4 |
+| **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band |
+
+The validator is opt-in for V3.1+ cards only (it inspects `frozen_at_version` and skips older cards). It does not block `npm --prefix app run build`.
 
 ## Block compatibility
 

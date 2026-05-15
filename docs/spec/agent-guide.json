@@ -2,17 +2,17 @@
   "layer": "agent-guide",
   "title": "Agent guide — building a card from this URL alone",
   "spec": "supercard",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "era": "atlas",
-  "spec_revision": "72557e5bdd62",
+  "spec_revision": "41903cb48aa8",
   "summary": "The operating manual. Read this first if your job is to produce a Supercard. It tells you the disclosure protocol, which layers to fetch for which task, and the end-to-end build loop with its exit gates.",
   "source": "00-INDEX/INDEX-supercard-v3.md",
   "provenance": [
     {
       "file": "00-INDEX/INDEX-supercard-v3.md",
-      "updated": "2026-05-14",
-      "version": "3.0.0",
-      "sha256": "d9468274f7d223ac50b4b89a9d4c13739fa02f41659c81aa5654eceddf5fddcc"
+      "updated": "2026-05-15",
+      "version": "3.1.0",
+      "sha256": "7bbb118b7b10282013c9941cdff2ceb22afbbd2b6d6fafe098c8cacf26f37d13"
     },
     {
       "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",

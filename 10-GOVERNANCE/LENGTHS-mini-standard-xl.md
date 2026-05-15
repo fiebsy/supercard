@@ -5,9 +5,9 @@
 | id | LENGTHS-mini-standard-xl |
 | type | governance |
 | era | atlas |
-| version | 3.0.0 |
+| version | 3.1.0 |
 | owner | derick |
-| updated | 2026-04-29 |
+| updated | 2026-05-15 |
 
 Length is a **prop**, not a fork. Same content model, same grammar, same identity — only emphasis, density, and depth vary.
 
@@ -85,3 +85,35 @@ Don't pad. If a topic only fills 6 blocks naturally, ship it as a Mini. Padding 
 ## Anti-pattern: compressing an XL into a Standard
 
 Don't compress. If a topic genuinely needs 22 blocks, give it 22 blocks. Compressing to fit Standard length destroys the beat structure and produces a card that's neither scannable (too dense for Standard) nor deep (too thin for XL).
+
+## L-5. Per-length anchor budgets (V3.1+)
+
+V3.1+ cards apply per-length anchor budgets on top of the block totals above. **Anchors** are the structurally emphatic blocks defined in GRAMMAR § G-9 (stat-callout, pull-quote, key-takeaway, numbered-principle, table-with-takeaway-row). Anchor counts EXCLUDE the title, dek, beat dividers, and the micro-folio.
+
+| Variant | Total blocks | Min anchors | Max anchors | Asterism rests |
+|---|---|---|---|---|
+| Mini | 5–8 | 2 | 3 | 0 |
+| Standard | 10–14 | 3 | 5 | 0–1 |
+| XL | 18–25 | 5 | 8 | 2–4 |
+
+Rules:
+
+1. XL cards rendering fewer than 2 asterisms MUST be re-mixed — the density grammar assumes mid-beat rests at this length.
+2. Mini cards MUST NOT use asterisms; the form is too short for them to register as rests rather than ornaments.
+3. Anchor counts that fall outside the band trigger a re-mix, not a length change — pad with content blocks or trim anchors before changing variant.
+
+## L-6. Beat anchor weighting (V3.1+)
+
+The 7 beats don't all carry the same anchor density. V3.1+ cards apply the following weighting:
+
+| Beat | Anchor requirement |
+|---|---|
+| 1. Hook | Anchor in the first block (the hero counts) |
+| 2. Evidence | Lead with a stat-callout or numbered-principle |
+| 3. Mechanism | Prose is permitted; the anchor MAY sit at the end of the beat |
+| 4. Comparison | Comparison-block or table-with-takeaway-row counts as the beat anchor |
+| 5. Counter | At least one pull-quote OR key-takeaway stating the steel-manned view |
+| 6. Application | End with a numbered-principle or application-checklist |
+| 7. Close | Anchor in the final block — key-takeaway is canonical |
+
+Mapping reflects ADHD reading behaviour: readers enter on the Hook, may bail anywhere, and re-enter at high-visual-contrast points. Anchors at beat openings (Evidence) and closings (Application, Close) give them re-entry landings.

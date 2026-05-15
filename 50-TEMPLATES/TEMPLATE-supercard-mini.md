@@ -21,11 +21,13 @@
 
 HERO-CARD: {{TITLE}}
 
-**Lede.**
+**Lede.** [One bolded 2–6-word lead-clause opens; one sentence elaboration. ≤ 75 words total. Single emphasis: the bold IS the block's emphasis.]
 
 ## Beat 2 — Evidence
 
 STAT-CALLOUT or SPARKLINE
+
+**[focal number].** [One sentence naming what the stat means.]
 
 ## Beat 3 — Mechanism
 
@@ -39,8 +41,17 @@ CHECKLIST (3 items max)
 
 KEY-TAKEAWAY
 
+**[The one phrase a reader remembers.]**
+
 ---
 
 **Mini variant: 5 blocks total. Don't pad to Standard.**
 
 If a topic naturally demands Beats 4 or 5, promote to Standard.
+
+V3.1 notes for Mini:
+
+- Anchor budget: 2–3 anchors (L-5)
+- Mini MUST NOT use asterism rests — the form is too short
+- Bolded lead-clause still required on every prose block
+- Micro-folio still required at top and bottom edges

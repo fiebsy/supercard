@@ -45,6 +45,20 @@ export function Section({
   );
 }
 
+/* ---- canvas (V3.1+ opts in via v31 prop; V3.0 cards omit it) ---------- */
+
+export function Canvas({
+  v31,
+  children,
+}: {
+  v31?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className={v31 ? "canvas v3-1" : "canvas"}>{children}</div>
+  );
+}
+
 /* ---- Beat 1 — loft-card (the one lofted element) ----------------------- */
 
 export function Hero({
@@ -72,16 +86,26 @@ export function Hero({
 export function StandardText({
   beat,
   heading,
+  lead,
   children,
 }: {
   beat: Beat;
   heading?: string;
+  /* V3.1+: the bolded 2–6-word lead-clause that opens the first paragraph.
+   * Renders as <strong class="lead"> so the validator can detect it. */
+  lead?: ReactNode;
   children: ReactNode;
 }) {
   return (
     <Section beat={beat}>
       {heading ? <h2>{heading}</h2> : null}
-      {children}
+      {lead ? (
+        <p>
+          <strong className="lead">{lead}</strong> {children}
+        </p>
+      ) : (
+        children
+      )}
     </Section>
   );
 }
@@ -185,6 +209,7 @@ export function DataTable({
   className,
   head,
   rows,
+  takeaway,
   closer,
 }: {
   beat: Beat;
@@ -192,8 +217,12 @@ export function DataTable({
   className?: string;
   head?: ReactNode[];
   rows: Row[];
+  /* V3.1+: closing takeaway row stating the table's verdict in one bolded
+   * clause (G-11). Required when rows.length >= 4. */
+  takeaway?: ReactNode;
   closer?: ReactNode;
 }) {
+  const span = head?.length ?? rows[0]?.cells.length ?? 1;
   return (
     <Section beat={beat}>
       {heading ? <h2>{heading}</h2> : null}
@@ -215,6 +244,13 @@ export function DataTable({
               ))}
             </tr>
           ))}
+          {takeaway ? (
+            <tr className="takeaway-row">
+              <td colSpan={span}>
+                <strong>{takeaway}</strong>
+              </td>
+            </tr>
+          ) : null}
         </tbody>
       </table>
       {closer ? <p>{closer}</p> : null}
@@ -320,8 +356,49 @@ export function Sources({ items }: { items: ReactNode[] }) {
   );
 }
 
+/* ---- V3.1: mid-beat asterism rest (G-10 / R-11) ------------------------ */
+
+export function Asterism() {
+  // Literal text glyph at body size/weight, 32pt vertical bands (CSS).
+  // No box, no rule, no tint — see RENDERING-spec § R-11.
+  return (
+    <div className="asterism" aria-hidden="true">
+      ⁂
+    </div>
+  );
+}
+
+/* ---- V3.1: beat micro-folio at top + bottom edges (R-10) --------------- */
+
+const BEAT_NAMES: Record<number, string> = {
+  1: "HOOK",
+  2: "EVIDENCE",
+  3: "MECHANISM",
+  4: "COMPARISON",
+  5: "COUNTER",
+  6: "APPLICATION",
+  7: "CLOSE",
+};
+
+export function MicroFolio({
+  beat,
+  total = 7,
+  edge,
+}: {
+  beat: number;
+  total?: number;
+  edge: "top" | "bottom";
+}) {
+  const name = BEAT_NAMES[beat] ?? "";
+  return (
+    <div className={`micro-folio micro-folio--${edge}`}>
+      BEAT {beat} · {name} · {beat} / {total}
+    </div>
+  );
+}
+
 /* ---- the corner glyph — on every section's screenshot ------------------ */
 
-export function Glyph() {
-  return <div className="glyph">◆ supercard · v3.0 atlas</div>;
+export function Glyph({ version = "v3.0" }: { version?: string } = {}) {
+  return <div className="glyph">◆ supercard · {version} atlas</div>;
 }
