@@ -121,5 +121,15 @@
     "https://supercard-seven.vercel.app/spec/lengths.json",
     "https://supercard-seven.vercel.app/spec/rendering.json",
     "https://supercard-seven.vercel.app/spec/agent-guide.json"
+  ],
+  "mirror_urls": [
+    {
+      "name": "vercel",
+      "url": "https://supercard-seven.vercel.app/spec/pipeline.json"
+    },
+    {
+      "name": "github_raw",
+      "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/pipeline.json"
+    }
   ]
 }

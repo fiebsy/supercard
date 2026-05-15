@@ -91,6 +91,113 @@
     "https://supercard-seven.vercel.app/spec/pipeline.json",
     "https://supercard-seven.vercel.app/spec/rendering.json"
   ],
+  "mirror_urls": {
+    "note": "Same file content as the canonical layer URLs above. Use any base if the canonical host is unreachable or undiscoverable from your environment.",
+    "bases": [
+      {
+        "name": "vercel",
+        "label": "Primary deployment (Vercel)",
+        "base": "https://supercard-seven.vercel.app/spec"
+      },
+      {
+        "name": "github_raw",
+        "label": "GitHub raw fallback — always indexed, no JS required",
+        "base": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec"
+      }
+    ],
+    "index": [
+      {
+        "name": "vercel",
+        "url": "https://supercard-seven.vercel.app/spec/index.json"
+      },
+      {
+        "name": "github_raw",
+        "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json"
+      }
+    ],
+    "by_layer": {
+      "agent-guide": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/agent-guide.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/agent-guide.json"
+        }
+      ],
+      "tokens": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/tokens.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/tokens.json"
+        }
+      ],
+      "principles": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/principles.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/principles.json"
+        }
+      ],
+      "grammar": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/grammar.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/grammar.json"
+        }
+      ],
+      "lengths": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/lengths.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/lengths.json"
+        }
+      ],
+      "blocks": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/blocks.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/blocks.json"
+        }
+      ],
+      "pipeline": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/pipeline.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/pipeline.json"
+        }
+      ],
+      "rendering": [
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/rendering.json"
+        },
+        {
+          "name": "github_raw",
+          "url": "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/rendering.json"
+        }
+      ]
+    }
+  },
   "provenance": {
     "canonical_repo": "https://github.com/fiebsy/supercard",
     "note": "Generated view of the canonical markdown. The markdown is the source of truth (ADR-0003).",

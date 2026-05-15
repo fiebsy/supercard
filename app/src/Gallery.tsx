@@ -18,6 +18,45 @@ export function Gallery() {
         two render paths.
       </p>
 
+      <div className="section-label">Spec</div>
+
+      <a className="spec-link" href="/spec/index.json">
+        <div className="spec-link-title">Manifest — /spec/index.json</div>
+        <div className="card-desc">
+          Progressive-disclosure JSON tree. Fetch the manifest first; it
+          carries the absolute URL of every layer plus a GitHub-raw mirror
+          for each.
+        </div>
+        <div className="spec-link-url" style={{ marginTop: "8px" }}>
+          supercard-seven.vercel.app/spec/index.json
+        </div>
+      </a>
+
+      <a
+        className="spec-link"
+        href="https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json"
+      >
+        <div className="spec-link-title">GitHub raw mirror</div>
+        <div className="card-desc">
+          Same content, always-indexed host. Use this if the Vercel URL
+          isn't reachable from your environment.
+        </div>
+        <div className="spec-link-url" style={{ marginTop: "8px" }}>
+          raw.githubusercontent.com/fiebsy/supercard/main/docs/spec/index.json
+        </div>
+      </a>
+
+      <a className="spec-link" href="/spec/PROMPT.md">
+        <div className="spec-link-title">Drop-in agent prompt</div>
+        <div className="card-desc">
+          Paste into any LLM's system prompt so it always builds Supercards
+          from the live spec.
+        </div>
+        <div className="spec-link-url" style={{ marginTop: "8px" }}>
+          supercard-seven.vercel.app/spec/PROMPT.md
+        </div>
+      </a>
+
       <div className="section-label">Cards</div>
 
       {cards.map((c) => (

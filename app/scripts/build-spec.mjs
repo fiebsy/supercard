@@ -45,6 +45,40 @@ const CANONICAL_URL =
 const BASE_URL = (process.env.SPEC_BASE_URL || CANONICAL_URL.replace(/\/[^/]*$/, "")).replace(/\/$/, "");
 const layerUrl = (layer) => `${BASE_URL}/${layer}.json`;
 
+// Mirror bases — alternate URLs the spec is published from. The Vercel
+// deployment is primary; the GitHub raw mirror is the always-indexed,
+// no-JS fallback for agents that can't reach an un-indexed *.vercel.app or
+// are gated by URL-provenance rules (raw.githubusercontent.com is heavily
+// crawled and frequently surfaces via search). Both points serve the same
+// file content — docs/spec/*.json on `main`.
+//
+// SPEC_MIRROR_BASES overrides as a `name|label|base` triple per line;
+// blank lines and lines starting with # are ignored. Defaults cover the
+// two we publish today.
+const DEFAULT_MIRRORS = [
+  {
+    name: "vercel",
+    label: "Primary deployment (Vercel)",
+    base: "https://supercard-seven.vercel.app/spec",
+  },
+  {
+    name: "github_raw",
+    label: "GitHub raw fallback — always indexed, no JS required",
+    base: "https://raw.githubusercontent.com/fiebsy/supercard/main/docs/spec",
+  },
+];
+const MIRRORS = process.env.SPEC_MIRROR_BASES
+  ? process.env.SPEC_MIRROR_BASES.split("\n")
+      .map((s) => s.trim())
+      .filter((s) => s && !s.startsWith("#"))
+      .map((entry) => {
+        const [name, label, base] = entry.split("|").map((x) => x.trim());
+        return { name, label, base: base.replace(/\/$/, "") };
+      })
+  : DEFAULT_MIRRORS.map((m) => ({ ...m, base: m.base.replace(/\/$/, "") }));
+const mirrorUrlsForLayer = (layer) =>
+  MIRRORS.map((m) => ({ name: m.name, url: `${m.base}/${layer}.json` }));
+
 // The drop-in instruction for any LLM/agent: this URL is the single source of
 // truth for anything "Supercard". Emitted into the manifest (usage_prompt) and
 // as docs/spec/PROMPT.md, so the spec carries its own usage contract.
@@ -268,6 +302,10 @@ function leaf(layer, title, summary, body) {
   if (Array.isArray(out.see_also)) {
     out.see_also_urls = out.see_also.map(layerUrl);
   }
+  // Same content, multiple URLs. If the canonical url is unreachable from a
+  // given environment (un-indexed *.vercel.app, URL-provenance gate, etc.),
+  // the GitHub raw mirror is always reachable.
+  out.mirror_urls = mirrorUrlsForLayer(layer);
   return out;
 }
 
@@ -658,6 +696,19 @@ const manifest = {
   // array so a fetcher that only scans top-level fields still sees them all.
   // Derived from LAYERS — never hand-maintained.
   bootstrap_urls: LAYERS.map((l) => layerUrl(l.layer)),
+  // Discovery fallback: if the canonical (Vercel) URL is unreachable —
+  // un-indexed *.vercel.app, URL-provenance gate, region block — every
+  // layer is also served from the GitHub raw mirror. Identical content,
+  // a different (and heavily indexed) host. Pick any base; resolve a
+  // layer by appending `<layer>.json`.
+  mirror_urls: {
+    note: "Same file content as the canonical layer URLs above. Use any base if the canonical host is unreachable or undiscoverable from your environment.",
+    bases: MIRRORS,
+    index: MIRRORS.map((m) => ({ name: m.name, url: `${m.base}/index.json` })),
+    by_layer: Object.fromEntries(
+      LAYERS.map((l) => [l.layer, mirrorUrlsForLayer(l.layer)])
+    ),
+  },
   provenance: {
     canonical_repo: "https://github.com/fiebsy/supercard",
     note: "Generated view of the canonical markdown. The markdown is the source of truth (ADR-0003).",

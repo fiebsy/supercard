@@ -1,0 +1,7 @@
+# Supercard — public spec and gallery. Crawl everything; nothing here is
+# private. The machine-readable spec at /spec/index.json is the entry
+# point — sitemap below lists every layer.
+User-agent: *
+Allow: /
+
+Sitemap: https://supercard-seven.vercel.app/sitemap.xml
