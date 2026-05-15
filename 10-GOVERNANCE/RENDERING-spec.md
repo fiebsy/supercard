@@ -35,6 +35,8 @@ How a Supercard source becomes a rendered HTML artifact, and how that artifact i
 
 Body text uses #111111 (--ink), never pure black. Per-block layers use --ink-2 (#333), --ink-3 (#555), --ink-4 (#888), --ink-5 (#BBB).
 
+The canvas is light-only. The renderer declares `color-scheme: light` on `:root` and emits `<meta name="color-scheme" content="light">` in `<head>` so iOS Safari's automatic dark-mode (and equivalents in other webviews) does not partially invert the page — that inversion leaves `--ink-2` / `--ink-3` text as low-contrast gray on near-black. A theme-aware dark variant, if ever introduced, ships as a parallel ink ramp under `@media (prefers-color-scheme: dark)`, never as an auto-inversion.
+
 ## Type scale (SF Pro Rounded)
 
 | Role | Size / leading | Weight | Tracking (em) |
@@ -162,6 +164,7 @@ The renderer keeps a versioned rule library at `/renderer/v3.0/`, `/renderer/v3.
 Rendered HTML must:
 
 - Be **standalone** — `--embed-resources --standalone` in Pandoc, all CSS/JS/fonts/images inlined as `data:` URIs
+- Declare `color-scheme: light` on `:root` and emit `<meta name="color-scheme" content="light">` in `<head>` (see "Gray ramp")
 - Render at 393pt mobile width as the canonical view
 - Pass the screenshot test on every section
 - Carry the corner glyph on every section as a fixed-position element
