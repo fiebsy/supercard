@@ -8,6 +8,7 @@
     "dev": "vite",
     "spec": "node scripts/build-spec.mjs",
     "spec:check": "node scripts/build-spec.mjs --check",
+    "validate": "node scripts/validate-v3-1.mjs",
     "build": "node scripts/build-spec.mjs && tsc && vite build && node scripts/copy-renders.mjs",
     "preview": "vite preview"
   },
