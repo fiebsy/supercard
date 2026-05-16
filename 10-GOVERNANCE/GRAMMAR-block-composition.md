@@ -5,7 +5,7 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.3.0 |
+| version | 3.4.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -205,6 +205,40 @@ Any `table` block with **≥ 4 data rows** MUST end with a bolded **Takeaway** r
 - Tables with < 4 data rows MAY omit the takeaway row if the block's title or surrounding text already states the verdict.
 - Visually: weight 600, no top border on the row, bottom border present.
 
+## G-12. Paragraph mobile cap (V3.4+)
+
+Every `standard-text`, `faq` answer, and `code` gloss SHOULD stay at or below **3 sentences and 60 words** for cards intended to be read on a mobile canvas. The existing G-8 ceiling of **4 sentences and 75 words** remains the hard maximum; blocks between 60–75 words emit a validator warning. Above 75 words is an error and forces a split, identical to G-8.
+
+**Why.** NN/g eye-tracking research and CDC plain-language guidance converge on 2–3 sentences / 40–60 words as the optimal paragraph length for mobile comprehension. The F-pattern scan means the first 1–2 sentences carry the load; longer paragraphs collapse into walls. The 75-word ceiling worked on desktop reading distances; the 60-word soft cap calibrates to mobile.
+
+**Interaction with G-8.** G-12 is a SHOULD, G-8 is a MUST. A V3.4 card may have a block between 60 and 75 words if breaking it would harm the argument; the validator will warn but not error. Above 75 the rule is the same as it always was: split into two `standard-text` blocks, each carrying its own bolded lead-clause.
+
+## G-13. Readability target (V3.4+)
+
+Every prose block in a V3.4+ card SHOULD test at **Flesch–Kincaid grade ≤ 9**, **Flesch Reading Ease ≥ 60**, and **average sentence length ≤ 20 words** (hard limit 25–30). The validator computes these per-block and surfaces a warning when any threshold is breached. Two warnings in a single card promote to an error and block the render.
+
+**Why.** WCAG 3.1.5 (AAA) asks for content at or below lower-secondary reading level. Apple's HIG Writing guide, The Economist Style Guide, and the CDC plain-language standard converge on the same envelope. The target is *measured*, not vibes: a grade-level reading on the prose tells you whether the writing landed where Principle 13 says it should.
+
+**What to do when a block fails.** Shorten sentences; replace polysyllabic words with shorter equivalents; cut adverbs; use active voice; spell out abbreviations on first use; define jargon. If a passage genuinely cannot be simplified — a technical term that has no shorter equivalent — keep the block but tighten the surrounding sentences enough to pull the grade level down to compensate.
+
+## G-14. Connective-flow vocabulary (V3.4+)
+
+Bridges between beats use one of the five Apple-validated patterns. Position-language and meta-language are forbidden anywhere on the rendered canvas.
+
+**The five patterns** (any of these counts as a beat bridge; combinations are fine):
+
+1. **Eyebrow + tagline pair.** A short uppercase eyebrow names the topic (≤ 4 words, per R-14); a tile-sized headline (28/32, semibold) lands the claim. The dominant pattern. Example: *"The evidence / It cuts both ways."*
+2. **Two-sentence haiku.** One headline holding two clipped sentences. Example: *"M5. The chip that zips."* The break is typographic (em-dash or period); both halves live in one Display-sized block.
+3. **"Built to / Designed to / Engineered for" imperative.** Three-to-six-word imperative headlines. Example: *"Built for AI. From the silicon up."*
+4. **Inline "Now you can…" kicker.** A bridging sentence inside a `standard-text` block, never as a section break. Example: *"All-new heart rate sensing. Now you can track your heart rate and calories burned during workouts."*
+5. **Single-word eyebrow.** Sometimes the entire section bridge is one uppercase word. Example: *"Performance."* The eyebrow is the bridge; the headline supplies the claim; the body supplies the proof.
+
+**Forbidden** (each adds a row to the anti-patterns table below):
+
+- Position-language: "Section 4", "Now we move to…", "In Beat 3", "Next up".
+- Meta-language: "In the following section…", "Let's look at…", "We'll cover…", "As mentioned above…", "As we'll see…".
+- Restatement bridges: an eyebrow or tagline that paraphrases the body below it (P9 redundancy filter applies).
+
 ## Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -262,3 +296,8 @@ Run on every section, including the header. Five questions per section. Any "no"
 | A context-chip strip (`A · B · C` of three or more orphan chips) used where one dek/lead-clause sentence would integrate the same facts (V3.1+) | Three orphan chips force three parses; prose forces one — labels integrate facts, they don't list them (R-14) |
 | A label nested inside an already-labeled container (eyebrow under a kicker under a section header) (V3.1+) | Three labels, one job — the typographic hierarchy alone should resolve it (R-14) |
 | Inconsistent labeling — a label kind that appears on some sections and not others without a structural reason (V3.1+) | Inconsistency reads as bug, not intent; either every comparable section earns the label or none do (R-14) |
+| `standard-text` block exceeding 60 words on a V3.4+ card (V3.4+, warning) | Crosses mobile paragraph cap — NN/g and CDC research point to 2–3 sentences / 40–60 words as the comprehension floor |
+| Prose block testing above Flesch–Kincaid grade 9 (V3.4+, warning) | Substance comes from real reasoning, not vocabulary — Hemingway's prose tests at Grade 5, The Economist enforces Grade 8 |
+| Position-language transition between beats (`Next up`, `Section 4`, `Now we move to…`) (V3.4+) | Author-outline scaffolding leaking into the reader's view — same family as R-10/I7 violations, just at the seam |
+| Meta-language transition between beats (`In the following section`, `Let's look at…`, `As mentioned above`) (V3.4+) | The reader doesn't need to be told that the author is about to make a point — they need the point |
+| Transition eyebrow or tagline that paraphrases the body below it (V3.4+) | Redundancy filter (P9) at the section seam — the bridge must add a frame, not restate the claim |

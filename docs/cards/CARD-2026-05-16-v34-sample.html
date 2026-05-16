@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Plain Language as Substance — Supercard V3.4</title>
+<meta name="sc:source_file" content="30-CARDS/CARD-2026-05-16-v34-sample--draft.md">
+<meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-v34-sample.md">
+<meta name="sc:renderer_version" content="v3.4">
+<meta name="sc:frozen_at_version" content="3.4.0">
+<meta name="sc:rendered_at" content="2026-05-16">
+<style>
+  :root {
+    color-scheme: light;
+    --w: #FFFFFF;
+    --g-06: rgba(0,0,0,0.06);
+    --g-12: rgba(0,0,0,0.12);
+    --g-30: rgba(0,0,0,0.30);
+    --g-60: rgba(0,0,0,0.60);
+    --k: #000000;
+    --ink: #111111;
+    --ink-2: #333333;
+    --ink-3: #555555;
+    /* V3.4 tokens (R-16, R-15) */
+    --surface-tint: rgba(0,0,0,0.025);
+    --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --s-1: 8px;  --s-2: 12px; --s-3: 16px; --s-4: 24px;
+    --s-5: 32px; --s-6: 48px; --s-7: 64px; --s-8: 96px; --s-9: 120px;
+    --shadow-lofted: 0 2px 4px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #E8E8E8;
+    font-family: var(--rounded);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    width: 393px;
+    margin: 0 auto;
+    background: var(--w);
+    min-height: 100vh;
+    padding: 0 16px var(--s-8);
+  }
+
+  /* V3.4 — R-15 64pt section gap (mobile-marketing scale) */
+  section {
+    padding: var(--s-7) 0 var(--s-3);
+    border-bottom: 0.5px solid var(--g-06);
+  }
+  section:first-of-type { padding-top: var(--s-6); }
+  section:last-of-type { border-bottom: none; }
+
+  /* Eyebrow — names the content per G-14, never the position */
+  .eyebrow {
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--g-60);
+    margin-bottom: var(--s-2);
+  }
+
+  /* V3.4 — Tile head (28/32 semibold). Canonical tagline shape per
+   * G-14 Pattern 1. Sits between Display title and Section header. */
+  .tile {
+    font-size: 28px;
+    line-height: 32px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin-bottom: var(--s-3);
+  }
+
+  h1 {
+    font-size: 40px;
+    line-height: 44px;
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    margin-bottom: var(--s-3);
+  }
+
+  /* R-9 + V3.4 body — 17/26, +0.03em letter, +0.06em word, left-ragged */
+  p {
+    font-size: 17px;
+    line-height: 26px;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    word-spacing: 0.06em;
+    color: var(--ink-2);
+    margin-bottom: var(--s-2);
+    text-align: left;
+    text-wrap: pretty;
+  }
+  p:last-child { margin-bottom: 0; }
+
+  strong { font-weight: 700; color: var(--k); }
+  .lede { color: var(--ink); }
+
+  /* Beat 1 — lofted hero */
+  .hero {
+    background: var(--w);
+    border-radius: 16px;
+    padding: var(--s-4);
+    box-shadow: var(--shadow-lofted);
+    margin: var(--s-2) 0 var(--s-3);
+  }
+  .hero .hook {
+    font-size: 19px;
+    line-height: 26px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+
+  /* V3.4 — R-16 surface-tinted card variant (in place of hairline border).
+   * 18pt radius; no border. The Apple marketing-page affordance. */
+  .tint-card {
+    background: var(--surface-tint);
+    border-radius: 18px;
+    padding: var(--s-4);
+    margin: var(--s-2) 0 var(--s-3);
+  }
+
+  /* Beat 2 — focal stat inside the tinted card */
+  .stat {
+    font-size: 56px;
+    line-height: 60px;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    font-variant-numeric: tabular-nums;
+    color: var(--k);
+    margin: var(--s-1) 0;
+  }
+
+  ul { margin: 0 0 var(--s-2) 0; padding: 0; list-style: none; }
+  li {
+    font-size: 17px;
+    line-height: 26px;
+    letter-spacing: 0.03em;
+    color: var(--ink-2);
+    padding: var(--s-1) 0;
+    border-bottom: 0.5px solid var(--g-06);
+    display: flex;
+    gap: var(--s-2);
+  }
+  li:last-child { border-bottom: none; }
+  .marker {
+    color: var(--g-30);
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 18px;
+  }
+
+  /* Beat 4 — comparison table with takeaway row per G-11 */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--s-2) 0;
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    padding: var(--s-2) var(--s-1);
+    border-bottom: 0.5px solid var(--g-12);
+    line-height: 22px;
+    color: var(--ink-2);
+    vertical-align: top;
+  }
+  th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--g-60);
+    font-weight: 600;
+  }
+  td:first-child { color: var(--g-60); }
+  tr.takeaway-row td {
+    font-weight: 600;
+    color: var(--k);
+    border-top: 0;
+    padding-top: var(--s-2);
+  }
+
+  .takeaway {
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+
+  .sources li { font-size: 13px; line-height: 18px; color: var(--g-60); }
+  .sources li { display: list-item; padding-left: 0; border-bottom: 0; }
+  .sources { padding-left: var(--s-3); }
+  .sources li { list-style: none; }
+  .sources li::before { content: "—"; color: var(--g-30); margin-right: var(--s-1); }
+
+  /* Corner glyph — fixed-position per R-17 (every screenshot region) */
+  .glyph {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(calc(196px - 100% - 4px));
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--g-30);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+    padding: 4px 7px;
+    border-radius: 6px;
+    border: 0.5px solid var(--g-06);
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+
+    <!-- Beat 1 · Hook — eyebrow names content per G-14 Pattern 1 -->
+    <section>
+      <div class="eyebrow">The cut</div>
+      <h1>Plain Language as Substance</h1>
+      <div class="hero">
+        <p class="hook"><strong>The substance survives the simplicity.</strong> A reader with no context should still get the gist of the card.</p>
+      </div>
+      <p class="lede">Short words carry real reasoning when the thinking is clear. That is the V3.4 readability cut in one line.</p>
+    </section>
+
+    <!-- Beat 2 · Evidence — surface-tinted card per R-16 -->
+    <section>
+      <div class="eyebrow">The number</div>
+      <div class="tile">60 words is the cap.</div>
+      <div class="tint-card">
+        <p>Most mobile readers stop reading at the third sentence. The research is consistent:</p>
+        <div class="stat">60 words</div>
+        <p>is the soft cap a paragraph should target on a phone. Past sixty, eye-tracking studies show the reader gives up before the period.</p>
+      </div>
+    </section>
+
+    <!-- Beat 3 · Mechanism — two standard-text blocks, each with bolded lead-clause -->
+    <section>
+      <div class="eyebrow">The bridges</div>
+      <div class="tile">Five named shapes.</div>
+      <p><strong>Five bridge patterns.</strong> A V3.4 card bridges its sections with one of five named shapes. The dominant form is an eyebrow plus tagline pair, in which the eyebrow names the topic and the tagline lands the claim.</p>
+      <p><strong>The other four shapes.</strong> They are the two-sentence haiku, the "Built / Designed / Engineered" imperative, the inline "Now you can…" kicker, and the single-word eyebrow. All five name the content; none of them name the position.</p>
+    </section>
+
+    <!-- Beat 4 · Comparison — table with explicit Takeaway row per G-11 -->
+    <section>
+      <div class="eyebrow">The diff</div>
+      <div class="tile">Before V3.4 vs. after.</div>
+      <table>
+        <thead>
+          <tr><th></th><th>Before V3.4</th><th>After V3.4</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Paragraph cap</td><td>75 words, 4 sentences</td><td>60 words, 3 sentences</td></tr>
+          <tr><td>Grade target</td><td>(unspecified)</td><td>Flesch–Kincaid ≤ 9</td></tr>
+          <tr><td>Section bridge</td><td>(unspecified)</td><td>Five-pattern vocabulary</td></tr>
+          <tr class="takeaway-row"><td>Takeaway</td><td>Walls of valid prose</td><td>Beats that breathe</td></tr>
+        </tbody>
+      </table>
+      <p>The cap drops from seventy-five to sixty words. The grade target moves from implicit to measured.</p>
+    </section>
+
+    <!-- Beat 5 · Counter — the honest steelman -->
+    <section>
+      <div class="eyebrow">The steelman</div>
+      <div class="tile">Plain is not thin.</div>
+      <p><strong>Plain is not thin.</strong> Hemingway's prose tests at grade five because it carries real weight in plain words, not because the words are plain. The discipline is shorter words for the same reasoning — never shorter reasoning for shorter words.</p>
+    </section>
+
+    <!-- Beat 6 · Application — checklist -->
+    <section>
+      <div class="eyebrow">The protocol</div>
+      <div class="tile">How to write the prose.</div>
+      <ul>
+        <li><span class="marker">☐</span><span>Draft the content first; ignore the bolded lead-clause until the prose is real.</span></li>
+        <li><span class="marker">☐</span><span>Run the validator's readability check on every prose block.</span></li>
+        <li><span class="marker">☐</span><span>Count sentences (≤ 3) and words (≤ 60) per block; split when you are over.</span></li>
+        <li><span class="marker">☐</span><span>Add the bolded lead-clause last — 2–6 words, noun phrase or imperative.</span></li>
+        <li><span class="marker">☐</span><span>Pick one of the five G-14 patterns for each bridge; never write "In the next section".</span></li>
+      </ul>
+    </section>
+
+    <!-- Beat 7 · Close — key takeaway -->
+    <section>
+      <div class="eyebrow">The bottom line</div>
+      <p class="takeaway"><strong>Clarity of writing follows clarity of thought.</strong></p>
+      <p>Same hours, same material; the difference is whether the reader still has it in six months.</p>
+    </section>
+
+    <!-- Sources -->
+    <section>
+      <div class="eyebrow">Sources</div>
+      <ul class="sources">
+        <li>Apple HIG — Writing guidelines</li>
+        <li>The Economist Style Guide — five rules for plain English</li>
+        <li>Nielsen Norman Group — Mobile paragraph length eye-tracking</li>
+        <li>CDC Plain Language standard</li>
+        <li>WCAG 2.2 SC 1.4.12 and 3.1.5</li>
+      </ul>
+    </section>
+
+  </div>
+  <div class="glyph">◆ supercard · v3.4 atlas</div>
+</body>
+</html>

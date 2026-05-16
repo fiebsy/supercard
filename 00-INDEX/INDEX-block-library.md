@@ -5,7 +5,7 @@
 | id | INDEX-block-library |
 | type | index |
 | era | atlas |
-| version | 3.3.0 |
+| version | 3.4.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -114,3 +114,7 @@ which rules apply to which `frozen_at_version`.
 - Spacing: 32pt margin-block above and below
 - Use: inserted by author OR auto-inserted by the renderer after every 4 content blocks within a beat of ≥ 5 blocks (see GRAMMAR § G-10)
 - Does not count as a block for density budgets (G-9) or for total-block counts (L-5)
+
+## V3.4 backwards compatibility
+
+No blocks were added, removed, deprecated, or had their length-compatibility changed in V3.4. The cut was entirely typography, spacing, and writing-discipline. Every block at every lifecycle tier renders identically under V3.4 as it did under V3.3, with the optional tinted-surface affordance (R-16) and optional Apple register (R-18) available to cards that opt in.

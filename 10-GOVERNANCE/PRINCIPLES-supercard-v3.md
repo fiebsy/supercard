@@ -5,11 +5,11 @@
 | id | PRINCIPLES-supercard-v3 |
 | type | governance |
 | era | atlas |
-| version | 3.3.0 |
+| version | 3.4.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
-The 10 foundational principles of the Supercard format. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
+The 14 foundational principles of the Supercard format (10 V3.0 + 2 V3.1 + 2 V3.4). PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
 
 ---
 
@@ -109,6 +109,22 @@ A reader who scans ONLY the bolded clauses of a card, top to bottom, must be abl
 
 **How to apply.** Run alongside the screenshot test (below), not after. Read only the bolded spans, top to bottom — title, hero takeaway, every lead-clause, every focal stat, every key-takeaway. They should compose a coherent thesis. If they don't, the lead-clauses aren't earning their bold.
 
+## 13. Plain language as substance (V3.4+)
+
+A Supercard's substance comes from *what* is said, not from the syllable count of how it's said. Every prose block targets a Flesch–Kincaid grade level of 6–9, an average sentence length of 15–20 words (hard ceiling 25–30), and a complex-word rate (≥3 syllables) under 15%. Orwell's rule applies: never use a long word where a short one will do, never use jargon where everyday English will land, never use a passive when an active will move.
+
+**Why it matters.** The brief was clear: a reader with no prior context — grandma, a tech bro skimming on the train, anyone — should get the gist of the same card. That's not dumbing down; it's a different discipline. Hemingway's prose tests at Grade 5. The Economist Style Guide enforces the same five rules Apple's HIG Writing guide does ("Choose simple, plain language. Prioritize clarity. Avoid the temptation to be too cute or clever."). Stratechery's long-form analyses test at Grade 8–9. Clarity of writing follows clarity of thought; obscure writing is usually obscure thinking trying to look smart.
+
+**How to apply.** Run the validator's readability check (added with G-13) on every prose block. Active voice; one idea per sentence; jargon defined on first use; abbreviations spelled out the first time. When two phrasings carry the same meaning, ship the shorter one. Substance comes from real reasoning and specific evidence — not from polysyllabic vocabulary.
+
+## 14. Connective flow without scaffold (V3.4+)
+
+Bridges between sections are named by content, never by position. The reader navigates the card by *what each section is about*, not by counting where they are in the author's outline. The five Apple-validated bridge patterns are the canonical vocabulary; meta-language ("Next, let's look at…", "In the following section…") and position-language ("Section 4", "Now we move to…") are forbidden.
+
+**Why it matters.** This is the application of Principle 1 (screenshot autonomy) to the transition seams between beats. A position counter ("4 / 7") tells you nothing if you screenshot the middle of the card. A content-named eyebrow + tagline pair ("The medical study / 99% consistent, 50% accurate") survives any crop. Apple's product pages — the strongest-tested screenshotable canvas in the industry — bridge every section this way and never reference position.
+
+**How to apply.** Use the five-pattern transition vocabulary documented in `GRAMMAR` § G-14: eyebrow + tagline pair, two-sentence haiku, "Built/Designed to…" imperative, inline "Now you can…" kicker, single-word eyebrow. The eyebrow names the topic; the tagline lands the claim; the body delivers the proof. Inherits from P1 (screenshot autonomy) and P12 (first-pass extraction).
+
 ---
 
 ## What these principles aren't
@@ -121,9 +137,9 @@ A reader who scans ONLY the bolded clauses of a card, top to bottom, must be abl
 
 If you can only remember one rule from this doc, remember this: **every visible region must convey one complete idea, traceable back to the system via the corner glyph.** Everything else flows from that.
 
-## The ADHD scan-ability gate (V3.1+)
+## The ADHD scan-ability gate (V3.1+, twelve questions on V3.4+)
 
-Runs alongside the screenshot test on every V3.1+ card before publication. Ten questions, binary Y/N. Any "no" blocks the render.
+Runs alongside the screenshot test on every V3.1+ card before publication. Ten questions for V3.1–V3.3; twelve for V3.4+. Binary Y/N. Any "no" blocks the render.
 
 1. Does every `standard-text` block open with a bolded 2–6-word lead-clause?
 2. Does no block contain more than one bolded run?
@@ -135,5 +151,7 @@ Runs alongside the screenshot test on every V3.1+ card before publication. Ten q
 8. Is the rendered canvas free of scaffold chrome — no `BEAT N`, no `N / TOTAL` counters, no renderer-version footer (R-10 V3.3)?
 9. Is every `stat-callout` accompanied by a verbal-anchor sentence, and every `table` of ≥ 4 rows closed by a bolded takeaway row?
 10. Does body text render at 17pt SF Pro Rounded, 26pt leading, +0.5pt tracking, left-aligned ragged-right, with no italic-for-emphasis runs?
+11. **(V3.4+)** Does every prose block clear the readability floor — Flesch–Kincaid grade ≤ 9, average sentence ≤ 20 words?
+12. **(V3.4+)** Does every prose block sit at or below the mobile paragraph cap — ≤ 3 sentences and ≤ 60 words?
 
-V3.0 cards are exempt — they're frozen at their authored version per ADR-0003. The gate applies only to cards with `frozen_at_version: 3.1.0` or higher.
+V3.0 cards are exempt — they're frozen at their authored version per ADR-0003. The gate applies only to cards with `frozen_at_version: 3.1.0` or higher. Questions 11–12 apply only to cards with `frozen_at_version: 3.4.0` or higher; V3.1–V3.3 cards stay on the ten-question form.

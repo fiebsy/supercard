@@ -2,9 +2,9 @@
   "layer": "glossary",
   "title": "One-place definitions for every cross-layer term",
   "spec": "supercard",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "era": "atlas",
-  "spec_revision": "e35c12d7499d",
+  "spec_revision": "bcb76b7c4610",
   "summary": "Every noun the system uses across multiple layers — artifacts, composition primitives, editorial micro-units, render-time furniture, versioning — defined once with the canonical source layer cited.",
   "source": "10-GOVERNANCE/GLOSSARY-supercard.md",
   "provenance": [

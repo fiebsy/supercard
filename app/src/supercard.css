@@ -27,7 +27,17 @@
   --s-6: 48px;
   --s-7: 64px;
   --s-8: 96px;
+  --s-9: 120px;
   --s-asterism-band: 32px;
+  /* V3.4 — surface tint, used by .tint-card per R-16. NOT a seventh step in
+   * the gray ramp; a single off-white permitted only as a card background to
+   * replace a hairline with tonal contrast. */
+  --surface-tint: rgba(0, 0, 0, 0.025);
+  /* V3.4 — Tile head step on the type ramp (28/32 semibold, −0.012em). The
+   * canonical size for the tagline half of an eyebrow + tagline pair (G-14
+   * Pattern 1). */
+  --t-tile: 28px;
+  --lh-tile: 32px;
   --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.04);
   --shadow-lofted: 0 2px 4px rgba(0, 0, 0, 0.04), 0 12px 32px rgba(0, 0, 0, 0.06),
     0 32px 80px rgba(0, 0, 0, 0.04);
@@ -532,4 +542,56 @@ a.spec-link:hover {
 }
 .canvas.v3-1 tr.takeaway-row td strong {
   color: var(--k);
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.4 additions — Tile head step, surface-tinted card affordance (R-16),
+ * marketing-scale beat gap (R-15), Apple register opt-in (R-18). Scoped to
+ * .canvas.v3-4 so V3.1–V3.3 cards remain pixel-identical.
+ * ----------------------------------------------------------------------- */
+
+/* Tile head — the canonical size for an eyebrow + tagline pair's tagline
+ * half (G-14 Pattern 1). Sits between Display title (40/44) and Section
+ * header (24/30). */
+.canvas.v3-4 .tile {
+  font-size: var(--t-tile);
+  line-height: var(--lh-tile);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin-bottom: var(--s-2);
+}
+
+/* Surface-tinted card variant (R-16) — replaces the hairline-bordered
+ * variant. Mutually exclusive per card. */
+.canvas.v3-4 .tint-card {
+  background: var(--surface-tint);
+  border-radius: 18px;
+  border: 0;
+  padding: var(--s-4);
+  margin: var(--s-2) 0;
+}
+
+/* Beat-gap scale (R-15) — author opts in by setting the variant on .canvas.
+ * Default stays --s-6 (48pt). */
+.canvas.v3-4.beat-gap-64 section {
+  padding-top: var(--s-7);
+}
+.canvas.v3-4.beat-gap-120 section {
+  padding-top: var(--s-9);
+}
+
+/* Apple register opt-in (R-18) — tighter body letter-spacing and line-height,
+ * larger Display ramp. The canvas root carries data-wcag-note when this is
+ * active so downstream consumers see the 1.47 line-height implication. */
+.canvas.v3-4.apple-register p,
+.canvas.v3-4.apple-register li {
+  line-height: 25px;
+  letter-spacing: -0.022em;
+  word-spacing: normal;
+}
+.canvas.v3-4.apple-register h1 {
+  font-size: clamp(56px, 12vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.024em;
 }

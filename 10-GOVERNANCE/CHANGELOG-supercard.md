@@ -5,7 +5,7 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.3.0 |
+| version | 3.4.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -14,6 +14,55 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 ---
 
 ## [Unreleased]
+
+---
+
+## [3.4.0] — "Atlas" — 2026-05-16
+
+Apple-calibrated readability cut. Two new principles (plain language as
+substance; connective flow without scaffold), three new grammar rules
+(mobile paragraph cap, readability target, connective-flow vocabulary),
+four new rendering rules (section spacing scale, surface-tinted card
+affordance, screenshot-autonomy enforcement, Apple register opt-in), and
+two new tokens (`--s-9: 120pt`, `--surface-tint: rgba(0,0,0,0.025)`)
+plus a 28/32 Tile head step on the type ramp. Backwards-compatible: every
+V3.3 card renders identically under V3.4. New constraints apply only to
+cards declaring `frozen_at_version: 3.4.0`.
+
+### Added
+
+- PRINCIPLES #13 — Plain language as substance (V3.4+). Targets Flesch–Kincaid grade 6–9, average sentence length 15–20 words, complex-word rate < 15%. The reader-with-no-prior-context test.
+- PRINCIPLES #14 — Connective flow without scaffold (V3.4+). Bridges between beats are named by content, never by position. Five Apple-validated bridge patterns are the canonical vocabulary; meta-language and position-language are forbidden.
+- PRINCIPLES — The ADHD scan-ability gate grows from ten to twelve questions on V3.4+ cards (adds readability floor and mobile paragraph-cap checks). V3.1–V3.3 cards stay on the ten-question form.
+- GRAMMAR § G-12 — Paragraph mobile cap (V3.4+). Prose blocks SHOULD stay ≤ 3 sentences / ≤ 60 words on a mobile canvas. The G-8 hard ceiling (4 sentences / 75 words) is unchanged; blocks between 60–75 words emit a warning.
+- GRAMMAR § G-13 — Readability target (V3.4+). Prose blocks SHOULD test at Flesch–Kincaid grade ≤ 9, Flesch Reading Ease ≥ 60, and average sentence ≤ 20 words. Two warnings in a single card escalate to an error.
+- GRAMMAR § G-14 — Connective-flow vocabulary (V3.4+). The five canonical patterns: eyebrow + tagline pair, two-sentence haiku, "Built/Designed/Engineered" imperative, inline "Now you can…" kicker, single-word eyebrow.
+- GRAMMAR — Five new anti-patterns mirroring G-12 / G-13 / G-14 (over-cap paragraphs, above-grade-9 prose, position-language bridges, meta-language bridges, restatement bridges).
+- RENDERING § R-15 — Section spacing scale (V3.4+). Beat boundaries snap to one of three uniform values per card — 48pt (V3.3 default), 64pt (mobile-marketing), or 120pt (desktop-marketing). Mixed gaps emit a warning.
+- RENDERING § R-16 — Surface-tinted card affordance (V3.4+). Cards MAY use `--surface-tint` + 18pt radius + no border in place of the V3.3 hairline-bordered variant. Mutually exclusive on any given card.
+- RENDERING § R-17 — Screenshot-autonomy enforcement (V3.4+). The validator verifies every block has its own anchor (lead-clause, focal stat, definition term, takeaway row, or attribution) and the corner glyph is fixed-position.
+- RENDERING § R-18 — Apple register opt-in (V3.4+). Cards MAY declare `apple_register: true` to opt into Apple's exact body typography (−0.022em letter-spacing, 25pt line-height, 56–80pt Display clamp). Emits a WCAG-note data-attribute because the 1.47 line-height sits below SC 1.4.12's 1.5 floor; cards needing AA stay on R-9.
+- RENDERING — Type-scale gains a Tile head step at 28/32 semibold, −0.012em. New canonical size for the tagline half of an eyebrow + tagline pair (G-14 Pattern 1).
+- RENDERING — Spacing tokens gain `--s-9: 120px` (marketing-scale). Tokens layer gains `--surface-tint: rgba(0,0,0,0.025)` as a single off-white permitted as card background (NOT a seventh step in the gray ramp).
+- RENDERING — Output contract adds a corner-glyph viewport-persistent bullet: cards over 2,000pt height MUST be tested with an automated scroll-screenshot pass before publish.
+- PIPELINE — I8 (Plain-language readability) added to the identity invariants. Total invariants: 8.
+- PIPELINE — G9 (Readability gate) added to the constraint gates. Total gates: 9.
+- VALIDATOR (`app/scripts/validate-v3-1.mjs`) — Six new error triggers and four new warnings, all version-gated to `frozen_at_version: 3.4.0` or higher. Internal header comment clarifies the validator covers V3.1 through V3.4 despite the filename.
+- APP — `app/src/supercard.css` gains `--s-9`, `--surface-tint`, `--t-tile`, `--lh-tile`, and the `.tint-card` variant class.
+- AGENT-GUIDE — New `writing_register` block documents the V3.4 readability targets, paragraph caps, and the five-pattern transition vocabulary so an agent authoring a V3.4 card sees the rules before drafting prose.
+
+### Changed
+
+- RENDERING — Type-scale eyebrow tracking corrected from +0.07em to +0.08em, removing the inconsistency with R-10 / R-14 (which always specified +0.08).
+- RENDERING — `--s-6` use-row clarified to "Beat boundaries (V3.3 default)" — R-15 (V3.4+) adds 64pt and 120pt as opt-in alternatives.
+- INDEX-supercard-v3 — `spec_revision` bumps with V3.4.
+- INDEX-block-library — version stamp bumps to 3.4.0; new V3.4 backwards-compatibility note. No block ID, family, or length-variant changes.
+
+### Considered & rejected
+
+- Renaming `validate-v3-1.mjs` to `validate.mjs` now that it serves V3.1 through V3.4. Rejected — every call site (`package.json`, CI config, project docs) would break. Kept the filename; added an internal comment that explains the scope.
+- Making R-9 the default and R-18 the toggle, vs. keeping R-9 as default and adding R-18 as the opt-in. Stayed with R-9 default — its 1.53 line-height is WCAG SC 1.4.12 compliant out of the box; R-18 ships the more compressed Apple typography only when the author asks for it.
+- Adding `--surface-tint` as a seventh step in the gray ramp. Rejected — it is a single off-white for a single purpose (card surface in place of a hairline border), not a new ramp step. The strict-grayscale principle (P5) stays unchanged.
 
 ---
 
