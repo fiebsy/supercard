@@ -7,7 +7,7 @@
 | era | atlas |
 | version | 3.1.0 |
 | owner | derick |
-| updated | 2026-05-15 |
+| updated | 2026-05-16 |
 
 How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*.
 
@@ -195,3 +195,8 @@ Run on every section, including the header. Five questions per section. Any "no"
 | `standard-text` block exceeding 75 words (V3.1+) | Crosses chunk-collapse threshold — split into two blocks with their own lead-clauses |
 | Cover header elements outside R-13 (running brand-mark folio, mode badge, date eyebrow, context-chip strip, second eyebrow restating the micro-folio's beat name) (V3.1+) | Random labels load the cover with chrome instead of meaning — the cover permits exactly four elements (micro-folio, title, dek, hero), see RENDERING § R-13 |
 | Section eyebrow on a beat's first block when the top-edge micro-folio is present (V3.1+) | Pure duplication — the folio already says `BEAT 3 · MECHANISM · 4 / 7`; a separate `MECHANISM` eyebrow 12pt below adds no information (R-10) |
+| A label longer than 4 words anywhere on the card (V3.1+) | A label that needs five words is a sentence pretending to be a label — promote to the dek/lead-clause or cut (R-14) |
+| A label whose only function is to "balance" another label (V3.1+) | Symmetry isn't a reason; load-bearing is — if the second label answers no question the reader is asking, cut it (R-14) |
+| A context-chip strip (`A · B · C` of three or more orphan chips) used where one dek/lead-clause sentence would integrate the same facts (V3.1+) | Three orphan chips force three parses; prose forces one — labels integrate facts, they don't list them (R-14) |
+| A label nested inside an already-labeled container (folio under a beat-name eyebrow under a section header) (V3.1+) | Three labels, one job — the typographic hierarchy alone should resolve it (R-14) |
+| Inconsistent labeling — a label kind that appears on some sections and not others without a structural reason (V3.1+) | Inconsistency reads as bug, not intent; either every comparable section earns the label or none do (R-14) |

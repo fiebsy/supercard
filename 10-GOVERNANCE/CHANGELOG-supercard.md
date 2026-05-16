@@ -7,7 +7,7 @@
 | era | atlas |
 | version | 3.1.0 |
 | owner | derick |
-| updated | 2026-05-15 |
+| updated | 2026-05-16 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
 
@@ -17,6 +17,9 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 
 ### Added
 
+- RENDERING § R-14 — Labels earn their existence (V3.1+): system-wide label justification rule that generalizes R-13's cover discipline to every label on the canvas (eyebrows, kickers, folios, badges, chips, micro-labels, section names, mode tags). Three-question test (does removing it lose meaning; does it answer a question the reader is asking; is it the only element doing that job). Magazine-furniture spec (one canonical position per label kind, single micro-type register, integrate facts in prose, 4-word ceiling). Forbidden patterns enumerated. Label-occlusion test added as a pre-publish check
+- RENDERING § R-12 — Two new error triggers (label > 4 words; context-chip strip of ≥ 3 orphan chips) and one new warning (label kind appearing inconsistently across comparable sections), all sourced from R-14
+- GRAMMAR — Five new anti-patterns mirroring R-14 (over-long labels, balance-only labels, context-chip strips, nested labels, inconsistent labeling across comparable sections)
 - RENDERING § R-13 — Cover discipline (V3.1+): the cover permits exactly four elements (top-edge micro-folio, title, dek, hero) and pins their five spacing joins (16 / 32 / 12 / 24 / 48pt). Forbidden anti-patterns enumerated explicitly: running brand-mark folios (`SC · BRIEFING · 1 / 7`-style), mode badges, date eyebrows, context-chip strips, second eyebrows restating the micro-folio's beat name
 - RENDERING § R-10 — Strengthened: the top-edge micro-folio replaces the section eyebrow on a beat's first block (the folio already names the beat, with position — restating it 12pt below is duplication). Sole-tenancy at the top edge re-declared
 - RENDERING § R-12 — Two new error triggers (cover header outside R-13; section eyebrow duplicating the micro-folio) and one new warning (cover spacing departing from R-13 by > 4pt)
@@ -25,6 +28,7 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 ### Considered & rejected
 
 - Adding a "mode badge" slot to the cover (one of `BRIEFING` / `DEEP-DIVE` / `REFERENCE`). Rejected — mode is already carried by the corner glyph and the URL; a third surface restates identity instead of adding meaning, and the cover already has the dek to carry timeliness or scope
+- Restricting R-14 to V3.1+ cover-only (i.e. just renaming R-13). Rejected — the same label-justification failure shows up mid-card too (eyebrows duplicating folios, kickers paraphrasing titles, chip strips below stat callouts). R-13 stays as the cover specialization; R-14 covers the rest of the canvas with one rule
 
 ---
 

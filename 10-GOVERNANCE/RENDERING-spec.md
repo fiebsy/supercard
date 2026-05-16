@@ -7,7 +7,7 @@
 | era | atlas |
 | version | 3.1.0 |
 | owner | derick |
-| updated | 2026-05-15 |
+| updated | 2026-05-16 |
 
 How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
@@ -140,11 +140,14 @@ V3.1+ cards are validated by `app/scripts/validate-v3-1.mjs` (invoked as `npm --
 | **Error** (exit 1) | A `table` with ≥ 4 data rows lacks a `**Takeaway**` row |
 | **Error** (exit 1) | The cover declares any header element other than the four named in R-13 (running folio, mode badge, context-chip strip, second eyebrow) |
 | **Error** (exit 1) | A beat's first block emits a section eyebrow that restates the beat name already shown by the adjacent top-edge micro-folio (R-10) |
+| **Error** (exit 1) | A label (eyebrow, kicker, folio, badge, chip, micro-label) runs longer than 4 words (R-14) |
+| **Error** (exit 1) | A context-chip strip (`A · B · C` of three or more orphan chips) appears anywhere a single dek/lead-clause sentence would integrate the same facts (R-14) |
 | **Warning** | A `standard-text` block exceeds 75 words or 4 sentences |
 | **Warning** | A beat has > 4 consecutive content blocks without an asterism or anchor |
 | **Warning** | A beat of ≥ 5 blocks is missing the `⁂` asterism after block 4 |
 | **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band |
 | **Warning** | The cover stack departs from R-13 spacing (16 / 32 / 12 / 24 / 48pt) by more than 4pt at any join |
+| **Warning** | A label appears on some sections of a card and not others without a structural reason (R-14 — inconsistency reads as bug) |
 
 The validator is opt-in for V3.1+ cards only (it inspects `frozen_at_version` and skips older cards). It does not block `npm --prefix app run build`.
 
@@ -183,6 +186,42 @@ The cover is the card's title block — the first ~200pt of vertical space. It s
 These five values are the cover. Any deviation greater than 4pt at a join is a warning (R-12); the renderer should snap to the canonical stack.
 
 **Why every item is justified:** the micro-folio carries beat identity (screenshot autonomy, principle 1); the title is the topic; the dek is the thesis; the hero is the one elevated anchor (principle 4). Four elements, each load-bearing, each on the spec — and no fifth.
+
+## R-14. Labels earn their existence (V3.1+)
+
+R-13 set the discipline for the cover. R-14 generalizes it to every label that appears anywhere on the card. A label is any short, non-prose mark that names what something *is* — eyebrows, kickers, folios, badges, chips, micro-labels, section names, mode tags. Labels are the highest-density, lowest-information element on the canvas. They must justify themselves the way magazine furniture does, or be cut.
+
+**The test for every label, asked in order:**
+
+1. **Does removing it lose meaning?** If the surrounding prose, position, or hierarchy already says what the label says, the label is restating, not adding. Cut it.
+2. **Does it answer a question the reader is actually asking at that point on the page?** A reader at the top of a beat asks *"where am I in the card?"* — a position folio answers that. A reader at the top of a block asks *"what is this block about?"* — a title answers that. A label that answers neither is decoration.
+3. **Is it the only element doing that job?** If two labels carry the same signal (corner glyph + eyebrow + folio all naming the beat), only the one closest to the reader's current focus survives. The others are duplication.
+
+If a label fails any of the three, it's a renderer drift and must be cut. No exceptions for "consistency," "balance," or "the template has a slot for it."
+
+**When labels do appear, they read as magazine furniture — not UI chrome:**
+
+- **Hierarchy is set by typography, not by adding labels.** Display title, dek, body, caption — that's the ladder. A label is a fifth tier only when the four typographic tiers can't carry the load.
+- **Each label sits in exactly one canonical position** for its kind: folio at the top edge, page number at the bottom edge, kicker above the title, byline below it. Position itself is half the label's meaning; floating labels read as chips.
+- **Labels use the same micro-type spec everywhere they appear:** 11/14pt SF Pro Rounded, weight 500, UPPERCASE, +0.08em tracking, `--g-60`, middle-dot separators. One typographic register for all labels means a reader recognizes "this is a label" without parsing the content. (This is the same spec R-10 pins for the micro-folio — by design.)
+- **Labels integrate facts, they don't list them.** A magazine doesn't strip its dateline into `MAGAZINE · ISSUE · DATE · SECTION` chips above an article — it writes "In the May issue of Harper's, ..." into the dek. Time, jurisdiction, status, mode, and any other context-setting fact lives *inside* the prose where it can modify a verb, not in a label strip beside it.
+- **No label runs longer than four words.** A label that needs five words is a sentence pretending to be a label; promote it to the dek or cut it.
+
+**Forbidden patterns** (each one an R-12 Error if a renderer emits it; the validator catches the structurally checkable ones — the rest are renderer-discipline reviews before publish):
+
+| Drift | Why it fails |
+|---|---|
+| Two labels carrying the same signal in the same visual region | Duplication; the reader parses both and learns nothing extra |
+| A label that paraphrases the title or dek below it | The prose already does the work; the label is throat-clearing |
+| A label whose only function is to "balance" another label | Symmetry isn't a reason; load-bearing is |
+| A context-chip strip (`A · B · C`) used where one dek sentence would integrate the same facts | Strips force three parses; prose forces one |
+| A label that appears on some sections and not others without a structural reason | Inconsistency reads as bug, not intent |
+| A label nested inside an already-labeled container (folio under a beat-name eyebrow under a section header) | Three labels, one job — the typographic hierarchy alone should resolve it |
+| A label longer than four words | A sentence pretending to be a label — promote to the dek or cut |
+
+**The label-occlusion test, run on the rendered card before publish:** cover the labels with your thumb. If the card still tells you what each section is and where you are in it, the labels were doing real work — keep them. If you suddenly can't navigate, the labels were the whole navigation system and the typographic hierarchy needs strengthening. If nothing changes, the labels were decoration — cut them.
+
+R-13 is the cover-specific application of R-14; R-10's micro-folio is the one label every V3.1+ card *does* earn (it answers "where am I in the card?" — a question the reader is actually asking, with no other element on the canvas doing that job).
 
 ## Block compatibility
 

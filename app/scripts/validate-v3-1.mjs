@@ -11,6 +11,9 @@
  *     - block contains >= 2 bolded runs
  *     - standard-text block missing the opening bolded lead-clause
  *     - table with >= 4 data rows missing a bolded **Takeaway** row
+ *     - context-chip strip (>= 3 middle-dot-separated UPPERCASE tokens on
+ *       its own line, not the BEAT N micro-folio) appears anywhere a dek or
+ *       lead-clause sentence would integrate the same facts (R-14)
  *
  *   Warnings (exit 0, printed) — fix where possible:
  *     - standard-text block exceeds 75 words or 4 sentences
@@ -182,6 +185,28 @@ function hasAsterism(text) {
   return /⁂/.test(text);
 }
 
+// R-14 context-chip strip: a standalone line of the form
+//   `WORD · WORD · WORD` (3+ middle-dot-separated UPPERCASE tokens),
+// which is NOT the R-10 micro-folio (those start with `BEAT N`). Detected
+// after stripping bold/italic markers so `**A · B · C**` and `*A · B · C*`
+// also catch. The surrounding pipe rule excludes table cells.
+function findChipStrips(text) {
+  const hits = [];
+  for (const raw of text.split("\n")) {
+    if (/\|/.test(raw)) continue; // skip table rows
+    const line = raw.replace(/[*_`>]/g, "").trim();
+    if (!line) continue;
+    if (/^BEAT\s+\d+\s*·/.test(line)) continue; // R-10 micro-folio
+    const tokens = line.split(/\s*·\s*/);
+    if (tokens.length < 3) continue;
+    // Each chip is short, starts with a letter/digit, and is upper-case-ish:
+    // letters, digits, spaces, comma, period, dash, slash. ≤ 30 chars.
+    const allLabelLike = tokens.every((t) => /^[A-Z0-9][A-Z0-9 ,./-]{0,29}$/.test(t));
+    if (allLabelLike) hits.push(line);
+  }
+  return hits;
+}
+
 /* ------------------------------------------------------------------ *
  * Validation
  * ------------------------------------------------------------------ */
@@ -228,6 +253,9 @@ function validateCard(path, raw) {
       if (dataRows >= 4 && !hasTakeawayRow(b.bodyText)) {
         push(errors, b, `table has ${dataRows} data rows without a **Takeaway** row (G-11)`);
       }
+    }
+    for (const strip of findChipStrips(b.bodyText)) {
+      push(errors, b, `context-chip strip "${strip}" — labels integrate facts in prose; promote to dek or lead-clause (R-14)`);
     }
   }
 
