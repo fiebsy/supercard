@@ -1,9 +1,9 @@
 {
   "spec": "supercard",
   "title": "Supercard V3 — public specification",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "era": "atlas",
-  "spec_revision": "e35c12d7499d",
+  "spec_revision": "bcb76b7c4610",
   "sources_updated_max": "2026-05-16",
   "canonical_url": "https://berafoot.com/spec/index.json",
   "base_url": "https://berafoot.com/spec",
@@ -35,7 +35,7 @@
       "title": "Identity rules — what is and isn't a Supercard",
       "url": "https://berafoot.com/spec/principles.json",
       "file": "principles.json",
-      "summary": "The 12 foundational principles (10 V3.0 + 2 V3.1). PRINCIPLES is the identity-audit reference; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
+      "summary": "The 14 foundational principles (10 V3.0 + 2 V3.1 + 2 V3.4). PRINCIPLES is the identity-audit reference; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
       "source": "10-GOVERNANCE/PRINCIPLES-supercard-v3.md"
     },
     {
@@ -67,7 +67,7 @@
       "title": "Request → published card, end to end",
       "url": "https://berafoot.com/spec/pipeline.json",
       "file": "pipeline.json",
-      "summary": "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; 8 constraint gates plus 6 identity invariants govern the output. data.stages carries the substantive Stage 0–5 content (do / produce / check / layers_consulted per stage). data.frontmatter_contract is the single-place schema for breakdown / card / render metadata.",
+      "summary": "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; 9 constraint gates (V3.4+) plus 8 identity invariants govern the output. data.stages carries the substantive Stage 0–5 content (do / produce / check / layers_consulted per stage). data.frontmatter_contract is the single-place schema for breakdown / card / render metadata.",
       "source": "10-GOVERNANCE/PIPELINE-card-assembly.md"
     },
     {
@@ -241,17 +241,17 @@
       {
         "file": "00-INDEX/INDEX-supercard-v3.md",
         "updated": "2026-05-16",
-        "sha256": "e6637d0ed2fa858f46691cd4d7a294cf8ba9d22f50532e2630e84f4ee8b9e7b2"
+        "sha256": "70d73edc0062559df7af2d7dff939e7034af86c3dec3d29d10f05f316323d1bc"
       },
       {
         "file": "10-GOVERNANCE/PRINCIPLES-supercard-v3.md",
         "updated": "2026-05-16",
-        "sha256": "f6eeb080ff4adba8937fcd7affff6e8f7c5c71e73506c94b6193699d6b882727"
+        "sha256": "bc08a17c82ef8a6629e183b70dd67ad039d7d1a48629bd61a5d3c527feb1b93f"
       },
       {
         "file": "10-GOVERNANCE/GRAMMAR-block-composition.md",
         "updated": "2026-05-16",
-        "sha256": "240ce6df4dbf7b84907665b510ac453b013d8fbb4f6302e4563144abb222d6e1"
+        "sha256": "bcccbe350959dea87a369f7fec70f00ee176390f3b4527cdf1354a2409869b26"
       },
       {
         "file": "10-GOVERNANCE/LENGTHS-mini-standard-xl.md",
@@ -261,17 +261,17 @@
       {
         "file": "00-INDEX/INDEX-block-library.md",
         "updated": "2026-05-16",
-        "sha256": "18908681e06753eabbf69ec2a9dccdb014dad97e1e3ecf062bfd553e3be7425a"
+        "sha256": "5bd32ec8414bb2d38a27441b844cad83ad58abd46037e1ef9bf17b83fac15f2e"
       },
       {
         "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",
         "updated": "2026-05-16",
-        "sha256": "d4515a2bcf263a2425a0e5477228c587560fd47ef91aee6fcf23949e89c6a147"
+        "sha256": "73a032381af3eeaf43d4128ebb915a92a5afb67b00b82eed72af4f0d96650ca7"
       },
       {
         "file": "10-GOVERNANCE/RENDERING-spec.md",
         "updated": "2026-05-16",
-        "sha256": "eaf080a48892399842e88952967a7c1fa1154f85d71ef2c109a9d228fdc5e9f2"
+        "sha256": "8825832f79c5ffb72f4d4ea4abf4747ad0816e290bdc04f26066447c802deb56"
       },
       {
         "file": "10-GOVERNANCE/GLOSSARY-supercard.md",

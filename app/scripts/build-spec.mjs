@@ -409,7 +409,7 @@ function buildPrinciples() {
   return leaf(
     "principles",
     "Identity rules — what is and isn't a Supercard",
-    "The 12 foundational principles (10 V3.0 + 2 V3.1). PRINCIPLES is the identity-audit reference; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
+    "The 14 foundational principles (10 V3.0 + 2 V3.1 + 2 V3.4). PRINCIPLES is the identity-audit reference; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
     {
       source: d.path,
       provenance: provenanceOf(d),
@@ -709,7 +709,7 @@ function buildPipeline() {
   return leaf(
     "pipeline",
     "Request → published card, end to end",
-    `The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; 8 constraint gates plus 6 identity invariants govern the output. data.stages carries the substantive Stage 0–5 content (do / produce / check / layers_consulted per stage). data.frontmatter_contract is the single-place schema for breakdown / card / render metadata.`,
+    `The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; 9 constraint gates (V3.4+) plus 8 identity invariants govern the output. data.stages carries the substantive Stage 0–5 content (do / produce / check / layers_consulted per stage). data.frontmatter_contract is the single-place schema for breakdown / card / render metadata.`,
     {
       source: d.path,
       provenance: provenanceOf(d),
@@ -815,9 +815,83 @@ function buildAgentGuide() {
           "choose a length variant": ["lengths", "grammar"],
           "look up a term": ["glossary"],
           "see a worked end-to-end example": ["example"],
+          "write or simplify prose on a V3.4+ card": ["agent-guide", "principles", "grammar"],
         },
         build_sequence_pointer:
           "For Stage 0–5 with do/produce/check/layers_consulted, fetch the pipeline layer (data.stages). For constraint gates and identity invariants, fetch pipeline (data.constraint_gates and data.identity_invariants). For the frontmatter contract on breakdowns, cards, and renders, fetch pipeline (data.frontmatter_contract). For the block selection procedure, fetch grammar (data.block_selection_procedure).",
+        writing_register: {
+          id: "writing_register",
+          title: "How to write a V3.4+ Supercard's prose",
+          summary: "Plain-language targets, paragraph caps, and the transition vocabulary. Read this BEFORE drafting prose blocks on a card declaring frozen_at_version: 3.4.0 or higher.",
+          rules: {
+            readability_targets: {
+              flesch_kincaid_grade_max: 9,
+              flesch_reading_ease_min: 60,
+              avg_sentence_length_words_max: 20,
+              sentence_length_hard_max_words: 30,
+              complex_word_ratio_max: 0.15,
+              source: "P13, G-13",
+            },
+            paragraph_caps: {
+              mobile_soft_cap_sentences: 3,
+              mobile_soft_cap_words: 60,
+              hard_cap_sentences: 4,
+              hard_cap_words: 75,
+              source: "G-12 (mobile soft), G-8 (hard)",
+            },
+            bolded_lead_clause: {
+              words_min: 2,
+              words_max: 6,
+              must_be_noun_phrase_or_imperative: true,
+              must_not_be_hedge_or_interjection: true,
+              source: "G-7",
+            },
+          },
+          transition_vocabulary: [
+            {
+              pattern: "eyebrow_plus_tagline",
+              shape: "Short uppercase eyebrow names topic (≤4 words); tile-sized headline (28/32, semibold) lands the claim.",
+              example: "The evidence / It cuts both ways.",
+              source: "G-14",
+            },
+            {
+              pattern: "two_sentence_haiku",
+              shape: "One headline holding two clipped sentences; typographic break (em-dash or period); both halves in one Display-sized block.",
+              example: "M5. The chip that zips.",
+              source: "G-14",
+            },
+            {
+              pattern: "imperative_lead",
+              shape: "Three-to-six-word imperative headline starting with Built/Designed/Engineered.",
+              example: "Built for AI. From the silicon up.",
+              source: "G-14",
+            },
+            {
+              pattern: "now_you_can_kicker",
+              shape: "Bridging sentence INSIDE a standard-text block, never as a section break.",
+              example: "Now you can track your heart rate during workouts.",
+              source: "G-14",
+            },
+            {
+              pattern: "single_word_eyebrow",
+              shape: "Entire section bridge is one uppercase word; eyebrow IS the bridge.",
+              example: "Performance.",
+              source: "G-14",
+            },
+          ],
+          forbidden_transitions: [
+            "position-language ('Section N', 'Next up', 'Now we move to…')",
+            "meta-language ('In the following section', 'Let's look at…', 'We'll cover…', 'As mentioned above')",
+            "restatement bridges (eyebrow or tagline paraphrasing the body below)",
+          ],
+          writing_protocol: [
+            "Draft each block's content first. Ignore the bolded lead-clause until the content is real.",
+            "Run the readability check (validator helper). If above Grade 9 or below Ease 60, simplify.",
+            "Count sentences (≤3 mobile target, ≤4 hard) and words (≤60 mobile target, ≤75 hard) per block.",
+            "Add the bolded lead-clause last — 2-6 words, noun phrase or imperative, the block's one emphasis.",
+            "For section bridges, pick one of the five transition patterns. Never write 'In the next section'.",
+          ],
+        },
         canonical_repo: "https://github.com/fiebsy/supercard",
         note: "This JSON spec is a generated view of the markdown in that repo. The markdown is the source of truth (ADR-0003). To change the spec, change the markdown and regenerate — see _meta.regenerate in index.json.",
       },

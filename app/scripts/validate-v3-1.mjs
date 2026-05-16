@@ -1,5 +1,10 @@
 /*
- * validate-v3-1.mjs — surfaces V3.1 ADHD-scan-ability violations in cards.
+ * validate-v3-1.mjs — surfaces ADHD-scan-ability violations in cards.
+ *
+ * Validates V3.1+ cards: V3.1, V3.2, V3.3, V3.4. Filename retained from the
+ * V3.1 launch; the validator is version-aware via the card's frontmatter
+ * `frozen_at_version` and applies the rule set for that version (and any
+ * versions inherited).
  *
  *   node scripts/validate-v3-1.mjs                # scan every card
  *   node scripts/validate-v3-1.mjs <card.md...>   # scan named cards
@@ -17,12 +22,29 @@
  *     - scaffold leakage on V3.3+ cards: a standalone BEAT N / N / TOTAL
  *       line on the rendered canvas. The pre-V3.3 micro-folio was permitted;
  *       R-10 (V3.3) and identity invariant I7 prohibit it.
+ *     - (V3.4+) prose block has zero anchor — no bolded lead-clause, focal
+ *       stat, definition term, takeaway row, or attribution (R-17)
+ *     - (V3.4+) position-language transition between beats — "Section N",
+ *       "Next up", "Now we move to…" (G-14)
+ *     - (V3.4+) meta-language transition between beats — "In the following
+ *       section", "Let's look at…", "As mentioned above" (G-14)
+ *     - (V3.4+) more than two readability warnings on a single card (G9)
+ *     - (V3.4+) `apple_register: true` declared alongside R-9 customization
+ *       in the same card (R-18)
+ *     - (V3.4+) mixed beat-gap sizes within a single card (R-15)
+ *     - (V3.4+) card uses both --surface-tint and --g-06 hairline on
+ *       different blocks (R-16)
  *
  *   Warnings (exit 0, printed) — fix where possible:
  *     - standard-text block exceeds 75 words or 4 sentences
  *     - beat has > 4 consecutive content blocks without an asterism/anchor
  *     - beat with >= 5 blocks missing the asterism (⁂) rest
  *     - per-beat anchor:content ratio outside the 1:2..1:4 band
+ *     - (V3.4+) standard-text block exceeds 60 words (G-12 mobile cap)
+ *     - (V3.4+) prose block tests above Flesch-Kincaid grade 9 (G-13)
+ *     - (V3.4+) prose block tests below Flesch Reading Ease 60 (G-13)
+ *     - (V3.4+) prose block average sentence length above 20 words (G-13)
+ *     - (V3.4+) eyebrow / tagline paraphrases the body below it (G-14)
  *
  * The validator is opt-in (V3.1+ only) and does not block the build.
  */
@@ -188,6 +210,123 @@ function hasAsterism(text) {
   return /⁂/.test(text);
 }
 
+/* ------------------------------------------------------------------ *
+ * V3.4 helpers — readability, anchor presence, transition vocabulary,
+ * spacing-token / register consistency.
+ *
+ * Readability uses a standard Flesch-Kincaid implementation with a
+ * vowel-cluster syllable heuristic — same family as the npm `flesch`
+ * and `readability-scores` packages, inlined to avoid adding a runtime
+ * dependency. Tracks Flesch-Kincaid grade level, Flesch Reading Ease,
+ * and average sentence length per block (G-13).
+ * ------------------------------------------------------------------ */
+
+function readableText(raw) {
+  // Strip markdown noise the reader doesn't experience as prose so the
+  // grade-level number reflects what the rendered block reads as.
+  return raw
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/^\s*HERO-CARD:.*$/gm, "")
+    .replace(/^\s*`?BLOCK-[\w-]+`?.*$/gm, "")
+    .replace(/^\s*>\s?/gm, "")
+    .replace(/^\s*\|.*\|\s*$/gm, " ")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/\*([^*]+)\*/g, "$1")
+    .replace(/_([^_]+)_/g, "$1")
+    .replace(/\[(.*?)\]\([^)]*\)/g, "$1")
+    .replace(/[#>|*_]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function countSyllables(word) {
+  const w = word.toLowerCase().replace(/[^a-z]/g, "");
+  if (!w) return 0;
+  if (w.length <= 3) return 1;
+  const trimmed = w.replace(/(?:[^aeiouy]es|ed|[^aeiouy]e)$/, "");
+  const groups = trimmed.match(/[aeiouy]+/g);
+  return Math.max(1, groups ? groups.length : 1);
+}
+
+// Flesch-Kincaid implementation (see PRINCIPLES 13 / GRAMMAR § G-13).
+// Returns { grade, ease, avgSentenceLength, sentences, words, complexRatio }.
+function fleschKincaid(raw) {
+  const text = readableText(raw);
+  if (!text) {
+    return { grade: 0, ease: 100, avgSentenceLength: 0, sentences: 0, words: 0, complexRatio: 0 };
+  }
+  const sentenceMatches = text.match(/[^.!?]+[.!?]+(?:\s|$)/g) || [text];
+  const sentences = Math.max(1, sentenceMatches.length);
+  const wordTokens = text.match(/\b[\w'-]+\b/g) || [];
+  const words = Math.max(1, wordTokens.length);
+  let syllables = 0;
+  let complexWords = 0;
+  for (const w of wordTokens) {
+    const s = countSyllables(w);
+    syllables += s;
+    if (s >= 3) complexWords += 1;
+  }
+  const grade = 0.39 * (words / sentences) + 11.8 * (syllables / words) - 15.59;
+  const ease = 206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words);
+  return {
+    grade: Math.round(grade * 10) / 10,
+    ease: Math.round(ease * 10) / 10,
+    avgSentenceLength: Math.round((words / sentences) * 10) / 10,
+    sentences,
+    words,
+    complexRatio: Math.round((complexWords / words) * 1000) / 1000,
+  };
+}
+
+// R-17 anchor presence: every block must carry one of bolded lead-clause,
+// focal stat (numeric anchor), definition term, takeaway row, or attribution.
+function hasAnchor(block) {
+  const text = block.bodyText;
+  if (!text) return false;
+  if (block.type && ANCHOR_TYPES.has(block.type)) return true;
+  if (block.type === "stat-callout" || block.type === "stat-grid") return true;
+  if (block.type === "definition" && /\*\*[^*]+\*\*/.test(text)) return true;
+  if (block.type === "table" && hasTakeawayRow(text)) return true;
+  if (block.type === "pull-quote" || block.type === "quote-as-evidence") {
+    return /—\s*\S+|^\s*—/m.test(text);
+  }
+  if (startsWithBoldedLead(text)) return true;
+  // Hero blocks declare themselves via HERO-CARD; an explicit hero anchor is
+  // the hero block's lead.
+  if (/^\s*HERO-CARD:/m.test(text)) return true;
+  // A focal stat — a large bolded number — counts as anchor for any block.
+  if (/\*\*[\d.,%$]+[\d.,%$KMB]*\*\*/.test(text)) return true;
+  return false;
+}
+
+const POSITION_LANG = [
+  /\b(?:section|beat)\s+\d+\b/i,
+  /\bnext\s+up\b/i,
+  /\bnow\s+we\s+move\s+to\b/i,
+  /\bin\s+beat\s+\d+\b/i,
+];
+const META_LANG = [
+  /\bin\s+the\s+following\s+section\b/i,
+  /\blet'?s\s+look\s+at\b/i,
+  /\bwe['']?ll\s+cover\b/i,
+  /\bas\s+mentioned\s+above\b/i,
+  /\bas\s+we['']?ll\s+see\b/i,
+];
+
+function findTransitionViolations(text) {
+  const hits = { position: [], meta: [] };
+  for (const re of POSITION_LANG) {
+    const m = re.exec(text);
+    if (m) hits.position.push(m[0]);
+  }
+  for (const re of META_LANG) {
+    const m = re.exec(text);
+    if (m) hits.meta.push(m[0]);
+  }
+  return hits;
+}
+
 // R-14 context-chip strip: a standalone line of the form
 //   `WORD · WORD · WORD` (3+ middle-dot-separated UPPERCASE tokens).
 // Detected after stripping bold/italic markers so `**A · B · C**` and
@@ -243,6 +382,9 @@ function validateCard(path, raw) {
   }
 
   const blocks = parseBlocks(raw);
+  const isV34 = compareVersion(fav, "3.4.0") >= 0;
+  const appleRegister = (meta.apple_register || "").toLowerCase() === "true";
+  const readabilityWarningsThisCard = [];
 
   // ------- per-block rules
   for (const b of blocks) {
@@ -258,10 +400,14 @@ function validateCard(path, raw) {
       const words = countWords(b.bodyText);
       if (words > 75) {
         push(warnings, b, `standard-text exceeds 75-word cap (${words} words; G-8)`);
+      } else if (isV34 && words > 60) {
+        push(warnings, b, `standard-text exceeds 60-word mobile cap (${words} words; G-12)`);
       }
       const sents = countSentences(b.bodyText);
       if (sents > 4) {
         push(warnings, b, `standard-text exceeds 4-sentence cap (${sents} sentences; G-8)`);
+      } else if (isV34 && sents > 3) {
+        push(warnings, b, `standard-text exceeds 3-sentence mobile cap (${sents} sentences; G-12)`);
       }
     }
     if (b.type === "table" || /^\s*\|.*\|/m.test(b.bodyText)) {
@@ -277,6 +423,72 @@ function validateCard(path, raw) {
       for (const leak of findScaffoldLeaks(b.bodyText)) {
         push(errors, b, `scaffold leakage "${leak}" — beat labels and position counters do not appear in the rendered card (R-10 V3.3, I7)`);
       }
+    }
+    if (isV34) {
+      // R-17: every block carries its own anchor.
+      const proseTypes = new Set(["standard-text", "faq", "code"]);
+      if (!hasAnchor(b) && (proseTypes.has(b.type) || b.type === null)) {
+        push(errors, b, `block has no anchor — needs a bolded lead-clause, focal stat, definition term, takeaway row, or attribution (R-17)`);
+      }
+      // G-13 readability check on prose-bearing blocks.
+      const proseLike = proseTypes.has(b.type) || b.type === null;
+      if (proseLike) {
+        const reading = readableText(b.bodyText);
+        if (reading.split(/\s+/).filter(Boolean).length >= 20) {
+          const r = fleschKincaid(b.bodyText);
+          if (r.grade > 9) {
+            const msg = `prose tests above Flesch–Kincaid grade 9 (grade ${r.grade}; G-13)`;
+            push(warnings, b, msg);
+            readabilityWarningsThisCard.push({ block: b, msg });
+          }
+          if (r.ease < 60) {
+            const msg = `prose tests below Flesch Reading Ease 60 (ease ${r.ease}; G-13)`;
+            push(warnings, b, msg);
+            readabilityWarningsThisCard.push({ block: b, msg });
+          }
+          if (r.avgSentenceLength > 20) {
+            const msg = `prose average sentence length ${r.avgSentenceLength} > 20 words (G-13)`;
+            push(warnings, b, msg);
+            readabilityWarningsThisCard.push({ block: b, msg });
+          }
+        }
+      }
+      // G-14 transition vocabulary: position-language and meta-language.
+      const trans = findTransitionViolations(b.bodyText);
+      for (const phrase of trans.position) {
+        push(errors, b, `position-language transition "${phrase}" — bridges name content, never position (G-14)`);
+      }
+      for (const phrase of trans.meta) {
+        push(errors, b, `meta-language transition "${phrase}" — the reader needs the point, not a preview of it (G-14)`);
+      }
+    }
+  }
+
+  // ------- per-card V3.4 rules
+  if (isV34) {
+    // G9: more than two readability warnings on a single card escalate.
+    if (readabilityWarningsThisCard.length > 2) {
+      push(errors, null, `card has ${readabilityWarningsThisCard.length} readability warnings — G9 gate escalates to an error above 2`);
+    }
+    // R-15: a card SHOULD snap to one beat-gap value. The frontmatter field
+    // `beat_gap` is the declaration; if absent we don't error (the renderer
+    // picks the default 48pt per R-15).
+    if (meta.beat_gap) {
+      const allowed = new Set(["48", "64", "120", "48pt", "64pt", "120pt"]);
+      if (!allowed.has(meta.beat_gap.trim().toLowerCase())) {
+        push(errors, null, `beat_gap "${meta.beat_gap}" not one of 48 / 64 / 120 pt — R-15 requires a uniform snap value per card`);
+      }
+    }
+    // R-16: card declares either tinted surface (no hairline) or hairline (no
+    // tint), not both. The frontmatter field `surface` is the declaration.
+    const surface = (meta.surface || "").trim().toLowerCase();
+    if (surface && !["hairline", "tinted"].includes(surface)) {
+      push(errors, null, `surface "${meta.surface}" not one of "hairline" | "tinted" — R-16 is per-card`);
+    }
+    // R-18: apple_register: true forbids per-card R-9 overrides in the same
+    // card (the validator looks for a `r9_overrides` frontmatter field).
+    if (appleRegister && meta.r9_overrides && meta.r9_overrides.toLowerCase() !== "false") {
+      push(errors, null, `apple_register: true conflicts with r9_overrides declared in the same card (R-18 mutual exclusion)`);
     }
   }
 

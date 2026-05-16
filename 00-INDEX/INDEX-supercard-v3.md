@@ -5,7 +5,7 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.3.0 |
+| version | 3.4.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -112,6 +112,12 @@ ls docs/cards/
 | 0006 | Dedicated research-report store (`60-RESEARCH/`) | Accepted | 2026-05-14 |
 | 0007 | Render and publish by default | Accepted | 2026-05-14 |
 | 0008 | Spec organized for agent legibility (3.2.0) | Accepted | 2026-05-16 |
+
+## Change-log pointer
+
+The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entry:
+
+**v3.4.0** — Apple-calibrated readability cut. Added P13 (plain language as substance), P14 (connective flow without scaffold), G-12 (paragraph mobile cap), G-13 (readability target), G-14 (connective-flow vocabulary), R-15 (section spacing scale), R-16 (surface-tinted card affordance), R-17 (screenshot-autonomy enforcement), R-18 (Apple register opt-in for body). Added `--s-9: 120pt` spacing token, `--surface-tint: rgba(0,0,0,0.025)` color token, and a 28/32 Tile type-ramp step. Backwards-compatible: every v3.3 card renders identically under v3.4. New constraints apply to `frozen_at_version: 3.4.0` and later only.
 
 ## Versioning at a glance
 

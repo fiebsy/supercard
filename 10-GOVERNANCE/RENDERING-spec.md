@@ -5,7 +5,7 @@
 | id | RENDERING-spec |
 | type | governance |
 | era | atlas |
-| version | 3.3.0 |
+| version | 3.4.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -35,6 +35,8 @@ How a Supercard source becomes a rendered HTML artifact, and how that artifact i
 
 Body text uses #111111 (--ink), never pure black. Per-block layers use --ink-2 (#333), --ink-3 (#555), --ink-4 (#888), --ink-5 (#BBB).
 
+**Surface tint (V3.4+, optional).** A `--surface-tint: rgba(0,0,0,0.025)` (alternately `#F7F7F7`) is permitted as a card background under R-16. It is **not** a seventh step in the ramp; it is a single off-white that sits between `--w` and `--g-06` for the specific purpose of replacing a hairline border with a tonal-contrast affordance. Cards using `--surface-tint` MUST omit the hairline; cards using the hairline MUST use `--w`. Mixing both on the same card is forbidden.
+
 The canvas is light-only. The renderer declares `color-scheme: light` on `:root` and emits `<meta name="color-scheme" content="light">` in `<head>` so iOS Safari's automatic dark-mode (and equivalents in other webviews) does not partially invert the page — that inversion leaves `--ink-2` / `--ink-3` text as low-contrast gray on near-black. A theme-aware dark variant, if ever introduced, ships as a parallel ink ramp under `@media (prefers-color-scheme: dark)`, never as an auto-inversion.
 
 ## Type scale (SF Pro Rounded)
@@ -43,12 +45,19 @@ The canvas is light-only. The renderer declares `color-scheme: light` on `:root`
 |---|---|---|---|
 | Hero number | 56 / 60 | Bold (700) + tnum | −0.022 |
 | Display title | 40 / 44 | Semibold (600) | −0.018 |
+| Tile head (V3.4+) | 28 / 32 | Semibold (600) | −0.012 |
 | Section header | 24 / 30 | Semibold (600) | −0.012 |
 | Subtitle | 19 / 26 | Medium (500) | −0.005 |
 | Body | 17 / 24 | Regular (400) | −0.008 |
 | Caption | 13 / 18 | Regular | +0.008 |
-| Eyebrow | 11 / 14 | Semibold UPPERCASE | +0.07 |
+| Eyebrow | 11 / 14 | Semibold UPPERCASE | +0.08 |
 | Code / equations | 14 / 22 | SF Mono Regular | 0 |
+
+**Note on the body row.** The token table lists Body as 17/24 with tracking −0.008. **R-9 (V3.1+) supersedes that row** for any card frozen at V3.1.0 or later — body renders at 17/26 with +0.03em letter-spacing and +0.06em word-spacing, left-aligned ragged, weights 400/500/700 only. The token row remains as the V3.0 reference; the R-9 override is what V3.1+ cards render to. **R-18 (V3.4+) adds an opt-in "Apple register" variant** that further tightens body line-height and letter-spacing for marketing-mode cards.
+
+**Note on the eyebrow row.** The eyebrow row is canonical at +0.08em tracking — matching R-10 and R-14. The earlier +0.07 figure was a stale token-table value; cards and CSS that still emit +0.07 render visibly the same and are accepted, but new renders snap to +0.08.
+
+**Note on the Tile head row (V3.4+).** The 28/32 Tile head step is new in V3.4 and is the canonical size for the tagline half of an eyebrow + tagline pair (see G-14 Pattern 1). It sits between Display title (40/44) and Section header (24/30). V3.1–V3.3 cards do not use the Tile step.
 
 CSS stack:
 
@@ -69,9 +78,10 @@ CSS stack:
 | --s-3 | 16 | Default block padding |
 | --s-4 | 24 | Card internal pad |
 | --s-5 | 32 | Section internal spacing |
-| --s-6 | 48 | Beat boundaries |
+| --s-6 | 48 | Beat boundaries (V3.3 default) |
 | --s-7 | 64 | Major section breaks |
 | --s-8 | 96 | Hero / footer |
+| --s-9 | 120 | Marketing-scale section gap (V3.4+, opt-in via R-15) |
 
 ## Shadow system
 
@@ -214,6 +224,50 @@ If a label fails any of the three, it's a renderer drift and must be cut. No exc
 
 R-13 is the cover-specific application of R-14. The only labels a V3.3 card earns are the editorial eyebrow (when a beat's first block doesn't carry its own anchor) and the corner glyph (system identity, screenshot autonomy). Everything else fails the three-question test.
 
+## R-15. Section spacing scale (V3.4+)
+
+Beat boundaries default to **48pt (`--s-6`)** on the canonical 393pt mobile canvas — unchanged from V3.3. Cards declaring `frozen_at_version: 3.4.0` MAY use **64pt (`--s-7`) or 120pt (`--s-9`)** between beats when the card's mode and length variant warrant marketing-scale breathing room: XL deep-dives and any card whose hero stat carries a Display-sized poster moment.
+
+The renderer MUST snap to one of the three values per card — 48, 64, or 120 pt — and apply that value to every beat boundary uniformly. Mixed gap sizes within a single card emit a warning. Apple's marketing pages run at 60–80pt mobile / 120–140pt desktop; the 64pt option matches mobile-scale Apple, the 120pt option matches desktop-scale Apple.
+
+## R-16. Surface-tinted card affordance (V3.4+)
+
+A card MAY use the **tinted-surface variant** in place of the default hairline-bordered variant. The two are mutually exclusive on any given card; the choice is per-card, not per-block.
+
+**Default (V3.3 baseline, unchanged):** white surface (`--w`), 0.5px hairline at `--g-06`, 16pt corner radius.
+
+**Tinted variant (V3.4+):** `--surface-tint` (`rgba(0,0,0,0.025)`) surface, no border, **18pt corner radius**. Cards using this variant inherit the Apple marketing-page affordance pattern: contrast comes from the surface tint against the white page, not from a hairline stroke that can compress out in screenshots.
+
+**The screenshot-survival test for R-16.** Render the card, take a JPEG screenshot at 70% quality, view it at 50% size. The hairline must remain visible OR the surface tint must clearly differentiate the card from the page. If neither holds, the card fails R-17 below.
+
+## R-17. Screenshot-autonomy enforcement (V3.4+)
+
+The validator (`app/scripts/validate-v3-1.mjs`) MUST verify two structural conditions on every V3.4+ card:
+
+1. **Every block has its own anchor.** An anchor is one of: a bolded lead-clause (G-7), a focal stat (numeric anchor), a definition term (definition block), a takeaway row (table with ≥ 4 rows, G-11), or an attribution (pull-quote). Blocks without anchors fail R-17 with an error.
+
+2. **The corner glyph is present on every screenshot region.** The renderer MUST emit the corner glyph as a fixed-position element with `position: fixed` so that it appears on every viewport-sized capture of the card. Cards that scroll past 2,000pt MUST verify the glyph remains in the viewport at every scroll position via the test in `RENDERING-spec § Output contract`.
+
+R-17 is the operationalization of Principle 1 (screenshot autonomy) at validation time. P1 was the goal; R-17 is the gate.
+
+## R-18. Apple register opt-in (V3.4+)
+
+A V3.4+ card MAY declare `apple_register: true` in its frontmatter to opt into Apple's exact body typography in place of R-9's defaults. The Apple register applies these overrides on prose-bearing roles:
+
+| Role | R-9 default (V3.1+) | Apple register (V3.4+ opt-in) |
+|---|---|---|
+| Body letter-spacing | +0.03em | **−0.022em** |
+| Body word-spacing | +0.06em | (default) |
+| Body line-height | 26pt (1.53) | **25pt (1.47)** |
+| Display tracking | −0.018em | **−0.024em** |
+| Display headline ramp | 40 → 56pt | **56 → 80pt** with `clamp()` |
+
+**When to use it.** The Apple register is for marketing-mode cards — content that prioritizes the screenshotable poster aesthetic over the cognitive-prosthesis dense-reading aesthetic. A card carrying a single hero number, a few lofted stats, and short tile-headed beats reads better in the Apple register. A card carrying long prose, three multi-block beats, and dense rationale reads better in R-9.
+
+**WCAG note.** R-9's 26pt body line-height (1.53) sits above the WCAG 2.2 SC 1.4.12 floor of 1.5. The Apple register's 25pt (1.47) sits **below** that floor. The render MUST emit a `data-wcag-note="apple-register-below-1.5"` attribute on the canvas root when `apple_register: true` is set, so downstream consumers know about the accessibility implication. Cards needing strict WCAG AA conformance stay on R-9.
+
+**Mutual exclusion.** A card declares either Apple register or R-9, not both. Mixing within a single card emits an error.
+
 ## Block compatibility
 
 Every block in `20-BLOCKS/` declares:
@@ -241,6 +295,7 @@ Rendered HTML must:
 - Carry the corner glyph on every section as a fixed-position element
 - **Emit no scaffold chrome.** Beat numbers (`BEAT 3`), position counters (`4 / 7`), block-type ids (`BLOCK-pull-quote`), and renderer-version / mode / date footers are **authoring metadata**: they live in the markdown card (`30-CARDS/`), in the breakdown, and in the HTML `<meta>` tags below — never in the reader-visible canvas (R-10, I7). A beat's first block MAY carry a single editorial eyebrow (e.g., `The medical study`) when its own anchor doesn't name the content; the eyebrow is the *only* permitted section label and never carries a position counter. The cover (R-13) declares which header elements are permitted; any other label is a renderer drift.
 - Embed provenance as `<meta>` tags in the HTML `<head>`: `sc:source_file`, `sc:research_report`, `sc:renderer_version`, `sc:frozen_at_version`, `sc:rendered_at` (and `sc:source_commit`, `sc:content_hash` where available). These five are mandatory and reader-invisible — they carry the production-metadata stamp that R-10 (V3.3) moves out of the rendered chrome. `sc:research_report` closes the genealogy loop — the render points back through the card to the `60-RESEARCH/` report it descends from.
+- **Corner glyph viewport-persistent (V3.4+).** The corner glyph element renders with `position: fixed` and remains in the viewport at every scroll position. Cards over 2,000pt total height MUST be tested with an automated scroll-screenshot pass before publish — every 800pt slice must capture the glyph.
 
 ## Publishing (mandatory — ADR-0007)
 

@@ -5,7 +5,7 @@
 | id | PIPELINE-card-assembly |
 | type | governance |
 | era | atlas |
-| version | 3.3.0 |
+| version | 3.4.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -93,7 +93,7 @@ The "facts kept" column is approximate — what matters is monotone progression 
 
 ## Stage 4 — Constraint gates and identity invariants
 
-- **Do.** Run the 8 constraint gates (G1–G8) below at draft completion. Then verify the 7 identity invariants (I1–I7) hold. Re-run any failed gate after a fix; restart from the violated layer if any invariant is broken.
+- **Do.** Run the 9 constraint gates (G1–G9) below at draft completion. Then verify the 8 identity invariants (I1–I8) hold. Re-run any failed gate after a fix; restart from the violated layer if any invariant is broken.
 - **Produce.** A gate-results table (`id`, `result`, `note`) and an invariant-check confirmation. Both attach to the card's `Authoring notes`.
 - **Check.** Every gate returns pass. Every invariant holds.
 - **Layers consulted.** `principles`, `grammar`, `lengths`, `rendering`.
@@ -111,7 +111,8 @@ Two categories of check, both must pass. **Gates** are binary pass/fail rules an
 | G5 | Screenshot test | Five questions on every section, including the header | GRAMMAR pre-publication test |
 | G6 | Frozen-at-version | Frontmatter declares `frozen_at_version` | ADR-0003 |
 | G7 | Density budget (V3.1+) | Anchor-to-content ratio per beat between 1:2 and 1:4; ≤ 2 same-type consecutive anchors; ≤ 4 consecutive content blocks | GRAMMAR § G-9 |
-| G8 | ADHD scan-ability gate (V3.1+) | The 10-item Y/N checklist in PRINCIPLES; any "no" blocks the render | PRINCIPLES § ADHD gate |
+| G8 | ADHD scan-ability gate (V3.1+) | The 10-item Y/N checklist in PRINCIPLES; any "no" blocks the render. V3.4+ cards run the twelve-question form. | PRINCIPLES § ADHD gate |
+| G9 | Readability gate (V3.4+) | Computes Flesch–Kincaid grade level and Flesch Reading Ease across every prose block. Fails when grade level exceeds 9 on more than 30% of prose blocks or when reading ease drops below 60 on any single block. | GRAMMAR § G-13, PRINCIPLES 13 |
 
 ### Identity invariants (always on; not "passed" — held)
 
@@ -124,6 +125,7 @@ Two categories of check, both must pass. **Gates** are binary pass/fail rules an
 | I5 | Format-as-grammar, not length — Mini / Standard / XL are presentation variants of one grammar | PRINCIPLES 3 |
 | I6 | Genealogy-as-asset — every card declares `version`, `frozen_at_version`, `research_report` | PRINCIPLES 10, ADR-0003, ADR-0006 |
 | I7 | No scaffold leakage — the author's production structure (beats, block IDs, render metadata, version strings) does not appear in the reader's view. Renderer chrome that exists to help the author is not part of the rendered card | RENDERING § R-10 (V3.3) |
+| I8 | Plain-language readability (V3.4+) — every prose block in a V3.4+ card targets Flesch–Kincaid grade ≤ 9 and Flesch Reading Ease ≥ 60. The validator enforces this with a warning at the per-block level and an error at the per-card level (two warnings escalate). Inherits from PRINCIPLES 13. | PRINCIPLES 13, GRAMMAR § G-13 |
 
 Any gate failure → fix, then re-run the gate. Any invariant violation → the artifact is by definition not a Supercard; restart from the violated layer.
 
