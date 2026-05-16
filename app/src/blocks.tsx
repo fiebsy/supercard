@@ -10,6 +10,13 @@
  * "Close", not "Beat 7 · Close", and never the BLOCK-* id. The beat index and
  * block id are authoring metadata: they live in the markdown card (30-CARDS/)
  * and in the JSX comments below, and are never rendered (RENDERING-spec).
+ *
+ * V3.3 note: the rendered card MUST NOT emit beat NUMBERS, position counters
+ * (`BEAT N`, `N / TOTAL`), or any reader-visible renderer-version footer.
+ * Beat-name eyebrows are still permitted, but only as a content-naming label
+ * — see RENDERING § R-10 (V3.3) and identity invariant I7. The deprecated
+ * `MicroFolio` component below is dev-only and must not be mounted in new
+ * cards (frozen_at_version >= 3.3.0).
  */
 import type { ReactNode } from "react";
 
@@ -368,7 +375,16 @@ export function Asterism() {
   );
 }
 
-/* ---- V3.1: beat micro-folio at top + bottom edges (R-10) --------------- */
+/* ---- Deprecated V3.1 beat micro-folio (dev-only on V3.3+) -------------- *
+ * R-10 (V3.3) prohibits emitting beat labels, numbers, or position counters
+ * on the rendered canvas — they leaked the author's seven-beat scaffold into
+ * the reader's view. The component survives so V3.1/V3.2 cards can still be
+ * re-rendered for diagnostics, and so a renderer maintainer can flip on a
+ * `.dev-mode` class on the canvas root to see the structural overlay; the
+ * `.micro-folio` CSS rule defaults to `display: none`, so even when this
+ * component is mounted, the markup is invisible in a production render.
+ *
+ * Do NOT mount this in new cards (frozen_at_version >= 3.3.0). */
 
 const BEAT_NAMES: Record<number, string> = {
   1: "HOOK",
@@ -380,6 +396,7 @@ const BEAT_NAMES: Record<number, string> = {
   7: "CLOSE",
 };
 
+/** @deprecated Removed from the V3.3 render contract (R-10, I7). Dev-only. */
 export function MicroFolio({
   beat,
   total = 7,
@@ -391,7 +408,7 @@ export function MicroFolio({
 }) {
   const name = BEAT_NAMES[beat] ?? "";
   return (
-    <div className={`micro-folio micro-folio--${edge}`}>
+    <div className={`micro-folio micro-folio--${edge}`} aria-hidden="true">
       BEAT {beat} · {name} · {beat} / {total}
     </div>
   );

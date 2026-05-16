@@ -1,9 +1,9 @@
 {
   "spec": "supercard",
   "title": "Supercard V3 — public specification",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "era": "atlas",
-  "spec_revision": "05290259e680",
+  "spec_revision": "e35c12d7499d",
   "sources_updated_max": "2026-05-16",
   "canonical_url": "https://berafoot.com/spec/index.json",
   "base_url": "https://berafoot.com/spec",
@@ -241,47 +241,47 @@
       {
         "file": "00-INDEX/INDEX-supercard-v3.md",
         "updated": "2026-05-16",
-        "sha256": "4a74b7c244c9055aee8eef0c28d9de8333d3b10aa91de2d4ee36838a1be801f5"
+        "sha256": "e6637d0ed2fa858f46691cd4d7a294cf8ba9d22f50532e2630e84f4ee8b9e7b2"
       },
       {
         "file": "10-GOVERNANCE/PRINCIPLES-supercard-v3.md",
         "updated": "2026-05-16",
-        "sha256": "d5e3fde9bfbfc6a7612b479af8793dd0cddccaaa06c1fd607e879de686d2cd48"
+        "sha256": "f6eeb080ff4adba8937fcd7affff6e8f7c5c71e73506c94b6193699d6b882727"
       },
       {
         "file": "10-GOVERNANCE/GRAMMAR-block-composition.md",
         "updated": "2026-05-16",
-        "sha256": "8f1e220326076c6d1564cfd3e1b43681624a42354ce6b126625dddd4684d522e"
+        "sha256": "240ce6df4dbf7b84907665b510ac453b013d8fbb4f6302e4563144abb222d6e1"
       },
       {
         "file": "10-GOVERNANCE/LENGTHS-mini-standard-xl.md",
         "updated": "2026-05-16",
-        "sha256": "a0a46841c0af5d0884e4d8de539c9036faf585559a92af7f564a0c848414c364"
+        "sha256": "e8c2e487046806d887cb044fa68e7e01cbd8d626b1295b376c28c309fe06eaf0"
       },
       {
         "file": "00-INDEX/INDEX-block-library.md",
         "updated": "2026-05-16",
-        "sha256": "ae054c3a47a8f19c5c20434954367020e0b0b217b15afb677fbee6f1d54b6811"
+        "sha256": "18908681e06753eabbf69ec2a9dccdb014dad97e1e3ecf062bfd553e3be7425a"
       },
       {
         "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",
         "updated": "2026-05-16",
-        "sha256": "2a314451c6684b0d47166da733c60f0c7e0d5b9fbf71c508857890de9dfcef96"
+        "sha256": "d4515a2bcf263a2425a0e5477228c587560fd47ef91aee6fcf23949e89c6a147"
       },
       {
         "file": "10-GOVERNANCE/RENDERING-spec.md",
         "updated": "2026-05-16",
-        "sha256": "45b852e6564b00154fdb5208144069703961862f51b5c7f9d457a8043844a823"
+        "sha256": "eaf080a48892399842e88952967a7c1fa1154f85d71ef2c109a9d228fdc5e9f2"
       },
       {
         "file": "10-GOVERNANCE/GLOSSARY-supercard.md",
         "updated": "2026-05-16",
-        "sha256": "6f74a36852ba90df86fd55b7411ae1f52ff2678edee48e01336f13a9c586ae96"
+        "sha256": "ea82659d8a59986b3b8a685b0c84b73fd0f865886b65e0b4e0fcff273e8b5e59"
       },
       {
         "file": "10-GOVERNANCE/EXAMPLE-mini-supercard.md",
         "updated": "2026-05-16",
-        "sha256": "94eb141db5a28478e102066d382c2e48c5d8dd77a228b3249246452db5920f2e"
+        "sha256": "bcf6df54c65bf26dc49c937e971d90e233c475a34ab4b434e1f4271e0dd02c09"
       }
     ]
   },

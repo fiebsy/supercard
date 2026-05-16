@@ -5,7 +5,7 @@
 | id | GLOSSARY-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -48,8 +48,8 @@ multiple layers is defined here, with its canonical source layer cited.
 | Term | Definition | Source |
 |---|---|---|
 | Corner glyph | The system mark on every section of every rendered card. The one element that makes a cropped screenshot traceable to the system. | PRINCIPLES 1 (screenshot autonomy), RENDERING |
-| Micro-folio | The 11pt small-caps label at the top edge of every beat and bottom edge of every card: `BEAT N · BEAT-NAME · POSITION / TOTAL`. The only top/bottom-edge label permitted on a V3.1+ card. | RENDERING § R-10 |
-| Eyebrow | A short label above a section heading (typically the beat name). V3.1+: omitted on a beat's first block when the top-edge micro-folio is present (the folio carries the same signal). | RENDERING § R-10, R-14 |
+| Micro-folio | **Deprecated in V3.3.** The 11pt small-caps `BEAT N · BEAT-NAME · POSITION / TOTAL` label V3.1–V3.2 emitted at the top edge of every beat and the bottom edge of every card. R-10 (V3.3) prohibits emitting it on the rendered canvas — it leaked the author's seven-beat scaffold into the reader's view. The CSS class survives gated to dev-mode for renderer diagnostics; the React component is dev-only. | RENDERING § R-10 (V3.3) |
+| Eyebrow | A short editorial label above a beat's first block (e.g., `The medical study`). V3.3+: optional, naming the *content* — never the position. Beat numbers and counters are prohibited (R-10). | RENDERING § R-10 (V3.3), R-14 |
 | Dek | The subtitle below the title on the cover — the thesis sentence. Carries the load that mode badges and context chips would otherwise carry. 1 sentence preferred, 2 sentences hard cap. | RENDERING § R-13 |
 | Kicker | A short editorial label above the title or a section heading. Bound by R-14 (must earn its existence; ≤ 4 words). | RENDERING § R-14 |
 | Asterism rest | A centered `⁂` (U+2042) glyph at body size/weight inside a beat of ≥ 5 blocks, after every 4th block. Mid-beat breath. Doesn't count as a block for budget purposes. | GRAMMAR § G-10, RENDERING § R-11 |

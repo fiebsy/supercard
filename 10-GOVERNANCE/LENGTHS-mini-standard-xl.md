@@ -5,7 +5,7 @@
 | id | LENGTHS-mini-standard-xl |
 | type | governance |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -88,7 +88,7 @@ Don't compress. If a topic genuinely needs 22 blocks, give it 22 blocks. Compres
 
 ## L-5. Per-length anchor budgets (V3.1+)
 
-V3.1+ cards apply per-length anchor budgets on top of the block totals above. **Anchors** are the structurally emphatic blocks defined in GRAMMAR § G-9 (stat-callout, pull-quote, key-takeaway, numbered-principle, table-with-takeaway-row). Anchor counts EXCLUDE the title, dek, beat dividers, and the micro-folio.
+V3.1+ cards apply per-length anchor budgets on top of the block totals above. **Anchors** are the structurally emphatic blocks defined in GRAMMAR § G-9 (stat-callout, pull-quote, key-takeaway, numbered-principle, table-with-takeaway-row). Anchor counts EXCLUDE the title, dek, beat dividers, and the optional editorial eyebrow (R-10 V3.3).
 
 | Variant | Total blocks | Min anchors | Max anchors | Asterism rests |
 |---|---|---|---|---|

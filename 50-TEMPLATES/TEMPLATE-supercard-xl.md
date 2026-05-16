@@ -66,10 +66,10 @@ HERO-CARD: {{TITLE}}
 - Run the redundancy filter on every block — XL is where padding hides.
 - Section dividers mark beat boundaries only, not every section.
 
-V3.1 notes for XL:
+V3.1 notes for XL (revised V3.3):
 
 - Anchor budget: 5–8 anchors (L-5)
 - XL MUST carry 2–4 asterism rests — typically one mid-beat in the multi-block beats (Evidence, Mechanism)
 - Every prose block opens with a bolded 2–6-word lead-clause
 - Every ≥ 4-row table closes with a `**Takeaway**` row
-- Micro-folio at top and bottom edges (R-10)
+- No `BEAT N`, no `N / TOTAL`, no renderer-version footer on the canvas (R-10 V3.3, I7)

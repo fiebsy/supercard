@@ -5,7 +5,7 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -33,7 +33,7 @@ Every Supercard moves through some subset of these beats, in order:
 
 Never run more than 3 long sections in a row. Section dividers mark beat boundaries only — chapter breaks, not paragraph breaks. Above 25 blocks → split into a multi-part Supercard.
 
-**Beats are authoring scaffolding, not public labels.** The markdown card names each section by beat *and* block type (`Beat 7 · Close` / `BLOCK-pull-quote`) — that is authoring metadata, and it stays in the markdown. The *rendered* card labels each section with the beat **name only** (`CLOSE`); it never shows the `Beat N` index or the `BLOCK-*` id. A render is a shareable artifact — see `RENDERING-spec` § Output contract.
+**Beats are authoring scaffolding, not public labels.** The markdown card names each section by beat *and* block type (`Beat 7 · Close` / `BLOCK-pull-quote`) — that is authoring metadata, and it stays in the markdown. The *rendered* card emits **no** beat number, position counter, or block-type label (R-10 V3.3, I7 — no scaffold leakage). A beat boundary in the rendered card is whitespace and the first block's own anchor; a single short editorial eyebrow (`The medical study`) is permitted only when that anchor doesn't name the content. A render is a shareable artifact — see `RENDERING-spec` § Output contract.
 
 ## Block selection procedure (the one routine)
 
@@ -248,16 +248,17 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Three consecutive `standard-text` blocks in one beat (V3.1+) | Wall-of-text collapse — interrupt with an anchor or asterism |
 | Table of ≥ 4 rows without a takeaway row (V3.1+) | Readers extract no thesis from raw rows under scan — close with a bolded verdict |
 | Italics used for emphasis (V3.1+) | Italics are worst-performing for dyslexic/ADHD readers — emphasis is bold-only |
-| All-caps body runs longer than 4 words (V3.1+) | Disables word-shape recognition — restrict to micro-folio and ≤ 4-word kickers |
+| All-caps body runs longer than 4 words (V3.1+) | Disables word-shape recognition — restrict to ≤ 4-word kickers and eyebrows |
 | Justified text (V3.1+) | Uneven word-spacing rivers disrupt tracking — body MUST be left-aligned, ragged-right |
 | Two or more bolded runs in one block (V3.1+) | Destroys the single-emphasis signal — one bold per block, renderer errors |
 | Deep whitespace alone as a section break (V3.1+) | Reads as "page didn't finish loading" — mid-beat rests use the asterism, not raw whitespace |
 | Stacking ≥ 3 anchor blocks of the same type (V3.1+) | Checkerboard fatigue — the third anchor MUST switch type |
 | `standard-text` block exceeding 75 words (V3.1+) | Crosses chunk-collapse threshold — split into two blocks with their own lead-clauses |
-| Cover header elements outside R-13 (running brand-mark folio, mode badge, date eyebrow, context-chip strip, second eyebrow restating the micro-folio's beat name) (V3.1+) | Random labels load the cover with chrome instead of meaning — the cover permits exactly four elements (micro-folio, title, dek, hero), see RENDERING § R-13 |
-| Section eyebrow on a beat's first block when the top-edge micro-folio is present (V3.1+) | Pure duplication — the folio already says `BEAT 3 · MECHANISM · 4 / 7`; a separate `MECHANISM` eyebrow 12pt below adds no information (R-10) |
+| Cover header elements outside R-13 (top-edge folios, running brand-mark, mode badge, date eyebrow, context-chip strip, kicker above the title) (V3.1+, revised V3.3) | Random labels load the cover with chrome instead of meaning — the cover permits exactly three elements (title, dek, hero), see RENDERING § R-13 |
+| Beat label, beat number, or position counter rendered to the reader anywhere on the card (`BEAT 3`, `4 / 7`, `MECHANISM · 4 / 7`) (V3.3) | Author scaffolding leaking into the reader's view — R-10 (V3.3) and I7 prohibit emitting structural-outline labels to the reader |
+| Reader-visible footer carrying renderer version, era, mode, or render date (`SUPERCARD V3.3 · ATLAS · BRIEFING · 2026-05-16`) (V3.3) | Production stamp belongs in the `<meta>` block, not on the canvas — R-10 (V3.3) moves bottom-folio metadata to dev-only |
 | A label longer than 4 words anywhere on the card (V3.1+) | A label that needs five words is a sentence pretending to be a label — promote to the dek/lead-clause or cut (R-14) |
 | A label whose only function is to "balance" another label (V3.1+) | Symmetry isn't a reason; load-bearing is — if the second label answers no question the reader is asking, cut it (R-14) |
 | A context-chip strip (`A · B · C` of three or more orphan chips) used where one dek/lead-clause sentence would integrate the same facts (V3.1+) | Three orphan chips force three parses; prose forces one — labels integrate facts, they don't list them (R-14) |
-| A label nested inside an already-labeled container (folio under a beat-name eyebrow under a section header) (V3.1+) | Three labels, one job — the typographic hierarchy alone should resolve it (R-14) |
+| A label nested inside an already-labeled container (eyebrow under a kicker under a section header) (V3.1+) | Three labels, one job — the typographic hierarchy alone should resolve it (R-14) |
 | Inconsistent labeling — a label kind that appears on some sections and not others without a structural reason (V3.1+) | Inconsistency reads as bug, not intent; either every comparable section earns the label or none do (R-14) |

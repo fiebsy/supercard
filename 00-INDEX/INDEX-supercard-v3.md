@@ -5,7 +5,7 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 

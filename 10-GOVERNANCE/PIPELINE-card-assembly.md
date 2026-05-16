@@ -5,7 +5,7 @@
 | id | PIPELINE-card-assembly |
 | type | governance |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -93,7 +93,7 @@ The "facts kept" column is approximate — what matters is monotone progression 
 
 ## Stage 4 — Constraint gates and identity invariants
 
-- **Do.** Run the 8 constraint gates (G1–G8) below at draft completion. Then verify the 6 identity invariants (I1–I6) hold. Re-run any failed gate after a fix; restart from the violated layer if any invariant is broken.
+- **Do.** Run the 8 constraint gates (G1–G8) below at draft completion. Then verify the 7 identity invariants (I1–I7) hold. Re-run any failed gate after a fix; restart from the violated layer if any invariant is broken.
 - **Produce.** A gate-results table (`id`, `result`, `note`) and an invariant-check confirmation. Both attach to the card's `Authoring notes`.
 - **Check.** Every gate returns pass. Every invariant holds.
 - **Layers consulted.** `principles`, `grammar`, `lengths`, `rendering`.
@@ -120,9 +120,10 @@ Two categories of check, both must pass. **Gates** are binary pass/fail rules an
 | I1 | Screenshot autonomy — every visible region conveys one complete idea on its own | PRINCIPLES 1 |
 | I2 | Strict grayscale — black, white, and the six-step gray ramp; no color, ever | PRINCIPLES 5 |
 | I3 | SF Pro Rounded canonical typeface; SF Mono for code and equations | PRINCIPLES 6 |
-| I4 | Rendered card shows beat NAMES only — never the `Beat N` index or `BLOCK-*` ids | RENDERING output contract |
+| I4 | Rendered card never shows the `Beat N` index or `BLOCK-*` ids. Beat names may appear only as the optional editorial eyebrow permitted by R-10 (V3.3) — never with a position counter | RENDERING output contract |
 | I5 | Format-as-grammar, not length — Mini / Standard / XL are presentation variants of one grammar | PRINCIPLES 3 |
 | I6 | Genealogy-as-asset — every card declares `version`, `frozen_at_version`, `research_report` | PRINCIPLES 10, ADR-0003, ADR-0006 |
+| I7 | No scaffold leakage — the author's production structure (beats, block IDs, render metadata, version strings) does not appear in the reader's view. Renderer chrome that exists to help the author is not part of the rendered card | RENDERING § R-10 (V3.3) |
 
 Any gate failure → fix, then re-run the gate. Any invariant violation → the artifact is by definition not a Supercard; restart from the violated layer.
 

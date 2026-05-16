@@ -491,7 +491,16 @@ a.spec-link:hover {
   user-select: none;
 }
 
-/* beat micro-folio at top and bottom edges (R-10) */
+/* DEPRECATED in V3.3 — the beat micro-folio (R-10 V3.1/V3.2) is no longer
+ * permitted on the rendered canvas (see RENDERING § R-10 V3.3 and identity
+ * invariant I7: no scaffold leakage). The rule survives for renderer
+ * diagnostics only — hidden by default, shown only under a `.dev-mode`
+ * toggle on the canvas root. Do NOT re-enable globally. */
+.micro-folio,
+.beat-folio,
+.folio {
+  display: none;
+}
 .canvas.v3-1 .micro-folio {
   font-size: 11px;
   line-height: 14px;
@@ -507,6 +516,11 @@ a.spec-link:hover {
 }
 .canvas.v3-1 .micro-folio--bottom {
   margin: var(--s-4) 0 var(--s-3);
+}
+.canvas.dev-mode .micro-folio,
+.canvas.dev-mode .beat-folio,
+.canvas.dev-mode .folio {
+  display: block;
 }
 
 /* table takeaway-row (G-11) */

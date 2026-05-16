@@ -12,8 +12,11 @@
  *     - standard-text block missing the opening bolded lead-clause
  *     - table with >= 4 data rows missing a bolded **Takeaway** row
  *     - context-chip strip (>= 3 middle-dot-separated UPPERCASE tokens on
- *       its own line, not the BEAT N micro-folio) appears anywhere a dek or
- *       lead-clause sentence would integrate the same facts (R-14)
+ *       its own line) appears anywhere a dek or lead-clause sentence would
+ *       integrate the same facts (R-14)
+ *     - scaffold leakage on V3.3+ cards: a standalone BEAT N / N / TOTAL
+ *       line on the rendered canvas. The pre-V3.3 micro-folio was permitted;
+ *       R-10 (V3.3) and identity invariant I7 prohibit it.
  *
  *   Warnings (exit 0, printed) — fix where possible:
  *     - standard-text block exceeds 75 words or 4 sentences
@@ -186,23 +189,36 @@ function hasAsterism(text) {
 }
 
 // R-14 context-chip strip: a standalone line of the form
-//   `WORD · WORD · WORD` (3+ middle-dot-separated UPPERCASE tokens),
-// which is NOT the R-10 micro-folio (those start with `BEAT N`). Detected
-// after stripping bold/italic markers so `**A · B · C**` and `*A · B · C*`
-// also catch. The surrounding pipe rule excludes table cells.
+//   `WORD · WORD · WORD` (3+ middle-dot-separated UPPERCASE tokens).
+// Detected after stripping bold/italic markers so `**A · B · C**` and
+// `*A · B · C*` also catch. The surrounding pipe rule excludes table cells.
 function findChipStrips(text) {
   const hits = [];
   for (const raw of text.split("\n")) {
     if (/\|/.test(raw)) continue; // skip table rows
     const line = raw.replace(/[*_`>]/g, "").trim();
     if (!line) continue;
-    if (/^BEAT\s+\d+\s*·/.test(line)) continue; // R-10 micro-folio
     const tokens = line.split(/\s*·\s*/);
     if (tokens.length < 3) continue;
     // Each chip is short, starts with a letter/digit, and is upper-case-ish:
     // letters, digits, spaces, comma, period, dash, slash. ≤ 30 chars.
     const allLabelLike = tokens.every((t) => /^[A-Z0-9][A-Z0-9 ,./-]{0,29}$/.test(t));
     if (allLabelLike) hits.push(line);
+  }
+  return hits;
+}
+
+// R-10 (V3.3) scaffold leakage: any standalone `BEAT N` / `N / TOTAL` /
+// `MECHANISM · 4 / 7` style line on the rendered canvas. The pre-V3.3 micro-folio
+// was an exception; in V3.3+ it is itself the error this checks for.
+function findScaffoldLeaks(text) {
+  const hits = [];
+  for (const raw of text.split("\n")) {
+    if (/\|/.test(raw)) continue; // skip table rows
+    const line = raw.replace(/[*_`>]/g, "").trim();
+    if (!line) continue;
+    if (/^BEAT\s+\d+\s*·/i.test(line)) hits.push(line);
+    else if (/^\d+\s*\/\s*\d+\s*$/.test(line)) hits.push(line);
   }
   return hits;
 }
@@ -256,6 +272,11 @@ function validateCard(path, raw) {
     }
     for (const strip of findChipStrips(b.bodyText)) {
       push(errors, b, `context-chip strip "${strip}" — labels integrate facts in prose; promote to dek or lead-clause (R-14)`);
+    }
+    if (compareVersion(fav, "3.3.0") >= 0) {
+      for (const leak of findScaffoldLeaks(b.bodyText)) {
+        push(errors, b, `scaffold leakage "${leak}" — beat labels and position counters do not appear in the rendered card (R-10 V3.3, I7)`);
+      }
     }
   }
 

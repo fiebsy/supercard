@@ -5,7 +5,7 @@
 | id | PRINCIPLES-supercard-v3 |
 | type | governance |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -95,11 +95,11 @@ The history of how a Supercard came to be — the ADRs, the stewards' log, the r
 
 ## 11. Cognitive prosthesis, made operational (V3.1+)
 
-The ADHD framing in principle 1 isn't a vibe; it must translate into four MUST rules every V3.1+ card honours: (a) every block is scannable in under 4 seconds, (b) every beat is re-enterable from any of its blocks, (c) every cropped screenshot carries beat identity via the micro-folio, (d) every prose block frontloads its thesis in a bolded lead-clause.
+The ADHD framing in principle 1 isn't a vibe; it must translate into four MUST rules every V3.1+ card honours: (a) every block is scannable in under 4 seconds, (b) every beat is re-enterable from any of its blocks, (c) every cropped screenshot carries system identity via the corner glyph, (d) every prose block frontloads its thesis in a bolded lead-clause.
 
 **Why it matters.** V3.0 stated the goal (cognitive prosthesis) but enforced it only at the principle level — single emphasis, redundancy filter, screenshot autonomy. That left room for long `standard-text` walls, undifferentiated multi-block beats in XL, and cards that scan beautifully on the hero and collapse two beats later. The operational rules close that gap without breaking the existing constraints.
 
-**How to apply.** The single-emphasis rule (principle 2) is unchanged. The bolded lead-clause **is** the block's one emphasis — no second bold runs in the same block. Long prose splits at the 75-word ceiling. Re-entry comes from the top-and-bottom micro-folio (`BEAT 3 · MECHANISM · 4 / 7`) on every card. See `GRAMMAR` § G-7 / G-8 and `RENDERING` § R-9 / R-10 for the rendering contract.
+**How to apply.** The single-emphasis rule (principle 2) is unchanged. The bolded lead-clause **is** the block's one emphasis — no second bold runs in the same block. Long prose splits at the 75-word ceiling. Re-entry comes from each block's own anchor (the bolded lead-clause, the focal stat, the section's optional editorial eyebrow) — never from a position counter, which V3.3's R-10 prohibits as scaffold leakage. See `GRAMMAR` § G-7 / G-8 and `RENDERING` § R-9 / R-10 for the rendering contract.
 
 ## 12. First-pass extraction test (V3.1+)
 
@@ -132,7 +132,7 @@ Runs alongside the screenshot test on every V3.1+ card before publication. Ten q
 5. Does the anchor-to-content ratio per beat sit between 1:2 and 1:4?
 6. Does no beat contain more than 4 consecutive content blocks without an asterism or anchor break?
 7. Does every beat of ≥ 5 blocks contain at least one centered asterism (⁂)?
-8. Are top-edge and bottom-edge beat micro-folios present and tabular-aligned?
+8. Is the rendered canvas free of scaffold chrome — no `BEAT N`, no `N / TOTAL` counters, no renderer-version footer (R-10 V3.3)?
 9. Is every `stat-callout` accompanied by a verbal-anchor sentence, and every `table` of ≥ 4 rows closed by a bolded takeaway row?
 10. Does body text render at 17pt SF Pro Rounded, 26pt leading, +0.5pt tracking, left-aligned ragged-right, with no italic-for-emphasis runs?
 

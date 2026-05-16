@@ -5,7 +5,7 @@
 | id | EXAMPLE-mini-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -176,7 +176,7 @@ Gates run at draft completion (PIPELINE § Stage 4 — Constraint gates).
 | G3 | Loft budget | ✓ | 1 lofted element (hero); within 1–3 cap |
 | G4 | Redundancy filter | ✓ | Close re-frames hero; no two blocks restate the same point |
 | G5 | Screenshot test | ✓ | All 6 blocks pass; corner glyph on each section |
-| G6 | Frozen-at-version | ✓ | `frozen_at_version: 3.2.0` declared |
+| G6 | Frozen-at-version | ✓ | `frozen_at_version: 3.3.0` declared |
 | G7 | Density budget (V3.1+) | ⚠︎ | Beat 3 has 0 anchors / 2 content — Mini exemption documented in STEWARDS-LOG; alternative would be promoting the definition to a `numbered-principle` |
 | G8 | ADHD scan-ability gate (V3.1+) | ✓ | Bold-only read: "retrieval at the edge of forgetting → one-third the study time → software does the scheduling → spaced repetition replaces hours with timing." Yields the card's thesis. |
 
@@ -193,8 +193,8 @@ declared.
 | type | card |
 | length | mini |
 | era | atlas |
-| version | 3.2.0 |
-| frozen_at_version | 3.2.0 |
+| version | 3.3.0 |
+| frozen_at_version | 3.3.0 |
 | lifecycle | core |
 | owner | derick |
 | created | 2026-05-16 |
@@ -214,16 +214,19 @@ with the cover and Beat 1 hero. Five representative lines from the rendered
 output:
 
 ```html
-<meta name="sc:frozen_at_version" content="3.2.0"><meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-spaced-repetition.md">
-<div class="sc-folio">BEAT 1 · HOOK · 1 / 5</div>
+<meta name="sc:frozen_at_version" content="3.3.0"><meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-spaced-repetition.md">
 <h1 class="sc-title">Spaced repetition</h1>
 <p class="sc-dek">Retrieval at the edge of forgetting — same retention, one-third the study time, paid in scheduling discipline.</p>
-<section class="sc-hero sc-loft" aria-label="HOOK"><p class="sc-lede"><strong>Retrieval at the edge of forgetting.</strong> A recall attempt at the longest interval the learner can still answer correctly strengthens memory more than re-reading ever does.</p></section>
+<section class="sc-hero sc-loft"><p class="sc-lede"><strong>Retrieval at the edge of forgetting.</strong> A recall attempt at the longest interval the learner can still answer correctly strengthens memory more than re-reading ever does.</p></section>
+<section><p><strong>One-third the study time.</strong> Cepeda et al.'s 84-study meta-analysis found spaced review reaches the same retention as massed practice with about 33% of the hours.</p></section>
 ```
 
-The full render carries one `<section>` per block, the corner glyph on every
-section as a fixed-position element, and one bottom-edge `BEAT N · NAME · n / 5`
-folio. See `RENDERING § Output contract` for the full contract.
+The full render carries one `<section>` per block and the corner glyph on every
+section as a fixed-position element. The cover opens on the title — no top-edge
+folio, no `BEAT N` label, no mode badge (R-13 V3.3, R-10 V3.3). Production
+metadata (renderer version, mode, render date) lives in the `<meta>` block, not
+in any reader-visible footer. See `RENDERING § Output contract` for the full
+contract.
 
 ## 7. What you'd do differently in a `briefing` mode card
 

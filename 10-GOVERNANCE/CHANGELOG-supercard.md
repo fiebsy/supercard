@@ -5,7 +5,7 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.2.0 |
+| version | 3.3.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
@@ -14,6 +14,39 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 ---
 
 ## [Unreleased]
+
+---
+
+## [3.3.0] — "Atlas" — 2026-05-16
+
+Removed renderer chrome that leaked the author's production scaffold into the
+reader's view. R-10 inverted: beat folios prohibited, replaced with optional
+editorial eyebrow. Bottom folio moved to dev-only metadata. New invariant I7
+prohibits scaffold leakage broadly.
+
+### Changed
+
+- RENDERING § R-10 — Inverted: the V3.1 beat micro-folio (`BEAT N · BEAT-NAME · POSITION / TOTAL` at the top of every beat and the bottom of every card) is prohibited on the rendered canvas. Beat boundaries render as whitespace and the first block's own anchor. A single short editorial eyebrow (e.g., `The medical study`) is permitted when the beat's first block doesn't carry a sufficient anchor; it names the *content*, never the position. Position counters are never permitted under any circumstance.
+- RENDERING § R-10 — Bottom-folio metadata (`SUPERCARD V3.X · ATLAS · {MODE} · YYYY-MM-DD`) moved to dev-only: an HTML comment or `data-*` attribute. Production renders MUST NOT show renderer version, era, mode, or render date in any reader-visible chrome. The five `sc:*` `<meta>` tags remain mandatory.
+- RENDERING § R-13 — Cover discipline revised: the cover stack drops the top-edge micro-folio. Permitted elements reduce to three (title, dek, hero). Spacing stack reduces to four joins (32 / 12 / 24 / 48pt).
+- RENDERING § R-12 — Validator triggers updated: removed the R-10 micro-folio enforcement rows; added two errors (any `BEAT N` / `N / TOTAL` counter on the canvas; reader-visible renderer-version footer).
+- RENDERING § R-9 — Dropped the "300-weight reserved for the micro-folio" carve-out; 300 is now reserved for the dek alone.
+- GRAMMAR — "Beats are authoring scaffolding" note rewritten: the rendered card emits no beat number, position counter, or block-type label (I7). Anti-patterns table updated to mirror the new R-10 / R-13: removed the row about a section eyebrow duplicating the micro-folio; added two rows for beat-label leakage and renderer-version footer leakage.
+- PIPELINE § Identity invariants — I4 reconciled with the new R-10: rendered card never shows the `Beat N` index or `BLOCK-*` ids; beat NAMES may appear only as the optional editorial eyebrow, never with a position counter.
+- PIPELINE § Identity invariants — Added **I7: No scaffold leakage**. The author's production structure (beats, block IDs, render metadata, version strings) does not appear in the reader's view. Renderer chrome that exists to help the author is not part of the rendered card.
+- PRINCIPLES — Principle 11 MUST-rule (c) re-grounded on the corner glyph (system identity, always present) rather than the now-deprecated micro-folio. ADHD scan-ability gate item 8 rewritten to verify the canvas is free of scaffold chrome.
+- GLOSSARY — `Micro-folio` marked deprecated in V3.3 (dev-only CSS/component). `Eyebrow` redefined as the optional editorial label permitted by R-10 (V3.3), never carrying a position counter.
+- LENGTHS § L-5 — Anchor-count exclusion list swaps `micro-folio` for `optional editorial eyebrow (R-10 V3.3)`.
+- AGENT-GUIDE — First-layer guidance surfaces R-10 (V3.3) and I7 so a renderer or card author calling the spec sees the new scaffold-leakage prohibition without drilling. The pre-V3.3 instruction to "emit top-edge micro-folio at each beat boundary" is removed from any quick-reference, checklist, or example block.
+- INDEX — `spec_revision` bump to 3.3.0.
+- Templates (mini / standard / xl) — Removed the "micro-folio still required at top and bottom edges" reminders; the ADHD-gate checklist item now verifies the canvas is free of scaffold chrome.
+- App — `MicroFolio` React component marked dev-only and not emitted in production cards. `.micro-folio` CSS classes preserved as reference but display defaults to `none`; show only under a `.dev-mode` gate on the canvas root.
+- Validator (`app/scripts/validate-v3-1.mjs`) — `BEAT N` micro-folio is no longer a recognized exception to the context-chip strip rule; on V3.3+ cards, a `BEAT N` line on the rendered canvas is itself an error.
+
+### Considered & rejected
+
+- Keeping the micro-folio as an opt-in for `reference`-mode cards (the long-form cheat-sheet shape). Rejected — the rule is about the leak, not the mode. A reference card's navigation comes from a real table of contents block, not from a beat counter; once we permit the counter for one mode, it creeps back into briefings.
+- Keeping the bottom-folio as a "tiny footer" credit line. Rejected — the same metadata is already in `<head>` `<meta>` tags, where it does not steal a line from the reader. Print-style "issue / date" credit is a magazine pattern that translates to the cover dek, not to a footer.
 
 ---
 

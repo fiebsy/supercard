@@ -792,6 +792,14 @@ function buildAgentGuide() {
       data: {
         what_is_a_supercard:
           "A screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis for ADHD readers. Every visible region must be self-sufficient: a stranger seeing only a cropped screenshot still gets one complete idea. The format is a grammar, not a length.",
+        first_layer_guidance: {
+          note: "The two rules a renderer or card author most often gets wrong, surfaced before the disclosure protocol so they cannot be missed. Both new in V3.3.",
+          r10_no_scaffold_chrome:
+            "RENDERING § R-10 (V3.3): the rendered card MUST NOT emit beat labels, beat numbers, position counters (`BEAT N`, `N / TOTAL`, `MECHANISM · 4 / 7`), or any reader-visible renderer-version / mode / date footer. The seven-beat structure is a production scaffold; it does not appear in the rendered output. A single short editorial eyebrow (e.g. `The medical study`) is permitted per beat when the beat's first block does not carry a sufficient anchor — it names the content, never the position. Production metadata lives in the `<meta>` block, not on the canvas.",
+          i7_no_scaffold_leakage:
+            "PIPELINE identity invariant I7 (V3.3): the author's production structure (beats, block IDs, render metadata, version strings) does not appear in the reader's view. Renderer chrome that exists to help the author is not part of the rendered card.",
+          why: "A reader holding a screenshot never asked which beat of the author's outline they were in. R-10 and I7 close the leak the V3.1 micro-folio opened — see the CHANGELOG entry for 3.3.0 and RENDERING § R-10 for the full rule.",
+        },
         disclosure_protocol: [
           "1. The manifest (index.json) lists every layer with its absolute URL in the 'layers' array. Fetch any layer directly from that URL — you are NOT limited to URLs pasted into a chat. If you need a layer, fetch it.",
           "2. You are reading the agent-guide layer. Identify your task, then fetch only the layers it needs (see task_routing below). Do not fetch every layer up front.",

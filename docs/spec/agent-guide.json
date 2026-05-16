@@ -2,27 +2,33 @@
   "layer": "agent-guide",
   "title": "Route to the right layer for your task",
   "spec": "supercard",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "era": "atlas",
-  "spec_revision": "05290259e680",
+  "spec_revision": "e35c12d7499d",
   "summary": "The thin router. Read this first if your job is to produce a Supercard. It gives the disclosure protocol and the task → layers map. For the build sequence itself, fetch the pipeline layer; pipeline.data.stages carries Stage 0–5 with do/produce/check/layers_consulted per stage. For terms, fetch glossary. For a worked end-to-end build, fetch example.",
   "source": "00-INDEX/INDEX-supercard-v3.md",
   "provenance": [
     {
       "file": "00-INDEX/INDEX-supercard-v3.md",
       "updated": "2026-05-16",
-      "version": "3.2.0",
-      "sha256": "4a74b7c244c9055aee8eef0c28d9de8333d3b10aa91de2d4ee36838a1be801f5"
+      "version": "3.3.0",
+      "sha256": "e6637d0ed2fa858f46691cd4d7a294cf8ba9d22f50532e2630e84f4ee8b9e7b2"
     },
     {
       "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",
       "updated": "2026-05-16",
-      "version": "3.2.0",
-      "sha256": "2a314451c6684b0d47166da733c60f0c7e0d5b9fbf71c508857890de9dfcef96"
+      "version": "3.3.0",
+      "sha256": "d4515a2bcf263a2425a0e5477228c587560fd47ef91aee6fcf23949e89c6a147"
     }
   ],
   "data": {
     "what_is_a_supercard": "A screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis for ADHD readers. Every visible region must be self-sufficient: a stranger seeing only a cropped screenshot still gets one complete idea. The format is a grammar, not a length.",
+    "first_layer_guidance": {
+      "note": "The two rules a renderer or card author most often gets wrong, surfaced before the disclosure protocol so they cannot be missed. Both new in V3.3.",
+      "r10_no_scaffold_chrome": "RENDERING § R-10 (V3.3): the rendered card MUST NOT emit beat labels, beat numbers, position counters (`BEAT N`, `N / TOTAL`, `MECHANISM · 4 / 7`), or any reader-visible renderer-version / mode / date footer. The seven-beat structure is a production scaffold; it does not appear in the rendered output. A single short editorial eyebrow (e.g. `The medical study`) is permitted per beat when the beat's first block does not carry a sufficient anchor — it names the content, never the position. Production metadata lives in the `<meta>` block, not on the canvas.",
+      "i7_no_scaffold_leakage": "PIPELINE identity invariant I7 (V3.3): the author's production structure (beats, block IDs, render metadata, version strings) does not appear in the reader's view. Renderer chrome that exists to help the author is not part of the rendered card.",
+      "why": "A reader holding a screenshot never asked which beat of the author's outline they were in. R-10 and I7 close the leak the V3.1 micro-folio opened — see the CHANGELOG entry for 3.3.0 and RENDERING § R-10 for the full rule."
+    },
     "disclosure_protocol": [
       "1. The manifest (index.json) lists every layer with its absolute URL in the 'layers' array. Fetch any layer directly from that URL — you are NOT limited to URLs pasted into a chat. If you need a layer, fetch it.",
       "2. You are reading the agent-guide layer. Identify your task, then fetch only the layers it needs (see task_routing below). Do not fetch every layer up front.",
