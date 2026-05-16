@@ -5,9 +5,9 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.1.0 |
+| version | 3.2.0 |
 | owner | derick |
-| updated | 2026-05-15 |
+| updated | 2026-05-16 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
@@ -19,20 +19,19 @@ A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artif
 
 ## How Claude should use this system
 
-**The fast path:** for a topic-to-card build, run the dynamic assembly pipeline in `10-GOVERNANCE/PIPELINE-card-assembly.md` (or invoke the `supercard` skill). It handles research → breakdown → card with mode-driven adaptation. The steps below are the underlying manual process.
+**The fast path:** for a topic-to-card build, run the dynamic assembly pipeline in `10-GOVERNANCE/PIPELINE-card-assembly.md` (or invoke the `supercard` skill). It handles research → breakdown → card with mode-driven adaptation. The canonical layer sequence below mirrors the agent-guide `task_routing` and the pipeline's Stage 0–5.
 
-**To build a new Supercard on topic X:**
+**To build a new Supercard on topic X (canonical layer sequence):**
 
-1. Read `PRINCIPLES-supercard-v3` (the cognitive-prosthesis principles)
-2. Read `GRAMMAR-block-composition` (the rules for composing blocks)
-3. Read `LENGTHS-mini-standard-xl` (which length variant fits the topic)
-4. Open `INDEX-block-library` — survey the 38 blocks by family + lifecycle
-5. For each block you'll use, read its individual `BLOCK-*` spec in `20-BLOCKS/`
-6. Search `30-CARDS/` and `90-ARCHIVE/` for related prior cards
-7. Read the most-recent 5 entries of `STEWARDS-LOG-2026` for current direction
-8. Compose the card using only Core/Stable blocks (Experimental requires explicit ask)
-9. Save to `30-CARDS/` as `CARD-{YYYY}-{slug}--draft` with a Metadata table at the top, including the `research_report` it descends from
-10. Render the HTML and publish it to `docs/cards/` + the `docs/index.html` gallery, then push — the card is viewable online (ADR-0007)
+1. **`PIPELINE-card-assembly`** — the operational manual: Stage 0–5 with what-to-do, what-to-produce, what-to-check per stage.
+2. **`GRAMMAR-block-composition`** — the block selection procedure (decision tree + precedence + density budget).
+3. **`LENGTHS-mini-standard-xl`** — which length variant the mode admits.
+4. **`INDEX-block-library`** — survey the 39 blocks across 7 families with `rules_by_version`.
+5. **`RENDERING-spec`** — the output contract (tokens, type scale, frozen-at-version).
+
+Use **`PRINCIPLES-supercard-v3`** to judge identity (it's the audit reference; not part of the build sequence). Use **`GLOSSARY-supercard`** to disambiguate terms. Use **`EXAMPLE-mini-supercard`** for a worked end-to-end build.
+
+For each block you'll use, read its individual `BLOCK-*` spec in `20-BLOCKS/`. Search `30-CARDS/` and `90-ARCHIVE/` for related prior cards. Read the most-recent 5 entries of `STEWARDS-LOG-2026` for current direction. Compose using only Core/Stable blocks (Experimental requires an explicit ask). Save to `30-CARDS/` as `CARD-{YYYY}-{slug}--draft` with a Metadata table at the top, including the `research_report` it descends from. Render the HTML and publish to `docs/cards/` + the `docs/index.html` gallery, then push — the card is viewable online (ADR-0007).
 
 The breakdown — the deep-research report — is the first durable artifact: it lives in `60-RESEARCH/` and is registered in `INDEX-research-reports.md`. Check that registry before researching, so a topic is never researched twice (ADR-0006).
 
@@ -57,8 +56,8 @@ The breakdown — the deep-research report — is the first durable artifact: it
 ## Folder map
 
 - **`00-INDEX/`** — this doc + block library index
-- **`10-GOVERNANCE/`** — principles, grammar, lengths, rendering, pipeline, changelog, stewards' log, ADRs
-- **`20-BLOCKS/`** — 38 individual block specs (one doc each)
+- **`10-GOVERNANCE/`** — principles, grammar, lengths, rendering, pipeline, glossary, worked example, changelog, stewards' log, ADRs
+- **`20-BLOCKS/`** — 39 individual block specs (one doc each)
 - **`30-CARDS/`** — active V3 Supercards
 - **`40-LAB/`** — experiments + RFC proposals + audit reports
 - **`50-TEMPLATES/`** — golden templates for new artifacts
@@ -112,6 +111,7 @@ ls docs/cards/
 | 0005 | Mode-driven card assembly pipeline | Proposed | 2026-05-14 |
 | 0006 | Dedicated research-report store (`60-RESEARCH/`) | Accepted | 2026-05-14 |
 | 0007 | Render and publish by default | Accepted | 2026-05-14 |
+| 0008 | Spec organized for agent legibility (3.2.0) | Accepted | 2026-05-16 |
 
 ## Versioning at a glance
 
@@ -123,11 +123,13 @@ ls docs/cards/
 
 ## Quick links
 
-- Principles → `10-GOVERNANCE/PRINCIPLES-supercard-v3`
-- Grammar → `10-GOVERNANCE/GRAMMAR-block-composition`
+- Pipeline → `10-GOVERNANCE/PIPELINE-card-assembly` (operational manual)
+- Grammar → `10-GOVERNANCE/GRAMMAR-block-composition` (block selection procedure)
 - Lengths → `10-GOVERNANCE/LENGTHS-mini-standard-xl`
-- Pipeline → `10-GOVERNANCE/PIPELINE-card-assembly`
 - Rendering → `10-GOVERNANCE/RENDERING-spec`
+- Principles → `10-GOVERNANCE/PRINCIPLES-supercard-v3` (identity audit reference)
+- Glossary → `10-GOVERNANCE/GLOSSARY-supercard`
+- Worked example → `10-GOVERNANCE/EXAMPLE-mini-supercard`
 - Changelog → `10-GOVERNANCE/CHANGELOG-supercard`
 - Stewards' log → `10-GOVERNANCE/STEWARDS-LOG-2026`
 - Block library → `00-INDEX/INDEX-block-library`

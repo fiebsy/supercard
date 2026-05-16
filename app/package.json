@@ -1,7 +1,7 @@
 {
   "name": "supercard-app",
   "private": true,
-  "version": "3.1.0",
+  "version": "3.2.0",
   "type": "module",
   "description": "React render path for Supercards — the repo-access counterpart to the standalone HTML in docs/. Deploys to Vercel.",
   "scripts": {

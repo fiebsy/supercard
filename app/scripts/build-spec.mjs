@@ -255,6 +255,8 @@ const SRC = {
   blocks: readDoc("00-INDEX/INDEX-block-library.md"),
   pipeline: readDoc("10-GOVERNANCE/PIPELINE-card-assembly.md"),
   rendering: readDoc("10-GOVERNANCE/RENDERING-spec.md"),
+  glossary: readDoc("10-GOVERNANCE/GLOSSARY-supercard.md"),
+  example: readDoc("10-GOVERNANCE/EXAMPLE-mini-supercard.md"),
 };
 
 const VERSION = SRC.index.meta.version || "3.0.0";
@@ -353,7 +355,7 @@ function buildTokens() {
 
   return leaf(
     "tokens",
-    "Render tokens — the text-style spec",
+    "Style values to render any block",
     "Machine-readable design tokens: canvas, the six-step gray ramp, the SF Pro Rounded type scale, the 8pt spacing scale, and the shadow system. Style any block from these values alone — no other ramp, no color, ever.",
     {
       source: SRC.rendering.path,
@@ -406,8 +408,8 @@ function buildPrinciples() {
   }
   return leaf(
     "principles",
-    "Principles — the identity anchor",
-    "The 10 foundational principles. PRINCIPLES says what we're doing; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
+    "Identity rules — what is and isn't a Supercard",
+    "The 12 foundational principles (10 V3.0 + 2 V3.1). PRINCIPLES is the identity-audit reference; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
     {
       source: d.path,
       provenance: provenanceOf(d),
@@ -432,18 +434,50 @@ function buildGrammar() {
       if (m) beats.push({ n: Number(m[1]), name: m[2].trim(), role: m[3].trim() });
     }
   }
+  // Parse the block-selection procedure as an ordered list of steps so
+  // agents can run the procedure programmatically without parsing markdown.
+  const procSec = sections(d.raw).find((s) =>
+    s.title.toLowerCase().includes("block selection procedure")
+  );
+  const procedure = [];
+  if (procSec) {
+    for (const line of procSec.body.split("\n")) {
+      // Match "N. **Name** ... — action" where the em-dash may be later in the
+      // line (step 7 has "**Apply prose rules (G-7, G-8)** if the result is a
+      // prose block — ...").
+      const m = /^\s*(\d+)\.\s+\*\*(.+?)\*\*\s*(.*?)\s*[—-]\s+(.+?)\s*$/.exec(line);
+      if (m) {
+        const condition = m[3].trim();
+        const name = condition ? `${m[2].trim()} ${condition}` : m[2].trim();
+        procedure.push({ step: Number(m[1]), name, action: m[4].trim() });
+      }
+    }
+  }
+  // Parse the decision-tree precedence list (ordered).
+  const precSec = sections(d.raw).find((s) =>
+    s.title.toLowerCase().includes("precedence")
+  );
+  const precedence = [];
+  if (precSec) {
+    for (const line of precSec.body.split("\n")) {
+      const m = /^\s*(\d+)\.\s+\*\*(.+?)\*\*\s*[—-]\s*(.+?)\s*$/.exec(line);
+      if (m) precedence.push({ rank: Number(m[1]), family: m[2].trim(), rule: m[3].trim() });
+    }
+  }
   return leaf(
     "grammar",
-    "Grammar — how blocks compose",
-    "The seven-beat narrative spine (Hook → Evidence → Mechanism → Comparison → Counter → Application → Close), the shape-first/text-last decision tree for picking a block per section, and the adjacency rules. GRAMMAR says how to assemble what PRINCIPLES defines.",
+    "Pick a block and compose the card",
+    "The seven-beat narrative spine (Hook → Evidence → Mechanism → Comparison → Counter → Application → Close), the single block-selection procedure (10 ordered steps that walk the decision tree, precedence, density budget, prose rules, anti-patterns, gates), and the V3.1+ rules (G-7–G-11) woven into the decision tree itself.",
     {
       source: d.path,
       provenance: provenanceOf(d),
       data: {
         seven_beat_spine: beats,
-        note: "Beats are authoring scaffolding. The rendered card labels each section with the beat NAME only — never the Beat N index or the BLOCK-* id. Full decision tree and adjacency rules are in doc_markdown.",
+        block_selection_procedure: procedure,
+        decision_tree_precedence: precedence,
+        note: "Beats are authoring scaffolding. The rendered card labels each section with the beat NAME only — never the Beat N index or the BLOCK-* id. Full decision tree, adjacency rules, density budget (G-9), prose rules (G-7/G-8), asterism rest (G-10), table takeaway-row (G-11), and the anti-patterns table are in doc_markdown. A numeric worked example of the procedure is in the example layer.",
       },
-      see_also: ["blocks", "lengths", "principles"],
+      see_also: ["blocks", "lengths", "principles", "example"],
       doc_markdown: d.raw,
     }
   );
@@ -470,7 +504,7 @@ function buildLengths() {
   }));
   return leaf(
     "lengths",
-    "Lengths — Mini / Standard / XL",
+    "Mini / Standard / XL — same content, different emphasis",
     "Length is a prop, not a fork: same content model, same grammar, same identity — only emphasis, density, and depth vary. Standard is canonical; Mini and XL are derived views.",
     {
       source: d.path,
@@ -489,15 +523,56 @@ function buildLengths() {
 function buildBlocks() {
   const d = SRC.blocks;
   const table = findTable(d, "id", "name", "family", "lifecycle", "length_variants");
-  const blocks = rowsAsObjects(table).map((r) => ({
-    id: r.id,
-    name: r.name,
-    family: r.family,
-    lifecycle: r.lifecycle,
-    version: r.version,
-    length_variants: (r.length_variants || "").split(",").map((x) => x.trim()).filter(Boolean),
-    last_review: r.last_review || null,
-  }));
+  // Parse per-block additive rules sections like:
+  //   ### BLOCK-standard-text (revised V3.1)
+  //   - rule one
+  //   - rule two
+  // into rules_by_version[blockId] = [{ version, status, rules: [...] }, ...]
+  const rulesByBlock = {};
+  const headerRe = /^###\s+(BLOCK-[a-z0-9-]+)\s*\(([^)]+)\)\s*$/i;
+  const lines = d.raw.split("\n");
+  let current = null;
+  for (const line of lines) {
+    const h = headerRe.exec(line);
+    if (h) {
+      const id = h[1];
+      const tag = h[2].trim();
+      const v = (/(\d+\.\d+(?:\.\d+)?)/.exec(tag) || [])[1] || null;
+      const versionKey = v ? (v.split(".").length === 2 ? `${v}.0` : v) : null;
+      current = { id, status: tag, version: versionKey, rules: [] };
+      (rulesByBlock[id] ||= []).push(current);
+      continue;
+    }
+    if (line.startsWith("### ") || line.startsWith("## ")) {
+      current = null;
+      continue;
+    }
+    if (current) {
+      const m = /^\s*-\s+(.+?)\s*$/.exec(line);
+      if (m) current.rules.push(m[1].trim());
+    }
+  }
+  const blocks = rowsAsObjects(table).map((r) => {
+    const entry = {
+      id: r.id,
+      name: r.name,
+      family: r.family,
+      lifecycle: r.lifecycle,
+      version: r.version,
+      length_variants: (r.length_variants || "").split(",").map((x) => x.trim()).filter(Boolean),
+      last_review: r.last_review || null,
+    };
+    const versionRules = rulesByBlock[r.id];
+    if (versionRules && versionRules.length) {
+      const byVersion = {};
+      for (const v of versionRules) {
+        if (!v.version) continue;
+        byVersion[v.version] = { status: v.status, rules: v.rules };
+      }
+      if (Object.keys(byVersion).length) entry.rules_by_version = byVersion;
+    }
+    return entry;
+  });
   const byFamily = {};
   const byLifecycle = {};
   for (const b of blocks) {
@@ -506,8 +581,8 @@ function buildBlocks() {
   }
   return leaf(
     "blocks",
-    "Block library — the 38 blocks",
-    "Every block across 6 families with its lifecycle tier and length compatibility. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
+    "The block library with lifecycle and length compatibility",
+    `The ${blocks.length} blocks across ${Object.keys(byFamily).length} families (numeric, comparative, sequential, definitional, distributional, editorial, structural) with their lifecycle tier and length compatibility. Each block carries its rules_by_version cross-reference so an agent reading this layer does not need grammar to know which rules apply at a given frozen_at_version. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.`,
     {
       source: d.path,
       provenance: provenanceOf(d),
@@ -538,18 +613,103 @@ function buildPipeline() {
     block_bias: r.block_bias,
     redundancy_posture: r.redundancy_posture,
   }));
-  const gates = rowsAsObjects(findTable(d, "Gate", "Rule", "Source")).map((r) => ({
+
+  // Stage 0–5 — extract Do / Produce / Check / Layers consulted bullets per
+  // stage so pipeline.stages carries the substantive content, not just names.
+  const stages = sections(d.raw)
+    .filter((s) => /^stage\s+\d/i.test(s.title))
+    .map((s) => {
+      const m = /^stage\s+(\d+)\s*[—-]\s*(.+)$/i.exec(s.title);
+      const stage = {
+        n: m ? Number(m[1]) : null,
+        title: s.title,
+        name: m ? m[2].trim() : s.title,
+        do: null,
+        produce: null,
+        check: null,
+        layers_consulted: [],
+      };
+      for (const line of s.body.split("\n")) {
+        const lb = /^\s*-\s+\*\*([A-Za-z _-]+)\.\*\*\s*(.+?)\s*$/.exec(line);
+        if (!lb) continue;
+        const key = lb[1].trim().toLowerCase().replace(/\s+/g, "_");
+        const value = lb[2].trim();
+        if (key === "do") stage.do = value;
+        else if (key === "produce") stage.produce = value;
+        else if (key === "check") stage.check = value;
+        else if (key === "layers_consulted") {
+          stage.layers_consulted = value
+            .replace(/[`.]/g, "")
+            .split(/[,;]/)
+            .map((x) => x.trim())
+            .filter(Boolean);
+        }
+      }
+      return stage;
+    });
+
+  // Gates and identity invariants — two tables under Stage 4.
+  const gates = rowsAsObjects(findTable(d, "id", "Gate", "Rule", "Source")).map((r) => ({
+    id: r.id,
     gate: r.gate,
     rule: r.rule,
     source: r.source,
   }));
-  const stages = sections(d.raw)
-    .filter((s) => /^stage\s+\d/i.test(s.title))
-    .map((s) => ({ stage: s.title }));
+  const invariants = rowsAsObjects(findTable(d, "id", "Invariant", "Source")).map((r) => ({
+    id: r.id,
+    invariant: r.invariant,
+    source: r.source,
+  }));
+
+  // Stage 3 conversion anchors.
+  const conversionTable = findTable(
+    d,
+    "Mode",
+    "Beats admitted (of 7)",
+    "Blocks per admitted beat",
+    "Total blocks",
+    "% of breakdown beats kept",
+    "% of breakdown facts kept"
+  );
+  const stage3_conversion_anchors = rowsAsObjects(conversionTable).map((r) => ({
+    mode: r.mode.replace(/`/g, ""),
+    beats_admitted_of_7: r.beats_admitted_of_7,
+    blocks_per_admitted_beat: r.blocks_per_admitted_beat,
+    total_blocks: r.total_blocks,
+    pct_breakdown_beats_kept: r.of_breakdown_beats_kept,
+    pct_breakdown_facts_kept: r.of_breakdown_facts_kept,
+  }));
+
+  // Frontmatter contract — three tables under § Frontmatter contract.
+  const breakdownFm = rowsAsObjects(findTable(d, "Field", "Required", "Source / form", "Notes")).map((r) => ({
+    field: r.field.replace(/`/g, ""),
+    required: r.required === "✓",
+    source_or_form: r.source_form,
+    notes: r.notes,
+  }));
+  // The same header set repeats for the card frontmatter table — pick by index.
+  const allFieldTables = d.tables.filter((t) => {
+    const have = t.header.map((h) => h.toLowerCase());
+    return ["field", "required", "source / form", "notes"].every((w) => have.includes(w));
+  });
+  const cardFm = allFieldTables[1]
+    ? rowsAsObjects(allFieldTables[1]).map((r) => ({
+        field: r.field.replace(/`/g, ""),
+        required: r.required === "✓" || r.required === "rendered" ? r.required : false,
+        source_or_form: r.source_form,
+        notes: r.notes,
+      }))
+    : [];
+  const renderMeta = rowsAsObjects(findTable(d, "Meta name", "Source field", "Required")).map((r) => ({
+    meta_name: r.meta_name.replace(/`/g, ""),
+    source_field: r.source_field.replace(/`/g, ""),
+    required: r.required === "✓",
+  }));
+
   return leaf(
     "pipeline",
-    "Pipeline — request to published card",
-    "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; six constraint gates must all pass.",
+    "Request → published card, end to end",
+    `The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; 8 constraint gates plus 6 identity invariants govern the output. data.stages carries the substantive Stage 0–5 content (do / produce / check / layers_consulted per stage). data.frontmatter_contract is the single-place schema for breakdown / card / render metadata.`,
     {
       source: d.path,
       provenance: provenanceOf(d),
@@ -557,9 +717,26 @@ function buildPipeline() {
         flow: "Request → Mode → Check research store → Deep research → Breakdown MD → Supercard MD → Render → Publish",
         modes,
         stages,
-        constraint_gates: gates,
+        stage3_conversion_anchors: {
+          note: "Per-mode targets for the Stage-3 lossy conversion. Use these as the convergence band; re-mix if you're out of band.",
+          rows: stage3_conversion_anchors,
+        },
+        constraint_gates: {
+          note: "Binary pass/fail rules run at draft completion. Any failure → fix and re-run the gate.",
+          rows: gates,
+        },
+        identity_invariants: {
+          note: "Always-on identity properties. Not 'passed' — held. Any violation means the artifact is by definition not a Supercard; restart from the violated layer.",
+          rows: invariants,
+        },
+        frontmatter_contract: {
+          note: "The single contract for breakdown, card, and render-time metadata. An agent reading any one artifact can navigate to the others via these fields.",
+          breakdown: breakdownFm,
+          card: cardFm,
+          render_meta: renderMeta,
+        },
       },
-      see_also: ["grammar", "lengths", "rendering", "agent-guide"],
+      see_also: ["grammar", "lengths", "rendering", "agent-guide", "glossary"],
       doc_markdown: d.raw,
     }
   );
@@ -579,7 +756,7 @@ function buildRendering() {
     .map((m) => m[1].replace(/\*\*/g, "").trim());
   return leaf(
     "rendering",
-    "Rendering — the output contract",
+    "Markdown → published HTML output contract",
     "How a card's markdown becomes a published artifact. The HTML path is the floor: a standalone file, all resources inlined, reproducible from this spec with NO codebase. The React path is the bonus for an agent with repo access.",
     {
       source: d.path,
@@ -607,8 +784,8 @@ function buildRendering() {
 function buildAgentGuide() {
   return leaf(
     "agent-guide",
-    "Agent guide — building a card from this URL alone",
-    "The operating manual. Read this first if your job is to produce a Supercard. It tells you the disclosure protocol, which layers to fetch for which task, and the end-to-end build loop with its exit gates.",
+    "Route to the right layer for your task",
+    "The thin router. Read this first if your job is to produce a Supercard. It gives the disclosure protocol and the task → layers map. For the build sequence itself, fetch the pipeline layer; pipeline.data.stages carries Stage 0–5 with do/produce/check/layers_consulted per stage. For terms, fetch glossary. For a worked end-to-end build, fetch example.",
     {
       source: "00-INDEX/INDEX-supercard-v3.md",
       provenance: provenanceOf(SRC.index, SRC.pipeline),
@@ -618,8 +795,9 @@ function buildAgentGuide() {
         disclosure_protocol: [
           "1. The manifest (index.json) lists every layer with its absolute URL in the 'layers' array. Fetch any layer directly from that URL — you are NOT limited to URLs pasted into a chat. If you need a layer, fetch it.",
           "2. You are reading the agent-guide layer. Identify your task, then fetch only the layers it needs (see task_routing below). Do not fetch every layer up front.",
-          "3. Each layer is self-sufficient and carries its own provenance + the full source markdown in doc_markdown.",
-          "4. Re-fetch index.json and compare spec_revision before a run if you cached an earlier copy — a changed revision means a source doc moved.",
+          "3. For the operational build sequence (Stage 0–5), fetch the pipeline layer — its data.stages array carries do/produce/check/layers_consulted per stage. This agent-guide is a router, not the operational manual.",
+          "4. Each layer is self-sufficient and carries its own provenance + the full source markdown in doc_markdown.",
+          "5. Re-fetch index.json and compare spec_revision before a run if you cached an earlier copy — a changed revision means a source doc moved.",
         ],
         task_routing: {
           "build a card from a topic": ["pipeline", "grammar", "lengths", "blocks", "tokens", "rendering"],
@@ -627,27 +805,105 @@ function buildAgentGuide() {
           "pick the right block for a section": ["grammar", "blocks"],
           "judge whether something is a valid Supercard": ["principles"],
           "choose a length variant": ["lengths", "grammar"],
+          "look up a term": ["glossary"],
+          "see a worked end-to-end example": ["example"],
         },
-        build_loop: [
-          "Stage 0 — Parse the request: topic + mode (named or inferred). Confirm the mode in one line.",
-          "Stage 1 — Research: depth scales with mode; every fact carries a source and a confidence.",
-          "Stage 2 — Breakdown MD: the full uncompressed report, organized by the 7 beats, no length budget.",
-          "Stage 3 — Convert to Supercard MD: run the GRAMMAR decision tree per section; Core/Stable blocks only; single emphasis per block.",
-          "Stage 4 — Constraint gates: all six must pass (length budget, single emphasis, loft budget, redundancy filter, screenshot test, grayscale + type).",
-          "Stage 5 — Render and publish: standalone HTML at 393pt, corner glyph on every section, resources inlined. The HTML path is mandatory.",
-        ],
-        non_negotiables: [
-          "Screenshot autonomy: every visible region conveys one complete idea on its own.",
-          "Single emphasis per block: exactly one bold phrase / focal stat / callout.",
-          "Strict grayscale: black, white, and the six-step gray ramp. No color, ever.",
-          "SF Pro Rounded canonical typeface; SF Mono for code and equations.",
-          "1–3 lofted elements per card maximum (hero + at most 2).",
-          "The rendered card shows beat NAMES only — never the Beat N index or BLOCK-* ids.",
-        ],
+        build_sequence_pointer:
+          "For Stage 0–5 with do/produce/check/layers_consulted, fetch the pipeline layer (data.stages). For constraint gates and identity invariants, fetch pipeline (data.constraint_gates and data.identity_invariants). For the frontmatter contract on breakdowns, cards, and renders, fetch pipeline (data.frontmatter_contract). For the block selection procedure, fetch grammar (data.block_selection_procedure).",
         canonical_repo: "https://github.com/fiebsy/supercard",
         note: "This JSON spec is a generated view of the markdown in that repo. The markdown is the source of truth (ADR-0003). To change the spec, change the markdown and regenerate — see _meta.regenerate in index.json.",
       },
-      see_also: ["pipeline", "principles", "grammar", "tokens"],
+      see_also: ["pipeline", "grammar", "glossary", "example"],
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: glossary — definitions for every term used across multiple layers.
+ * ------------------------------------------------------------------ */
+
+function buildGlossary() {
+  const d = SRC.glossary;
+  const terms = [];
+  for (const s of sections(d.raw)) {
+    // Each ## section is a category; rows are Term | Definition | Source.
+    const table = (d.tables || []).find((t) => {
+      const have = t.header.map((h) => h.toLowerCase());
+      return ["term", "definition", "source"].every((w) => have.includes(w));
+    });
+    // Use per-section parse so we keep category grouping.
+    for (const line of s.body.split("\n")) {
+      if (!/^\s*\|/.test(line)) continue;
+      const cells = splitRow(line);
+      if (cells.length !== 3) continue;
+      if (cells[0].toLowerCase() === "term") continue;
+      if (cells.every((c) => /^:?-+:?$/.test(c))) continue;
+      terms.push({
+        category: s.title,
+        term: cells[0],
+        definition: cells[1],
+        source: cells[2],
+      });
+    }
+    void table;
+  }
+  return leaf(
+    "glossary",
+    "One-place definitions for every cross-layer term",
+    "Every noun the system uses across multiple layers — artifacts, composition primitives, editorial micro-units, render-time furniture, versioning — defined once with the canonical source layer cited.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: {
+        count: terms.length,
+        terms,
+      },
+      see_also: ["principles", "grammar", "rendering"],
+      doc_markdown: d.raw,
+    }
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * Layer: example — one worked Mini-mode build, end to end.
+ * ------------------------------------------------------------------ */
+
+function buildExample() {
+  const d = SRC.example;
+  const headlineSec = sections(d.raw).find((s) => s.title.toLowerCase().includes("the request"));
+  const finalListTable = findTable(d, "#", "Beat", "Block", "Family", "Role");
+  const final_block_list = rowsAsObjects(finalListTable).map((r) => ({
+    seq: Number(r[""]) || r[""] || null,
+    beat: r.beat,
+    block: (r.block || "").replace(/`/g, ""),
+    family: r.family,
+    role: r.role,
+  }));
+  const gateTable = findTable(d, "id", "Gate", "Result", "Note");
+  const gate_results = rowsAsObjects(gateTable).map((r) => ({
+    id: r.id,
+    gate: r.gate,
+    result: r.result,
+    note: r.note,
+  }));
+  return leaf(
+    "example",
+    "One worked Mini-mode build, inline",
+    "A single end-to-end worked example: topic → mode inference → ~3-sentence breakdown excerpt → 6-block selection with the GRAMMAR procedure walked per beat → constraint-gate results → frontmatter → 5 lines of rendered HTML scaffolding. Read this once before authoring your first card.",
+    {
+      source: d.path,
+      provenance: provenanceOf(d),
+      data: {
+        mode: "summary",
+        length: "mini",
+        topic: "spaced repetition",
+        intro: headlineSec ? headlineSec.body.split("\n").slice(0, 6).join(" ").trim() : null,
+        final_block_list,
+        gate_results,
+        note: "The full step-by-step walk lives in doc_markdown — read it for the per-beat application of the procedure.",
+      },
+      see_also: ["grammar", "pipeline", "blocks", "lengths"],
+      doc_markdown: d.raw,
     }
   );
 }
@@ -665,6 +921,8 @@ const LAYERS = [
   buildBlocks(),
   buildPipeline(),
   buildRendering(),
+  buildGlossary(),
+  buildExample(),
 ];
 
 const manifest = {
@@ -681,7 +939,7 @@ const manifest = {
     "The machine-readable Supercard specification, served as a progressive-disclosure JSON tree. A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact — a cognitive prosthesis. Fetch this manifest first, then drill into only the layers your task needs.",
   how_to_use:
     "Every layer's full absolute URL is in the 'layers' array below (layers[].url) and is also collected in the top-level 'bootstrap_urls' array — fetch any of them directly. You are NOT limited to URLs handed to you in a chat, and you do NOT need user intervention to chain layers: index.json carries the absolute URL of every layer it references. Start with the 'agent-guide' layer: it routes you to the layers your task needs and gives the end-to-end build loop. Drill only into the layers your task needs — do not fetch all of them up front. Each layer is self-sufficient and carries its own provenance.",
-  start_here: ["agent-guide", "principles", "grammar"],
+  start_here: ["agent-guide"],
   layers: LAYERS.map((l) => ({
     id: l.layer,
     title: l.title,

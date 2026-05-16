@@ -19,7 +19,7 @@ versioned, and rendered.
 |---|---|
 | `00-INDEX/` | Canonical entry point, block library index, session setup |
 | `10-GOVERNANCE/` | Principles, grammar, lengths, rendering, pipeline, changelog, stewards' log, ADRs |
-| `20-BLOCKS/` | The 38 individual block specs (one file each) — to be authored |
+| `20-BLOCKS/` | The 39 individual block specs (one file each) — to be authored |
 | `30-CARDS/` | Active V3 Supercards |
 | `40-LAB/` | Experiments, RFC proposals, audit reports |
 | `50-TEMPLATES/` | Golden templates for new artifacts |

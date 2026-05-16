@@ -5,14 +5,25 @@
 | id | INDEX-block-library |
 | type | index |
 | era | atlas |
-| version | 3.1.0 |
+| version | 3.2.0 |
 | owner | derick |
-| updated | 2026-05-15 |
+| updated | 2026-05-16 |
 
-The 38 V3 blocks across 6 families (Numeric, Comparative, Sequential,
-Definitional, Distributional, Editorial). Source of truth for block lifecycle
-and length compatibility. Each block has (or will have) a full spec doc in
-`20-BLOCKS/`.
+The **39** V3 blocks across **7 families** (Numeric, Comparative, Sequential,
+Definitional, Distributional, Editorial, Structural). Source of truth for block
+lifecycle and length compatibility. Each block has (or will have) a full spec
+doc in `20-BLOCKS/`.
+
+**V3.2 re-homing.** Editorial used to hold 18 of 39 blocks, including blocks
+the decision tree routes elsewhere. In V3.2 the family field is brought into
+line with the decision tree's own logic:
+
+- `BLOCK-column-chart` and `BLOCK-bullet-chart` are now **comparative**.
+- `BLOCK-area-chart` is now **sequential**.
+- `BLOCK-section-divider`, `BLOCK-asterism-rest`, `BLOCK-loft-card`, and `BLOCK-footnote-source` move to a new **structural** family.
+
+Block ids are unchanged (ADR-0003 contract). Only the family field — used for
+decision-tree routing — moves.
 
 | id | name | family | lifecycle | version | length_variants | supersedes | last_review |
 |---|---|---|---|---|---|---|---|
@@ -23,12 +34,15 @@ and length compatibility. Each block has (or will have) a full spec doc in
 | BLOCK-annotated-data-point | Annotated single data point | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-comparison | Comparison block | comparative | core | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-bar-chart | Bar chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-column-chart | Column chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |
 | BLOCK-slope-chart | Slope / bump chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-scatter-quadrant | Scatter / quadrant | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-dot-plot | Dot plot | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-bullet-chart | Bullet chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |
 | BLOCK-timeline | Timeline | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-process-flow | Process / flow | sequential | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-line-chart | Line chart | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-area-chart | Area chart | sequential | stable | 3.0.0 | standard,xl | | 2026-05-16 |
 | BLOCK-definition | Definition | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-numbered-principle | Numbered principle | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-equation | Equation | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
@@ -48,17 +62,18 @@ and length compatibility. Each block has (or will have) a full spec doc in
 | BLOCK-table | Table | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-faq | FAQ | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-key-takeaway | Key takeaway / TL;DR | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
-| BLOCK-section-divider | Section divider | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-footnote-source | Footnote / source aggregator | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-loft-card | Loft-card | editorial | core | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-area-chart | Area chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-column-chart | Column chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-bullet-chart | Bullet chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-asterism-rest | Asterism rest (mid-beat) | editorial | core | 3.1.0 | standard,xl | | 2026-05-15 |
+| BLOCK-section-divider | Section divider | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-footnote-source | Footnote / source aggregator | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-loft-card | Loft-card | structural | core | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-asterism-rest | Asterism rest (mid-beat) | structural | core | 3.1.0 | standard,xl | | 2026-05-16 |
 
-## V3.1 rules (per block)
+## Rules by version (per block)
 
-Additive rules that apply to cards with `frozen_at_version: 3.1.0` or higher. V3.0 cards remain on V3.0 rules per ADR-0003.
+Additive rules that apply to cards with `frozen_at_version: 3.1.0` or higher.
+V3.0 cards remain on V3.0 rules per ADR-0003. The `rules_by_version` field
+emitted into the `blocks` layer carries one entry per affected version so an
+agent reading `blocks.json` does not need to cross-reference grammar to know
+which rules apply to which `frozen_at_version`.
 
 ### BLOCK-standard-text (revised V3.1)
 

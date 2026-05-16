@@ -5,11 +5,11 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.1.0 |
+| version | 3.2.0 |
 | owner | derick |
 | updated | 2026-05-16 |
 
-How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*.
+How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*. The block-selection procedure (below) is the single composed routine an agent walks for every section.
 
 ---
 
@@ -35,13 +35,30 @@ Never run more than 3 long sections in a row. Section dividers mark beat boundar
 
 **Beats are authoring scaffolding, not public labels.** The markdown card names each section by beat *and* block type (`Beat 7 · Close` / `BLOCK-pull-quote`) — that is authoring metadata, and it stays in the markdown. The *rendered* card labels each section with the beat **name only** (`CLOSE`); it never shows the `Beat N` index or the `BLOCK-*` id. A render is a shareable artifact — see `RENDERING-spec` § Output contract.
 
+## Block selection procedure (the one routine)
+
+For each unit of content the breakdown produces, walk these steps **in order**. Each step is either a filter (eliminates candidates) or a transform (rewrites the unit). Don't skip; the steps depend on each other.
+
+1. **Shape-first match** — run the decision tree below; record the first branch that matches (subject to precedence).
+2. **Apply precedence** — if the unit matched multiple branches, use the precedence list to pick one and only one block.
+3. **Apply length-variant filter** — drop candidates whose `length_variants` (in `INDEX-block-library`) don't include the card's target length.
+4. **Apply lifecycle filter** — Core/Stable only. Experimental requires an explicit ask from the user.
+5. **Apply mode's block bias** — favour the modes table's `block_bias` blocks where the choice is otherwise a tie.
+6. **Apply density budget (G-9)** — count the beat's anchor and content blocks so far. If adding the candidate would violate the 1:2–1:4 anchor-to-content ratio, or exceed 2 same-type consecutive anchors, or exceed 4 consecutive content blocks, recast or swap. Insert a mid-beat asterism rest (G-10) instead when the limit is 4 content blocks and a switch isn't warranted.
+7. **Apply prose rules (G-7, G-8)** if the result is a prose block — every `standard-text`, `faq` answer, and `code` block opens with a 2–6-word bolded lead-clause (that bolded run *is* the block's one emphasis). Split at 75 words or 4 sentences.
+8. **Apply block-specific V3.1 rules** — `stat-callout` requires a verbal anchor; `table` with ≥ 4 data rows requires a `**Takeaway**` row (G-11); `pull-quote` requires attribution; `code` requires a bolded gloss.
+9. **Apply anti-pattern check** — run the unit against the anti-patterns table below. Any match → re-cast.
+10. **Run constraint gates** — at draft completion, the card runs the gates in `PIPELINE § Stage 4`. Block selection inputs to gates G1, G2, G7, G8.
+
+A worked numeric walk of this procedure on a Mini-mode card is in `EXAMPLE-mini-supercard`.
+
 ## The decision tree (shape-first, text last)
 
-For each section's content, run this in order. Stop at the first match.
+For each section's content, run this in order. Stop at the first match, **subject to the precedence rules below**.
 
 Is the content primarily a NUMBER?
 
-- 1 number → Stat callout
+- 1 number → Stat callout *(requires a verbal anchor sentence — V3.1+)*
 - 2-6 parallel → Stat grid
 - number over time → Sparkline (inline) or Line chart (full)
 - number vs threshold → Gauge / Bullet chart
@@ -50,30 +67,74 @@ Is the content primarily a NUMBER?
 Is the content a COMPARISON of 2-3 things?
 
 - text comparison → Comparison block
-- numeric magnitude → Bar chart
+- numeric magnitude (vertical bars) → Column chart
+- numeric magnitude (horizontal bars) → Bar chart
 - change between two → Slope chart
 - 2D positioning → Scatter / quadrant
+- ranking → Dot plot
 
 Is the content a SERIES OF STEPS?
 
 - undated → Process / flow
 - dated → Timeline
+- continuous trend → Line chart
+- cumulative trend (under-curve volume matters) → Area chart
+
+Is the content a DISTRIBUTION?
+
+- frequency by bucket → Histogram
+- two-axis density → Heatmap
+- part-of-whole at fixed granularity → Waffle
+- repeated parallel patterns → Small multiples
 
 - Is the content a DEFINITION? → Definition block
 - Is the content a NUMBERED RULE? → Numbered principle
-- Is the content a LIST OF DON'Ts? → Anti-pattern
-- Is the content a TREND OVER TIME? → Line chart or Sparkline
-- Is the content a DISTRIBUTION? → Histogram / Distribution
-- Is the content REPEATED PATTERNS? → Small multiples
-- Is the content STRUCTURED ROWS/COLS? → Table (sparingly)
-- Is the content TECHNICAL/CODE? → Code
+- Is the content TECHNICAL/CODE? → Code *(requires a bolded gloss above the `<pre>` — V3.1+)*
 - Is the content MATHEMATICAL? → Equation
-- Is the content a FAQ-style question? → FAQ
+
+Is the content STRUCTURAL FURNITURE (navigation/rest, not content)?
+
+- beat boundary → Section divider
+- mid-beat rest after every 4 content blocks in a beat of ≥ 5 → Asterism rest *(V3.1+; see G-10)*
+- elevated callout earning loft → Loft-card
+- aggregated sources → Footnote / source aggregator
+
+Is the content EDITORIAL PROSE (the residuals)?
+
+- Is the content a LIST OF DON'Ts? → Anti-pattern
+- Is the content a CHECKLIST of actions? → Checklist
+- Is the content a flashcard-style Q/A list? → Flashcard list
+- Is the content a FAQ-style question? → FAQ *(answer takes a bolded lead-clause — V3.1+)*
+- Is the content a verbatim lift from a source? → Pull quote / Quote-as-evidence
+- Is the content STRUCTURED ROWS/COLS? → Table (sparingly) *(≥ 4 rows requires a `**Takeaway**` row — V3.1+)*
+- Is the content an image with explanatory marks? → Annotated visual / Image with caption
 - Is the content a SYNTHESIS/TAKEAWAY? → Key takeaway
 
-(Default fallback) → Standard text block
+(Default fallback) → Standard text block *(opens with a 2–6-word bolded lead-clause; ≤ 75 words, ≤ 4 sentences — V3.1+)*
 
 Text is the **residual** category, not the first choice. The inverse of how most synthesis is drafted.
+
+## Decision tree precedence (when a unit matches more than one branch)
+
+The tree says "stop at the first match" — but a dated list of don'ts hits SERIES OF STEPS, COMPARISON (don't vs. do), and the editorial anti-pattern branch all at once. Use this order when ambiguity remains. Higher branches win.
+
+1. **Numeric** — if the unit has a focal number, treat it as numeric. (A "list of don'ts" with a count is still anti-pattern, not stat-grid; numbers are *load-bearing* iff the number itself is the takeaway.)
+2. **Comparative** — if the unit is fundamentally A-vs-B (parallel items on a shared axis), treat it as comparative.
+3. **Sequential** — if order matters (dated, stepwise, causal chain), treat it as sequential.
+4. **Distributional** — if the unit shows shape across a population, treat it as distributional.
+5. **Definitional** — if the unit names a term, a numbered rule, code, or an equation.
+6. **Editorial structural** — dividers, asterism rests, loft-cards, footnotes. These are *furniture*, not content; resort to them only when their structural job is the point.
+7. **Editorial prose** — anti-pattern, checklist, FAQ, pull-quote, table, key-takeaway. The catalogued prose containers.
+8. **Standard text** — the residual fallback.
+
+**Explicit overrides:**
+
+- **List-of-don'ts → Anti-pattern**, even when sequential-looking — the editorial framing carries the load, not the order.
+- **Dated stat → Stat callout + caption** in Mini; **Sparkline / Line chart** in Standard/XL — Mini's density budget cannot afford a chart, so the time dimension goes into the caption.
+- **Numbered principle vs. Numbered rule list → Numbered principle** when the principles are independent and each is the single emphasis of its block; **Checklist** when the items are subordinate actions on one shared verb.
+- **Verbatim quote → Quote-as-evidence** in Beat 2 (Evidence) or Beat 5 (Counter); **Pull-quote** in Beat 7 (Close). Same shape, different anchoring role.
+- **Table → Key takeaway** when the table is < 4 rows and its verdict fits in one sentence — the table's furniture overhead isn't earned.
+- **Standard text** is *never* a tie-breaker. If two non-text branches matched, pick the higher one in the precedence list, even if standard-text would feel "safer." Standard text is residual.
 
 ## Adjacency rules
 

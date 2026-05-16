@@ -1,9 +1,9 @@
 {
   "spec": "supercard",
   "title": "Supercard V3 — public specification",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "era": "atlas",
-  "spec_revision": "b27fb8c2653d",
+  "spec_revision": "05290259e680",
   "sources_updated_max": "2026-05-16",
   "canonical_url": "https://berafoot.com/spec/index.json",
   "base_url": "https://berafoot.com/spec",
@@ -11,22 +11,20 @@
   "summary": "The machine-readable Supercard specification, served as a progressive-disclosure JSON tree. A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact — a cognitive prosthesis. Fetch this manifest first, then drill into only the layers your task needs.",
   "how_to_use": "Every layer's full absolute URL is in the 'layers' array below (layers[].url) and is also collected in the top-level 'bootstrap_urls' array — fetch any of them directly. You are NOT limited to URLs handed to you in a chat, and you do NOT need user intervention to chain layers: index.json carries the absolute URL of every layer it references. Start with the 'agent-guide' layer: it routes you to the layers your task needs and gives the end-to-end build loop. Drill only into the layers your task needs — do not fetch all of them up front. Each layer is self-sufficient and carries its own provenance.",
   "start_here": [
-    "agent-guide",
-    "principles",
-    "grammar"
+    "agent-guide"
   ],
   "layers": [
     {
       "id": "agent-guide",
-      "title": "Agent guide — building a card from this URL alone",
+      "title": "Route to the right layer for your task",
       "url": "https://berafoot.com/spec/agent-guide.json",
       "file": "agent-guide.json",
-      "summary": "The operating manual. Read this first if your job is to produce a Supercard. It tells you the disclosure protocol, which layers to fetch for which task, and the end-to-end build loop with its exit gates.",
+      "summary": "The thin router. Read this first if your job is to produce a Supercard. It gives the disclosure protocol and the task → layers map. For the build sequence itself, fetch the pipeline layer; pipeline.data.stages carries Stage 0–5 with do/produce/check/layers_consulted per stage. For terms, fetch glossary. For a worked end-to-end build, fetch example.",
       "source": "00-INDEX/INDEX-supercard-v3.md"
     },
     {
       "id": "tokens",
-      "title": "Render tokens — the text-style spec",
+      "title": "Style values to render any block",
       "url": "https://berafoot.com/spec/tokens.json",
       "file": "tokens.json",
       "summary": "Machine-readable design tokens: canvas, the six-step gray ramp, the SF Pro Rounded type scale, the 8pt spacing scale, and the shadow system. Style any block from these values alone — no other ramp, no color, ever.",
@@ -34,23 +32,23 @@
     },
     {
       "id": "principles",
-      "title": "Principles — the identity anchor",
+      "title": "Identity rules — what is and isn't a Supercard",
       "url": "https://berafoot.com/spec/principles.json",
       "file": "principles.json",
-      "summary": "The 10 foundational principles. PRINCIPLES says what we're doing; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
+      "summary": "The 12 foundational principles (10 V3.0 + 2 V3.1). PRINCIPLES is the identity-audit reference; anything that violates these is by definition not a Supercard. The load-bearing one is #1, screenshot autonomy.",
       "source": "10-GOVERNANCE/PRINCIPLES-supercard-v3.md"
     },
     {
       "id": "grammar",
-      "title": "Grammar — how blocks compose",
+      "title": "Pick a block and compose the card",
       "url": "https://berafoot.com/spec/grammar.json",
       "file": "grammar.json",
-      "summary": "The seven-beat narrative spine (Hook → Evidence → Mechanism → Comparison → Counter → Application → Close), the shape-first/text-last decision tree for picking a block per section, and the adjacency rules. GRAMMAR says how to assemble what PRINCIPLES defines.",
+      "summary": "The seven-beat narrative spine (Hook → Evidence → Mechanism → Comparison → Counter → Application → Close), the single block-selection procedure (10 ordered steps that walk the decision tree, precedence, density budget, prose rules, anti-patterns, gates), and the V3.1+ rules (G-7–G-11) woven into the decision tree itself.",
       "source": "10-GOVERNANCE/GRAMMAR-block-composition.md"
     },
     {
       "id": "lengths",
-      "title": "Lengths — Mini / Standard / XL",
+      "title": "Mini / Standard / XL — same content, different emphasis",
       "url": "https://berafoot.com/spec/lengths.json",
       "file": "lengths.json",
       "summary": "Length is a prop, not a fork: same content model, same grammar, same identity — only emphasis, density, and depth vary. Standard is canonical; Mini and XL are derived views.",
@@ -58,27 +56,43 @@
     },
     {
       "id": "blocks",
-      "title": "Block library — the 38 blocks",
+      "title": "The block library with lifecycle and length compatibility",
       "url": "https://berafoot.com/spec/blocks.json",
       "file": "blocks.json",
-      "summary": "Every block across 6 families with its lifecycle tier and length compatibility. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
+      "summary": "The 39 blocks across 7 families (numeric, comparative, sequential, definitional, distributional, editorial, structural) with their lifecycle tier and length compatibility. Each block carries its rules_by_version cross-reference so an agent reading this layer does not need grammar to know which rules apply at a given frozen_at_version. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
       "source": "00-INDEX/INDEX-block-library.md"
     },
     {
       "id": "pipeline",
-      "title": "Pipeline — request to published card",
+      "title": "Request → published card, end to end",
       "url": "https://berafoot.com/spec/pipeline.json",
       "file": "pipeline.json",
-      "summary": "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; six constraint gates must all pass.",
+      "summary": "The dynamic assembly pipeline: Request → Mode → check the research store → deep research → breakdown MD → Supercard MD → render → publish. Four modes (summary, briefing, deep-dive, reference) bias depth and length; 8 constraint gates plus 6 identity invariants govern the output. data.stages carries the substantive Stage 0–5 content (do / produce / check / layers_consulted per stage). data.frontmatter_contract is the single-place schema for breakdown / card / render metadata.",
       "source": "10-GOVERNANCE/PIPELINE-card-assembly.md"
     },
     {
       "id": "rendering",
-      "title": "Rendering — the output contract",
+      "title": "Markdown → published HTML output contract",
       "url": "https://berafoot.com/spec/rendering.json",
       "file": "rendering.json",
       "summary": "How a card's markdown becomes a published artifact. The HTML path is the floor: a standalone file, all resources inlined, reproducible from this spec with NO codebase. The React path is the bonus for an agent with repo access.",
       "source": "10-GOVERNANCE/RENDERING-spec.md"
+    },
+    {
+      "id": "glossary",
+      "title": "One-place definitions for every cross-layer term",
+      "url": "https://berafoot.com/spec/glossary.json",
+      "file": "glossary.json",
+      "summary": "Every noun the system uses across multiple layers — artifacts, composition primitives, editorial micro-units, render-time furniture, versioning — defined once with the canonical source layer cited.",
+      "source": "10-GOVERNANCE/GLOSSARY-supercard.md"
+    },
+    {
+      "id": "example",
+      "title": "One worked Mini-mode build, inline",
+      "url": "https://berafoot.com/spec/example.json",
+      "file": "example.json",
+      "summary": "A single end-to-end worked example: topic → mode inference → ~3-sentence breakdown excerpt → 6-block selection with the GRAMMAR procedure walked per beat → constraint-gate results → frontmatter → 5 lines of rendered HTML scaffolding. Read this once before authoring your first card.",
+      "source": "10-GOVERNANCE/EXAMPLE-mini-supercard.md"
     }
   ],
   "bootstrap_urls": [
@@ -89,7 +103,9 @@
     "https://berafoot.com/spec/lengths.json",
     "https://berafoot.com/spec/blocks.json",
     "https://berafoot.com/spec/pipeline.json",
-    "https://berafoot.com/spec/rendering.json"
+    "https://berafoot.com/spec/rendering.json",
+    "https://berafoot.com/spec/glossary.json",
+    "https://berafoot.com/spec/example.json"
   ],
   "mirror_urls": {
     "note": "Same file content as the canonical layer URLs above. Use any base if the canonical host is unreachable or undiscoverable from your environment.",
@@ -195,6 +211,26 @@
           "name": "vercel",
           "url": "https://supercard-seven.vercel.app/spec/rendering.json"
         }
+      ],
+      "glossary": [
+        {
+          "name": "berafoot",
+          "url": "https://berafoot.com/spec/glossary.json"
+        },
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/glossary.json"
+        }
+      ],
+      "example": [
+        {
+          "name": "berafoot",
+          "url": "https://berafoot.com/spec/example.json"
+        },
+        {
+          "name": "vercel",
+          "url": "https://supercard-seven.vercel.app/spec/example.json"
+        }
       ]
     }
   },
@@ -204,38 +240,48 @@
     "sources": [
       {
         "file": "00-INDEX/INDEX-supercard-v3.md",
-        "updated": "2026-05-15",
-        "sha256": "7bbb118b7b10282013c9941cdff2ceb22afbbd2b6d6fafe098c8cacf26f37d13"
+        "updated": "2026-05-16",
+        "sha256": "4a74b7c244c9055aee8eef0c28d9de8333d3b10aa91de2d4ee36838a1be801f5"
       },
       {
         "file": "10-GOVERNANCE/PRINCIPLES-supercard-v3.md",
-        "updated": "2026-05-15",
-        "sha256": "97a8b084d1c452f495925d9d101cffe4bf9113fe16d4c863098388e93195ab99"
+        "updated": "2026-05-16",
+        "sha256": "d5e3fde9bfbfc6a7612b479af8793dd0cddccaaa06c1fd607e879de686d2cd48"
       },
       {
         "file": "10-GOVERNANCE/GRAMMAR-block-composition.md",
         "updated": "2026-05-16",
-        "sha256": "e48bf95247f352aaa7c66f94675d86fc92bc8bf61cbc086537d0625ef71cd09b"
+        "sha256": "8f1e220326076c6d1564cfd3e1b43681624a42354ce6b126625dddd4684d522e"
       },
       {
         "file": "10-GOVERNANCE/LENGTHS-mini-standard-xl.md",
-        "updated": "2026-05-15",
-        "sha256": "625d5c1b6d85de1fca3a7bec28a265840e0aa9f3dbba67f4ad5a1924490c484f"
+        "updated": "2026-05-16",
+        "sha256": "a0a46841c0af5d0884e4d8de539c9036faf585559a92af7f564a0c848414c364"
       },
       {
         "file": "00-INDEX/INDEX-block-library.md",
-        "updated": "2026-05-15",
-        "sha256": "6b070225d4bc5bdf48bb16303f0c4e0da677d0f30c6595f671823ec4e44df7b3"
+        "updated": "2026-05-16",
+        "sha256": "ae054c3a47a8f19c5c20434954367020e0b0b217b15afb677fbee6f1d54b6811"
       },
       {
         "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",
-        "updated": "2026-05-14",
-        "sha256": "81180bd94884a427210d3623bcc9a4cbac687cd6915678d5591e164a3b566c3e"
+        "updated": "2026-05-16",
+        "sha256": "2a314451c6684b0d47166da733c60f0c7e0d5b9fbf71c508857890de9dfcef96"
       },
       {
         "file": "10-GOVERNANCE/RENDERING-spec.md",
         "updated": "2026-05-16",
-        "sha256": "7bec9167ab6fb41bad69e0498b315f5f4c930c049c26829214285f5ae259518d"
+        "sha256": "45b852e6564b00154fdb5208144069703961862f51b5c7f9d457a8043844a823"
+      },
+      {
+        "file": "10-GOVERNANCE/GLOSSARY-supercard.md",
+        "updated": "2026-05-16",
+        "sha256": "6f74a36852ba90df86fd55b7411ae1f52ff2678edee48e01336f13a9c586ae96"
+      },
+      {
+        "file": "10-GOVERNANCE/EXAMPLE-mini-supercard.md",
+        "updated": "2026-05-16",
+        "sha256": "94eb141db5a28478e102066d382c2e48c5d8dd77a228b3249246452db5920f2e"
       }
     ]
   },

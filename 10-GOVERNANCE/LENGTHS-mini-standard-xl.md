@@ -5,9 +5,9 @@
 | id | LENGTHS-mini-standard-xl |
 | type | governance |
 | era | atlas |
-| version | 3.1.0 |
+| version | 3.2.0 |
 | owner | derick |
-| updated | 2026-05-15 |
+| updated | 2026-05-16 |
 
 Length is a **prop**, not a fork. Same content model, same grammar, same identity — only emphasis, density, and depth vary.
 

@@ -1,18 +1,18 @@
 {
   "layer": "blocks",
-  "title": "Block library — the 38 blocks",
+  "title": "The block library with lifecycle and length compatibility",
   "spec": "supercard",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "era": "atlas",
-  "spec_revision": "b27fb8c2653d",
-  "summary": "Every block across 6 families with its lifecycle tier and length compatibility. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
+  "spec_revision": "05290259e680",
+  "summary": "The 39 blocks across 7 families (numeric, comparative, sequential, definitional, distributional, editorial, structural) with their lifecycle tier and length compatibility. Each block carries its rules_by_version cross-reference so an agent reading this layer does not need grammar to know which rules apply at a given frozen_at_version. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
   "source": "00-INDEX/INDEX-block-library.md",
   "provenance": [
     {
       "file": "00-INDEX/INDEX-block-library.md",
-      "updated": "2026-05-15",
-      "version": "3.1.0",
-      "sha256": "6b070225d4bc5bdf48bb16303f0c4e0da677d0f30c6595f671823ec4e44df7b3"
+      "updated": "2026-05-16",
+      "version": "3.2.0",
+      "sha256": "ae054c3a47a8f19c5c20434954367020e0b0b217b15afb677fbee6f1d54b6811"
     }
   ],
   "data": {
@@ -23,7 +23,8 @@
       "sequential",
       "definitional",
       "distributional",
-      "editorial"
+      "editorial",
+      "structural"
     ],
     "by_family": {
       "numeric": [
@@ -36,14 +37,17 @@
       "comparative": [
         "BLOCK-comparison",
         "BLOCK-bar-chart",
+        "BLOCK-column-chart",
         "BLOCK-slope-chart",
         "BLOCK-scatter-quadrant",
-        "BLOCK-dot-plot"
+        "BLOCK-dot-plot",
+        "BLOCK-bullet-chart"
       ],
       "sequential": [
         "BLOCK-timeline",
         "BLOCK-process-flow",
-        "BLOCK-line-chart"
+        "BLOCK-line-chart",
+        "BLOCK-area-chart"
       ],
       "definitional": [
         "BLOCK-definition",
@@ -68,13 +72,12 @@
         "BLOCK-image-caption",
         "BLOCK-table",
         "BLOCK-faq",
-        "BLOCK-key-takeaway",
+        "BLOCK-key-takeaway"
+      ],
+      "structural": [
         "BLOCK-section-divider",
         "BLOCK-footnote-source",
         "BLOCK-loft-card",
-        "BLOCK-area-chart",
-        "BLOCK-column-chart",
-        "BLOCK-bullet-chart",
         "BLOCK-asterism-rest"
       ]
     },
@@ -98,11 +101,14 @@
         "BLOCK-gauge-progress",
         "BLOCK-annotated-data-point",
         "BLOCK-bar-chart",
+        "BLOCK-column-chart",
         "BLOCK-slope-chart",
         "BLOCK-scatter-quadrant",
         "BLOCK-dot-plot",
+        "BLOCK-bullet-chart",
         "BLOCK-timeline",
         "BLOCK-line-chart",
+        "BLOCK-area-chart",
         "BLOCK-equation",
         "BLOCK-code",
         "BLOCK-histogram",
@@ -117,10 +123,7 @@
         "BLOCK-table",
         "BLOCK-faq",
         "BLOCK-section-divider",
-        "BLOCK-footnote-source",
-        "BLOCK-area-chart",
-        "BLOCK-column-chart",
-        "BLOCK-bullet-chart"
+        "BLOCK-footnote-source"
       ]
     },
     "blocks": [
@@ -135,7 +138,16 @@
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-04-29",
+        "rules_by_version": {
+          "3.1.0": {
+            "status": "clarified V3.1",
+            "rules": [
+              "Verbal anchor: **REQUIRED** — one sentence naming what the stat means and its direction",
+              "Bare numbers without a verbal frame are forbidden (cognitive-load failure per Sanchez & Wiley 2006)"
+            ]
+          }
+        }
       },
       {
         "id": "BLOCK-stat-grid",
@@ -211,6 +223,18 @@
         "last_review": "2026-04-29"
       },
       {
+        "id": "BLOCK-column-chart",
+        "name": "Column chart",
+        "family": "comparative",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-05-16"
+      },
+      {
         "id": "BLOCK-slope-chart",
         "name": "Slope / bump chart",
         "family": "comparative",
@@ -245,6 +269,18 @@
           "xl"
         ],
         "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-bullet-chart",
+        "name": "Bullet chart",
+        "family": "comparative",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-05-16"
       },
       {
         "id": "BLOCK-timeline",
@@ -282,6 +318,18 @@
           "xl"
         ],
         "last_review": "2026-04-29"
+      },
+      {
+        "id": "BLOCK-area-chart",
+        "name": "Area chart",
+        "family": "sequential",
+        "lifecycle": "stable",
+        "version": "3.0.0",
+        "length_variants": [
+          "standard",
+          "xl"
+        ],
+        "last_review": "2026-05-16"
       },
       {
         "id": "BLOCK-definition",
@@ -331,7 +379,17 @@
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-04-29",
+        "rules_by_version": {
+          "3.1.0": {
+            "status": "clarified V3.1",
+            "rules": [
+              "Bolded gloss above the `<pre>`: **REQUIRED** — one-line bolded clause stating what the code does",
+              "The gloss is the block's single emphasis; no bold runs inside the code itself",
+              "Body weight inside `<pre>` is regular SF Mono; comments stay at body weight, not italic"
+            ]
+          }
+        }
       },
       {
         "id": "BLOCK-histogram",
@@ -392,7 +450,20 @@
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-04-29",
+        "rules_by_version": {
+          "3.1.0": {
+            "status": "revised V3.1",
+            "rules": [
+              "Word cap: **75** (a block exceeding this MUST be split into two)",
+              "Sentence cap: **4**",
+              "Lead-clause: **REQUIRED** — bolded 2–6-word noun phrase or imperative",
+              "Internal spacing: 8pt between thought-groups, 16pt between sub-paragraphs",
+              "Additional bold runs: **FORBIDDEN** (single emphasis per block; the lead-clause is it)",
+              "Italics: permitted **only** for titles of works and foreign terms (never for emphasis)"
+            ]
+          }
+        }
       },
       {
         "id": "BLOCK-pull-quote",
@@ -404,7 +475,17 @@
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-04-29",
+        "rules_by_version": {
+          "3.1.0": {
+            "status": "clarified V3.1",
+            "rules": [
+              "Chrome: forbidden — no rules, no quotemark boxes",
+              "Emphasis: a single oversized opening quotation glyph (U+201C) at 1.5× body size, weight 500",
+              "Attribution: **REQUIRED** at 11pt, 60% gray, weight 400"
+            ]
+          }
+        }
       },
       {
         "id": "BLOCK-quote-as-evidence",
@@ -491,7 +572,17 @@
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-04-29",
+        "rules_by_version": {
+          "3.1.0": {
+            "status": "revised V3.1",
+            "rules": [
+              "Takeaway row: **REQUIRED** for tables with ≥ 4 data rows (see GRAMMAR § G-11)",
+              "Visual: bolded bottom row, weight 600, no top border on the row",
+              "Tables with the takeaway row count as **anchor blocks** in density budgets (G-9); tables without it count as content"
+            ]
+          }
+        }
       },
       {
         "id": "BLOCK-faq",
@@ -521,86 +612,62 @@
       {
         "id": "BLOCK-section-divider",
         "name": "Section divider",
-        "family": "editorial",
+        "family": "structural",
         "lifecycle": "stable",
         "version": "3.0.0",
         "length_variants": [
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-05-16"
       },
       {
         "id": "BLOCK-footnote-source",
         "name": "Footnote / source aggregator",
-        "family": "editorial",
+        "family": "structural",
         "lifecycle": "stable",
         "version": "3.0.0",
         "length_variants": [
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-05-16"
       },
       {
         "id": "BLOCK-loft-card",
         "name": "Loft-card",
-        "family": "editorial",
+        "family": "structural",
         "lifecycle": "core",
         "version": "3.0.0",
         "length_variants": [
           "standard",
           "xl"
         ],
-        "last_review": "2026-04-29"
-      },
-      {
-        "id": "BLOCK-area-chart",
-        "name": "Area chart",
-        "family": "editorial",
-        "lifecycle": "stable",
-        "version": "3.0.0",
-        "length_variants": [
-          "standard",
-          "xl"
-        ],
-        "last_review": "2026-04-29"
-      },
-      {
-        "id": "BLOCK-column-chart",
-        "name": "Column chart",
-        "family": "editorial",
-        "lifecycle": "stable",
-        "version": "3.0.0",
-        "length_variants": [
-          "standard",
-          "xl"
-        ],
-        "last_review": "2026-04-29"
-      },
-      {
-        "id": "BLOCK-bullet-chart",
-        "name": "Bullet chart",
-        "family": "editorial",
-        "lifecycle": "stable",
-        "version": "3.0.0",
-        "length_variants": [
-          "standard",
-          "xl"
-        ],
-        "last_review": "2026-04-29"
+        "last_review": "2026-05-16"
       },
       {
         "id": "BLOCK-asterism-rest",
         "name": "Asterism rest (mid-beat)",
-        "family": "editorial",
+        "family": "structural",
         "lifecycle": "core",
         "version": "3.1.0",
         "length_variants": [
           "standard",
           "xl"
         ],
-        "last_review": "2026-05-15"
+        "last_review": "2026-05-16",
+        "rules_by_version": {
+          "3.1.0": {
+            "status": "new V3.1",
+            "rules": [
+              "Glyph: `⁂` (U+2042)",
+              "Size: body (17pt) / weight 400 / 100% ink",
+              "Spacing: 32pt margin-block above and below",
+              "Use: inserted by author OR auto-inserted by the renderer after every 4 content blocks within a beat of ≥ 5 blocks (see GRAMMAR § G-10)",
+              "Does not count as a block for density budgets (G-9) or for total-block counts (L-5)"
+            ]
+          }
+        }
       }
     ]
   },
@@ -608,7 +675,7 @@
     "grammar",
     "rendering"
   ],
-  "doc_markdown": "# INDEX — Block Library\n\n| key | value |\n|---|---|\n| id | INDEX-block-library |\n| type | index |\n| era | atlas |\n| version | 3.1.0 |\n| owner | derick |\n| updated | 2026-05-15 |\n\nThe 38 V3 blocks across 6 families (Numeric, Comparative, Sequential,\nDefinitional, Distributional, Editorial). Source of truth for block lifecycle\nand length compatibility. Each block has (or will have) a full spec doc in\n`20-BLOCKS/`.\n\n| id | name | family | lifecycle | version | length_variants | supersedes | last_review |\n|---|---|---|---|---|---|---|---|\n| BLOCK-stat-callout | Stat callout | numeric | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-stat-grid | Stat grid | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-sparkline | Sparkline | numeric | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-gauge-progress | Gauge / progress | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-annotated-data-point | Annotated single data point | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-comparison | Comparison block | comparative | core | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-bar-chart | Bar chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-slope-chart | Slope / bump chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-scatter-quadrant | Scatter / quadrant | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-dot-plot | Dot plot | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-timeline | Timeline | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-process-flow | Process / flow | sequential | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-line-chart | Line chart | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-definition | Definition | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-numbered-principle | Numbered principle | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-equation | Equation | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-code | Code | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-histogram | Histogram / distribution | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-heatmap | Heatmap | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-waffle | Waffle | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-small-multiples | Small multiples | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-standard-text | Standard text | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-pull-quote | Pull quote | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-quote-as-evidence | Quote-as-evidence | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-flashcard-list | Flashcard list | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-anti-pattern | Anti-pattern | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-checklist | Checklist | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-annotated-visual | Annotated visual | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-image-caption | Image with caption | editorial | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-table | Table | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-faq | FAQ | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-key-takeaway | Key takeaway / TL;DR | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-section-divider | Section divider | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-footnote-source | Footnote / source aggregator | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-loft-card | Loft-card | editorial | core | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-area-chart | Area chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-column-chart | Column chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-bullet-chart | Bullet chart | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-asterism-rest | Asterism rest (mid-beat) | editorial | core | 3.1.0 | standard,xl | | 2026-05-15 |\n\n## V3.1 rules (per block)\n\nAdditive rules that apply to cards with `frozen_at_version: 3.1.0` or higher. V3.0 cards remain on V3.0 rules per ADR-0003.\n\n### BLOCK-standard-text (revised V3.1)\n\n- Word cap: **75** (a block exceeding this MUST be split into two)\n- Sentence cap: **4**\n- Lead-clause: **REQUIRED** — bolded 2–6-word noun phrase or imperative\n- Internal spacing: 8pt between thought-groups, 16pt between sub-paragraphs\n- Additional bold runs: **FORBIDDEN** (single emphasis per block; the lead-clause is it)\n- Italics: permitted **only** for titles of works and foreign terms (never for emphasis)\n\n### BLOCK-stat-callout (clarified V3.1)\n\n- Verbal anchor: **REQUIRED** — one sentence naming what the stat means and its direction\n- Bare numbers without a verbal frame are forbidden (cognitive-load failure per Sanchez & Wiley 2006)\n\n### BLOCK-pull-quote (clarified V3.1)\n\n- Chrome: forbidden — no rules, no quotemark boxes\n- Emphasis: a single oversized opening quotation glyph (U+201C) at 1.5× body size, weight 500\n- Attribution: **REQUIRED** at 11pt, 60% gray, weight 400\n\n### BLOCK-table (revised V3.1)\n\n- Takeaway row: **REQUIRED** for tables with ≥ 4 data rows (see GRAMMAR § G-11)\n- Visual: bolded bottom row, weight 600, no top border on the row\n- Tables with the takeaway row count as **anchor blocks** in density budgets (G-9); tables without it count as content\n\n### BLOCK-code (clarified V3.1)\n\n- Bolded gloss above the `<pre>`: **REQUIRED** — one-line bolded clause stating what the code does\n- The gloss is the block's single emphasis; no bold runs inside the code itself\n- Body weight inside `<pre>` is regular SF Mono; comments stay at body weight, not italic\n\n### BLOCK-asterism-rest (new V3.1)\n\n- Glyph: `⁂` (U+2042)\n- Size: body (17pt) / weight 400 / 100% ink\n- Spacing: 32pt margin-block above and below\n- Use: inserted by author OR auto-inserted by the renderer after every 4 content blocks within a beat of ≥ 5 blocks (see GRAMMAR § G-10)\n- Does not count as a block for density budgets (G-9) or for total-block counts (L-5)\n",
+  "doc_markdown": "# INDEX — Block Library\n\n| key | value |\n|---|---|\n| id | INDEX-block-library |\n| type | index |\n| era | atlas |\n| version | 3.2.0 |\n| owner | derick |\n| updated | 2026-05-16 |\n\nThe **39** V3 blocks across **7 families** (Numeric, Comparative, Sequential,\nDefinitional, Distributional, Editorial, Structural). Source of truth for block\nlifecycle and length compatibility. Each block has (or will have) a full spec\ndoc in `20-BLOCKS/`.\n\n**V3.2 re-homing.** Editorial used to hold 18 of 39 blocks, including blocks\nthe decision tree routes elsewhere. In V3.2 the family field is brought into\nline with the decision tree's own logic:\n\n- `BLOCK-column-chart` and `BLOCK-bullet-chart` are now **comparative**.\n- `BLOCK-area-chart` is now **sequential**.\n- `BLOCK-section-divider`, `BLOCK-asterism-rest`, `BLOCK-loft-card`, and `BLOCK-footnote-source` move to a new **structural** family.\n\nBlock ids are unchanged (ADR-0003 contract). Only the family field — used for\ndecision-tree routing — moves.\n\n| id | name | family | lifecycle | version | length_variants | supersedes | last_review |\n|---|---|---|---|---|---|---|---|\n| BLOCK-stat-callout | Stat callout | numeric | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-stat-grid | Stat grid | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-sparkline | Sparkline | numeric | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-gauge-progress | Gauge / progress | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-annotated-data-point | Annotated single data point | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-comparison | Comparison block | comparative | core | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-bar-chart | Bar chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-column-chart | Column chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |\n| BLOCK-slope-chart | Slope / bump chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-scatter-quadrant | Scatter / quadrant | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-dot-plot | Dot plot | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-bullet-chart | Bullet chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |\n| BLOCK-timeline | Timeline | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-process-flow | Process / flow | sequential | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-line-chart | Line chart | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-area-chart | Area chart | sequential | stable | 3.0.0 | standard,xl | | 2026-05-16 |\n| BLOCK-definition | Definition | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-numbered-principle | Numbered principle | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-equation | Equation | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-code | Code | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-histogram | Histogram / distribution | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-heatmap | Heatmap | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-waffle | Waffle | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-small-multiples | Small multiples | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-standard-text | Standard text | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-pull-quote | Pull quote | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-quote-as-evidence | Quote-as-evidence | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-flashcard-list | Flashcard list | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-anti-pattern | Anti-pattern | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-checklist | Checklist | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-annotated-visual | Annotated visual | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-image-caption | Image with caption | editorial | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-table | Table | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-faq | FAQ | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |\n| BLOCK-key-takeaway | Key takeaway / TL;DR | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |\n| BLOCK-section-divider | Section divider | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |\n| BLOCK-footnote-source | Footnote / source aggregator | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |\n| BLOCK-loft-card | Loft-card | structural | core | 3.0.0 | standard,xl | | 2026-05-16 |\n| BLOCK-asterism-rest | Asterism rest (mid-beat) | structural | core | 3.1.0 | standard,xl | | 2026-05-16 |\n\n## Rules by version (per block)\n\nAdditive rules that apply to cards with `frozen_at_version: 3.1.0` or higher.\nV3.0 cards remain on V3.0 rules per ADR-0003. The `rules_by_version` field\nemitted into the `blocks` layer carries one entry per affected version so an\nagent reading `blocks.json` does not need to cross-reference grammar to know\nwhich rules apply to which `frozen_at_version`.\n\n### BLOCK-standard-text (revised V3.1)\n\n- Word cap: **75** (a block exceeding this MUST be split into two)\n- Sentence cap: **4**\n- Lead-clause: **REQUIRED** — bolded 2–6-word noun phrase or imperative\n- Internal spacing: 8pt between thought-groups, 16pt between sub-paragraphs\n- Additional bold runs: **FORBIDDEN** (single emphasis per block; the lead-clause is it)\n- Italics: permitted **only** for titles of works and foreign terms (never for emphasis)\n\n### BLOCK-stat-callout (clarified V3.1)\n\n- Verbal anchor: **REQUIRED** — one sentence naming what the stat means and its direction\n- Bare numbers without a verbal frame are forbidden (cognitive-load failure per Sanchez & Wiley 2006)\n\n### BLOCK-pull-quote (clarified V3.1)\n\n- Chrome: forbidden — no rules, no quotemark boxes\n- Emphasis: a single oversized opening quotation glyph (U+201C) at 1.5× body size, weight 500\n- Attribution: **REQUIRED** at 11pt, 60% gray, weight 400\n\n### BLOCK-table (revised V3.1)\n\n- Takeaway row: **REQUIRED** for tables with ≥ 4 data rows (see GRAMMAR § G-11)\n- Visual: bolded bottom row, weight 600, no top border on the row\n- Tables with the takeaway row count as **anchor blocks** in density budgets (G-9); tables without it count as content\n\n### BLOCK-code (clarified V3.1)\n\n- Bolded gloss above the `<pre>`: **REQUIRED** — one-line bolded clause stating what the code does\n- The gloss is the block's single emphasis; no bold runs inside the code itself\n- Body weight inside `<pre>` is regular SF Mono; comments stay at body weight, not italic\n\n### BLOCK-asterism-rest (new V3.1)\n\n- Glyph: `⁂` (U+2042)\n- Size: body (17pt) / weight 400 / 100% ink\n- Spacing: 32pt margin-block above and below\n- Use: inserted by author OR auto-inserted by the renderer after every 4 content blocks within a beat of ≥ 5 blocks (see GRAMMAR § G-10)\n- Does not count as a block for density budgets (G-9) or for total-block counts (L-5)\n",
   "see_also_urls": [
     "https://berafoot.com/spec/grammar.json",
     "https://berafoot.com/spec/rendering.json"

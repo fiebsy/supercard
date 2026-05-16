@@ -5,9 +5,9 @@
 | id | PRINCIPLES-supercard-v3 |
 | type | governance |
 | era | atlas |
-| version | 3.1.0 |
+| version | 3.2.0 |
 | owner | derick |
-| updated | 2026-05-15 |
+| updated | 2026-05-16 |
 
 The 10 foundational principles of the Supercard format. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
 
