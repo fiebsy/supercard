@@ -134,7 +134,7 @@ em {
   font-style: italic;
 }
 .lede {
-  color: var(--ink);
+  color: var(--ink-2);
 }
 
 /* Beat 1 — anchor hero. V3.6 (R-22): flat, no elevation. Set apart by border +
@@ -151,7 +151,9 @@ em {
   line-height: 26px;
   font-weight: 500;
   letter-spacing: -0.005em;
-  color: var(--ink);
+  /* Muted (was --ink) so the one bold phrase — the single emphasis the hook is
+   * built around — is the only near-black ink in the card's anchor. */
+  color: var(--ink-2);
 }
 
 ol,
