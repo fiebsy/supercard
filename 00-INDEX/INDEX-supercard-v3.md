@@ -5,9 +5,9 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.4.0 |
+| version | 3.5.0 |
 | owner | derick |
-| updated | 2026-05-16 |
+| updated | 2026-06-25 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
@@ -112,10 +112,13 @@ ls docs/cards/
 | 0006 | Dedicated research-report store (`60-RESEARCH/`) | Accepted | 2026-05-14 |
 | 0007 | Render and publish by default | Accepted | 2026-05-14 |
 | 0008 | Spec organized for agent legibility (3.2.0) | Accepted | 2026-05-16 |
+| 0009 | V3.5 reading-layer refinement (R-19/R-20/R-21) | Accepted | 2026-06-25 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entry:
+
+**v3.5.0** — Reading-layer refinement. Added R-19 (body type metrics — retires R-9's positive tracking, body to 17/26 −0.01em / word-spacing normal), R-20 (text-ink ladder — `--ink` #1A1A1A / `--ink-2` #595959 / `--ink-3` #767676, all clearing WCAG 4.5:1; `#888`/`#BBB`/`--g-30` demoted to non-text), R-21 (three-size reading core — header 40 / subhead 26 / body 17, weight + ink + space do the rest). Amended R-15 (V3.5 default beat gap 48→64pt), R-13 (dek at body-size + secondary ink), and superseded R-9 / folded R-18's display tightening in as the default (dropping the sub-1.5 line-height variant). Backwards-compatible: every V3.0–V3.4 card renders identically. New constraints apply to `frozen_at_version: 3.5.0` and later only. (ADR-0009.)
 
 **v3.4.0** — Apple-calibrated readability cut. Added P13 (plain language as substance), P14 (connective flow without scaffold), G-12 (paragraph mobile cap), G-13 (readability target), G-14 (connective-flow vocabulary), R-15 (section spacing scale), R-16 (surface-tinted card affordance), R-17 (screenshot-autonomy enforcement), R-18 (Apple register opt-in for body). Added `--s-9: 120pt` spacing token, `--surface-tint: rgba(0,0,0,0.025)` color token, and a 28/32 Tile type-ramp step. Backwards-compatible: every v3.3 card renders identically under v3.4. New constraints apply to `frozen_at_version: 3.4.0` and later only.
 

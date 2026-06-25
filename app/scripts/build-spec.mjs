@@ -368,7 +368,7 @@ function buildTokens() {
           note: "ui-rounded first — resolves to SF Pro Rounded on Apple platforms.",
         },
         gray_ramp: {
-          note: "The only ramp. Body text is #111111 (--ink), never pure black. Per-block layers: --ink-2 #333, --ink-3 #555, --ink-4 #888, --ink-5 #BBB.",
+          note: "The only ramp, split by job. TEXT INK — V3.0–V3.4: #111111 (--ink), --ink-2 #333, --ink-3 #555. V3.5+ (R-20): a 3-step ladder clearing WCAG 4.5:1 — --ink #1A1A1A, --ink-2 #595959, --ink-3 #767676. NON-TEXT ONLY: --ink-4 #888, --ink-5 #BBB, --g-30 (hairlines, gridlines, disabled, decorative rules; large text >= 24px at 3:1 only). Never pure black for body.",
           steps: grayRamp,
         },
         type_scale: typeScale,

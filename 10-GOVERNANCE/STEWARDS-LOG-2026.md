@@ -7,11 +7,42 @@
 | era | atlas |
 | version | 3.0.0 |
 | owner | derick |
-| updated | 2026-05-14 |
+| updated | 2026-06-25 |
 
 The design diary. Append-only, newest at top. Captures **the noticing** — patterns observed, temptations resisted, blocks that almost made it in, shifts in taste. Distinct from the CHANGELOG (what changed) and ADRs (why a single thing was decided).
 
 Append entries via SupercardOps `logStewardEntry()` or directly.
+
+---
+
+## 2026-06-25 — derick — [temptation]
+
+**Context.** The V3.5 reading-layer pass (ADR-0009) measured a working render
+against Apple's tracking table and WCAG and found four small drifts: R-9's
+positive body tracking, a 48pt beat gap where Apple runs 60–80, three text inks
+below the 4.5:1 floor, and nine type sizes where the canon wants three. The
+obvious move — and the one I had to talk myself out of — was to *fix the three
+published V3.x cards too*. They sit right there in `docs/cards/`; re-inking them
+to #1A1A1A and re-tracking the body to −0.01em is a five-minute script. And they
+would look better.
+
+**Action.** Didn't. The whole point of frozen-at-version (P8 / ADR-0003) is that
+"they would look better under the new rules" is exactly the rationalization that
+corrupts an archive — it's how you end up unable to reconstruct what V3.4
+actually shipped. The four changes apply only to `frozen_at_version: 3.5.0`; the
+CSS scopes every new metric under `.canvas.v3-5` and leaves the base `:root` ink
+tokens alone; R-9 and R-18 stay verbatim in the spec, superseded-not-deleted,
+next to R-19 that replaces them. The old cards keep their authored render. If a
+V3.x card ever deserves the V3.5 treatment, it gets *re-authored* under 3.5.0
+with a migration note — voluntarily, visibly — not silently rewritten.
+
+**Follow-up.** Shipped all four as one version because they were validated as
+one render — a half-migration (new inks, old tracking) is a render nobody
+checked. Watch the tinted-surface caveat: tertiary `--ink-3` #767676 clears
+4.5:1 on white but only ≈4.3:1 on `--surface-tint`. The validator now re-checks
+against the tint, but if authors keep tripping it, that's signal the tinted
+variant should carry its own darker tertiary token rather than leaning on author
+discipline.
 
 ---
 

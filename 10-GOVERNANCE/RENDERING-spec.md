@@ -5,9 +5,9 @@
 | id | RENDERING-spec |
 | type | governance |
 | era | atlas |
-| version | 3.4.0 |
+| version | 3.5.0 |
 | owner | derick |
-| updated | 2026-05-16 |
+| updated | 2026-06-25 |
 
 How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
@@ -29,11 +29,11 @@ How a Supercard source becomes a rendered HTML artifact, and how that artifact i
 | 0% | --w | #FFFFFF | Page, card surface |
 | 6% | --g-06 | rgba(0,0,0,0.06) | Hairline borders, card outlines |
 | 12% | --g-12 | rgba(0,0,0,0.12) | Gridlines, subtle backgrounds |
-| 30% | --g-30 | rgba(0,0,0,0.30) | Tertiary text, deemphasized data |
+| 30% | --g-30 | rgba(0,0,0,0.30) | Deemphasized data, gridlines (V3.5+ R-20: **non-text only**) |
 | 60% | --g-60 | rgba(0,0,0,0.60) | Secondary text, axis labels, footnotes |
 | 100% | --k | #000000 | Body text, primary, focal data |
 
-Body text uses #111111 (--ink), never pure black. Per-block layers use --ink-2 (#333), --ink-3 (#555), --ink-4 (#888), --ink-5 (#BBB).
+**Text vs. non-text split (read with R-20).** The ramp serves two jobs — *text ink* and *non-text rules/fills* — and the contrast floor differs. Body text uses #111111 (`--ink`), never pure black. The per-block ink layers `--ink-2` (#333), `--ink-3` (#555), `--ink-4` (#888), `--ink-5` (#BBB) are the **V3.0–V3.4** ramp and stay frozen for those cards. **V3.5+ cards render text from the R-20 three-step ink ladder** (`--ink` #1A1A1A, `--ink-2` #595959, `--ink-3` #767676 — every step clears WCAG 2.2 SC 1.4.3); `#888` / `#BBB` / `--g-30` are demoted to **non-text only** (hairlines, gridlines, disabled, decorative rules) and are permitted for *large* text (≥ 24px, 3:1 floor) only. See R-20.
 
 **Surface tint (V3.4+, optional).** A `--surface-tint: rgba(0,0,0,0.025)` (alternately `#F7F7F7`) is permitted as a card background under R-16. It is **not** a seventh step in the ramp; it is a single off-white that sits between `--w` and `--g-06` for the specific purpose of replacing a hairline border with a tonal-contrast affordance. Cards using `--surface-tint` MUST omit the hairline; cards using the hairline MUST use `--w`. Mixing both on the same card is forbidden.
 
@@ -53,7 +53,7 @@ The canvas is light-only. The renderer declares `color-scheme: light` on `:root`
 | Eyebrow | 11 / 14 | Semibold UPPERCASE | +0.08 |
 | Code / equations | 14 / 22 | SF Mono Regular | 0 |
 
-**Note on the body row.** The token table lists Body as 17/24 with tracking −0.008. **R-9 (V3.1+) supersedes that row** for any card frozen at V3.1.0 or later — body renders at 17/26 with +0.03em letter-spacing and +0.06em word-spacing, left-aligned ragged, weights 400/500/700 only. The token row remains as the V3.0 reference; the R-9 override is what V3.1+ cards render to. **R-18 (V3.4+) adds an opt-in "Apple register" variant** that further tightens body line-height and letter-spacing for marketing-mode cards.
+**Note on the body row.** The token table lists Body as 17/24 with tracking −0.008. **R-9 (V3.1–V3.4) supersedes that row** for cards frozen at V3.1.0–V3.4.x — body renders at 17/26 with +0.03em letter-spacing and +0.06em word-spacing, left-aligned ragged, weights 400/500/700 only. **R-19 (V3.5+) supersedes R-9 in turn** for cards frozen at V3.5.0 or later — body renders at 17/26 with letter-spacing **−0.01em** and **word-spacing normal** (the positive tracking is retired; see R-19 for the why). The token row remains as the V3.0 reference. **R-18 (V3.4)** added an opt-in "Apple register" variant; **R-19 folds R-18's display tightening in as the V3.5 default** and drops the sub-1.5 line-height variant (V3.5 body stays at 26pt, ≥ 1.5).
 
 **Note on the eyebrow row.** The eyebrow row is canonical at +0.08em tracking — matching R-10 and R-14. The earlier +0.07 figure was a stale token-table value; cards and CSS that still emit +0.07 render visibly the same and are accepted, but new renders snap to +0.08.
 
@@ -78,10 +78,10 @@ CSS stack:
 | --s-3 | 16 | Default block padding |
 | --s-4 | 24 | Card internal pad |
 | --s-5 | 32 | Section internal spacing |
-| --s-6 | 48 | Beat boundaries (V3.3 default) |
-| --s-7 | 64 | Major section breaks |
-| --s-8 | 96 | Hero / footer |
-| --s-9 | 120 | Marketing-scale section gap (V3.4+, opt-in via R-15) |
+| --s-6 | 48 | Beat boundaries (V3.3–V3.4 default; V3.5 opt-*down* for dense `reference` cards — R-15) |
+| --s-7 | 64 | Beat boundaries (**V3.5 default** — R-15); major section breaks |
+| --s-8 | 96 | Hero / footer; poster moments (R-15) |
+| --s-9 | 120 | Marketing-scale section gap (V3.4+ opt-in; poster / XL deep-dive — R-15) |
 
 ## Shadow system
 
@@ -99,9 +99,14 @@ CSS stack:
 
 **Hard cap: 1–3 elevated elements per Supercard.** All opacity ≤ 6% per stop. Y-offset ⅓ of blur. Pure black at low opacity — never warm or cool gray (tinted shadows leak hue and break grayscale).
 
-## R-9. Type metrics (V3.1+)
+## R-9. Type metrics (V3.1–V3.4 — superseded by R-19 for V3.5+)
 
-The base type scale above is V3.0's authoritative reference. V3.1+ cards (those declaring `frozen_at_version: 3.1.0` or higher) render with the following overrides on prose-bearing roles. Older cards remain on the V3.0 table per ADR-0003.
+> **Superseded by R-19 for `frozen_at_version ≥ 3.5.0`.** R-9 stays in force for
+> cards frozen at V3.1.0–V3.4.x; V3.5+ cards render body type from R-19, which
+> retires the positive letter-spacing and word-spacing this rule introduced.
+> R-9 is preserved here unchanged for those older frozen cards (ADR-0003).
+
+The base type scale above is V3.0's authoritative reference. V3.1–V3.4 cards (those declaring `frozen_at_version: 3.1.0`–`3.4.x`) render with the following overrides on prose-bearing roles. Older cards remain on the V3.0 table per ADR-0003.
 
 | Role | V3.0 | V3.1+ |
 |---|---|---|
@@ -160,7 +165,7 @@ The cover is the card's title block — the first ~200pt of vertical space. It s
 **Permitted elements, in this exact stacking order — no others:**
 
 1. **Title** — display title role (40 / 44pt, semibold). 5 words preferred, 8 words hard cap; never a complete sentence.
-2. **Dek** — subtitle role (19 / 26pt, medium). 1 sentence preferred, 2 sentences hard cap. Carries the load that mode badges and context chips would otherwise carry — a briefing's date, jurisdiction, or status belongs *in* the dek prose, not in a label strip beside it.
+2. **Dek** — subtitle role. **V3.1–V3.4:** 19 / 26pt, medium. **V3.5+ (R-21):** the dek stops being its own size — render it at **body size (17 / 26)** in a lighter weight (400/500) or `--ink-2` (secondary ink), so weight + ink, not a fourth size step, set it apart from the title. 1 sentence preferred, 2 sentences hard cap either way. Carries the load that mode badges and context chips would otherwise carry — a briefing's date, jurisdiction, or status belongs *in* the dek prose, not in a label strip beside it.
 3. **Hero block** — the lofted Beat 1 anchor (loft-card / hook).
 
 **Forbidden in the cover (each is a common renderer drift):**
@@ -224,11 +229,15 @@ If a label fails any of the three, it's a renderer drift and must be cut. No exc
 
 R-13 is the cover-specific application of R-14. The only labels a V3.3 card earns are the editorial eyebrow (when a beat's first block doesn't carry its own anchor) and the corner glyph (system identity, screenshot autonomy). Everything else fails the three-question test.
 
-## R-15. Section spacing scale (V3.4+)
+## R-15. Section spacing scale (V3.4; default revised in V3.5)
 
-Beat boundaries default to **48pt (`--s-6`)** on the canonical 393pt mobile canvas — unchanged from V3.3. Cards declaring `frozen_at_version: 3.4.0` MAY use **64pt (`--s-7`) or 120pt (`--s-9`)** between beats when the card's mode and length variant warrant marketing-scale breathing room: XL deep-dives and any card whose hero stat carries a Display-sized poster moment.
+**V3.4 cards (unchanged):** beat boundaries default to **48pt (`--s-6`)**; a card MAY opt up to **64pt (`--s-7`) or 120pt (`--s-9`)** when its mode and length warrant marketing-scale breathing room.
 
-The renderer MUST snap to one of the three values per card — 48, 64, or 120 pt — and apply that value to every beat boundary uniformly. Mixed gap sizes within a single card emit a warning. Apple's marketing pages run at 60–80pt mobile / 120–140pt desktop; the 64pt option matches mobile-scale Apple, the 120pt option matches desktop-scale Apple.
+**V3.5+ cards (revised default):** the default beat boundary becomes **64pt (`--s-7`)**. The opt-*down* to **48pt (`--s-6`)** is reserved for dense `reference`-mode cards; **96–120pt (`--s-8` / `--s-9`)** stays for poster / hero moments and XL deep-dives. More macro-spacing reads as "separate ideas" (Gestalt proximity), aids scannability, and raises perceived quality — Apple's marketing pages run 60–80pt mobile / 120–140pt desktop, so 64pt matches mobile-scale Apple and 120pt matches desktop-scale.
+
+The renderer MUST snap to **one** value per card — 48, 64, 96, or 120 pt — and apply it to every beat boundary uniformly. Mixed gap sizes within a single card emit a warning.
+
+**Caveat (both versions).** Scale only the *between-section* gap. Do **not** inflate micro-spacing (line-height, intra-block gaps, cover-stack joins) to match — the beat gap grows; the reading rhythm inside a block does not.
 
 ## R-16. Surface-tinted card affordance (V3.4+)
 
@@ -250,9 +259,16 @@ The validator (`app/scripts/validate-v3-1.mjs`) MUST verify two structural condi
 
 R-17 is the operationalization of Principle 1 (screenshot autonomy) at validation time. P1 was the goal; R-17 is the gate.
 
-## R-18. Apple register opt-in (V3.4+)
+## R-18. Apple register opt-in (V3.4 — folded into the V3.5 default by R-19)
 
-A V3.4+ card MAY declare `apple_register: true` in its frontmatter to opt into Apple's exact body typography in place of R-9's defaults. The Apple register applies these overrides on prose-bearing roles:
+> **Superseded for V3.5+ by R-19.** V3.5 folds R-18's *display* tightening in as
+> the default (no opt-in needed) and **drops the sub-1.5 body line-height
+> variant** along with its `data-wcag-note="apple-register-below-1.5"` warning —
+> V3.5 body stays at 26pt (1.53), above the WCAG floor, so no card carries the
+> accessibility caveat. R-18 remains in force only for cards frozen at V3.4.x;
+> `apple_register: true` is **not** a valid declaration on a V3.5 card.
+
+A V3.4 card MAY declare `apple_register: true` in its frontmatter to opt into Apple's exact body typography in place of R-9's defaults. The Apple register applies these overrides on prose-bearing roles:
 
 | Role | R-9 default (V3.1+) | Apple register (V3.4+ opt-in) |
 |---|---|---|
@@ -267,6 +283,66 @@ A V3.4+ card MAY declare `apple_register: true` in its frontmatter to opt into A
 **WCAG note.** R-9's 26pt body line-height (1.53) sits above the WCAG 2.2 SC 1.4.12 floor of 1.5. The Apple register's 25pt (1.47) sits **below** that floor. The render MUST emit a `data-wcag-note="apple-register-below-1.5"` attribute on the canvas root when `apple_register: true` is set, so downstream consumers know about the accessibility implication. Cards needing strict WCAG AA conformance stay on R-9.
 
 **Mutual exclusion.** A card declares either Apple register or R-9, not both. Mixing within a single card emits an error.
+
+## R-19. Body type metrics (V3.5+ — supersedes R-9)
+
+V3.5+ cards (those declaring `frozen_at_version: 3.5.0` or higher) render prose-bearing roles from this rule. It supersedes R-9 (which stays in force for V3.1–V3.4 cards) and folds R-18's display tightening in as the default.
+
+| Role | V3.1–V3.4 (R-9 / R-18) | V3.5+ (R-19) |
+|---|---|---|
+| Body size / leading | 17 / 26 | **17 / 26** (unchanged — 1.53, above the WCAG 1.5 floor) |
+| Body letter-spacing | +0.03em (R-9) | **−0.01em** |
+| Body word-spacing | +0.06em (R-9) | **normal** |
+| Body alignment | left, ragged-right | left, ragged-right (unchanged) |
+| Weights permitted in body | 400 / 500 / 700 | 400 / 500 / 700 (unchanged) |
+| Italics for emphasis | forbidden | forbidden (italics only for titles / foreign terms) |
+| Display tracking | −0.018em (R-9) / −0.024em (R-18 opt-in) | **−0.020em** (R-18's tightening, now default) |
+
+**Why.** R-9 set body to +0.03em letter-spacing and +0.06em word-spacing. Apple tracks 17pt body *negative* (≈ −0.024em), and Goudy, Spiekermann, and Butterick are unanimous that lowercase body text is never positively tracked — positive tracking breaks word-shape recognition, the very thing fast scanning relies on. R-9's *good* parts are kept: 26pt leading stays above the WCAG 2.2 SC 1.4.12 floor (1.5 × 17 = 25.5pt); only the positive letter-spacing and word-spacing are removed, and the default tightens to −0.01em. R-18's "Apple register" already pointed this way but was opt-in; R-19 makes the correct default the only default and drops the sub-1.5 line-height variant.
+
+**Tracking ladder by role (V3.5+).** This replaces R-9's body row and the type-scale tracking column for V3.5 cards:
+
+| Role | Size / leading | Weight | Tracking |
+|---|---|---|---|
+| Hero number (reserved) | 56 / 60 | 700 + tnum | −0.025em |
+| Display title | 40 / 44 | 600 | −0.020em |
+| Subhead | 26 / 32 | 600 | −0.012em |
+| Body | 17 / 26 | 400 | **−0.01em** (word-spacing normal) |
+| Caption | 13 / 18 | 400 | 0 to +0.005em |
+| Eyebrow (UPPERCASE) | 11 / 14 | 600 | **+0.08em** — the *only* positively-tracked role |
+
+The eyebrow is the single exception: UPPERCASE letterforms have no word-shape to break, so positive tracking (which opens the caps' tight default fit) is correct there and nowhere else.
+
+## R-20. Text-ink ladder (V3.5+)
+
+`--ink-4` #888 (≈ 3.5:1), `--ink-5` #BBB (≈ 1.9:1), and `--g-30` (≈ 2:1) fail WCAG 2.2 SC 1.4.3 (4.5:1) for body text — yet `--g-30` was assigned to "tertiary text" through V3.4. Muted text cannot mean *unreadable*: de-emphasis must be a tonal step **between two passing inks**, not a drop below the floor. V3.5+ cards render all text from this three-step ladder:
+
+| Layer | Token | Value | Contrast on white | Role |
+|---|---|---|---|---|
+| Primary (essence) | `--ink` | #1A1A1A | ≈ 17.6:1 | Bold lead-clauses, headers, focal stats |
+| Secondary (dive-deeper) | `--ink-2` | #595959 | ≈ 7:1 | Body prose readers drop into |
+| Tertiary (support) | `--ink-3` | #767676 | = 4.54:1 | Captions, footnotes, axis labels, eyebrows |
+
+- **Demote `#888` / `#BBB` / `--g-30` to non-text only** — hairlines, gridlines, disabled, decorative rules. They are permitted for *large* text (≥ 24px) only, at the 3:1 large-text floor, and only above #949494.
+- **WCAG values are not rounded.** A token computing 4.499:1 fails; the validator (R-12 / `validate-v3-1.mjs`) computes contrast and errors on any text token under floor.
+- **Re-check against the surface.** On tinted-surface cards (R-16) the background is `--surface-tint` (rgba(0,0,0,0.025) over white, ≈ #F8F8F8), not pure white. Tertiary `--ink-3` #767676 clears 4.5:1 on white but only ≈ 4.3:1 on the tint — so **on tinted cards, tertiary text must step up to a tint-safe ink** (≥ #6E6E6E) or the card uses the hairline (white) surface. The validator re-runs the contrast check against `--surface-tint` for cards declaring `surface: tinted`.
+
+The ramp's two jobs — text ink vs. non-text rules/fills — now have an explicit split (see "Gray ramp" above): the R-20 ladder is the only source of text ink on V3.5 cards.
+
+## R-21. Three-size reading core (V3.5+)
+
+The canon builds deep hierarchy from few sizes — Vignelli's "A Few Basic Typefaces," Müller-Brockmann's grid work, and Apple's HIG ("use one font and just a few styles and sizes"). Nine roles is too many. V3.5+ collapses the reading core to **three sizes**, with **weight + ink + space** doing the differentiation:
+
+| Tier | Size / leading | Differentiation lever | Replaces |
+|---|---|---|---|
+| Header | 40 / 44 | weight 600, −0.020em | Display title (Hero 56 → opt-in poster only) |
+| Subhead / large card | 26 / 32 | weight 600 + size | **merges Tile 28 + Section 24 + Subtitle 19** |
+| Body | 17 / 26 | weight (400 / 500 / 700) + ink (#1A1A1A vs #595959) | Body |
+| Utility (sparing) | 13 caption · 11 eyebrow | used rarely, always well-spaced | Caption, Eyebrow (kept, restricted) |
+| Reserved | 56 hero · 14 mono | poster / code only | Hero, Code |
+
+- **The dek / subtitle stops being a size.** Render it at **body size (17/26)** in a lighter weight or `--ink-2` (R-13, updated). The 19pt step is retired for V3.5.
+- **The Vignelli test (authoring note).** If a beat "needs" a fourth size, differentiate by **weight or ink first** before adding a size. A size is the last lever, not the first — most apparent "need for a new size" is really a need for a heavier weight or a darker ink at an existing size.
 
 ## Block compatibility
 

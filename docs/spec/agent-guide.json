@@ -2,17 +2,17 @@
   "layer": "agent-guide",
   "title": "Route to the right layer for your task",
   "spec": "supercard",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "era": "atlas",
-  "spec_revision": "bcb76b7c4610",
+  "spec_revision": "886e27b47776",
   "summary": "The thin router. Read this first if your job is to produce a Supercard. It gives the disclosure protocol and the task → layers map. For the build sequence itself, fetch the pipeline layer; pipeline.data.stages carries Stage 0–5 with do/produce/check/layers_consulted per stage. For terms, fetch glossary. For a worked end-to-end build, fetch example.",
   "source": "00-INDEX/INDEX-supercard-v3.md",
   "provenance": [
     {
       "file": "00-INDEX/INDEX-supercard-v3.md",
-      "updated": "2026-05-16",
-      "version": "3.4.0",
-      "sha256": "70d73edc0062559df7af2d7dff939e7034af86c3dec3d29d10f05f316323d1bc"
+      "updated": "2026-06-25",
+      "version": "3.5.0",
+      "sha256": "7fbee2c7e689e9517e96acf7494676cfe10dbd977a651c33ad400bf9f3ddbfcf"
     },
     {
       "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",

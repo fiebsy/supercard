@@ -5,9 +5,9 @@
 | id | PRINCIPLES-supercard-v3 |
 | type | governance |
 | era | atlas |
-| version | 3.4.0 |
+| version | 3.5.0 |
 | owner | derick |
-| updated | 2026-05-16 |
+| updated | 2026-06-25 |
 
 The 14 foundational principles of the Supercard format (10 V3.0 + 2 V3.1 + 2 V3.4). PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
 
@@ -51,7 +51,7 @@ Supercards use black, white, and a six-step gray ramp (0%, 6%, 12%, 30%, 60%, 10
 
 **Why it matters.** Color introduces hue management cost (which red? which orange? does it match across cards?). Grayscale forces emphasis to come from weight, position, and size — the underlying typography decisions. The result is editorial timelessness instead of web-app fashion.
 
-**How to apply.** All emphasis lives in font weight (300 → 700) and gray opacity. Charts use solid black for the focal series and gray-30/gray-60 for context series. Never use color to "highlight" — use weight or position.
+**How to apply.** All emphasis lives in font weight (300 → 700) and gray opacity. Charts use solid black for the focal series and gray-30/gray-60 for context series. Never use color to "highlight" — use weight or position. *(V3.5+: grayscale must still clear the contrast floor — `RENDERING` § R-20 splits the ramp into a passing text-ink ladder and non-text-only grays.)*
 
 ## 6. SF Pro Rounded as the canonical typeface
 
@@ -99,7 +99,7 @@ The ADHD framing in principle 1 isn't a vibe; it must translate into four MUST r
 
 **Why it matters.** V3.0 stated the goal (cognitive prosthesis) but enforced it only at the principle level — single emphasis, redundancy filter, screenshot autonomy. That left room for long `standard-text` walls, undifferentiated multi-block beats in XL, and cards that scan beautifully on the hero and collapse two beats later. The operational rules close that gap without breaking the existing constraints.
 
-**How to apply.** The single-emphasis rule (principle 2) is unchanged. The bolded lead-clause **is** the block's one emphasis — no second bold runs in the same block. Long prose splits at the 75-word ceiling. Re-entry comes from each block's own anchor (the bolded lead-clause, the focal stat, the section's optional editorial eyebrow) — never from a position counter, which V3.3's R-10 prohibits as scaffold leakage. See `GRAMMAR` § G-7 / G-8 and `RENDERING` § R-9 / R-10 for the rendering contract.
+**How to apply.** The single-emphasis rule (principle 2) is unchanged. The bolded lead-clause **is** the block's one emphasis — no second bold runs in the same block. Long prose splits at the 75-word ceiling. Re-entry comes from each block's own anchor (the bolded lead-clause, the focal stat, the section's optional editorial eyebrow) — never from a position counter, which V3.3's R-10 prohibits as scaffold leakage. See `GRAMMAR` § G-7 / G-8 and `RENDERING` § R-9 / R-10 for the rendering contract. *(V3.5+ refines the reading layer itself — `RENDERING` § R-19 (body metrics), R-20 (text-ink ladder), R-21 (three-size core) make the scan-and-dive hierarchy carry on weight + ink + space, not a positive-tracked wall of nine sizes.)*
 
 ## 12. First-pass extraction test (V3.1+)
 

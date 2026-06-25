@@ -2,9 +2,9 @@
   "layer": "blocks",
   "title": "The block library with lifecycle and length compatibility",
   "spec": "supercard",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "era": "atlas",
-  "spec_revision": "bcb76b7c4610",
+  "spec_revision": "886e27b47776",
   "summary": "The 39 blocks across 7 families (numeric, comparative, sequential, definitional, distributional, editorial, structural) with their lifecycle tier and length compatibility. Each block carries its rules_by_version cross-reference so an agent reading this layer does not need grammar to know which rules apply at a given frozen_at_version. Compose with Core/Stable blocks only; Experimental requires an explicit ask. Each block's full spec lives in 20-BLOCKS/.",
   "source": "00-INDEX/INDEX-block-library.md",
   "provenance": [

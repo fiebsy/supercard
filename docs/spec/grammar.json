@@ -2,9 +2,9 @@
   "layer": "grammar",
   "title": "Pick a block and compose the card",
   "spec": "supercard",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "era": "atlas",
-  "spec_revision": "bcb76b7c4610",
+  "spec_revision": "886e27b47776",
   "summary": "The seven-beat narrative spine (Hook → Evidence → Mechanism → Comparison → Counter → Application → Close), the single block-selection procedure (10 ordered steps that walk the decision tree, precedence, density budget, prose rules, anti-patterns, gates), and the V3.1+ rules (G-7–G-11) woven into the decision tree itself.",
   "source": "10-GOVERNANCE/GRAMMAR-block-composition.md",
   "provenance": [

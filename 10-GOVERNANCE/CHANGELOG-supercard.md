@@ -5,15 +5,47 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.4.0 |
+| version | 3.5.0 |
 | owner | derick |
-| updated | 2026-05-16 |
+| updated | 2026-06-25 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
 
 ---
 
 ## [Unreleased]
+
+---
+
+## [3.5.0] — "Atlas" — 2026-06-25
+
+Reading-layer refinement. Three new rendering rules tighten how prose is set,
+inked, and sized, validated against Apple's SF Pro tracking table, WCAG 2.2
+SC 1.4.3 / 1.4.12, Vignelli, Müller-Brockmann, Butterick, Bringhurst, and
+NN/g. Backwards-compatible: every V3.0–V3.4 card renders identically. New
+constraints apply only to cards declaring `frozen_at_version: 3.5.0`.
+Strict grayscale (P5) and SF Pro Rounded (P6) are unchanged — no color.
+
+### Added
+
+- RENDERING § R-19 — Body type metrics (V3.5+). Supersedes R-9. Body renders at 17/26 with letter-spacing **−0.01em** and **word-spacing normal**; the positive lowercase tracking R-9 introduced is retired (it breaks word-shape recognition — Goudy / Spiekermann / Butterick). 26pt leading is kept (1.53, above the WCAG 1.5 floor). The eyebrow (+0.08em, UPPERCASE) is the only positively-tracked role.
+- RENDERING § R-20 — Text-ink ladder (V3.5+). A 3-step text family that clears the contrast floor: `--ink` #1A1A1A (≈17.6:1), `--ink-2` #595959 (≈7:1), `--ink-3` #767676 (=4.54:1). `#888` / `#BBB` / `--g-30` are demoted to non-text only (hairlines, gridlines, disabled, decorative rules); permitted for large text ≥ 24px at 3:1 only. The validator computes contrast (unrounded) and re-checks against `--surface-tint`.
+- RENDERING § R-21 — Three-size reading core (V3.5+). Collapses nine roles to header 40/44 · subhead 26/32 · body 17/26, with weight + ink + space doing the differentiation. The dek stops being a size (renders at body-size + secondary ink). Authoring note: differentiate by weight or ink before adding a size (the Vignelli test).
+- `app/scripts/validate-v3-1.mjs` — WCAG contrast self-check on the R-20 ink ladder (errors on any text token under 4.5:1, or 3:1 for ≥ 24px); V3.5 card gate (no `apple_register`, no positive body tracking overrides).
+- `app/src/supercard.css` — `.canvas.v3-5` scope: R-20 ink ladder, R-19 body metrics (−0.01em / word-spacing normal), 64pt default beat gap, −0.020em display tightening.
+- `renderer/v3.5/` — versioned rule-library note for the V3.5 reading layer.
+
+### Changed
+
+- RENDERING § R-15 — V3.5 default beat gap is **64pt** (`--s-7`), up from 48pt. 48pt becomes the opt-*down* for dense `reference` cards; 96–120pt stays for poster / XL. Micro-spacing does **not** scale with the beat gap.
+- RENDERING § R-13 — The cover dek points at body-size (17/26) + secondary ink for V3.5, not a 19pt subtitle step.
+- RENDERING § R-9 — Marked superseded by R-19 for `frozen_at_version ≥ 3.5.0`; retained unchanged for V3.1–V3.4 cards.
+- RENDERING § R-18 — Apple register's display tightening is folded into the V3.5 default by R-19; the sub-1.5 line-height variant and its `data-wcag-note` warning are dropped for V3.5. R-18 stays in force for V3.4 cards.
+- PRINCIPLES § 5 / § 11 — One-line cross-references added pointing to R-19 / R-20 / R-21.
+
+### Guardrails
+
+- Frozen-at-version (P8 / ADR-0003): no V3.0–V3.4 card or published render is migrated or reflowed. All four changes shipped together as one validated render (ADR-0009).
 
 ---
 

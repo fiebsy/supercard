@@ -2,9 +2,9 @@
   "layer": "lengths",
   "title": "Mini / Standard / XL — same content, different emphasis",
   "spec": "supercard",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "era": "atlas",
-  "spec_revision": "bcb76b7c4610",
+  "spec_revision": "886e27b47776",
   "summary": "Length is a prop, not a fork: same content model, same grammar, same identity — only emphasis, density, and depth vary. Standard is canonical; Mini and XL are derived views.",
   "source": "10-GOVERNANCE/LENGTHS-mini-standard-xl.md",
   "provenance": [

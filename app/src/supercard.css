@@ -595,3 +595,93 @@ a.spec-link:hover {
   line-height: 1.05;
   letter-spacing: -0.024em;
 }
+
+/* ----------------------------------------------------------------------- *
+ * V3.5 reading-layer refinement — R-19 (body type metrics), R-20 (text-ink
+ * ladder), R-21 (three-size reading core). Scoped to .canvas.v3-5 so every
+ * V3.0–V3.4 card stays pixel-identical; the base :root ink tokens
+ * (#111111 / #333 / #555) are untouched. A V3.5 card's canvas carries the
+ * inherited structural classes plus v3-5, e.g. class="canvas v3-1 v3-5";
+ * v3-5 comes last in this file so its reading-layer overrides win.
+ * See RENDERING-spec § R-19 / R-20 / R-21.
+ * ----------------------------------------------------------------------- */
+
+/* R-20 — text-ink ladder. Redefining the ink custom properties on the V3.5
+ * canvas re-inks every descendant that reads from them. All three steps clear
+ * WCAG 2.2 SC 1.4.3 (4.5:1): #1A1A1A ≈17.4:1, #595959 ≈7:1, #767676 =4.54:1.
+ * #888 / #BBB / --g-30 stay non-text-only (hairlines, gridlines, markers). */
+.canvas.v3-5 {
+  --ink: #1a1a1a;
+  --ink-2: #595959;
+  --ink-3: #767676;
+}
+
+/* Primary essence — bold lead-clauses, headers, focal stats read at --ink
+ * (#1A1A1A), not pure black. */
+.canvas.v3-5 strong,
+.canvas.v3-5 .lead,
+.canvas.v3-5 .lede,
+.canvas.v3-5 .def-term,
+.canvas.v3-5 .takeaway,
+.canvas.v3-5 tr.focal td,
+.canvas.v3-5 tr.takeaway-row td {
+  color: var(--ink);
+}
+
+/* R-19 — body type metrics. 17/26, letter-spacing −0.01em, word-spacing
+ * normal (the positive tracking R-9 introduced is retired). 26pt leading is
+ * 1.53 — above the WCAG 1.5 floor. Body prose reads at --ink-2 (secondary). */
+.canvas.v3-5 p,
+.canvas.v3-5 li {
+  line-height: 26px;
+  letter-spacing: -0.01em;
+  word-spacing: normal;
+  text-align: left;
+}
+.canvas.v3-5 p {
+  text-wrap: pretty;
+  color: var(--ink-2);
+}
+
+/* R-19 — display tightening folded in as default (was R-18's opt-in). */
+.canvas.v3-5 h1 {
+  letter-spacing: -0.02em;
+}
+
+/* R-21 — three-size reading core. Subhead / large-card merges Tile 28 +
+ * Section 24 + Subtitle 19 into one 26/32 step; weight + ink + size do the
+ * differentiation. */
+.canvas.v3-5 h2,
+.canvas.v3-5 .tile {
+  font-size: 26px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+/* R-21 / R-13 — the dek stops being a 19pt size; it renders at body size in a
+ * lighter weight + secondary ink. */
+.canvas.v3-5 .dek {
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+  margin-bottom: var(--s-3);
+}
+
+/* R-15 — V3.5 default beat gap is 64pt (--s-7), up from 48pt. Opt down to 48pt
+ * for dense reference cards via .beat-gap-48; up to 96/120 for poster moments.
+ * Micro-spacing does NOT scale with the beat gap. */
+.canvas.v3-5 section {
+  padding-top: var(--s-7);
+}
+.canvas.v3-5.beat-gap-48 section {
+  padding-top: var(--s-6);
+}
+.canvas.v3-5.beat-gap-96 section {
+  padding-top: var(--s-8);
+}
+.canvas.v3-5.beat-gap-120 section {
+  padding-top: var(--s-9);
+}

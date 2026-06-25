@@ -34,6 +34,12 @@
  *     - (V3.4+) mixed beat-gap sizes within a single card (R-15)
  *     - (V3.4+) card uses both --surface-tint and --g-06 hairline on
  *       different blocks (R-16)
+ *     - (spec) a R-20 text-ink token computes < 4.5:1 on white (< 3:1 for
+ *       large text >= 24px). Unrounded — 4.499:1 fails. Run once per invocation.
+ *     - (V3.5+) `apple_register` declared on a V3.5 card — R-18 is superseded,
+ *       its display tightening folded into the R-19 default (R-18/R-19)
+ *     - (V3.5+) positive body letter-spacing re-introduced via a frontmatter
+ *       override — retired by R-19 (body is −0.01em, word-spacing normal)
  *
  *   Warnings (exit 0, printed) — fix where possible:
  *     - standard-text block exceeds 75 words or 4 sentences
@@ -55,6 +61,94 @@ import { dirname, resolve, relative } from "node:path";
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, "../..");
 const cardsDir = resolve(repo, "30-CARDS");
+
+/* ------------------------------------------------------------------ *
+ * WCAG 2.2 contrast — R-20 text-ink ladder check (V3.5+).
+ *
+ * Every V3.5 text-ink token must compute >= 4.5:1 on its background
+ * (>= 3:1 only for large text >= 24px). WCAG values are NOT rounded: a
+ * token computing 4.499:1 fails. We re-check against --surface-tint
+ * (rgba(0,0,0,0.025) composited over white) as well as pure white, because
+ * tinted-surface cards (R-16) read text on the tint, not on #FFF.
+ * ------------------------------------------------------------------ */
+
+const TEXT_FLOOR = 4.5; // SC 1.4.3 normal text
+const LARGE_TEXT_FLOOR = 3.0; // SC 1.4.3 large text (>= 24px)
+
+function hexToRgb(hex) {
+  const h = hex.replace("#", "");
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+}
+
+function srgbToLinear(c) {
+  const cs = c / 255;
+  return cs <= 0.03928 ? cs / 12.92 : Math.pow((cs + 0.055) / 1.055, 2.4);
+}
+
+function relLuminance([r, g, b]) {
+  return 0.2126 * srgbToLinear(r) + 0.7152 * srgbToLinear(g) + 0.0722 * srgbToLinear(b);
+}
+
+// Contrast ratio, unrounded. fg/bg are [r,g,b] in 0..255.
+function contrastRatio(fg, bg) {
+  const l1 = relLuminance(fg);
+  const l2 = relLuminance(bg);
+  const [hi, lo] = l1 >= l2 ? [l1, l2] : [l2, l1];
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+// Composite an rgba(0,0,0,alpha) tint over white -> opaque [r,g,b].
+function blackTintOverWhite(alpha) {
+  const v = 255 * (1 - alpha);
+  return [v, v, v];
+}
+
+const WHITE = [255, 255, 255];
+const SURFACE_TINT = blackTintOverWhite(0.025); // --surface-tint, R-16
+
+// R-20 text-ink ladder. minPx 0 means "used at body/caption size" -> the
+// 4.5:1 normal-text floor applies. The demoted grays are listed so the
+// self-check documents WHY they're non-text-only.
+const INK_LADDER_V35 = [
+  { token: "--ink", hex: "#1A1A1A", role: "Primary (essence)" },
+  { token: "--ink-2", hex: "#595959", role: "Secondary (dive-deeper)" },
+  { token: "--ink-3", hex: "#767676", role: "Tertiary (support)" },
+];
+const DEMOTED_GRAYS = [
+  { token: "--ink-4", hex: "#888888" },
+  { token: "--ink-5", hex: "#BBBBBB" },
+  { token: "--g-30", rgb: blackTintOverWhite(0.3), label: "rgba(0,0,0,0.30)" },
+];
+
+// Returns { errors, notes }. Errors fail the build (exit 1) just like card
+// errors. This validates the SPEC's own ink tokens, version-independent.
+function checkInkLadderContrast() {
+  const errors = [];
+  const notes = [];
+  for (const tier of INK_LADDER_V35) {
+    const fg = hexToRgb(tier.hex);
+    const onWhite = contrastRatio(fg, WHITE);
+    const onTint = contrastRatio(fg, SURFACE_TINT);
+    notes.push(
+      `R-20 ${tier.token} ${tier.hex} — ${onWhite.toFixed(2)}:1 on white, ${onTint.toFixed(2)}:1 on --surface-tint (${tier.role})`,
+    );
+    if (onWhite < TEXT_FLOOR) {
+      errors.push(
+        `R-20 text-ink ${tier.token} ${tier.hex} computes ${onWhite.toFixed(3)}:1 on white — below the ${TEXT_FLOOR}:1 text floor (WCAG 2.2 SC 1.4.3)`,
+      );
+    }
+  }
+  // The demoted grays MUST fail the text floor (that's why they're non-text-only).
+  // If one ever passes, the demotion note is stale and should be revisited.
+  for (const g of DEMOTED_GRAYS) {
+    const fg = g.rgb || hexToRgb(g.hex);
+    const onWhite = contrastRatio(fg, WHITE);
+    notes.push(
+      `R-20 (non-text only) ${g.token} ${g.label || g.hex} — ${onWhite.toFixed(2)}:1 on white${onWhite >= LARGE_TEXT_FLOOR ? ` (>= ${LARGE_TEXT_FLOOR}:1: large text >= 24px only)` : ""}`,
+    );
+  }
+  return { errors, notes };
+}
 
 /* ------------------------------------------------------------------ *
  * Parsing
@@ -383,6 +477,7 @@ function validateCard(path, raw) {
 
   const blocks = parseBlocks(raw);
   const isV34 = compareVersion(fav, "3.4.0") >= 0;
+  const isV35 = compareVersion(fav, "3.5.0") >= 0;
   const appleRegister = (meta.apple_register || "").toLowerCase() === "true";
   const readabilityWarningsThisCard = [];
 
@@ -492,6 +587,31 @@ function validateCard(path, raw) {
     }
   }
 
+  // ------- per-card V3.5 rules (reading-layer refinement; R-19/R-20/R-21)
+  if (isV35) {
+    // R-18 is superseded for V3.5+: its display tightening is folded into the
+    // R-19 default, so `apple_register` is not a valid declaration on a V3.5 card.
+    if (appleRegister) {
+      push(errors, null, `apple_register is not valid on a V3.5 card — R-18's display tightening is folded into the R-19 default (R-18 superseded for V3.5+)`);
+    }
+    // R-19 retires positive body tracking. A V3.5 card MUST NOT re-introduce it
+    // via a frontmatter override (`r9_overrides` / `body_letter_spacing`).
+    const r9o = (meta.r9_overrides || "").toLowerCase();
+    const bls = (meta.body_letter_spacing || "").toLowerCase();
+    if (/\+0?\.\d|positive/.test(r9o) || /^\+/.test(bls)) {
+      push(errors, null, `positive body letter-spacing is retired in V3.5 (R-19: body is −0.01em, word-spacing normal) — remove the override`);
+    }
+    // R-20 tinted-surface caveat: tertiary --ink-3 #767676 clears 4.5:1 on white
+    // but only ~4.3:1 on --surface-tint. Warn tinted V3.5 cards to step tertiary
+    // text up to a tint-safe ink (or use the hairline surface).
+    if ((meta.surface || "").trim().toLowerCase() === "tinted") {
+      const onTint = contrastRatio(hexToRgb("#767676"), SURFACE_TINT);
+      if (onTint < TEXT_FLOOR) {
+        push(warnings, null, `tinted surface: R-20 tertiary --ink-3 #767676 is only ${onTint.toFixed(2)}:1 on --surface-tint (< ${TEXT_FLOOR}:1) — step tertiary text up to a tint-safe ink (>= #6E6E6E) or use the hairline surface`);
+      }
+    }
+  }
+
   // ------- per-beat rules
   const byBeat = new Map();
   for (const b of blocks) {
@@ -556,6 +676,17 @@ let totalErrors = 0;
 let totalWarnings = 0;
 let scanned = 0;
 let skipped = 0;
+
+// R-20 ink-ladder self-check — validates the spec's own text-ink tokens once,
+// independent of any card. A failing token is a spec error, not a card error.
+{
+  const { errors, notes } = checkInkLadderContrast();
+  console.log(`[validate] R-20 text-ink ladder (WCAG 2.2 SC 1.4.3, unrounded):`);
+  for (const n of notes) console.log(`           ${n}`);
+  for (const e of errors) console.error(`  ERROR  RENDERING-spec (R-20): ${e}`);
+  totalErrors += errors.length;
+  console.log("");
+}
 
 for (const path of paths) {
   if (!statSync(path).isFile()) continue;
