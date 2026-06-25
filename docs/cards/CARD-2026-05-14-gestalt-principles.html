@@ -4,446 +4,950 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Gestalt Principles — Supercard</title>
+<title>Gestalt Principles — Supercard V3.0</title>
 <meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-gestalt-principles--draft.md">
 <meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-gestalt-principles.md">
-<meta name="sc:renderer_version" content="v3.0">
+<meta name="sc:renderer_version" content="v3.6">
 <meta name="sc:frozen_at_version" content="3.0.0">
-<meta name="sc:rendered_at" content="2026-05-14">
+<meta name="sc:rendered_at" content="2026-06-25">
+<meta name="sc:content_hash" content="3a30b3c7f07b0f80fac62cd7be920f7c55636c7fb2e6912da713c364a0d85a7a">
+<!-- Styles inlined verbatim from app/src/supercard.css — the single source of
+     truth for layout/type/colour. The .canvas class chain below resolves this
+     card's frozen_at_version rule library (ADR-0010). Do not hand-edit. -->
 <style>
-  :root {
-    color-scheme: light;
-    --w: #FFFFFF;
-    --g-06: rgba(0,0,0,0.06);
-    --g-12: rgba(0,0,0,0.12);
-    --g-30: rgba(0,0,0,0.30);
-    --g-60: rgba(0,0,0,0.60);
-    --k: #000000;
-    --ink: #111111;
-    --ink-2: #333333;
-    --ink-3: #555555;
-    --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
-    --s-1: 8px;  --s-2: 12px; --s-3: 16px; --s-4: 24px;
-    --s-5: 32px; --s-6: 48px; --s-7: 64px; --s-8: 96px;
-    --shadow-lofted: 0 2px 4px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.04);
-    --shadow-subtle: 0 1px 2px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.04);
-  }
+/*
+ * Supercard V3 — render tokens and block styles.
+ * Ported verbatim from RENDERING-spec and the standalone HTML renders in
+ * docs/cards/, so a React-rendered card is pixel-identical to its HTML twin.
+ * Strict grayscale, SF Pro Rounded, 393pt mobile canvas, 16pt grid.
+ */
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  color-scheme: light;
+  --w: #ffffff;
+  --g-06: rgba(0, 0, 0, 0.06);
+  --g-12: rgba(0, 0, 0, 0.12);
+  --g-30: rgba(0, 0, 0, 0.3);
+  --g-60: rgba(0, 0, 0, 0.6);
+  --k: #000000;
+  --ink: #111111;
+  --ink-2: #333333;
+  --ink-3: #555555;
+  --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system,
+    BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --s-1: 8px;
+  --s-2: 12px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+  --s-9: 120px;
+  /* V3.4 — surface tint, used by .tint-card per R-16. NOT a seventh step in
+   * the gray ramp; a single off-white permitted only as a card background to
+   * replace a hairline with tonal contrast. */
+  --surface-tint: rgba(0, 0, 0, 0.025);
+  /* V3.4 — Tile head step on the type ramp (28/32 semibold, −0.012em). The
+   * canonical size for the tagline half of an eyebrow + tagline pair (G-14
+   * Pattern 1). */
+  --t-tile: 28px;
+  --lh-tile: 32px;
+  /* V3.6 — shadows retired (R-22, flat surfaces). The hero and any anchor card
+   * are now set apart by border + radius + padding, never elevation. No
+   * --shadow-* token exists; box-shadow is not used anywhere in the system. */
+}
 
-  html, body {
-    background: #E8E8E8;
-    font-family: var(--rounded);
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  .canvas {
-    width: 393px;
-    margin: 0 auto;
-    background: var(--w);
-    min-height: 100vh;
-    padding: 0 16px var(--s-8);
-  }
+html,
+body {
+  background: #e8e8e8;
+  font-family: var(--rounded);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
 
-  section {
-    padding: var(--s-6) 0 var(--s-3);
-    border-bottom: 0.5px solid var(--g-06);
-  }
-  section:last-of-type { border-bottom: none; }
+a {
+  color: inherit;
+}
 
-  .eyebrow {
-    font-size: 11px;
-    line-height: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--g-60);
-    margin-bottom: var(--s-3);
-  }
+.canvas {
+  width: 393px;
+  margin: 0 auto;
+  background: var(--w);
+  min-height: 100vh;
+  padding: 0 16px var(--s-8);
+}
 
-  h1 {
-    font-size: 40px;
-    line-height: 44px;
-    font-weight: 600;
-    letter-spacing: -0.018em;
-    margin-bottom: var(--s-3);
-  }
-  h2 {
-    font-size: 24px;
-    line-height: 30px;
-    font-weight: 600;
-    letter-spacing: -0.012em;
-    margin-bottom: var(--s-2);
-  }
+section {
+  padding: var(--s-6) 0 var(--s-3);
+  border-bottom: 0.5px solid var(--g-12);
+}
+section:last-of-type {
+  border-bottom: none;
+}
 
-  p {
-    font-size: 17px;
-    line-height: 24px;
-    font-weight: 400;
-    letter-spacing: -0.008em;
-    color: var(--ink-2);
-    margin-bottom: var(--s-2);
-  }
-  p:last-child { margin-bottom: 0; }
+/* section label — the beat NAME only (e.g. "CLOSE"); never "Beat N" or a
+ * BLOCK-* id. Those are authoring metadata, kept in the markdown source. */
+.eyebrow {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--g-60);
+  margin-bottom: var(--s-3);
+}
 
-  strong { font-weight: 700; color: var(--k); }
-  em { font-style: italic; }
-  .lede { color: var(--ink); }
+h1 {
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  margin-bottom: var(--s-3);
+}
+h2 {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin-bottom: var(--s-2);
+}
 
-  /* Beat 1 — lofted hero */
-  .hero {
-    background: var(--w);
-    border-radius: 16px;
-    padding: var(--s-4);
-    box-shadow: var(--shadow-lofted);
-    margin: var(--s-2) 0 var(--s-3);
-  }
-  .hero .hook {
-    font-size: 19px;
-    line-height: 26px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    color: var(--ink);
-  }
+p {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: -0.008em;
+  color: var(--ink-2);
+  margin-bottom: var(--s-2);
+}
+p:last-child {
+  margin-bottom: 0;
+}
 
-  ol, ul { margin: 0 0 var(--s-2) 0; padding: 0; list-style: none; }
-  li {
-    font-size: 17px;
-    line-height: 24px;
-    letter-spacing: -0.008em;
-    color: var(--ink-2);
-    padding: var(--s-1) 0;
-    border-bottom: 0.5px solid var(--g-06);
-    display: flex;
-    gap: var(--s-2);
-  }
-  li:last-child { border-bottom: none; }
-  .marker {
-    font-variant-numeric: tabular-nums;
-    color: var(--g-30);
-    font-weight: 600;
-    flex-shrink: 0;
-    min-width: 18px;
-  }
+strong {
+  font-weight: 700;
+  color: var(--k);
+}
+em {
+  font-style: italic;
+}
+.lede {
+  color: var(--ink);
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: var(--s-2) 0;
-    font-size: 15px;
-  }
-  th, td {
-    text-align: left;
-    padding: var(--s-2) var(--s-1);
-    border-bottom: 0.5px solid var(--g-12);
-    line-height: 20px;
-    color: var(--ink-2);
-    vertical-align: top;
-  }
-  th {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--g-60);
-    font-weight: 600;
-  }
-  td:first-child { color: var(--g-60); }
-  tr.focal td { color: var(--k); }
-  tr.focal td strong { color: var(--k); }
-  /* timeline year column — tabular, deemphasized */
-  table.timeline td:first-child {
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-    white-space: nowrap;
-    color: var(--g-30);
-  }
+/* Beat 1 — anchor hero. V3.6 (R-22): flat, no elevation. Set apart by border +
+ * radius + padding, not a shadow. */
+.hero {
+  background: var(--w);
+  border-radius: 16px;
+  border: 1px solid var(--g-12);
+  padding: var(--s-4);
+  margin: var(--s-2) 0 var(--s-3);
+}
+.hero .hook {
+  font-size: 19px;
+  line-height: 26px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
 
-  /* definition block */
-  .def-term {
-    font-weight: 700;
-    color: var(--k);
-  }
+ol,
+ul {
+  margin: 0 0 var(--s-2) 0;
+  padding: 0;
+  list-style: none;
+}
+li {
+  font-size: 17px;
+  line-height: 24px;
+  letter-spacing: -0.008em;
+  color: var(--ink-2);
+  padding: var(--s-1) 0;
+  border-bottom: 0.5px solid var(--g-12);
+  display: flex;
+  gap: var(--s-2);
+}
+li:last-child {
+  border-bottom: none;
+}
+.marker {
+  font-variant-numeric: tabular-nums;
+  color: var(--g-30);
+  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 18px;
+}
 
-  /* equation / code block */
-  pre {
-    font-family: var(--mono);
-    font-size: 14px;
-    line-height: 22px;
-    color: var(--k);
-    background: rgba(0,0,0,0.03);
-    border: 0.5px solid var(--g-06);
-    border-radius: 8px;
-    padding: var(--s-2) var(--s-3);
-    margin: var(--s-2) 0;
-    overflow-x: auto;
-  }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--s-2) 0;
+  font-size: 15px;
+}
+th,
+td {
+  text-align: left;
+  padding: var(--s-2) var(--s-1);
+  border-bottom: 0.5px solid var(--g-12);
+  line-height: 20px;
+  color: var(--ink-2);
+  vertical-align: top;
+}
+th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--g-60);
+  font-weight: 600;
+}
+td:first-child {
+  color: var(--g-60);
+}
+tr.focal td {
+  color: var(--k);
+}
+tr.focal td strong {
+  color: var(--k);
+}
+table.timeline td:first-child {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--g-30);
+}
 
-  /* quote-as-evidence + pull-quote */
-  blockquote {
-    font-size: 19px;
-    line-height: 26px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    color: var(--ink);
-    border-left: 2px solid var(--k);
-    padding-left: var(--s-3);
-    margin: var(--s-1) 0 var(--s-3);
-  }
-  blockquote.pull {
-    font-size: 24px;
-    line-height: 30px;
-    font-weight: 600;
-    letter-spacing: -0.012em;
-  }
+/* definition block */
+.def-term {
+  font-weight: 700;
+  color: var(--k);
+}
 
-  /* section divider — beat boundary, not paragraph break */
-  section.divider {
-    padding: var(--s-7) 0 var(--s-4);
-    border-bottom: 0.5px solid var(--g-06);
-  }
-  section.divider .rule {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--g-30);
-    margin-bottom: var(--s-2);
-  }
-  section.divider h2 { margin-bottom: var(--s-2); }
+/* equation / code block */
+pre {
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--k);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--g-12);
+  border-radius: 8px;
+  padding: var(--s-2) var(--s-3);
+  margin: var(--s-2) 0;
+  overflow-x: auto;
+}
 
-  .takeaway {
-    font-size: 24px;
-    line-height: 30px;
-    font-weight: 600;
-    letter-spacing: -0.012em;
-    color: var(--ink);
-  }
+/* quote-as-evidence + pull-quote */
+blockquote {
+  font-size: 19px;
+  line-height: 26px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  border-left: 2px solid var(--k);
+  padding-left: var(--s-3);
+  margin: var(--s-1) 0 var(--s-3);
+}
+blockquote.pull {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
 
-  .attrib { font-size: 13px; line-height: 18px; color: var(--g-60); }
+/* section divider — beat boundary, not paragraph break */
+section.divider {
+  padding: var(--s-7) 0 var(--s-4);
+  border-bottom: 0.5px solid var(--g-12);
+}
+section.divider .rule {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--g-30);
+  margin-bottom: var(--s-2);
+}
+section.divider h2 {
+  margin-bottom: var(--s-2);
+}
 
-  .sources li, .notes li { font-size: 13px; line-height: 18px; color: var(--g-60); }
-  .sources li, .notes li { display: list-item; padding-left: 0; }
-  .sources, .notes { padding-left: var(--s-3); }
-  .sources li { list-style: none; }
-  .sources li::before { content: "—"; color: var(--g-30); margin-right: var(--s-1); }
+.takeaway {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
 
-  /* corner glyph — present on every section's screenshot */
-  .glyph {
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(calc(196px - 100% - 4px));
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.04em;
-    color: var(--g-30);
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(4px);
-    padding: 4px 7px;
-    border-radius: 6px;
-    border: 0.5px solid var(--g-06);
-    user-select: none;
-  }
+/* focal stat — the reserved hero-number metrics (stat-callout). Reads at
+ * --ink, so it picks up #1A1A1A automatically on a V3.5 canvas. */
+.stat {
+  font-size: 56px;
+  line-height: 60px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: var(--s-1) 0;
+}
+
+.sources li {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--g-60);
+  display: list-item;
+  padding-left: 0;
+  list-style: none;
+}
+.sources {
+  padding-left: var(--s-3);
+}
+.sources li::before {
+  /* V3.6 (R-24): the list marker is a middle dot, not an em dash — no em dash
+   * renders anywhere on the canvas, in prose or as furniture. */
+  content: "·";
+  color: var(--g-30);
+  margin-right: var(--s-1);
+}
+
+/* corner glyph — present on every section's screenshot */
+.glyph {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(calc(196px - 100% - 4px));
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--g-30);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  padding: 4px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--g-12);
+  user-select: none;
+}
+
+/* gallery — mirrors docs/index.html */
+.gallery-lede {
+  font-size: 17px;
+  line-height: 24px;
+  color: var(--ink-2);
+  margin-bottom: var(--s-6);
+}
+.section-label {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--g-60);
+  margin: var(--s-5) 0 var(--s-2);
+}
+a.card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--g-12);
+  border-radius: 16px;
+  padding: var(--s-4);
+  margin-bottom: var(--s-2);
+  background: var(--w);
+}
+a.card-link:hover {
+  border-color: var(--g-12);
+}
+.card-title {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin-bottom: var(--s-1);
+}
+.card-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g-30);
+}
+.card-desc {
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--ink-3);
+  margin-top: var(--s-1);
+}
+.back-link {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g-60);
+  text-decoration: none;
+  padding: var(--s-5) 0 0;
+}
+.back-link:hover {
+  color: var(--k);
+}
+
+/*
+ * Static spec-discovery block at the top of app/index.html — visible BEFORE
+ * the React app mounts so a crawler (or any agent reading the raw HTML) sees
+ * the spec URL and its GitHub-raw mirror without executing JS. Styled with
+ * the same 393pt canvas and gray ramp as the rest of the site so it doesn't
+ * clash with the React Gallery rendered below.
+ */
+#spec-discovery {
+  width: 393px;
+  margin: 0 auto;
+  background: var(--w);
+  padding: var(--s-6) 16px var(--s-4);
+}
+#spec-discovery h1 {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin-bottom: var(--s-2);
+}
+#spec-discovery p {
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--ink-3);
+  margin-bottom: var(--s-2);
+}
+#spec-discovery ul {
+  list-style: none;
+  margin: var(--s-2) 0 var(--s-3);
+  padding: 0;
+}
+#spec-discovery li {
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+#spec-discovery a {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--g-12);
+  text-underline-offset: 2px;
+}
+#spec-discovery a:hover {
+  text-decoration-color: var(--g-30);
+}
+#spec-discovery code {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  background: var(--g-06);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* gallery — visible "spec" section card, mirrors the "cards" list above */
+a.spec-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--g-12);
+  border-radius: 16px;
+  padding: var(--s-4);
+  margin-bottom: var(--s-2);
+  background: var(--w);
+}
+a.spec-link:hover {
+  border-color: var(--g-12);
+}
+.spec-link-title {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  margin-bottom: var(--s-1);
+}
+.spec-link-url {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--g-60);
+  word-break: break-all;
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.1 overrides — scoped to .canvas.v3-1 so V3.0 cards keep their metrics
+ * intact (frozen-at-version per ADR-0003). See RENDERING-spec § R-9–R-12.
+ * ----------------------------------------------------------------------- */
+
+.canvas.v3-1 p,
+.canvas.v3-1 li {
+  line-height: 26px;
+  letter-spacing: 0.03em;
+  word-spacing: 0.06em;
+  text-align: left;
+}
+
+.canvas.v3-1 p {
+  text-wrap: pretty;
+}
+
+.canvas.v3-1 em {
+  font-style: italic;
+}
+
+/* lead-clause — visually the same as <strong>, but tagged so the validator
+ * can confirm a prose block opens with one (G-7). */
+.canvas.v3-1 .lead {
+  font-weight: 700;
+  color: var(--k);
+}
+
+/* thought-group ramp inside prose blocks (G-8) */
+.canvas.v3-1 .thought-group + .thought-group {
+  margin-top: var(--s-1);
+}
+.canvas.v3-1 .thought-group + .sub-paragraph,
+.canvas.v3-1 .sub-paragraph + .thought-group,
+.canvas.v3-1 .sub-paragraph + .sub-paragraph {
+  margin-top: var(--s-3);
+}
+
+/* mid-beat asterism rest — RETIRED in V3.6 (R-11 / G-10 superseded by R-24).
+ * The asterism (`⁂` / `* * *`) never renders on the canvas; macro-spacing
+ * between beats does the rest-the-eye work. Hidden globally (not just on v3-6)
+ * so any older card or React twin re-renders without it. */
+.asterism {
+  display: none;
+}
+
+/* DEPRECATED in V3.3 — the beat micro-folio (R-10 V3.1/V3.2) is no longer
+ * permitted on the rendered canvas (see RENDERING § R-10 V3.3 and identity
+ * invariant I7: no scaffold leakage). The rule survives for renderer
+ * diagnostics only — hidden by default, shown only under a `.dev-mode`
+ * toggle on the canvas root. Do NOT re-enable globally. */
+.micro-folio,
+.beat-folio,
+.folio {
+  display: none;
+}
+.canvas.v3-1 .micro-folio {
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--g-60);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.canvas.v3-1 .micro-folio--top {
+  margin: var(--s-2) 0 var(--s-3);
+}
+.canvas.v3-1 .micro-folio--bottom {
+  margin: var(--s-4) 0 var(--s-3);
+}
+.canvas.dev-mode .micro-folio,
+.canvas.dev-mode .beat-folio,
+.canvas.dev-mode .folio {
+  display: block;
+}
+
+/* table takeaway-row (G-11) */
+.canvas.v3-1 tr.takeaway-row td {
+  font-weight: 600;
+  color: var(--k);
+  border-top: 0;
+  padding-top: var(--s-2);
+}
+.canvas.v3-1 tr.takeaway-row td strong {
+  color: var(--k);
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.4 additions — Tile head step, surface-tinted card affordance (R-16),
+ * marketing-scale beat gap (R-15), Apple register opt-in (R-18). Scoped to
+ * .canvas.v3-4 so V3.1–V3.3 cards remain pixel-identical.
+ * ----------------------------------------------------------------------- */
+
+/* Tile head — the canonical size for an eyebrow + tagline pair's tagline
+ * half (G-14 Pattern 1). Sits between Display title (40/44) and Section
+ * header (24/30). */
+.canvas.v3-4 .tile {
+  font-size: var(--t-tile);
+  line-height: var(--lh-tile);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  margin-bottom: var(--s-2);
+}
+
+/* Surface-tinted card variant (R-16) — replaces the hairline-bordered
+ * variant. Mutually exclusive per card. */
+.canvas.v3-4 .tint-card {
+  background: var(--surface-tint);
+  border-radius: 18px;
+  border: 0;
+  padding: var(--s-4);
+  margin: var(--s-2) 0;
+}
+
+/* Beat-gap scale (R-15) — author opts in by setting the variant on .canvas.
+ * Default stays --s-6 (48pt). */
+.canvas.v3-4.beat-gap-64 section {
+  padding-top: var(--s-7);
+}
+.canvas.v3-4.beat-gap-120 section {
+  padding-top: var(--s-9);
+}
+
+/* Apple register opt-in (R-18) — tighter body letter-spacing and line-height,
+ * larger Display ramp. The canvas root carries data-wcag-note when this is
+ * active so downstream consumers see the 1.47 line-height implication. */
+.canvas.v3-4.apple-register p,
+.canvas.v3-4.apple-register li {
+  line-height: 25px;
+  letter-spacing: -0.022em;
+  word-spacing: normal;
+}
+.canvas.v3-4.apple-register h1 {
+  font-size: clamp(56px, 12vw, 80px);
+  line-height: 1.05;
+  letter-spacing: -0.024em;
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.5 reading-layer refinement — R-19 (body type metrics), R-20 (text-ink
+ * ladder), R-21 (three-size reading core). Scoped to .canvas.v3-5 so every
+ * V3.0–V3.4 card stays pixel-identical; the base :root ink tokens
+ * (#111111 / #333 / #555) are untouched. A V3.5 card's canvas carries the
+ * inherited structural classes plus v3-5, e.g. class="canvas v3-1 v3-5";
+ * v3-5 comes last in this file so its reading-layer overrides win.
+ * See RENDERING-spec § R-19 / R-20 / R-21.
+ * ----------------------------------------------------------------------- */
+
+/* R-20 — text-ink ladder. Redefining the ink custom properties on the V3.5
+ * canvas re-inks every descendant that reads from them. All three steps clear
+ * WCAG 2.2 SC 1.4.3 (4.5:1): #1A1A1A ≈17.4:1, #595959 ≈7:1, #767676 =4.54:1.
+ * #888 / #BBB / --g-30 stay non-text-only (hairlines, gridlines, markers). */
+.canvas.v3-5 {
+  --ink: #1a1a1a;
+  --ink-2: #595959;
+  --ink-3: #767676;
+}
+
+/* Primary essence — bold lead-clauses, headers, focal stats read at --ink
+ * (#1A1A1A), not pure black. */
+.canvas.v3-5 strong,
+.canvas.v3-5 .lead,
+.canvas.v3-5 .lede,
+.canvas.v3-5 .def-term,
+.canvas.v3-5 .takeaway,
+.canvas.v3-5 tr.focal td,
+.canvas.v3-5 tr.takeaway-row td {
+  color: var(--ink);
+}
+
+/* R-19 — body type metrics. 17/26, letter-spacing −0.01em, word-spacing
+ * normal (the positive tracking R-9 introduced is retired). 26pt leading is
+ * 1.53 — above the WCAG 1.5 floor. Body prose reads at --ink-2 (secondary). */
+.canvas.v3-5 p,
+.canvas.v3-5 li {
+  line-height: 26px;
+  letter-spacing: -0.01em;
+  word-spacing: normal;
+  text-align: left;
+}
+.canvas.v3-5 p {
+  text-wrap: pretty;
+  color: var(--ink-2);
+}
+
+/* R-19 — display tightening folded in as default (was R-18's opt-in). */
+.canvas.v3-5 h1 {
+  letter-spacing: -0.02em;
+}
+
+/* R-21 — three-size reading core. Subhead / large-card merges Tile 28 +
+ * Section 24 + Subtitle 19 into one 26/32 step; weight + ink + size do the
+ * differentiation. */
+.canvas.v3-5 h2,
+.canvas.v3-5 .tile {
+  font-size: 26px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+/* R-21 / R-13 — the dek stops being a 19pt size; it renders at body size in a
+ * lighter weight + secondary ink. */
+.canvas.v3-5 .dek {
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+  margin-bottom: var(--s-3);
+}
+
+/* R-15 — V3.5 default beat gap is 64pt (--s-7), up from 48pt. Opt down to 48pt
+ * for dense reference cards via .beat-gap-48; up to 96/120 for poster moments.
+ * Micro-spacing does NOT scale with the beat gap. */
+.canvas.v3-5 section {
+  padding-top: var(--s-7);
+}
+.canvas.v3-5.beat-gap-48 section {
+  padding-top: var(--s-6);
+}
+.canvas.v3-5.beat-gap-96 section {
+  padding-top: var(--s-8);
+}
+.canvas.v3-5.beat-gap-120 section {
+  padding-top: var(--s-9);
+}
+
+/* R-19 / R-20 — the eyebrow is the only positively-tracked role (+0.08em) and
+ * reads at tertiary ink (#767676, 4.54:1), not --g-60. Base CSS still carries
+ * the stale V3.0 0.07em/--g-60; these win on a V3.5 canvas. */
+.canvas.v3-5 .eyebrow,
+.canvas.v3-5 th {
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+/* R-20 — table key column is readable tertiary ink, not the sub-floor --g-60. */
+.canvas.v3-5 td:first-child {
+  color: var(--ink-3);
+}
+
+/* R-21 — the key-takeaway closer is a subhead-sized line (26/32), like .tile. */
+.canvas.v3-5 .takeaway {
+  font-size: 26px;
+  line-height: 32px;
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.6 surface refinement — R-22 (flat surfaces, no shadow), R-23 (heavier
+ * hairline: hairlines step from --g-06 to --g-12, anchor cards to 1px),
+ * R-24 (no em dash, no asterism). Unlike V3.1–V3.5, V3.6's visual rules are
+ * applied at the BASE level above (not scoped to .canvas.v3-6) and therefore
+ * re-render every card regardless of frozen_at_version — a deliberate
+ * departure from the frozen-at-version invariant, recorded in ADR-0011: these
+ * are corrections to defaults the steward rejected (elevation, faint borders,
+ * asterism furniture, em dashes), not a new opt-in register. The .v3-6 class
+ * is still emitted on 3.6.0+ cards for forward extensibility; it carries no
+ * overrides today.
+ * ----------------------------------------------------------------------- */
+.canvas.v3-6 {
+  /* reserved — V3.6 visual rules live at base level (see ADR-0011). */
+}
 </style>
 </head>
 <body>
   <div class="canvas">
 
-    <!-- Beat 1 — Hook -->
     <section>
-      <div class="eyebrow">Hook</div>
+      <div class="eyebrow">the one elevated element on this card</div>
       <h1>Gestalt Principles</h1>
       <div class="hero">
-        <p class="hook">You never see raw pixels. Before you are aware of looking, your visual system has already grouped, split, and completed the scene into objects — and the Gestalt principles are <strong>the catalogue of rules it uses</strong>.</p>
+        <p class="hook">You never see raw pixels. Before you are aware of looking, your visual system has already grouped, split, and completed the scene into objects, and the Gestalt principles are <strong>the catalogue of rules it uses</strong>.</p>
       </div>
-      <p class="lede">Three German psychologists asked why a row of dots looks like <em>a row</em> and not like <em>dots</em>. The answer became the working grammar of perception — and of design.</p>
+      <p class="lede">HERO-CARD: <strong>Gestalt Principles</strong></p>
+      <p><strong>Lede.</strong> Three German psychologists asked why a row of dots looks like <em>a row</em>
+and not like <em>dots</em>. The answer became the working grammar of perception, and
+of design.</p>
     </section>
 
-    <!-- Beat 2 — Evidence: phi phenomenon -->
     <section>
-      <div class="eyebrow">Evidence</div>
-      <p>In 1912, Max Wertheimer flashed two lights in alternation and people saw <strong>one light moving</strong> — motion where nothing moved. The percept was a whole that existed in no part.</p>
-      <p>That experiment, the <em>phi phenomenon</em>, launched Gestalt psychology: the claim that perception builds wholes first, and the parts come after.</p>
+      <div class="eyebrow">the founding experiment</div>
+      <p>In 1912, Max Wertheimer flashed two lights in alternation and people saw <strong>one
+light moving</strong>: motion where nothing moved. The percept was a whole that
+existed in no part. That experiment, the <em>phi phenomenon</em>, launched Gestalt
+psychology: the claim that perception builds wholes first, and the parts come
+after.</p>
     </section>
 
-    <!-- Beat 2 — Evidence: timeline -->
     <section>
-      <div class="eyebrow">Evidence</div>
-      <h2>It built — and outlived — a school of psychology</h2>
-      <table class="timeline">
+      <div class="eyebrow">it built, and outlived, a school of psychology</div>
+      <table>
+        <thead>
+          <tr><th>year</th><th>event</th></tr>
+        </thead>
         <tbody>
-          <tr><td>1912</td><td>Wertheimer's phi-phenomenon paper — Gestalt psychology begins</td></tr>
+          <tr><td>1912</td><td>Wertheimer's phi-phenomenon paper: Gestalt psychology begins</td></tr>
           <tr><td>1923</td><td>Wertheimer formalizes the laws of perceptual organization</td></tr>
           <tr><td>1935</td><td>Koffka's <em>Principles of Gestalt Psychology</em></td></tr>
           <tr><td>1933→</td><td>Founders flee Nazi Germany; the school scatters</td></tr>
-          <tr><td>1950s</td><td>Köhler's brain-field theory refuted — Gestalt fades as a movement</td></tr>
-          <tr class="focal"><td>2012</td><td><strong>The principles are vindicated, the theory is not</strong> — <em>Psychological Bulletin</em> centennial review</td></tr>
+          <tr><td>1950s</td><td>Köhler's brain-field theory refuted: Gestalt fades as a movement</td></tr>
+          <tr><td>2012</td><td><em>Psychological Bulletin</em> centennial review: <strong>the principles are vindicated, the theory is not</strong></td></tr>
         </tbody>
       </table>
     </section>
 
-    <!-- Beat 2 — Evidence: Koffka quote -->
     <section>
-      <div class="eyebrow">Evidence</div>
-      <blockquote>"The whole is <strong>other</strong> than the sum of its parts."</blockquote>
-      <p>— Kurt Koffka, <em>Principles of Gestalt Psychology</em>, 1935. Not <em>"greater"</em> — Koffka corrected that himself. The whole is not <em>more</em> of the parts; it is something <em>qualitatively different</em>. "This is not a principle of addition."</p>
+      <div class="eyebrow">the canonical formulation</div>
+      <p>&gt; "The whole is <strong>other</strong> than the sum of its parts."</p>
+      <p>Kurt Koffka, <em>Principles of Gestalt Psychology</em>, 1935. Not "<em>greater</em>". Koffka
+corrected that himself. The whole is not <em>more</em> of the parts; it is something
+<em>qualitatively different</em>. "This is not a principle of addition."</p>
     </section>
 
-    <!-- Section divider — Mechanism -->
-    <section class="divider">
-      <div class="rule">— Mechanism —</div>
-      <h2>How it works</h2>
-      <p>One master law, the classic grouping principles, the figure/ground act, the modern additions, and the one principle turned into math.</p>
+    <section>
+      <p><strong>How it works:</strong> one master law, the classic grouping principles, the
+figure/ground act, the modern additions, and the one principle turned into math.</p>
     </section>
 
-    <!-- Beat 3 — Mechanism: Prägnanz -->
     <section>
-      <div class="eyebrow">Mechanism</div>
-      <p><span class="def-term">Prägnanz</span> — the law every other Gestalt principle sits under. Given any stimulus, perception settles into the <strong>simplest, most regular, most stable</strong> organization the conditions allow.</p>
-      <p>Each specific principle is just a particular way the visual system pursues that "good form."</p>
+      <div class="eyebrow">the master law</div>
+      <p><strong>Prägnanz:</strong> the law every other Gestalt principle sits under. Given any
+stimulus, perception settles into the <strong>simplest, most regular, most stable</strong>
+organization the conditions allow. Each specific principle is just a particular
+way the visual system pursues that "good form."</p>
     </section>
 
-    <!-- Beat 3 — Mechanism: process-flow -->
     <section>
-      <div class="eyebrow">Mechanism</div>
-      <ol>
-        <li><span class="marker">1</span><span><strong>Carve</strong> — the image is first split into uniform, connected regions.</span></li>
-        <li><span class="marker">2</span><span><strong>Assign</strong> — each region is judged figure or ground: object, or backdrop.</span></li>
-        <li><span class="marker">3</span><span><strong>Group</strong> — the surviving elements are clustered by the grouping principles.</span></li>
-      </ol>
-      <p>Palmer &amp; Rock's insight: grouping isn't first. The system <strong>partitions the image before it groups anything</strong> — and that partition can override the rest.</p>
+      <div class="eyebrow">the order of operations</div>
+      <p>1. <strong>Carve:</strong> the image is first split into uniform, connected regions.
+2. <strong>Assign:</strong> each region is judged figure or ground: object, or backdrop.
+3. <strong>Group:</strong> the surviving elements are clustered by the grouping principles.</p>
+      <p>Palmer &amp; Rock's insight: grouping isn't first. The system <strong>partitions the image
+before it groups anything</strong>, and that partition can override the rest.</p>
     </section>
 
-    <!-- Beat 3 — Mechanism: classic grouping principles -->
     <section>
-      <div class="eyebrow">Mechanism</div>
-      <h2>The classic grouping principles</h2>
-      <ol>
-        <li><span class="marker">1</span><span><strong>Proximity</strong> — elements close together are read as one group.</span></li>
-        <li><span class="marker">2</span><span><strong>Similarity</strong> — elements sharing color, size, or shape are grouped.</span></li>
-        <li><span class="marker">3</span><span><strong>Common fate</strong> — elements moving together are grouped.</span></li>
-        <li><span class="marker">4</span><span><strong>Good continuation</strong> — elements on a smooth path are grouped; the eye prefers continuity over abrupt change.</span></li>
-        <li><span class="marker">5</span><span><strong>Closure</strong> — incomplete figures are perceived as whole.</span></li>
-        <li><span class="marker">6</span><span><strong>Symmetry / order</strong> — regular, symmetrical arrangements are grouped and preferred.</span></li>
-      </ol>
-      <p>These are tendencies, <strong>not an algorithm</strong> — they describe what the system does, not a recipe that yields one answer.</p>
+      <div class="eyebrow">the classic grouping principles (Wertheimer, 1923)</div>
+      <p>1. <strong>Proximity:</strong> elements close together are read as one group.
+2. <strong>Similarity:</strong> elements sharing color, size, or shape are grouped.
+3. <strong>Common fate:</strong> elements moving together are grouped.
+4. <strong>Good continuation:</strong> elements on a smooth path are grouped; the eye prefers continuity over abrupt change.
+5. <strong>Closure:</strong> incomplete figures are perceived as whole.
+6. <strong>Symmetry / order:</strong> regular, symmetrical arrangements are grouped and preferred.</p>
+      <p>These are tendencies, <strong>not an algorithm</strong>: they describe what the system does,
+not a recipe that yields one answer.</p>
     </section>
 
-    <!-- Beat 3 — Mechanism: figure/ground -->
     <section>
-      <div class="eyebrow">Mechanism</div>
-      <p><span class="def-term">Figure/ground</span> — distinct from grouping. Grouping decides which elements clump; figure/ground decides which region is <strong>the object</strong> — it owns the contour, has shape, sits in front — and which is mere backdrop.</p>
-      <p>Reversible images like Rubin's vase show the assignment is an active, unstable <em>decision</em>, not a given.</p>
+      <div class="eyebrow">the other organizing act</div>
+      <p><strong>Figure/ground:</strong> distinct from grouping. Grouping decides which elements
+clump; figure/ground decides which region is <strong>the object</strong> (it owns the
+contour, has shape, sits in front) and which is mere backdrop. Reversible
+images like Rubin's vase show the assignment is an active, unstable <em>decision</em>,
+not a given.</p>
     </section>
 
-    <!-- Beat 3 — Mechanism: modern additions -->
     <section>
-      <div class="eyebrow">Mechanism</div>
-      <h2>The set is open, not fixed</h2>
+      <div class="eyebrow">the set is open, not fixed</div>
       <table>
         <thead>
-          <tr><th>Principle</th><th>What it adds</th><th>Added</th></tr>
+          <tr><th>principle</th><th>what it adds</th><th>added</th></tr>
         </thead>
         <tbody>
-          <tr><td>Common region</td><td>elements inside a shared boundary group — even against proximity</td><td>1992</td></tr>
-          <tr><td>Uniform connectedness</td><td>a uniform, connected region groups — and can override proximity and similarity</td><td>1994</td></tr>
+          <tr><td>Common region</td><td>elements inside a shared boundary group, even against proximity</td><td>Palmer, 1992</td></tr>
+          <tr><td>Uniform connectedness</td><td>a uniform, connected region groups, and can override proximity and similarity</td><td>Palmer &amp; Rock, 1994</td></tr>
           <tr><td>Element connectedness</td><td>physically joined elements group</td><td>1994</td></tr>
-          <tr><td>Synchrony</td><td>elements changing at the same instant group — common fate, generalized</td><td>modern</td></tr>
+          <tr><td>Synchrony</td><td>elements changing at the same instant group: common fate, generalized</td><td>modern</td></tr>
         </tbody>
       </table>
-      <p>There is <strong>no canonical count</strong> of Gestalt principles — the set has grown for a century and is still growing.</p>
+      <p>There is <strong>no canonical count</strong> of Gestalt principles: the set has grown for a
+century and is still growing.</p>
     </section>
 
-    <!-- Beat 3 — Mechanism: equation -->
     <section>
-      <div class="eyebrow">Mechanism</div>
-      <h2>The one principle turned into math</h2>
+      <div class="eyebrow">the one principle turned into math</div>
       <p>For proximity, grouping is fully predicted by <em>relative</em> distance:</p>
-      <pre>log-odds = k · log(d&#8321; / d&#8322;)</pre>
-      <p>In an ambiguous dot lattice, the odds of seeing one grouping over a competitor depend <strong>only on the ratio of the competing distances</strong> — not absolute spacing, not overall symmetry. The vague Victorian "near things group" became a precise, fitted law (Kubovy &amp; Wagemans, 1995).</p>
+      <p>``<code>
+log-odds = k · log(d₁ / d₂)
+</code>``</p>
+      <p>In an ambiguous dot lattice, the odds of seeing one grouping over a competitor
+depend <strong>only on the ratio of the competing distances</strong>, not absolute spacing,
+not overall symmetry. The vague Victorian "near things group" became a precise,
+fitted law (Kubovy &amp; Wagemans, 1995).</p>
     </section>
 
-    <!-- Beat 4 — Comparison: Gestalt vs structuralism -->
     <section>
-      <div class="eyebrow">Comparison</div>
-      <h2>Two accounts of how perception works</h2>
+      <div class="eyebrow">two accounts of how perception works</div>
       <table>
         <thead>
-          <tr><th></th><th>Structuralism</th><th>Gestalt</th></tr>
+          <tr><th></th><th>Structuralism (parts-first)</th><th>Gestalt (wholes-first)</th></tr>
         </thead>
         <tbody>
           <tr><td>Unit of mind</td><td>atomic sensations</td><td>structured wholes</td></tr>
-          <tr><td>Perception is</td><td>addition</td><td>organization</td></tr>
-          <tr class="focal"><td>The phi test</td><td>can't explain it</td><td><strong>predicts it</strong></td></tr>
-          <tr><td>Determines what</td><td>parts → whole</td><td>whole → parts</td></tr>
+          <tr><td>Perception is</td><td>addition: parts sum to a whole</td><td>organization: the whole shapes the parts</td></tr>
+          <tr><td>The phi test</td><td>can't explain it</td><td><strong>predicts it</strong></td></tr>
+          <tr><td>What determines what</td><td>parts determine the whole</td><td>the whole determines the parts</td></tr>
         </tbody>
       </table>
-      <p>The phi phenomenon was the wedge: you <strong>cannot build "motion" by adding two static flashes</strong>. The whole had to come first.</p>
+      <p>The phi phenomenon was the wedge: you <strong>cannot build "motion" by adding two
+static flashes</strong>. The whole had to come first.</p>
     </section>
 
-    <!-- Beat 4 — Comparison: principles against principles -->
     <section>
-      <div class="eyebrow">Comparison</div>
-      <p>The principles <strong>compete and combine</strong> — a layout can pit proximity against similarity against common region, and the percept is whatever organization fits best. For proximity and similarity, that combination is quantifiably <em>additive</em>.</p>
-      <p>And mind the name collision: Gestalt <em>therapy</em> (Perls, 1940s) borrowed the word but has no line back to this perceptual research — different field entirely.</p>
+      <div class="eyebrow">principles against principles</div>
+      <p>The principles <strong>compete and combine</strong>: a layout can pit proximity against
+similarity against common region, and the percept is whatever organization fits
+best. For proximity and similarity, that combination is quantifiably <em>additive</em>.
+And mind the name collision: Gestalt <em>therapy</em> (Perls, 1940s) borrowed the
+word but has no line back to this perceptual research: different field
+entirely.</p>
     </section>
 
-    <!-- Section divider — Counter -->
-    <section class="divider">
-      <div class="rule">— Counter —</div>
-      <h2>The honest steelman</h2>
-      <p>What failed, what stayed vague, and why "principles" is the right word and "theory" is not.</p>
-    </section>
-
-    <!-- Beat 5 — Counter: anti-pattern -->
     <section>
-      <div class="eyebrow">Counter</div>
-      <h2>Where the Gestalt account is weak</h2>
-      <ul>
-        <li><span class="marker">✕</span><span><strong>The explanatory theory failed.</strong> Köhler claimed grouping reflected electrical <em>fields</em> in the brain. Lashley (1951) and Sperry (1955) disrupted cortical current flow — and shape perception survived.</span></li>
-        <li><span class="marker">✕</span><span><strong>"Mere demonstrations."</strong> The classic principles were established by compelling pictures, not measurement — descriptive rules with no predictive model for decades.</span></li>
-        <li><span class="marker">✕</span><span><strong>The laws are vague and they conflict.</strong> "Similar things group" — how similar? on which dimension? against proximity, which wins? No joint algorithm.</span></li>
-        <li><span class="marker">✕</span><span><strong>The list just grows.</strong> A set of "laws" that expands with every new demo risks being a taxonomy, not a theory.</span></li>
+      <p><strong>The honest steelman:</strong> what failed, what stayed vague, and why "principles"
+is the right word and "theory" is not.</p>
+    </section>
+
+    <section>
+      <div class="eyebrow">where the Gestalt account is weak</div>
+      <ul class="sources">
+        <li><strong>The explanatory theory failed.</strong> Köhler claimed grouping reflected electrical <em>fields</em> in the brain. Lashley (1951) and Sperry (1955) disrupted cortical current flow, and shape perception survived. The mechanism was wrong.</li>
+        <li><strong>"Mere demonstrations."</strong> The classic principles were established by compelling pictures, not measurement: descriptive rules with no predictive model for decades.</li>
+        <li><strong>The laws are vague and they conflict.</strong> "Similar things group": how similar? on which dimension? against proximity, which wins? No joint algorithm.</li>
+        <li><strong>The list just grows.</strong> A set of "laws" that expands with every new demo risks being a taxonomy, not a theory.</li>
       </ul>
-      <p>The honest verdict: the Gestalt principles are <strong>robust descriptions, not a finished explanation</strong> — and that is still enormously useful.</p>
+      <p>The honest verdict: the Gestalt principles are <strong>robust descriptions, not a
+finished explanation</strong>, and that is still enormously useful.</p>
     </section>
 
-    <!-- Beat 5 — Counter: the theory that broke -->
     <section>
-      <div class="eyebrow">Counter</div>
-      <blockquote>Disrupt the cortex with gold foil, mica, and wire — and pattern perception still works.</blockquote>
-      <p>That is the gist of Lashley (1951) and Sperry (1955): the experiments that <strong>refuted Köhler's brain-field theory</strong> and pushed Gestalt psychology out of the mainstream. The phenomena outlived the mechanism that was meant to explain them.</p>
+      <div class="eyebrow">the theory that broke</div>
+      <p>&gt; Disrupt the cortex with gold foil, mica, and wire, and pattern perception
+&gt; still works.</p>
+      <p>That is the gist of Lashley (1951) and Sperry (1955): the experiments that
+<strong>refuted Köhler's brain-field theory</strong> and pushed Gestalt psychology out of the
+mainstream. The phenomena outlived the mechanism that was meant to explain them.</p>
     </section>
 
-    <!-- Beat 6 — Application: the bridge -->
     <section>
-      <div class="eyebrow">Application</div>
-      <h2>Why a designer should care</h2>
-      <p>Because the principles run pre-attentively and involuntarily, a designer who arranges proximity, similarity, common region, and continuity isn't decorating — they're supplying inputs to a fixed perceptual machine.</p>
-      <p>Layout <em>is</em> applied Gestalt. You are not persuading the viewer; you are <strong>programming what they group</strong>.</p>
+      <div class="eyebrow">why a designer should care</div>
+      <p>Because the principles run pre-attentively and involuntarily, a designer who
+arranges proximity, similarity, common region, and continuity isn't decorating:
+they're supplying inputs to a fixed perceptual machine. Layout <em>is</em> applied
+Gestalt. You are not persuading the viewer; you are <strong>programming what they
+group</strong>.</p>
     </section>
 
-    <!-- Beat 6 — Application: checklist -->
     <section>
-      <div class="eyebrow">Application</div>
-      <ul>
-        <li><span class="marker">☐</span><span>Group with <strong>whitespace</strong> before you reach for boxes or lines — proximity is the cheapest grouping tool</span></li>
-        <li><span class="marker">☐</span><span>Use a shared boundary (a card) only when you mean "these are one unit" — common region is a strong, expensive signal</span></li>
-        <li><span class="marker">☐</span><span>Align to a grid — continuity makes the eye follow an invisible line; misalignment reads as broken</span></li>
-        <li><span class="marker">☐</span><span>Watch for an <em>unintended</em> principle winning — e.g. everything one color, and similarity overrides the grouping you wanted</span></li>
-        <li><span class="marker">☐</span><span>Don't fight the machine — equal spacing everywhere destroys grouping and forces the user to read every element alone</span></li>
+      <div class="eyebrow">using the principles on purpose</div>
+      <ul class="sources">
+        <li>[ ] Group with <strong>whitespace</strong> before you reach for boxes or lines: proximity is the cheapest grouping tool</li>
+        <li>[ ] Use a shared boundary (a card) only when you mean "these are one unit": common region is a strong, expensive signal</li>
+        <li>[ ] Align to a grid: continuity makes the eye follow an invisible line; misalignment reads as broken</li>
+        <li>[ ] Watch for an <em>unintended</em> principle winning: e.g. everything one color, and similarity overrides the grouping you wanted</li>
+        <li>[ ] Don't fight the machine: equal spacing everywhere destroys grouping and forces the user to read every element alone</li>
       </ul>
     </section>
 
-    <!-- Beat 6 — Application: examples table -->
     <section>
-      <div class="eyebrow">Application</div>
-      <h2>The principles, already everywhere</h2>
+      <div class="eyebrow">the principles, already everywhere</div>
       <table>
         <thead>
-          <tr><th>You see</th><th>The principle at work</th></tr>
+          <tr><th>you see</th><th>the principle at work</th></tr>
         </thead>
         <tbody>
           <tr><td>The FedEx arrow in the negative space</td><td>closure + figure/ground</td></tr>
@@ -455,30 +959,43 @@
       </table>
     </section>
 
-    <!-- Beat 7 — Close: key takeaway -->
     <section>
-      <div class="eyebrow">Close</div>
-      <p class="takeaway"><strong>The Gestalt principles aren't design tips — they're the perceptual machine design runs on.</strong></p>
-      <p>Perception organizes before you do; the principles are the rules of that organization — descriptive, replicable, and yours to design with.</p>
+      <div class="eyebrow">bottom line</div>
+      <p><strong>The Gestalt principles aren't design tips: they're the perceptual machine
+design runs on.</strong> Perception organizes before you do; the principles are the
+rules of that organization: descriptive, replicable, and yours to design with.</p>
     </section>
 
-    <!-- Beat 7 — Close: pull-quote -->
     <section>
-      <div class="eyebrow">Close</div>
-      <blockquote class="pull">"The whole is <strong>other</strong> than the sum of its parts."</blockquote>
-      <p>The school that proved it is gone. The phenomenon it named is in everything you've ever looked at — and the designer's job is to choose <em>which whole</em>.</p>
+      <div class="eyebrow">the closer</div>
+      <p>&gt; "The whole is <strong>other</strong> than the sum of its parts."</p>
+      <p>The school that proved it is gone. The phenomenon it named is in everything
+you've ever looked at, and the designer's job is to choose <em>which whole</em>.</p>
     </section>
 
-    <!-- Sources -->
     <section>
-      <div class="eyebrow">Sources</div>
       <ul class="sources">
-        <li>Wagemans, J. et al. — "A century of Gestalt psychology in visual perception: I." — <em>Psychological Bulletin</em>, 2012</li>
-        <li>Wertheimer, M. — "Laws of organization in perceptual forms" — 1923</li>
-        <li>Wertheimer, M. — "Experimental studies on the seeing of motion" (the phi phenomenon) — 1912</li>
-        <li>Koffka, K. — <em>Principles of Gestalt Psychology</em> — 1935</li>
-        <li>Kubovy, M. &amp; Wagemans, J. — "Grouping by proximity and multistability in dot lattices" — 1995</li>
-        <li>Palmer, S.E. &amp; Rock, I. — "Rethinking perceptual organization: uniform connectedness" — 1994</li>
+        <li>Wagemans, J. et al. "A century of Gestalt psychology in visual perception: I." <em>Psychological Bulletin</em>, 2012</li>
+        <li>Wertheimer, M. "Untersuchungen zur Lehre von der Gestalt II" (Laws of organization in perceptual forms), 1923</li>
+        <li>Wertheimer, M. "Experimentelle Studien über das Sehen von Bewegung" (the phi phenomenon), 1912</li>
+        <li>Koffka, K. <em>Principles of Gestalt Psychology</em>, 1935</li>
+        <li>Kubovy, M. &amp; Wagemans, J. "Grouping by proximity and multistability in dot lattices" <em>Psychological Science</em>, 1995</li>
+        <li>Palmer, S.E. &amp; Rock, I. "Rethinking perceptual organization: The role of uniform connectedness," 1994</li>
+      </ul>
+      <p>Full sourcing (10 sources, source register, quantification literature, and open
+questions) in <code>60-RESEARCH/BREAKDOWN-gestalt-principles.md</code>.</p>
+    </section>
+
+    <section>
+      <ul class="sources">
+        <li>Mode <code>deep-dive</code> → XL. 21 blocks (19 content + 2 section dividers), under the</li>
+        <li><strong>Redundancy filter, hardest pass.</strong> The Evidence beat deliberately uses <em>no</em></li>
+        <li>Beat 3 carries five distinct mechanism blocks because the topic genuinely has</li>
+        <li>Two <code>definition</code> blocks (Prägnanz, figure/ground) are non-adjacent and present</li>
+        <li>Loft budget: the hero <code>loft-card</code> and the Beat 7 <code>key-takeaway</code> are the two</li>
+        <li>The Koffka quote appears twice on purpose: once as <code>quote-as-evidence</code> (Beat</li>
+        <li>The "no canonical count" point is stated explicitly in the modern-additions</li>
+        <li>Beat 6 rests on <code>medium</code> practitioner sources by design: it is the <em>practice</em></li>
       </ul>
     </section>
 

@@ -27,7 +27,7 @@
 > −0.01em, word-spacing normal), the R-20 three-step text-ink ladder
 > (every step clears WCAG 4.5:1), the R-21 three-size reading core, and
 > the R-15 64pt default beat gap. Hairline surface so tertiary ink reads
-> on white. Strict grayscale, SF Pro Rounded — no color.
+> on white. Strict grayscale, SF Pro Rounded: no color.
 
 ---
 
@@ -35,9 +35,9 @@
 
 `BLOCK-loft-card` · The cut
 
-### V3.5 tunes how a card reads — strict grayscale, SF Pro Rounded, no color.
+### V3.5 tunes how a card reads: strict grayscale, SF Pro Rounded, no color.
 
-> **Fewer sizes, darker ink, calmer tracking.** V3.5 tunes how a card reads — never what it says.
+> **Fewer sizes, darker ink, calmer tracking.** V3.5 tunes how a card reads, never what it says.
 
 The words stay the same. The page just reads easier.
 
@@ -70,7 +70,7 @@ with word spacing back to normal. The UPPERCASE eyebrow stays the only positivel
 | Tertiary | #767676 | 4.54:1 | Captions, labels |
 | **Takeaway** | #888 and below | drop to non-text | hairlines, gridlines |
 
-Every text step clears the WCAG 4.5:1 floor. De-emphasis is a tonal step down — never a step below readable.
+Every text step clears the WCAG 4.5:1 floor. De-emphasis is a tonal step down, never a step below readable.
 
 ---
 
@@ -78,7 +78,7 @@ Every text step clears the WCAG 4.5:1 floor. De-emphasis is a tonal step down �
 
 `BLOCK-standard-text` · The sizes
 
-**Three sizes carry the whole card.** Header, subhead, and body do the work. Weight, ink, and space set the rest — not a fourth size.
+**Three sizes carry the whole card.** Header, subhead, and body do the work. Weight, ink, and space set the rest, not a fourth size.
 
 ---
 
@@ -102,7 +102,7 @@ Every text step clears the WCAG 4.5:1 floor. De-emphasis is a tonal step down �
 
 `BLOCK-key-takeaway` · The bottom line
 
-**Hierarchy from weight, ink, and space — not from more sizes.**
+**Hierarchy from weight, ink, and space, not from more sizes.**
 
 Read it once, and the system fits in your head.
 
@@ -112,8 +112,8 @@ Read it once, and the system fits in your head.
 
 `BLOCK-footnote-source` · Sources
 
-- Apple — SF Pro tracking table and HIG Writing guidelines
-- WCAG 2.2 — SC 1.4.3 (contrast) and SC 1.4.12 (text spacing)
+- Apple: SF Pro tracking table and HIG Writing guidelines
+- WCAG 2.2: SC 1.4.3 (contrast) and SC 1.4.12 (text spacing)
 - Vignelli, "A Few Basic Typefaces"; Müller-Brockmann, grid systems
 - Butterick, "Practical Typography"; Bringhurst, "The Elements of Typographic Style"
-- Nielsen Norman Group — first-pass scanning and word-shape recognition
+- Nielsen Norman Group: first-pass scanning and word-shape recognition

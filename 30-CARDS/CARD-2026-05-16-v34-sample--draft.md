@@ -88,7 +88,7 @@ The cap drops from seventy-five to sixty words. The grade target moves from impl
 
 `BLOCK-standard-text` · the honest steelman
 
-**Plain is not thin.** Hemingway's prose tests at grade five because it carries real weight in plain words, not because the words are plain. The discipline is shorter words for the same reasoning — never shorter reasoning for shorter words.
+**Plain is not thin.** Hemingway's prose tests at grade five because it carries real weight in plain words, not because the words are plain. The discipline is shorter words for the same reasoning: never shorter reasoning for shorter words.
 
 ---
 
@@ -99,7 +99,7 @@ The cap drops from seventy-five to sixty words. The grade target moves from impl
 - [ ] Draft each block's content first; ignore the bolded lead-clause until the prose is real
 - [ ] Run the validator's readability check on every prose block (grade level, reading ease)
 - [ ] Count sentences (≤ 3) and words (≤ 60) per block; split when you are over
-- [ ] Add the bolded lead-clause last — 2–6 words, noun phrase or imperative
+- [ ] Add the bolded lead-clause last: 2 to 6 words, noun phrase or imperative
 - [ ] For each section bridge, pick one of the five patterns in G-14; never write "In the next section"
 
 ---
@@ -114,11 +114,11 @@ The cap drops from seventy-five to sixty words. The grade target moves from impl
 
 ## Sources
 
-- Apple HIG — Writing guidelines (Choose simple, plain language. Prioritize clarity.)
-- The Economist Style Guide — five rules for plain English (Orwell heritage)
-- Nielsen Norman Group — Eye-tracking studies on mobile paragraph length (2018, 2021)
-- CDC Plain Language standard — paragraph length recommendations
-- WCAG 2.2 SC 1.4.12 and 3.1.5 — line-height and reading-level floors
+- Apple HIG: Writing guidelines (Choose simple, plain language. Prioritize clarity.)
+- The Economist Style Guide: five rules for plain English (Orwell heritage)
+- Nielsen Norman Group: Eye-tracking studies on mobile paragraph length (2018, 2021)
+- CDC Plain Language standard: paragraph length recommendations
+- WCAG 2.2 SC 1.4.12 and 3.1.5: line-height and reading-level floors
 
 ---
 

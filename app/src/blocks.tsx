@@ -161,7 +161,7 @@ export function NumberedList({
             <span className="marker">{i + 1}</span>
             <span>
               {s.lead ? <strong>{s.lead}</strong> : null}
-              {s.lead ? " — " : null}
+              {s.lead ? ": " : null}
               {s.body}
             </span>
           </li>
