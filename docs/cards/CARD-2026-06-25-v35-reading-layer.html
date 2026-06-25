@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>The Reading Layer, Refined — Supercard V3.5</title>
+<meta name="sc:source_file" content="30-CARDS/CARD-2026-06-25-v35-reading-layer--draft.md">
+<meta name="sc:research_report" content="10-GOVERNANCE/ADR/ADR-0009-v35-reading-layer--accepted.md">
+<meta name="sc:renderer_version" content="v3.5">
+<meta name="sc:frozen_at_version" content="3.5.0">
+<meta name="sc:rendered_at" content="2026-06-25">
+<style>
+  :root {
+    color-scheme: light;
+    --w: #FFFFFF;
+    --g-06: rgba(0,0,0,0.06);
+    --g-12: rgba(0,0,0,0.12);
+    --g-30: rgba(0,0,0,0.30);
+    --g-60: rgba(0,0,0,0.60);
+    --k: #000000;
+    /* V3.5 — R-20 text-ink ladder. Every text step clears WCAG 2.2 SC 1.4.3
+     * (4.5:1): #1A1A1A ≈17.4:1, #595959 ≈7:1, #767676 =4.54:1. The grays
+     * #888 / #BBB / --g-30 are non-text only (hairlines, gridlines, glyph). */
+    --ink: #1A1A1A;
+    --ink-2: #595959;
+    --ink-3: #767676;
+    --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --s-1: 8px;  --s-2: 12px; --s-3: 16px; --s-4: 24px;
+    --s-5: 32px; --s-6: 48px; --s-7: 64px; --s-8: 96px; --s-9: 120px;
+    --shadow-lofted: 0 2px 4px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #E8E8E8;
+    font-family: var(--rounded);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    width: 393px;
+    margin: 0 auto;
+    background: var(--w);
+    min-height: 100vh;
+    padding: 0 16px var(--s-8);
+  }
+
+  /* V3.5 — R-15 default beat gap is 64pt (--s-7), up from 48pt. Micro-spacing
+   * does NOT scale with it. Hairline surface (R-16 default). */
+  section {
+    padding: var(--s-7) 0 var(--s-3);
+    border-bottom: 0.5px solid var(--g-06);
+  }
+  section:first-of-type { padding-top: var(--s-6); }
+  section:last-of-type { border-bottom: none; }
+
+  /* Eyebrow — names the content (G-14), never the position. Tertiary ink
+   * (#767676, 4.54:1) — the only positively-tracked role (R-19). */
+  .eyebrow {
+    font-size: 11px;
+    line-height: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-bottom: var(--s-2);
+  }
+
+  /* R-21 — Header. 40/44, weight 600, display tracking −0.020em (R-19 folds
+   * R-18's tightening in as the default). */
+  h1 {
+    font-size: 40px;
+    line-height: 44px;
+    font-weight: 600;
+    letter-spacing: -0.020em;
+    color: var(--ink);
+    margin-bottom: var(--s-3);
+  }
+
+  /* R-21 — Subhead / large card. One 26/32 step merges the old Tile 28 +
+   * Section 24 + Subtitle 19. Weight + size differentiate. */
+  .tile {
+    font-size: 26px;
+    line-height: 32px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin-bottom: var(--s-3);
+  }
+
+  /* R-19 — body metrics. 17/26, letter-spacing −0.01em, word-spacing normal;
+   * the positive tracking R-9 used is retired. 26pt leading = 1.53, above the
+   * WCAG 1.5 floor. Body prose reads at secondary ink (#595959). */
+  p {
+    font-size: 17px;
+    line-height: 26px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    word-spacing: normal;
+    color: var(--ink-2);
+    margin-bottom: var(--s-2);
+    text-align: left;
+    text-wrap: pretty;
+  }
+  p:last-child { margin-bottom: 0; }
+
+  /* Primary essence — bold lead-clauses read at --ink (#1A1A1A), not pure black. */
+  strong { font-weight: 700; color: var(--ink); }
+  .lede { color: var(--ink); }
+
+  /* R-21 / R-13 — the dek renders at body size + secondary ink, not a 19pt step. */
+  .dek {
+    font-size: 17px;
+    line-height: 26px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+    margin-bottom: var(--s-3);
+  }
+
+  /* Beat 1 — lofted hero */
+  .hero {
+    background: var(--w);
+    border-radius: 16px;
+    padding: var(--s-4);
+    box-shadow: var(--shadow-lofted);
+    margin: var(--s-2) 0 var(--s-3);
+  }
+  .hero .hook {
+    font-size: 19px;
+    line-height: 26px;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+
+  /* Beat 2 — focal stat. Reserved hero-number metrics; primary ink. */
+  .stat {
+    font-size: 56px;
+    line-height: 60px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    margin: var(--s-1) 0;
+  }
+
+  /* Beat 3 — comparison table with takeaway row (G-11). Gridlines use the
+   * non-text grays; text cells use the R-20 ink ladder. */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--s-2) 0;
+    font-size: 15px;
+  }
+  th, td {
+    text-align: left;
+    padding: var(--s-2) var(--s-1);
+    border-bottom: 0.5px solid var(--g-12);
+    line-height: 22px;
+    color: var(--ink-2);
+    vertical-align: top;
+  }
+  th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  td:first-child { color: var(--ink-3); }
+  tr.takeaway-row td {
+    font-weight: 600;
+    color: var(--ink);
+    border-top: 0;
+    padding-top: var(--s-2);
+  }
+
+  /* Beat 7 — key takeaway */
+  .takeaway {
+    font-size: 26px;
+    line-height: 32px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+
+  .sources li { font-size: 13px; line-height: 18px; color: var(--ink-3); display: list-item; padding-left: 0; border-bottom: 0; list-style: none; }
+  .sources { padding-left: var(--s-3); }
+  .sources li::before { content: "—"; color: var(--g-30); margin-right: var(--s-1); }
+
+  /* Corner glyph — fixed-position per R-17. Decorative mono in a non-text gray. */
+  .glyph {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(calc(196px - 100% - 4px));
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--g-30);
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(4px);
+    padding: 4px 7px;
+    border-radius: 6px;
+    border: 0.5px solid var(--g-06);
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+
+    <!-- Beat 1 · Hook — display title + lofted hero -->
+    <section>
+      <div class="eyebrow">The cut</div>
+      <h1>The Reading Layer, Refined</h1>
+      <p class="dek">V3.5 tunes how a card reads — strict grayscale, SF Pro Rounded, no color.</p>
+      <div class="hero">
+        <p class="hook"><strong>Fewer sizes, darker ink, calmer tracking.</strong> V3.5 tunes how a card reads — never what it says.</p>
+      </div>
+      <p class="lede">The words stay the same. The page just reads easier.</p>
+    </section>
+
+    <!-- Beat 2 · Evidence — focal stat: the body-tracking change (R-19) -->
+    <section>
+      <div class="eyebrow">The tracking</div>
+      <div class="tile">Body tracking flips negative.</div>
+      <p>R-9 spaced body text out with positive tracking. That broke the word shapes fast readers rely on. V3.5 retunes body letter-spacing to:</p>
+      <div class="stat">−0.01em</div>
+      <p>with word spacing back to normal. The UPPERCASE eyebrow stays the only positively-tracked role.</p>
+    </section>
+
+    <!-- Beat 3 · Ink ladder — table with takeaway row (G-11), R-20 -->
+    <section>
+      <div class="eyebrow">The ink</div>
+      <div class="tile">Three steps, all readable.</div>
+      <table>
+        <thead>
+          <tr><th>Layer</th><th>Ink</th><th>Contrast</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Primary</td><td>#1A1A1A</td><td>17.4:1</td><td>Headers, focal stats</td></tr>
+          <tr><td>Secondary</td><td>#595959</td><td>7.0:1</td><td>Body prose</td></tr>
+          <tr><td>Tertiary</td><td>#767676</td><td>4.54:1</td><td>Captions, labels</td></tr>
+          <tr class="takeaway-row"><td>Takeaway</td><td>#888 and below</td><td>drop to non-text</td><td>hairlines, gridlines</td></tr>
+        </tbody>
+      </table>
+      <p>Every text step clears the WCAG 4.5:1 floor. De-emphasis is a tonal step down — never a step below readable.</p>
+    </section>
+
+    <!-- Beat 4 · Three sizes — standard-text, bolded lead-clause (R-21) -->
+    <section>
+      <div class="eyebrow">The sizes</div>
+      <div class="tile">Three sizes, then weight and ink.</div>
+      <p><strong>Three sizes carry the whole card.</strong> Header, subhead, and body do the work. Weight, ink, and space set the rest — not a fourth size.</p>
+    </section>
+
+    <!-- Beat 5 · Wider beats — standard-text (R-15) -->
+    <section>
+      <div class="eyebrow">The spacing</div>
+      <div class="tile">Beats breathe wider.</div>
+      <p><strong>Beats sit further apart now.</strong> The default gap grows from 48 to 64 points. More space between ideas reads as more separate ideas.</p>
+    </section>
+
+    <!-- Beat 6 · The guarantee — standard-text (P8 / frozen-at-version) -->
+    <section>
+      <div class="eyebrow">The guarantee</div>
+      <div class="tile">Old cards never move.</div>
+      <p><strong>Old cards never change.</strong> Every card built before this keeps its first look. The new rules touch only the newest cards.</p>
+    </section>
+
+    <!-- Beat 7 · Close — key takeaway -->
+    <section>
+      <div class="eyebrow">The bottom line</div>
+      <p class="takeaway"><strong>Hierarchy from weight, ink, and space — not from more sizes.</strong></p>
+      <p>Read it once, and the system fits in your head.</p>
+    </section>
+
+    <!-- Sources -->
+    <section>
+      <div class="eyebrow">Sources</div>
+      <ul class="sources">
+        <li>Apple — SF Pro tracking table and HIG Writing guidelines</li>
+        <li>WCAG 2.2 — SC 1.4.3 (contrast) and SC 1.4.12 (text spacing)</li>
+        <li>Vignelli, "A Few Basic Typefaces"; Müller-Brockmann, grid systems</li>
+        <li>Butterick, "Practical Typography"; Bringhurst, "Elements of Typographic Style"</li>
+        <li>Nielsen Norman Group — first-pass scanning and word-shape recognition</li>
+      </ul>
+    </section>
+
+  </div>
+  <div class="glyph">◆ supercard · v3.5 atlas</div>
+</body>
+</html>
