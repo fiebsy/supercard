@@ -50,11 +50,23 @@ validator already encode.
 
 ## Canvas
 
+**Full-bleed page surface (V3.6) — the page *is* the card.** The render has **no
+outer wrapper**: `html`, `body`, and the single `.canvas` column all paint flat
+white (`--w`). There is **no grey page moat, no rounded device frame, and no
+outer rounded/shadowed card boxing the content**. The 393pt figure is the
+*content column width* (centered with `margin: 0 auto`), not a phone-shaped card
+floating on a backdrop — the column's edges are marked by faint dotted designer
+guides, not by tonal contrast. If you are generating a card by hand from this
+spec, render the body **edge-to-edge white and let the content fill the
+viewport**; do **not** wrap it in a rounded, shadowed, or grey-backed container.
+The `Card radius: 16pt` below applies **only** to the 1–3 bounded anchor cards
+*inside* the column (Principle 4 / R-22) — never to the page itself.
+
 - **Mobile portrait:** 393 × 852pt (iPhone 15/16 Pro)
 - **Outer gutter:** 16pt
 - **Content width:** 361pt
 - **Internal card pad:** 24pt
-- **Card radius:** 16pt (concentric with iOS 26)
+- **Card radius:** 16pt (concentric with iOS 26) — *bounded anchor cards only, not the page*
 - **Hairline:** 0.5px solid rgba(0,0,0,0.06)
 
 ## Gray ramp (the only ramp)
