@@ -5,10 +5,10 @@
  * from one deployment.
  */
 import { useState } from "react";
-import { cards } from "./cards/registry";
 import { Glyph } from "./blocks";
 
 const SPEC_URL = "https://berafoot.com/llms.txt";
+const REPO_URL = "https://github.com/fiebsy/supercard";
 
 function SpecBlock() {
   const [copied, setCopied] = useState(false);
@@ -80,30 +80,16 @@ function SpecBlock() {
 export function Gallery() {
   return (
     <div className="canvas" style={{ paddingTop: "var(--s-6)" }}>
-      <div className="eyebrow">Supercard · v3.6 Atlas · React</div>
       <h1>Supercard</h1>
       <p className="gallery-lede">
-        A screenshot-shareable, single-emphasis-per-block knowledge card — a
-        cognitive prosthesis. Each card below links to its React render; the
-        mono link opens the standalone HTML twin — same card, same pixels, two
-        render paths.
+        Screenshot-shareable knowledge cards, one emphasis per block.
       </p>
-
-      <div className="section-label">The spec</div>
 
       <SpecBlock />
 
-      <div className="section-label">Cards</div>
-
-      {cards.map((c) => (
-        <a className="card-link" key={c.slug} href={`#/cards/${c.slug}`}>
-          <div className="card-title">{c.title}</div>
-          <div className="card-meta">
-            {c.id} · {c.length} · {c.mode}
-          </div>
-          <div className="card-desc">{c.desc}</div>
-        </a>
-      ))}
+      <a className="repo-link" href={REPO_URL}>
+        github.com/fiebsy/supercard ↗
+      </a>
 
       <Glyph />
     </div>

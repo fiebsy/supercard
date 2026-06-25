@@ -14,8 +14,13 @@
   --g-60: rgba(0, 0, 0, 0.6);
   --k: #000000;
   --ink: #111111;
-  --ink-2: #333333;
-  --ink-3: #555555;
+  /* Secondary/tertiary ink muted a step (was #333 / #555) so the single
+   * per-block emphasis — black <strong>, the dark heading, the focal row —
+   * carries more contrast against everything that isn't in focus. Both still
+   * clear WCAG AA on white (#6b6b6b ≈5.1:1, #767676 =4.54:1). V3.5 cards
+   * redefine these on their own canvas and are unaffected. */
+  --ink-2: #6b6b6b;
+  --ink-3: #767676;
   --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system,
     BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
@@ -138,7 +143,7 @@ em {
   background: var(--w);
   border-radius: 16px;
   border: 1px solid var(--g-12);
-  padding: var(--s-4);
+  padding: var(--s-5);
   margin: var(--s-2) 0 var(--s-3);
 }
 .hero .hook {
@@ -387,6 +392,19 @@ a.card-link:hover {
   color: var(--k);
 }
 
+/* gallery — repo link on the minimalist landing (below the spec block) */
+.repo-link {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--g-60);
+  text-decoration: none;
+  margin-top: var(--s-5);
+}
+.repo-link:hover {
+  color: var(--k);
+}
+
 /*
  * Static spec-discovery block at the top of app/index.html — visible BEFORE
  * the React app mounts so a crawler (or any agent reading the raw HTML) sees
@@ -451,7 +469,7 @@ a.spec-link {
   color: inherit;
   border: 1px solid var(--g-12);
   border-radius: 16px;
-  padding: var(--s-4);
+  padding: var(--s-5);
   margin-bottom: var(--s-2);
   background: var(--w);
 }
@@ -585,7 +603,7 @@ a.spec-link:hover {
   background: var(--surface-tint);
   border-radius: 18px;
   border: 0;
-  padding: var(--s-4);
+  padding: var(--s-5);
   margin: var(--s-2) 0;
 }
 
