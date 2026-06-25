@@ -366,6 +366,29 @@ section.divider h2 {
   color: var(--g-60);
   margin: var(--s-5) 0 var(--s-2);
 }
+/* Hairline above the sample card — replaces the standalone "Sample" label,
+ * which now lives as a badge inside the card. Symmetric 32px margins keep the
+ * spec→sample gap on the same rhythm as the lede→spec gap. */
+.sample-divider {
+  border: 0;
+  border-top: 0.5px solid var(--g-12);
+  margin: var(--s-5) 0;
+}
+/* The "Sample" tag, moved inside the card's top-left as a subtle pill. */
+.sample-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g-60);
+  background: var(--surface-tint);
+  border: 1px solid var(--g-12);
+  border-radius: 999px;
+  padding: 3px 9px;
+  margin-bottom: var(--s-3);
+}
 a.card-link {
   display: block;
   text-decoration: none;
@@ -398,8 +421,9 @@ a.card-link:hover {
   margin-top: var(--s-1);
 }
 /* A small chevron back button on a card view — mirrors the gallery sample
- * card's forward chevron. Aligned to the 393px column so the circle sits above
- * the card title at the same left edge as the body. */
+ * card's forward chevron (same 34px circle). Carries the canvas's dotted side
+ * guides so the 393px column reads as one continuous run from the very top
+ * rather than starting abruptly at the card title. */
 .card-back {
   display: block;
   box-sizing: border-box;
@@ -407,13 +431,15 @@ a.card-link:hover {
   max-width: 100%;
   margin: 0 auto;
   padding: var(--s-4) 16px 0;
+  border-left: 1px dotted var(--g-12);
+  border-right: 1px dotted var(--g-12);
 }
 .card-back-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
   background: var(--k);
   color: var(--w);

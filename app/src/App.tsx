@@ -33,8 +33,8 @@ export function App() {
           <a className="card-back" href="#/" aria-label="Back to gallery">
             <span className="card-back-btn">
               <svg
-                width={18}
-                height={18}
+                width={17}
+                height={17}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

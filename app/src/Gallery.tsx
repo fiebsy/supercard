@@ -155,6 +155,7 @@ function SampleCard({ entry }: { entry: CardEntry }) {
         padding: "var(--s-5)",
       }}
     >
+      <span className="sample-badge">Sample</span>
       <div className="card-title">{entry.title}</div>
       <div
         style={{
@@ -215,7 +216,7 @@ export function Gallery() {
 
       <SpecBlock />
 
-      <div className="section-label">Sample</div>
+      <hr className="sample-divider" />
       {cards.map((c) => (
         <SampleCard key={c.slug} entry={c} />
       ))}
