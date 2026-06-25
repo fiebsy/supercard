@@ -26,7 +26,7 @@ versioned, and rendered.
 | `60-RESEARCH/` | The deep-research-report store — breakdowns + their registry (ADR-0006) |
 | `90-ARCHIVE/` | Frozen V1/V2 era + retired V3 minor versions |
 | `docs/` | Published Supercard renders — the gallery + one HTML per card, viewable online (ADR-0007) |
-| `docs/spec/` | The public, machine-readable spec — a progressive-disclosure JSON tree generated from the canonical markdown (`app/scripts/build-spec.mjs`) |
+| `docs/llms.txt` | The public spec — one self-contained file generated from the canonical markdown (`app/scripts/build-spec.mjs`). Served at `/llms.txt`; the single URL an agent needs (ADR-0012) |
 
 ## Start here
 

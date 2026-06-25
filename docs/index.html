@@ -4,18 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Supercard v3 Atlas — gallery and public spec</title>
-<meta name="description" content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. Published cards plus the machine-readable v3 'Atlas' spec at /spec/index.json.">
+<title>Supercard — one URL, the whole spec</title>
+<meta name="description" content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. The complete spec for agents lives in one self-contained file: /llms.txt. Plus a gallery of published cards.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://berafoot.com/html/index.html">
-<link rel="alternate" type="application/json" title="Supercard v3 — machine-readable spec (manifest)" href="/spec/index.json">
+<link rel="canonical" href="https://berafoot.com/">
+<link rel="alternate" type="text/plain" title="Supercard — the complete spec, in one file" href="/llms.txt">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Supercard v3 Atlas — gallery and public spec">
-<meta property="og:description" content="Published Supercards plus the machine-readable v3 spec at /spec/index.json.">
-<meta property="og:url" content="https://berafoot.com/html/index.html">
+<meta property="og:title" content="Supercard — one URL, the whole spec">
+<meta property="og:description" content="A screenshot-shareable knowledge card format. The complete, self-contained agent spec lives at /llms.txt.">
+<meta property="og:url" content="https://berafoot.com/">
 <meta name="sc:type" content="gallery">
 <meta name="sc:era" content="atlas">
-<meta name="sc:updated" content="2026-05-14">
+<meta name="sc:updated" content="2026-06-25">
 <style>
   :root {
     color-scheme: light;
@@ -25,14 +25,13 @@
     --g-30: rgba(0,0,0,0.30);
     --g-60: rgba(0,0,0,0.60);
     --k: #000000;
-    --ink: #111111;
-    --ink-2: #333333;
-    --ink-3: #555555;
+    --ink: #1A1A1A;
+    --ink-2: #595959;
+    --ink-3: #767676;
     --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
     --s-1: 8px;  --s-2: 12px; --s-3: 16px; --s-4: 24px;
     --s-5: 32px; --s-6: 48px; --s-7: 64px; --s-8: 96px;
-    --shadow-subtle: 0 1px 2px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.04);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,11 +55,11 @@
     font-size: 11px;
     line-height: 14px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: normal;
     color: var(--g-60);
     margin-bottom: var(--s-3);
   }
+  .eyebrow::first-letter { text-transform: uppercase; }
 
   h1 {
     font-size: 40px;
@@ -72,7 +71,7 @@
 
   .lede {
     font-size: 17px;
-    line-height: 24px;
+    line-height: 26px;
     font-weight: 400;
     letter-spacing: -0.008em;
     color: var(--ink-2);
@@ -83,24 +82,81 @@
     font-size: 11px;
     line-height: 14px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: normal;
     color: var(--g-60);
     margin: var(--s-5) 0 var(--s-2);
   }
+  .section-label::first-letter { text-transform: uppercase; }
+
+  /* The spec: one URL, copy-paste. The whole point of the page. */
+  .spec {
+    border: 1px solid var(--g-12);
+    border-radius: 16px;
+    padding: var(--s-4);
+    background: var(--w);
+    margin-bottom: var(--s-2);
+  }
+  .spec-title {
+    font-size: 17px;
+    line-height: 24px;
+    font-weight: 600;
+    letter-spacing: -0.008em;
+    margin-bottom: var(--s-1);
+  }
+  .spec-desc {
+    font-size: 15px;
+    line-height: 21px;
+    color: var(--ink-3);
+    margin-bottom: var(--s-3);
+  }
+  .url-row {
+    display: flex;
+    align-items: stretch;
+    gap: var(--s-1);
+  }
+  .url {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink);
+    background: rgba(0,0,0,0.025);
+    border: 1px solid var(--g-12);
+    border-radius: 10px;
+    padding: 0 var(--s-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .copy-btn {
+    flex: 0 0 auto;
+    font-family: var(--rounded);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--w);
+    background: var(--k);
+    border: 0;
+    border-radius: 10px;
+    padding: 10px var(--s-3);
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .copy-btn:hover { opacity: 0.82; }
+  .copy-btn.copied { background: var(--ink-2); }
 
   a.card-link {
     display: block;
     text-decoration: none;
     color: inherit;
-    border: 0.5px solid var(--g-06);
+    border: 1px solid var(--g-12);
     border-radius: 16px;
     padding: var(--s-4);
     margin-bottom: var(--s-2);
-    box-shadow: var(--shadow-subtle);
     background: var(--w);
   }
-  a.card-link:hover { border-color: var(--g-12); }
+  a.card-link:hover { border-color: var(--g-30); }
 
   .card-title {
     font-size: 24px;
@@ -121,38 +177,6 @@
     margin-top: var(--s-1);
   }
 
-  a.spec-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    border: 0.5px solid var(--g-06);
-    border-radius: 16px;
-    padding: var(--s-4);
-    margin-bottom: var(--s-2);
-    background: var(--w);
-  }
-  a.spec-link:hover { border-color: var(--g-12); }
-  .spec-link-title {
-    font-size: 17px;
-    line-height: 24px;
-    font-weight: 600;
-    letter-spacing: -0.008em;
-    margin-bottom: var(--s-1);
-  }
-  .spec-link-url {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--g-60);
-    margin-top: var(--s-1);
-    word-break: break-all;
-  }
-
-  p.empty {
-    font-size: 15px;
-    line-height: 21px;
-    color: var(--g-60);
-  }
-
   /* corner glyph — consistent with rendered cards */
   .glyph {
     position: fixed;
@@ -167,7 +191,7 @@
     backdrop-filter: blur(4px);
     padding: 4px 7px;
     border-radius: 6px;
-    border: 0.5px solid var(--g-06);
+    border: 1px solid var(--g-12);
     user-select: none;
   }
 </style>
@@ -175,37 +199,35 @@
 <body>
   <div class="canvas">
 
-    <div class="eyebrow">Supercard · v3.0 Atlas</div>
-    <h1>Gallery</h1>
-    <p class="lede">Every rendered Supercard, published from the repo. Each card links to its standalone render — open it, screenshot it, react to it.</p>
+    <div class="eyebrow">Supercard · v3.6 Atlas</div>
+    <h1>Supercard</h1>
+    <p class="lede">A screenshot-shareable, single-emphasis-per-block knowledge card — a cognitive prosthesis. Every region stands on its own: a stranger seeing only a cropped screenshot still gets one complete idea. Strict grayscale, SF Pro Rounded, no chrome.</p>
 
     <!--
       To add a card: render it to docs/cards/CARD-{date}-{slug}.html per
-      RENDERING-spec, then add an <a class="card-link"> entry below.
-      Newest at top. See docs/README.md and ADR-0007.
+      RENDERING-spec, then add an <a class="card-link"> entry below (the
+      renderer upserts it automatically). Newest at top. See docs/README.md
+      and ADR-0007.
     -->
 
-    <div class="section-label">Spec</div>
+    <div class="section-label">The spec</div>
 
-    <a class="spec-link" href="/spec/index.json">
-      <div class="spec-link-title">Manifest — /spec/index.json</div>
-      <div class="card-desc">Progressive-disclosure JSON tree. Fetch the manifest first; it carries the absolute URL of every layer plus a Vercel-app fallback URL for each.</div>
-      <div class="spec-link-url">berafoot.com/spec/index.json</div>
-    </a>
-
-    <a class="spec-link" href="https://supercard-seven.vercel.app/spec/index.json">
-      <div class="spec-link-title">Vercel-app fallback</div>
-      <div class="card-desc">Same deployment, alternate host. Use this if the apex domain isn't reachable from your environment.</div>
-      <div class="spec-link-url">supercard-seven.vercel.app/spec/index.json</div>
-    </a>
-
-    <a class="spec-link" href="/spec/PROMPT.md">
-      <div class="spec-link-title">Drop-in agent prompt</div>
-      <div class="card-desc">Paste into any LLM's system prompt so it always builds Supercards from the live spec.</div>
-      <div class="spec-link-url">berafoot.com/spec/PROMPT.md</div>
-    </a>
+    <div class="spec">
+      <div class="spec-title">One URL. The whole spec.</div>
+      <div class="spec-desc">Everything an agent needs to build, render, or judge a Supercard — principles, grammar, blocks, pipeline, tokens — lives in one self-contained <code>llms.txt</code> file. Point any LLM at it; there's nothing else to fetch.</div>
+      <div class="url-row">
+        <span class="url" id="spec-url">https://berafoot.com/llms.txt</span>
+        <button class="copy-btn" id="copy-btn" type="button" aria-label="Copy the spec URL">Copy</button>
+      </div>
+    </div>
 
     <div class="section-label">Cards</div>
+
+    <a class="card-link" href="cards/CARD-2026-05-14-musk-altman-openai-trial.html">
+      <div class="card-title">Musk v. Altman: the OpenAI Trial</div>
+      <div class="card-meta">CARD-2026-05-14-musk-altman-openai-trial · mini · v3.0 active</div>
+      <div class="card-desc">ai, openai, litigation, musk, altman</div>
+    </a>
     <a class="card-link" href="cards/CARD-2026-06-25-v35-reading-layer.html">
       <div class="card-title">The Reading Layer, Refined</div>
       <div class="card-meta">CARD-2026-06-25-v35-reading-layer · mini · v3.5 sample</div>
@@ -228,6 +250,35 @@
     </a>
 
   </div>
-  <div class="glyph">◆ supercard · v3.0 atlas</div>
+  <div class="glyph">◆ supercard · v3.6 atlas</div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById("copy-btn");
+      var url = document.getElementById("spec-url").textContent.trim();
+      btn.addEventListener("click", function () {
+        function done() {
+          btn.textContent = "Copied";
+          btn.classList.add("copied");
+          setTimeout(function () {
+            btn.textContent = "Copy";
+            btn.classList.remove("copied");
+          }, 1600);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(done, done);
+        } else {
+          var r = document.createRange();
+          r.selectNode(document.getElementById("spec-url"));
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(r);
+          try { document.execCommand("copy"); } catch (e) {}
+          sel.removeAllRanges();
+          done();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

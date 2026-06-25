@@ -1,12 +1,14 @@
 # Drift-check for the public Supercard spec.
 #
-# docs/spec/*.json is a GENERATED view of the canonical markdown in
+# docs/llms.txt is a GENERATED view of the canonical markdown in
 # 10-GOVERNANCE/ and 00-INDEX/ (built by app/scripts/build-spec.mjs). The
-# markdown is the source of truth; the JSON must always reflect it.
+# markdown is the source of truth; the llms.txt must always reflect it
+# (ADR-0013).
 #
-# This workflow regenerates the spec and fails if the committed docs/spec/
+# This workflow regenerates the spec and fails if the committed docs/llms.txt
 # is out of sync — i.e. someone edited a governance doc without running
-# `npm --prefix app run spec`. The fix is in the failure message.
+# `npm --prefix app run spec` — or if the retired docs/spec/ JSON tree
+# reappears. The fix is in the failure message.
 name: spec-drift
 
 on:
@@ -16,6 +18,7 @@ on:
       - "10-GOVERNANCE/**"
       - "00-INDEX/**"
       - "app/scripts/build-spec.mjs"
+      - "docs/llms.txt"
       - "docs/spec/**"
       - ".github/workflows/spec-drift.yml"
   pull_request:
@@ -23,6 +26,7 @@ on:
       - "10-GOVERNANCE/**"
       - "00-INDEX/**"
       - "app/scripts/build-spec.mjs"
+      - "docs/llms.txt"
       - "docs/spec/**"
       - ".github/workflows/spec-drift.yml"
 
@@ -34,5 +38,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Verify docs/spec/ is in sync with the canonical markdown
+      - name: Verify docs/llms.txt is in sync with the canonical markdown
         run: npm --prefix app run spec:check

@@ -5,7 +5,7 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.6.0 |
+| version | 3.6.2 |
 | owner | derick |
 | updated | 2026-06-25 |
 
@@ -115,10 +115,16 @@ ls docs/cards/
 | 0009 | V3.5 reading-layer refinement (R-19/R-20/R-21) | Accepted | 2026-06-25 |
 | 0010 | Deterministic renderer (`render-card.mjs`) | Accepted | 2026-06-25 |
 | 0011 | V3.6 surface refinement (R-22/R-23/R-24, retroactive) | Accepted | 2026-06-25 |
+| 0012 | Single self-contained `llms.txt` spec (supersedes 0008) | Accepted | 2026-06-25 |
+| 0013 | Sentence-case labels, centered separators, editorial eyebrows (R-25/R-26) | Accepted | 2026-06-25 |
 
 ## Change-log pointer
 
-The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entry:
+The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.6.2** — Delivery format. The public spec is now one self-contained `llms.txt` at `https://berafoot.com/llms.txt`, replacing the V3.1–V3.6 progressive-disclosure JSON tree at `docs/spec/`. No content rule changed; `app/scripts/build-spec.mjs` inlines and normalizes the canonical markdown into one file, still drift-checked in CI. Old `/spec/*.json` URLs 301-redirect to `/llms.txt`. (ADR-0012, superseding ADR-0008.)
+
+**v3.6.1** — Label-and-separator refinement. Added R-25 (sentence-case labels — eyebrow / `th` / divider / gallery section-label drop UPPERCASE, tracking returns to 0) and R-26 (centered separators — symmetric `section` padding). The React render path stops stamping the beat name on every block, adopting content-naming editorial eyebrows. Retroactive like V3.6.0. (ADR-0013.)
 
 **v3.6.0** — Surface refinement. Added R-22 (flat surfaces — shadows retired system-wide; the `--shadow-*` tokens are deleted and an anchor card is bounded by border + radius + padding), R-23 (heavier hairline — borders step from `--g-06` to `--g-12`, anchor cards to 1px), R-24 (no em dash in reader-visible card content; asterism rest retired — supersedes R-11/G-10). Amended Principle 4 ("bounded," not "lofted") and R-13. **Not backwards-compatible by design:** unlike every prior version, R-22/R-23/R-24's visual rules apply to every card on re-render regardless of `frozen_at_version` (the CSS lives at base level), and em dashes are stripped from all existing sources — the deliberate exception to the frozen-at-version guarantee (ADR-0011). The reading-layer rules (R-9/R-19, R-20, R-21) remain frozen and untouched. (ADR-0011.)
 
@@ -150,12 +156,12 @@ The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most r
 - Templates → `50-TEMPLATES/`
 - Research reports → `60-RESEARCH/` (registry: `INDEX-research-reports`)
 - Published renders → `docs/` (gallery: `docs/index.html`)
-- Public machine-readable spec → **https://berafoot.com/spec/index.json** (source: `docs/spec/`)
+- Public spec → **https://berafoot.com/llms.txt** (source: `docs/llms.txt`)
 
 ## Public spec endpoint
 
-The canonical entry point for any LLM or agent — **https://berafoot.com/spec/index.json**. For anything Supercard-related, this URL is the single source of truth; the drop-in instruction prompt for agents is at `docs/spec/PROMPT.md` (also served at `/spec/PROMPT.md`).
+The canonical entry point for any LLM or agent — **https://berafoot.com/llms.txt**. For anything Supercard-related, this one URL is the single source of truth: it is self-contained, so an agent fetches it and has the complete spec (principles, grammar, lengths, block library, pipeline, rendering + tokens, glossary, worked example) with nothing else to chain.
 
-For an agent working from a URL with no checkout, the canonical docs above are also published as a progressive-disclosure JSON tree at `docs/spec/`. Fetch `spec/index.json` (the manifest), then drill into only the layers a task needs — `agent-guide`, `tokens`, `principles`, `grammar`, `lengths`, `blocks`, `pipeline`, `rendering`. The JSON is a *generated view* of the markdown in `10-GOVERNANCE/` and `00-INDEX/` (the markdown stays the source of truth, ADR-0003); `app/scripts/build-spec.mjs` regenerates it and the `spec-drift` GitHub Action fails CI if the two ever diverge.
+The file is a *generated view* of the canonical markdown in `10-GOVERNANCE/` and `00-INDEX/` (the markdown stays the source of truth, ADR-0003); `app/scripts/build-spec.mjs` inlines and normalizes those docs into one `llms.txt`, and the `spec-drift` GitHub Action fails CI if the two ever diverge. This replaces the V3.1–V3.6 progressive-disclosure JSON tree at `docs/spec/` — one self-contained file in the `llms.txt` convention, not a manifest plus ten layers (ADR-0012, superseding ADR-0008). Old `/spec/*.json` URLs 301-redirect to `/llms.txt`.
 
-It is served publicly through the **Vercel deployment**, which publishes a private repo to a public URL — the repo itself stays private. The Vercel build copies `docs/` into the deployment and `vercel.json` rewrites `/spec/*` to it. The manifest's layer links are relative, so it works from whatever domain serves it.
+It is served publicly through the **Vercel deployment**, which publishes a private repo to a public URL — the repo itself stays private. The Vercel build copies `docs/` into the deployment and `vercel.json` rewrites `/llms.txt` to it.

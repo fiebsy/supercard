@@ -1,6 +1,6 @@
 # Supercard — public spec and gallery. Crawl everything; nothing here is
-# private. The machine-readable spec at /spec/index.json is the entry
-# point — sitemap below lists every layer.
+# private. The complete, self-contained spec is one file at /llms.txt —
+# see the sitemap below.
 User-agent: *
 Allow: /
 

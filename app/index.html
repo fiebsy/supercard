@@ -4,31 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light" />
-    <title>Supercard v3 Atlas — public spec and gallery</title>
+    <title>Supercard — one URL, the whole spec</title>
     <meta
       name="description"
-      content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. This site hosts the machine-readable v3 'Atlas' spec as a progressive-disclosure JSON tree at /spec/index.json, plus a gallery of published cards."
+      content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. The complete, self-contained agent spec lives in one file at /llms.txt, plus a gallery of published cards."
     />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://berafoot.com/" />
     <link
       rel="alternate"
-      type="application/json"
-      title="Supercard v3 — machine-readable spec (manifest)"
-      href="/spec/index.json"
+      type="text/plain"
+      title="Supercard — the complete spec, in one file"
+      href="/llms.txt"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Supercard v3 Atlas — public spec and gallery" />
+    <meta property="og:title" content="Supercard — one URL, the whole spec" />
     <meta
       property="og:description"
-      content="Machine-readable Supercard v3 spec as a progressive-disclosure JSON tree. Fetch /spec/index.json to start."
+      content="The complete, self-contained Supercard spec for agents. Fetch /llms.txt — nothing else to chain."
     />
     <meta property="og:url" content="https://berafoot.com/" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Supercard v3 Atlas — public spec and gallery" />
+    <meta name="twitter:title" content="Supercard — one URL, the whole spec" />
     <meta
       name="twitter:description"
-      content="Machine-readable Supercard v3 spec as a progressive-disclosure JSON tree. Fetch /spec/index.json to start."
+      content="The complete, self-contained Supercard spec for agents. Fetch /llms.txt — nothing else to chain."
     />
     <meta name="sc:type" content="react-app" />
     <meta name="sc:era" content="atlas" />
@@ -42,34 +42,31 @@
       DOM (see #spec-discovery rule in supercard.css).
     -->
     <aside id="spec-discovery">
-      <h1>Supercard v3 spec — Atlas manifest</h1>
+      <h1>Supercard — the complete spec, in one file</h1>
       <p>
         Supercard is a screenshot-shareable, single-emphasis-per-block
-        knowledge artifact — a cognitive prosthesis. The full
-        machine-readable Supercard v3 specification is published here as
-        a progressive-disclosure JSON tree.
+        knowledge artifact — a cognitive prosthesis. The complete,
+        self-contained Supercard specification is published here as a
+        single <code>llms.txt</code> file: everything an agent needs to
+        build, render, or judge a card, with nothing else to chain.
       </p>
       <p><strong>Start here:</strong></p>
       <ul>
         <li>
-          Manifest (canonical):
-          <a href="https://berafoot.com/spec/index.json"
-            >berafoot.com/spec/index.json</a
-          >
+          Spec (canonical):
+          <a href="https://berafoot.com/llms.txt">berafoot.com/llms.txt</a>
         </li>
         <li>
-          Manifest (Vercel-app fallback):
-          <a href="https://supercard-seven.vercel.app/spec/index.json"
-            >supercard-seven.vercel.app/spec/index.json</a
+          Spec (Vercel-app fallback):
+          <a href="https://supercard-seven.vercel.app/llms.txt"
+            >supercard-seven.vercel.app/llms.txt</a
           >
         </li>
-        <li>Agent guide: <a href="/spec/agent-guide.json">/spec/agent-guide.json</a></li>
-        <li>Drop-in prompt: <a href="/spec/PROMPT.md">/spec/PROMPT.md</a></li>
       </ul>
       <p>
-        Every layer's absolute URL is in the manifest's
-        <code>layers[].url</code> and <code>bootstrap_urls</code>, with
-        a Vercel-app fallback in <code>mirror_urls.by_layer</code>.
+        Drop-in instruction for any agent: treat
+        <code>/llms.txt</code> as the single source of truth for anything
+        "Supercard" and build from it alone.
       </p>
     </aside>
     <div id="root"></div>

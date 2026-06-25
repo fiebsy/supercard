@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Plain Language as Substance — Supercard V3.4</title>
-<meta name="sc:source_file" content="30-CARDS/CARD-2026-05-16-v34-sample--draft.md">
-<meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-v34-sample.md">
+<title>Musk v. Altman: the OpenAI Trial — Supercard V3.0</title>
+<meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-musk-altman-openai-trial--draft.md">
+<meta name="sc:research_report" content="">
 <meta name="sc:renderer_version" content="v3.6">
-<meta name="sc:frozen_at_version" content="3.4.0">
+<meta name="sc:frozen_at_version" content="3.0.0">
 <meta name="sc:rendered_at" content="2026-06-25">
-<meta name="sc:content_hash" content="034b2060cf28d6adea76ac1d72f4ee298c26b6d2fe9168f173a8a4a136a83403">
+<meta name="sc:content_hash" content="38d779651967a0a4152416047a56c020fd99fbcc89c7f1d5b56e8d8693a92c07">
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this
      card's frozen_at_version rule library (ADR-0010). Do not hand-edit. -->
@@ -85,7 +85,7 @@ a {
   padding: 0 16px var(--s-8);
 }
 
-/* V3.6.1 (ADR-0013): section vertical padding is symmetric so the bottom
+/* V3.6.1 (ADR-0012): section vertical padding is symmetric so the bottom
  * hairline sits evenly gapped between the two beats it divides — it no longer
  * hugs the section above. */
 section {
@@ -99,7 +99,7 @@ section:last-of-type {
 /* section label — a short editorial label that names the block's CONTENT
  * (e.g. "The founding experiment"); never a beat name, "Beat N", or a BLOCK-*
  * id. Those are authoring metadata, kept in the markdown source.
- * V3.6.1 (ADR-0013): sentence case, not UPPERCASE — the only forced cap is the
+ * V3.6.1 (ADR-0012): sentence case, not UPPERCASE — the only forced cap is the
  * first letter (::first-letter), so word-shape is preserved and the positive
  * tracking that UPPERCASE required is dropped. */
 .eyebrow {
@@ -274,7 +274,7 @@ blockquote.pull {
   letter-spacing: -0.012em;
 }
 
-/* section divider — beat boundary, not paragraph break. V3.6.1 (ADR-0013):
+/* section divider — beat boundary, not paragraph break. V3.6.1 (ADR-0012):
  * symmetric padding (breathier than a regular section, but evenly gapped on
  * both sides of its hairlines). */
 section.divider {
@@ -715,7 +715,7 @@ a.spec-link:hover {
 /* R-15 — V3.5 default beat gap is 64pt (--s-7), up from 48pt. Opt down to 48pt
  * for dense reference cards via .beat-gap-48; up to 96/120 for poster moments.
  * Micro-spacing does NOT scale with the beat gap. */
-/* V3.6.1 (ADR-0013): symmetric top+bottom so the beat gap stays centered on
+/* V3.6.1 (ADR-0012): symmetric top+bottom so the beat gap stays centered on
  * every hairline, not just above each section. */
 .canvas.v3-5 section {
   padding-top: var(--s-7);
@@ -735,7 +735,7 @@ a.spec-link:hover {
 }
 
 /* R-20 — the eyebrow + table head read at tertiary ink (#767676, 4.54:1), not
- * --g-60. V3.6.1 (ADR-0013): labels are sentence case, so the +0.08em positive
+ * --g-60. V3.6.1 (ADR-0012): labels are sentence case, so the +0.08em positive
  * tracking that UPPERCASE required is gone — neutral tracking preserves the
  * word-shape sentence case restores. */
 .canvas.v3-5 .eyebrow,
@@ -773,94 +773,75 @@ a.spec-link:hover {
 </style>
 </head>
 <body>
-  <div class="canvas v3-1 v3-4 beat-gap-64">
+  <div class="canvas">
 
     <section>
       <div class="eyebrow">the one elevated element on this card</div>
-      <h1>Plain Language as Substance</h1>
+      <h1>Musk v. Altman: the OpenAI Trial</h1>
       <div class="hero">
-        <p class="hook"><strong>The substance survives the simplicity.</strong> A reader with no context should still get the gist of the card.</p>
+        <p class="hook">Two men co-founded OpenAI as a nonprofit in 2015. A decade later they are in federal court over one question: did Elon Musk's early donation <strong>legally bind OpenAI to stay a nonprofit forever?</strong></p>
       </div>
-      <p class="lede">HERO-CARD: <strong>Plain Language as Substance</strong></p>
-      <p>Short words carry real reasoning when the thinking is clear. That is the V3.4 readability cut in one line.</p>
+      <p class="lede">HERO-CARD: <strong>Musk v. Altman</strong></p>
+      <p><strong>Lede.</strong> Musk says he was duped into bankrolling a charity that quietly became
+an ~$800B company; OpenAI says no such promise was ever made and Musk is a rival
+with regrets. As of mid-May 2026 the trial is in closing arguments in Oakland.</p>
     </section>
 
     <section>
-      <div class="eyebrow">single focal number, surface-tinted per R-16</div>
-      <p>Most mobile readers stop reading at the third sentence. The research is consistent:</p>
-      <div class="stat">60 words</div>
-      <p>is the soft cap a paragraph should target on a phone. Past sixty, eye-tracking studies show the reader gives up before the period.</p>
+      <div class="eyebrow">single focal number</div>
+      <p>Musk told the jury he handed OpenAI "essentially free funding" in its earliest
+years — roughly</p>
+      <div class="stat">$38M</div>
+      <p>— money he says helped build a company later valued by its own president at more
+than $850 billion. That asymmetry is the engine of the entire case.</p>
     </section>
 
     <section>
-      <div class="eyebrow">the bridge vocabulary, opening</div>
-      <p><strong>Five bridge patterns.</strong> A V3.4 card bridges its sections with one of five named shapes. The dominant form is an eyebrow plus tagline pair, in which the eyebrow names the topic and the tagline lands the claim.</p>
+      <div class="eyebrow">the legal crux</div>
+      <p><strong>Charitable trust</strong> — the legal theory the whole trial turns on. Musk argues
+his donation created a binding obligation forcing OpenAI to remain a nonprofit
+serving its founding mission; OpenAI argues no enforceable promise ever existed.
+The jury weighs only two surviving claims, fraud and unjust enrichment — and
+even then <strong>only as advice</strong>.</p>
     </section>
 
     <section>
-      <div class="eyebrow">the bridge vocabulary, the other four</div>
-      <p><strong>The other four shapes.</strong> They are the two-sentence haiku, the "Built / Designed / Engineered" imperative, the inline "Now you can…" kicker, and the single-word eyebrow. All five name the content; none of them name the position.</p>
-    </section>
-
-    <section>
-      <div class="eyebrow">two things on the same axis</div>
-      <table>
-        <thead>
-          <tr><th></th><th>Before V3.4</th><th>After V3.4</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Paragraph cap</td><td>75 words, 4 sentences (G-8)</td><td>60 words, 3 sentences (G-12)</td></tr>
-          <tr><td>Grade target</td><td>(unspecified)</td><td>Flesch–Kincaid ≤ 9 (G-13)</td></tr>
-          <tr><td>Section bridge</td><td>(unspecified)</td><td>Five-pattern vocabulary (G-14)</td></tr>
-          <tr class="takeaway-row"><td><strong>Takeaway</strong></td><td>Walls of valid prose</td><td>Beats that breathe</td></tr>
-        </tbody>
-      </table>
-      <p>The cap drops from seventy-five to sixty words. The grade target moves from implicit to measured.</p>
-    </section>
-
-    <section>
-      <div class="eyebrow">the honest steelman</div>
-      <p><strong>Plain is not thin.</strong> Hemingway's prose tests at grade five because it carries real weight in plain words, not because the words are plain. The discipline is shorter words for the same reasoning: never shorter reasoning for shorter words.</p>
-    </section>
-
-    <section>
-      <div class="eyebrow">so what / how to act</div>
+      <div class="eyebrow">how to read the outcome</div>
       <ul class="sources">
-        <li>[ ] Draft each block's content first; ignore the bolded lead-clause until the prose is real</li>
-        <li>[ ] Run the validator's readability check on every prose block (grade level, reading ease)</li>
-        <li>[ ] Count sentences (≤ 3) and words (≤ 60) per block; split when you are over</li>
-        <li>[ ] Add the bolded lead-clause last: 2 to 6 words, noun phrase or imperative</li>
-        <li>[ ] For each section bridge, pick one of the five patterns in G-14; never write "In the next section"</li>
+        <li>[ ] Watch the two phases separately — a liability finding is not the same as a $130B award or a corporate unwind</li>
+        <li>[ ] Treat the jury verdict as advisory — Judge Gonzalez Rogers can override it and decides remedies alone</li>
+        <li>[ ] Track the real stakes — Musk wants the for-profit conversion reversed and Altman ousted, not just damages</li>
       </ul>
     </section>
 
     <section>
       <div class="eyebrow">bottom line</div>
-      <p><strong>Clarity of writing follows clarity of thought.</strong> Same hours, same material; the difference is whether the reader still has it in six months.</p>
+      <p><strong>This was never really about the money — it's about whether a donation can
+freeze a company's mission forever.</strong> The verdict will be loud; with an advisory
+jury and a judge holding the final word, it won't be the last word.</p>
     </section>
 
     <section>
       <ul class="sources">
-        <li>Apple HIG: Writing guidelines (Choose simple, plain language. Prioritize clarity.)</li>
-        <li>The Economist Style Guide: five rules for plain English (Orwell heritage)</li>
-        <li>Nielsen Norman Group: Eye-tracking studies on mobile paragraph length (2018, 2021)</li>
-        <li>CDC Plain Language standard: paragraph length recommendations</li>
-        <li>WCAG 2.2 SC 1.4.12 and 3.1.5: line-height and reading-level floors</li>
+        <li>Wikipedia — "Musk v. Altman" — case timeline, parties, claims, restructuring</li>
+        <li>CNBC — Musk v. Altman trial coverage — Apr–May 2026 — jury, testimony, structure</li>
+        <li>MIT Technology Review — "Musk v. Altman week 1 &amp; 2" — May 2026 — testimony</li>
+        <li>NPR — "Sam Altman takes the stand" — 2026-05-12</li>
       </ul>
+      <p>Full sourcing in <code>40-LAB/BREAKDOWN-musk-altman-openai-trial.md</code>.</p>
     </section>
 
     <section>
-      <p>(End-of-card notes are authoring-only and live below the close.)</p>
       <ul class="sources">
-        <li>Chose Mini over Standard because the card is a discipline demo, not an exhaustive treatment.</li>
-        <li>Evidence section declares the surface-tinted variant (R-16) because its single stat is the page's one elevated moment.</li>
-        <li>Section gaps run at sixty-four points (R-15) because the card's Display moment earns marketing-scale breathing room.</li>
-        <li>Every prose block sits at grade seven or lower on the F-K scale; mean sentence length holds at twelve to fifteen words.</li>
-        <li>No transition uses position-language or meta-language. Each section eyebrow names the content; the first block's lead-clause does the bridge.</li>
+        <li>Mode <code>summary</code> → Mini. Beats 4 (Comparison) and 5 (Counter) are deliberately</li>
+        <li>Beat 2 uses a single <code>stat-callout</code> ($38M) rather than a grid: the load-bearing</li>
+        <li>Beat 3 chose <code>definition</code> over <code>numbered-principle</code>: the mechanism of this</li>
+        <li>Only the hero is lofted — 1 of the 1–3 elevation budget. Beats 2, 3, 6, 7 are</li>
+        <li>The ~$38M figure is what trial filings and OpenAI use; Wikipedia cites ~$44M</li>
       </ul>
     </section>
 
   </div>
-  <div class="glyph">◆ supercard · v3.4 atlas</div>
+  <div class="glyph">◆ supercard · v3.0 atlas</div>
 </body>
 </html>

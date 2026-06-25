@@ -227,11 +227,11 @@ Bridges between beats use one of the five Apple-validated patterns. Position-lan
 
 **The five patterns** (any of these counts as a beat bridge; combinations are fine):
 
-1. **Eyebrow + tagline pair.** A short uppercase eyebrow names the topic (≤ 4 words, per R-14); a tile-sized headline (28/32, semibold) lands the claim. The dominant pattern. Example: *"The evidence / It cuts both ways."*
+1. **Eyebrow + tagline pair.** A short sentence-case eyebrow names the topic (≤ 4 words, per R-14; sentence case not UPPERCASE, per R-25); a tile-sized headline (28/32, semibold) lands the claim. The dominant pattern. Example: *"The evidence / It cuts both ways."*
 2. **Two-sentence haiku.** One headline holding two clipped sentences. Example: *"M5. The chip that zips."* The break is a period or colon (the em dash is banned in card content — R-24); both halves live in one Display-sized block.
 3. **"Built to / Designed to / Engineered for" imperative.** Three-to-six-word imperative headlines. Example: *"Built for AI. From the silicon up."*
 4. **Inline "Now you can…" kicker.** A bridging sentence inside a `standard-text` block, never as a section break. Example: *"All-new heart rate sensing. Now you can track your heart rate and calories burned during workouts."*
-5. **Single-word eyebrow.** Sometimes the entire section bridge is one uppercase word. Example: *"Performance."* The eyebrow is the bridge; the headline supplies the claim; the body supplies the proof.
+5. **Single-word eyebrow.** Sometimes the entire section bridge is one sentence-case word. Example: *"Performance."* The eyebrow is the bridge; the headline supplies the claim; the body supplies the proof.
 
 **Forbidden** (each adds a row to the anti-patterns table below):
 

@@ -6,45 +6,9 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://berafoot.com/spec/index.json</loc>
+    <loc>https://berafoot.com/llms.txt</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/agent-guide.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/principles.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/grammar.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/lengths.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/tokens.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/blocks.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/pipeline.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/rendering.json</loc>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://berafoot.com/spec/PROMPT.md</loc>
-    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://berafoot.com/html/index.html</loc>

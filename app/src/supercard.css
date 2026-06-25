@@ -68,24 +68,33 @@ a {
   padding: 0 16px var(--s-8);
 }
 
+/* V3.6.1 (ADR-0013): section vertical padding is symmetric so the bottom
+ * hairline sits evenly gapped between the two beats it divides — it no longer
+ * hugs the section above. */
 section {
-  padding: var(--s-6) 0 var(--s-3);
+  padding: var(--s-6) 0;
   border-bottom: 0.5px solid var(--g-12);
 }
 section:last-of-type {
   border-bottom: none;
 }
 
-/* section label — the beat NAME only (e.g. "CLOSE"); never "Beat N" or a
- * BLOCK-* id. Those are authoring metadata, kept in the markdown source. */
+/* section label — a short editorial label that names the block's CONTENT
+ * (e.g. "The founding experiment"); never a beat name, "Beat N", or a BLOCK-*
+ * id. Those are authoring metadata, kept in the markdown source.
+ * V3.6.1 (ADR-0013): sentence case, not UPPERCASE — the only forced cap is the
+ * first letter (::first-letter), so word-shape is preserved and the positive
+ * tracking that UPPERCASE required is dropped. */
 .eyebrow {
   font-size: 11px;
   line-height: 14px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: normal;
   color: var(--g-60);
   margin-bottom: var(--s-3);
+}
+.eyebrow::first-letter {
+  text-transform: uppercase;
 }
 
 h1 {
@@ -187,10 +196,12 @@ td {
 }
 th {
   font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: normal;
   color: var(--g-60);
   font-weight: 600;
+}
+th::first-letter {
+  text-transform: uppercase;
 }
 td:first-child {
   color: var(--g-60);
@@ -246,16 +257,17 @@ blockquote.pull {
   letter-spacing: -0.012em;
 }
 
-/* section divider — beat boundary, not paragraph break */
+/* section divider — beat boundary, not paragraph break. V3.6.1 (ADR-0013):
+ * symmetric padding (breathier than a regular section, but evenly gapped on
+ * both sides of its hairlines). */
 section.divider {
-  padding: var(--s-7) 0 var(--s-4);
+  padding: var(--s-7) 0;
   border-bottom: 0.5px solid var(--g-12);
 }
 section.divider .rule {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--g-30);
   margin-bottom: var(--s-2);
 }
@@ -331,10 +343,12 @@ section.divider h2 {
   font-size: 11px;
   line-height: 14px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+  letter-spacing: normal;
   color: var(--g-60);
   margin: var(--s-5) 0 var(--s-2);
+}
+.section-label::first-letter {
+  text-transform: uppercase;
 }
 a.card-link {
   display: block;
@@ -585,9 +599,11 @@ a.spec-link:hover {
  * Default stays --s-6 (48pt). */
 .canvas.v3-4.beat-gap-64 section {
   padding-top: var(--s-7);
+  padding-bottom: var(--s-7);
 }
 .canvas.v3-4.beat-gap-120 section {
   padding-top: var(--s-9);
+  padding-bottom: var(--s-9);
 }
 
 /* Apple register opt-in (R-18) — tighter body letter-spacing and line-height,
@@ -682,25 +698,32 @@ a.spec-link:hover {
 /* R-15 — V3.5 default beat gap is 64pt (--s-7), up from 48pt. Opt down to 48pt
  * for dense reference cards via .beat-gap-48; up to 96/120 for poster moments.
  * Micro-spacing does NOT scale with the beat gap. */
+/* V3.6.1 (ADR-0013): symmetric top+bottom so the beat gap stays centered on
+ * every hairline, not just above each section. */
 .canvas.v3-5 section {
   padding-top: var(--s-7);
+  padding-bottom: var(--s-7);
 }
 .canvas.v3-5.beat-gap-48 section {
   padding-top: var(--s-6);
+  padding-bottom: var(--s-6);
 }
 .canvas.v3-5.beat-gap-96 section {
   padding-top: var(--s-8);
+  padding-bottom: var(--s-8);
 }
 .canvas.v3-5.beat-gap-120 section {
   padding-top: var(--s-9);
+  padding-bottom: var(--s-9);
 }
 
-/* R-19 / R-20 — the eyebrow is the only positively-tracked role (+0.08em) and
- * reads at tertiary ink (#767676, 4.54:1), not --g-60. Base CSS still carries
- * the stale V3.0 0.07em/--g-60; these win on a V3.5 canvas. */
+/* R-20 — the eyebrow + table head read at tertiary ink (#767676, 4.54:1), not
+ * --g-60. V3.6.1 (ADR-0013): labels are sentence case, so the +0.08em positive
+ * tracking that UPPERCASE required is gone — neutral tracking preserves the
+ * word-shape sentence case restores. */
 .canvas.v3-5 .eyebrow,
 .canvas.v3-5 th {
-  letter-spacing: 0.08em;
+  letter-spacing: normal;
   color: var(--ink-3);
 }
 

@@ -48,7 +48,7 @@ export function GestaltPrinciples() {
       />
 
       {/* Beat 2 - Evidence: phi phenomenon */}
-      <StandardText beat="Beat 2 · Evidence">
+      <StandardText beat="Beat 2 · Evidence" eyebrow="The founding experiment">
         <p>
           In 1912, Max Wertheimer flashed two lights in alternation and people
           saw <strong>one light moving</strong>: motion where nothing moved.
@@ -112,6 +112,7 @@ export function GestaltPrinciples() {
       {/* Beat 2 - Evidence: Koffka quote */}
       <Quote
         beat="Beat 2 · Evidence"
+        eyebrow="The canonical formulation"
         variant="evidence"
         quote={
           <>
@@ -135,7 +136,11 @@ export function GestaltPrinciples() {
       </SectionDivider>
 
       {/* Beat 3 - Mechanism: Prägnanz */}
-      <Definition beat="Beat 3 · Mechanism" term="Prägnanz:">
+      <Definition
+        beat="Beat 3 · Mechanism"
+        eyebrow="The master law"
+        term="Prägnanz:"
+      >
         <>
           the law every other Gestalt principle sits under. Given any
           stimulus, perception settles into the{" "}
@@ -148,6 +153,7 @@ export function GestaltPrinciples() {
       {/* Beat 3 - Mechanism: process flow */}
       <NumberedList
         beat="Beat 3 · Mechanism"
+        eyebrow="The order of operations"
         steps={[
           {
             body: (
@@ -246,7 +252,11 @@ export function GestaltPrinciples() {
       />
 
       {/* Beat 3 - Mechanism: figure/ground */}
-      <Definition beat="Beat 3 · Mechanism" term="Figure/ground:">
+      <Definition
+        beat="Beat 3 · Mechanism"
+        eyebrow="The other organizing act"
+        term="Figure/ground:"
+      >
         <>
           distinct from grouping. Grouping decides which elements clump;
           figure/ground decides which region is <strong>the object</strong> (it
@@ -352,7 +362,10 @@ export function GestaltPrinciples() {
       />
 
       {/* Beat 4 - Comparison: principles against principles */}
-      <StandardText beat="Beat 4 · Comparison">
+      <StandardText
+        beat="Beat 4 · Comparison"
+        eyebrow="Principles against principles"
+      >
         <p>
           The principles <strong>compete and combine</strong>: a layout can pit
           proximity against similarity against common region, and the percept is
@@ -411,6 +424,7 @@ export function GestaltPrinciples() {
       {/* Beat 5 - Counter: the theory that broke */}
       <Quote
         beat="Beat 5 · Counter"
+        eyebrow="The theory that broke"
         variant="evidence"
         quote="Disrupt the cortex with gold foil, mica, and wire, and pattern perception still works."
       >
@@ -439,6 +453,7 @@ export function GestaltPrinciples() {
       {/* Beat 6 - Application: checklist */}
       <MarkerList
         beat="Beat 6 · Application"
+        eyebrow="Using them on purpose"
         marker="☐"
         items={[
           <>
@@ -497,6 +512,7 @@ export function GestaltPrinciples() {
 
       {/* Beat 7 - Close: key takeaway */}
       <KeyTakeaway
+        eyebrow="Bottom line"
         takeaway={
           <strong>
             The Gestalt principles aren't design tips: they're the perceptual
@@ -511,6 +527,7 @@ export function GestaltPrinciples() {
       {/* Beat 7 - Close: pull-quote */}
       <Quote
         beat="Beat 7 · Close"
+        eyebrow="The closer"
         variant="pull"
         quote={
           <>

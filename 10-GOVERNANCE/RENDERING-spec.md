@@ -85,12 +85,12 @@ The canvas is light-only. The renderer declares `color-scheme: light` on `:root`
 | Subtitle | 19 / 26 | Medium (500) | −0.005 |
 | Body | 17 / 24 | Regular (400) | −0.008 |
 | Caption | 13 / 18 | Regular | +0.008 |
-| Eyebrow | 11 / 14 | Semibold UPPERCASE | +0.08 |
+| Eyebrow | 11 / 14 | Semibold sentence case | 0 |
 | Code / equations | 14 / 22 | SF Mono Regular | 0 |
 
 **Note on the body row.** The token table lists Body as 17/24 with tracking −0.008. **R-9 (V3.1–V3.4) supersedes that row** for cards frozen at V3.1.0–V3.4.x — body renders at 17/26 with +0.03em letter-spacing and +0.06em word-spacing, left-aligned ragged, weights 400/500/700 only. **R-19 (V3.5+) supersedes R-9 in turn** for cards frozen at V3.5.0 or later — body renders at 17/26 with letter-spacing **−0.01em** and **word-spacing normal** (the positive tracking is retired; see R-19 for the why). The token row remains as the V3.0 reference. **R-18 (V3.4)** added an opt-in "Apple register" variant; **R-19 folds R-18's display tightening in as the V3.5 default** and drops the sub-1.5 line-height variant (V3.5 body stays at 26pt, ≥ 1.5).
 
-**Note on the eyebrow row.** The eyebrow row is canonical at +0.08em tracking — matching R-10 and R-14. The earlier +0.07 figure was a stale token-table value; cards and CSS that still emit +0.07 render visibly the same and are accepted, but new renders snap to +0.08.
+**Note on the eyebrow row.** **R-25 (V3.6.1, ADR-0013) supersedes the prior UPPERCASE / +0.08em eyebrow rule.** Every micro-label — eyebrow, table `th`, divider rule, gallery section-label — now renders **sentence case** (only the first letter is forced up, via `::first-letter`), not UPPERCASE, with **neutral tracking**. The old positive tracking existed solely because UPPERCASE letterforms have no word-shape to break; once labels carry word-shape, opening their fit is wrong, so tracking returns to 0. Like R-22–R-24, this applies at the base CSS level and re-renders every card regardless of `frozen_at_version`. Cards/CSS that still emit the legacy +0.08/+0.07 UPPERCASE form render the old way and are accepted as genealogy, but new renders snap to sentence case.
 
 **Note on the Tile head row (V3.4+).** The 28/32 Tile head step is new in V3.4 and is the canonical size for the tagline half of an eyebrow + tagline pair (see G-14 Pattern 1). It sits between Display title (40/44) and Section header (24/30). V3.1–V3.3 cards do not use the Tile step.
 
@@ -168,9 +168,9 @@ Rationale: WCAG 2.2 SC 1.4.12 requires line-height ≥ 1.5× font-size — at 17
 
 Beat boundaries render as whitespace and the first block's own anchor. Renderers MUST NOT emit beat labels, beat numbers, position counters (`N / TOTAL`), or any other label whose purpose is to communicate the author's structural outline to the reader. The seven-beat structure is a production scaffold; it does not appear in the rendered output.
 
-**Permitted exception — the editorial eyebrow.** A single short editorial eyebrow label per beat (e.g., `The medical study`) is allowed when the beat's first block does not carry a sufficient anchor on its own. The eyebrow names the *content*, never the position. Position counters (`4 / 7`, `BEAT 3`, etc.) are never permitted under any circumstance.
+**Permitted exception — the editorial eyebrow.** A short editorial eyebrow label (e.g., `The founding experiment`) is allowed on **any block that does not carry its own heading anchor** — not just a beat's first block. The rule is one label per *job*, not one per beat: a block with an `h2`/Subhead already names its content, so it takes **no** eyebrow (a beat-name eyebrow stacked above a heading is the R-14 "two labels, one job" failure). A headingless block (a bare standard-text, definition, quote, takeaway) MAY carry one. The eyebrow names the *content* and must be **distinct from its neighbours** — it is never the beat name, and never repeats down a beat (a column of identical `MECHANISM` eyebrows is scaffold leakage, not a label). Position counters (`4 / 7`, `BEAT 3`, etc.) are never permitted under any circumstance.
 
-The eyebrow, when present, uses the existing label micro-type spec (11/14pt SF Pro Rounded, weight 500, UPPERCASE, +0.08em tracking, `--g-60`) so labels stay typographically uniform across the card. It is still subject to R-14: a label that doesn't earn its existence must be cut.
+The eyebrow, when present, uses the existing label micro-type spec (11/14pt SF Pro Rounded, weight 600, **sentence case, neutral tracking** per R-25, tertiary ink) so labels stay typographically uniform across the card. It is still subject to R-14: a label that doesn't earn its existence must be cut.
 
 **Bottom edge — dev-only metadata.** The pre-V3.3 footer (`SUPERCARD V3.X · ATLAS · {MODE} · YYYY-MM-DD`) is moved to dev-only. The renderer MAY emit this stamp as an HTML comment or a `data-*` attribute on the canvas root, but production renders MUST NOT show renderer version, era name, mode, or render date in any reader-visible chrome. The five `sc:*` `<meta>` tags in `<head>` (see Output contract) remain mandatory — they carry the same metadata in a place the reader cannot see.
 
@@ -260,7 +260,7 @@ If a label fails any of the three, it's a renderer drift and must be cut. No exc
 
 - **Hierarchy is set by typography, not by adding labels.** Display title, dek, body, caption — that's the ladder. A label is a fifth tier only when the four typographic tiers can't carry the load.
 - **Each label sits in exactly one canonical position** for its kind: editorial eyebrow above a beat's first block, kicker above the title, byline below it. Position itself is half the label's meaning; floating labels read as chips.
-- **Labels use the same micro-type spec everywhere they appear:** 11/14pt SF Pro Rounded, weight 500, UPPERCASE, +0.08em tracking, `--g-60`, middle-dot separators. One typographic register for all labels means a reader recognizes "this is a label" without parsing the content.
+- **Labels use the same micro-type spec everywhere they appear:** 11/14pt SF Pro Rounded, weight 600, **sentence case with neutral tracking** (R-25), `--g-60`/tertiary ink, middle-dot separators. One typographic register for all labels means a reader recognizes "this is a label" without parsing the content.
 - **Labels integrate facts, they don't list them.** A magazine doesn't strip its dateline into `MAGAZINE · ISSUE · DATE · SECTION` chips above an article — it writes "In the May issue of Harper's, ..." into the dek. Time, jurisdiction, status, mode, and any other context-setting fact lives *inside* the prose where it can modify a verb, not in a label strip beside it.
 - **No label runs longer than four words.** A label that needs five words is a sentence pretending to be a label; promote it to the dek or cut it.
 
@@ -279,7 +279,7 @@ If a label fails any of the three, it's a renderer drift and must be cut. No exc
 
 **The label-occlusion test, run on the rendered card before publish:** cover the labels with your thumb. If the card still tells you what each section is and where you are in it, the labels were doing real work — keep them. If you suddenly can't navigate, the labels were the whole navigation system and the typographic hierarchy needs strengthening. If nothing changes, the labels were decoration — cut them.
 
-R-13 is the cover-specific application of R-14. The only labels a V3.3 card earns are the editorial eyebrow (when a beat's first block doesn't carry its own anchor) and the corner glyph (system identity, screenshot autonomy). Everything else fails the three-question test.
+R-13 is the cover-specific application of R-14. The only labels a V3.3 card earns are the editorial eyebrow (on a block that lacks its own heading anchor) and the corner glyph (system identity, screenshot autonomy). Everything else fails the three-question test.
 
 ## R-15. Section spacing scale (V3.4; default revised in V3.5)
 
@@ -361,9 +361,9 @@ V3.5+ cards (those declaring `frozen_at_version: 3.5.0` or higher) render prose-
 | Subhead | 26 / 32 | 600 | −0.012em |
 | Body | 17 / 26 | 400 | **−0.01em** (word-spacing normal) |
 | Caption | 13 / 18 | 400 | 0 to +0.005em |
-| Eyebrow (UPPERCASE) | 11 / 14 | 600 | **+0.08em** — the *only* positively-tracked role |
+| Eyebrow (sentence case) | 11 / 14 | 600 | **0** (R-25 / ADR-0013) |
 
-The eyebrow is the single exception: UPPERCASE letterforms have no word-shape to break, so positive tracking (which opens the caps' tight default fit) is correct there and nowhere else.
+**Eyebrow tracking (V3.6.1, R-25).** Through V3.6.0 the eyebrow was the single positively-tracked role (+0.08em) *because* it was UPPERCASE — caps have no word-shape to break, so opening their tight default fit was correct. R-25 (ADR-0013) makes every micro-label sentence case, so that justification is gone: tracking returns to 0 and no role is positively tracked. Sentence-case labels keep their word-shape; only the first letter is forced up (`::first-letter`).
 
 ## R-20. Text-ink ladder (V3.5+)
 
@@ -447,7 +447,7 @@ Rendered HTML must:
 - Render at 393pt mobile width as the canonical view
 - Pass the screenshot test on every section
 - Carry the corner glyph on every section as a fixed-position element
-- **Emit no scaffold chrome.** Beat numbers (`BEAT 3`), position counters (`4 / 7`), block-type ids (`BLOCK-pull-quote`), and renderer-version / mode / date footers are **authoring metadata**: they live in the markdown card (`30-CARDS/`), in the breakdown, and in the HTML `<meta>` tags below — never in the reader-visible canvas (R-10, I7). A beat's first block MAY carry a single editorial eyebrow (e.g., `The medical study`) when its own anchor doesn't name the content; the eyebrow is the *only* permitted section label and never carries a position counter. The cover (R-13) declares which header elements are permitted; any other label is a renderer drift.
+- **Emit no scaffold chrome.** Beat numbers (`BEAT 3`), position counters (`4 / 7`), block-type ids (`BLOCK-pull-quote`), and renderer-version / mode / date footers are **authoring metadata**: they live in the markdown card (`30-CARDS/`), in the breakdown, and in the HTML `<meta>` tags below — never in the reader-visible canvas (R-10, I7). A block that lacks its own heading anchor MAY carry a single editorial eyebrow (e.g., `The founding experiment`) that names its content; the eyebrow is the *only* permitted section label, must be distinct from its neighbours (never the beat name, never repeated down a beat), and never carries a position counter. The cover (R-13) declares which header elements are permitted; any other label is a renderer drift.
 - Embed provenance as `<meta>` tags in the HTML `<head>`: `sc:source_file`, `sc:research_report`, `sc:renderer_version`, `sc:frozen_at_version`, `sc:rendered_at` (and `sc:source_commit`, `sc:content_hash` where available). These five are mandatory and reader-invisible — they carry the production-metadata stamp that R-10 (V3.3) moves out of the rendered chrome. `sc:research_report` closes the genealogy loop — the render points back through the card to the `60-RESEARCH/` report it descends from.
 - **Corner glyph viewport-persistent (V3.4+).** The corner glyph element renders with `position: fixed` and remains in the viewport at every scroll position. Cards over 2,000pt total height MUST be tested with an automated scroll-screenshot pass before publish — every 800pt slice must capture the glyph.
 

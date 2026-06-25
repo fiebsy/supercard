@@ -32,21 +32,30 @@ type Beat =
   | "Beat 7 · Close"
   | "Sources";
 
-export function Eyebrow({ beat }: { beat: Beat }) {
-  // Strip the "Beat N · " authoring prefix — public render shows the name only.
-  return <div className="eyebrow">{beat.replace(/^Beat \d+ · /, "")}</div>;
+export function Eyebrow({ label }: { label: string }) {
+  // The eyebrow is a short editorial label that names the block's CONTENT
+  // (e.g. "The founding experiment"), NOT the beat name. The beat is authoring
+  // metadata and is never rendered (R-10, R-14, I7). Sentence case + the
+  // first-letter cap are handled in CSS; the source string is authored as-is.
+  return <div className="eyebrow">{label}</div>;
 }
 
 export function Section({
-  beat,
+  beat: _beat,
+  eyebrow,
   children,
 }: {
+  /* `beat` is authoring metadata — kept for structure/typing, never rendered
+   * (no beat-name leakage, hence the underscore). The reader-visible label is
+   * `eyebrow`, supplied only when a block lacks its own heading anchor
+   * (R-14: one label per job). */
   beat: Beat;
+  eyebrow?: string;
   children: ReactNode;
 }) {
   return (
     <section>
-      <Eyebrow beat={beat} />
+      {eyebrow ? <Eyebrow label={eyebrow} /> : null}
       {children}
     </section>
   );
@@ -72,13 +81,15 @@ export function Hero({
   title,
   hook,
   lede,
+  eyebrow,
 }: {
   title: string;
   hook: ReactNode;
   lede: ReactNode;
+  eyebrow?: string;
 }) {
   return (
-    <Section beat="Beat 1 · Hook">
+    <Section beat="Beat 1 · Hook" eyebrow={eyebrow}>
       <h1>{title}</h1>
       <div className="hero">
         <p className="hook">{hook}</p>
@@ -92,11 +103,13 @@ export function Hero({
 
 export function StandardText({
   beat,
+  eyebrow,
   heading,
   lead,
   children,
 }: {
   beat: Beat;
+  eyebrow?: string;
   heading?: string;
   /* V3.1+: the bolded 2–6-word lead-clause that opens the first paragraph.
    * Renders as <strong class="lead"> so the validator can detect it. */
@@ -104,7 +117,7 @@ export function StandardText({
   children: ReactNode;
 }) {
   return (
-    <Section beat={beat}>
+    <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2>{heading}</h2> : null}
       {lead ? (
         <p>
@@ -121,15 +134,17 @@ export function StandardText({
 
 export function Definition({
   beat,
+  eyebrow,
   term,
   children,
 }: {
   beat: Beat;
+  eyebrow?: string;
   term: string;
   children: ReactNode;
 }) {
   return (
-    <Section beat={beat}>
+    <Section beat={beat} eyebrow={eyebrow}>
       <p>
         <span className="def-term">{term}</span> {children}
       </p>
@@ -143,17 +158,19 @@ type Step = { lead?: ReactNode; body: ReactNode };
 
 export function NumberedList({
   beat,
+  eyebrow,
   heading,
   steps,
   closer,
 }: {
   beat: Beat;
+  eyebrow?: string;
   heading?: string;
   steps: Step[];
   closer?: ReactNode;
 }) {
   return (
-    <Section beat={beat}>
+    <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2>{heading}</h2> : null}
       <ol>
         {steps.map((s, i) => (
@@ -176,6 +193,7 @@ export function NumberedList({
 
 export function MarkerList({
   beat,
+  eyebrow,
   heading,
   marker,
   items,
@@ -183,6 +201,7 @@ export function MarkerList({
   closer,
 }: {
   beat: Beat;
+  eyebrow?: string;
   heading?: string;
   marker: string;
   items: ReactNode[];
@@ -190,7 +209,7 @@ export function MarkerList({
   closer?: ReactNode;
 }) {
   return (
-    <Section beat={beat}>
+    <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2>{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
       <ul>
@@ -212,6 +231,7 @@ type Row = { cells: ReactNode[]; focal?: boolean };
 
 export function DataTable({
   beat,
+  eyebrow,
   heading,
   className,
   head,
@@ -220,6 +240,7 @@ export function DataTable({
   closer,
 }: {
   beat: Beat;
+  eyebrow?: string;
   heading?: string;
   className?: string;
   head?: ReactNode[];
@@ -231,7 +252,7 @@ export function DataTable({
 }) {
   const span = head?.length ?? rows[0]?.cells.length ?? 1;
   return (
-    <Section beat={beat}>
+    <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2>{heading}</h2> : null}
       <table className={className}>
         {head ? (
@@ -269,19 +290,21 @@ export function DataTable({
 
 export function Equation({
   beat,
+  eyebrow,
   heading,
   intro,
   formula,
   closer,
 }: {
   beat: Beat;
+  eyebrow?: string;
   heading?: string;
   intro?: ReactNode;
   formula: string;
   closer?: ReactNode;
 }) {
   return (
-    <Section beat={beat}>
+    <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2>{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
       <pre>{formula}</pre>
@@ -294,18 +317,20 @@ export function Equation({
 
 export function Quote({
   beat,
+  eyebrow,
   variant,
   quote,
   children,
 }: {
   beat: Beat;
+  eyebrow?: string;
   variant: "evidence" | "pull";
   quote: ReactNode;
   children?: ReactNode;
 }) {
   const pull = variant === "pull";
   return (
-    <Section beat={beat}>
+    <Section beat={beat} eyebrow={eyebrow}>
       <blockquote className={pull ? "pull" : undefined}>{quote}</blockquote>
       {children ? <p>{children}</p> : null}
     </Section>
@@ -337,12 +362,14 @@ export function SectionDivider({
 export function KeyTakeaway({
   takeaway,
   children,
+  eyebrow,
 }: {
   takeaway: ReactNode;
   children?: ReactNode;
+  eyebrow?: string;
 }) {
   return (
-    <Section beat="Beat 7 · Close">
+    <Section beat="Beat 7 · Close" eyebrow={eyebrow}>
       <p className="takeaway">{takeaway}</p>
       {children ? <p>{children}</p> : null}
     </Section>
@@ -353,7 +380,7 @@ export function KeyTakeaway({
 
 export function Sources({ items }: { items: ReactNode[] }) {
   return (
-    <Section beat="Sources">
+    <Section beat="Sources" eyebrow="Sources">
       <ul className="sources">
         {items.map((s, i) => (
           <li key={i}>{s}</li>

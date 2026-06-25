@@ -5,11 +5,77 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.6.0 |
+| version | 3.6.2 |
 | owner | derick |
 | updated | 2026-06-25 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
+
+---
+
+## [3.6.2] — "Atlas" — 2026-06-25
+
+Delivery format. The public spec is now **one self-contained `llms.txt`** at
+`https://berafoot.com/llms.txt`, replacing the V3.1–V3.6 progressive-disclosure
+JSON tree at `docs/spec/` (a manifest plus ten layer files). An agent fetches
+one URL and has the complete spec — principles, grammar, lengths, block library,
+pipeline, rendering + tokens, glossary, worked example — with nothing to chain.
+**No content rule changed:** every principle, grammar rule, block, token, and
+gate is identical; this is a packaging change. ADR-0008's organization work is
+kept; only its JSON-tree delivery is retired. (ADR-0012, superseding ADR-0008.)
+
+### Added
+
+- `docs/llms.txt` — the entire public spec as one file, generated from the
+  canonical markdown by `app/scripts/build-spec.mjs` (inlines + normalizes each
+  governance doc under a single H1 with a Contents index). Deterministic;
+  `spec_revision` is a hash of the source markdown. Served at `/llms.txt`.
+- The drop-in agent prompt now lives in a "Using this spec" section of
+  `llms.txt` itself, not a separate `PROMPT.md`.
+
+### Changed
+
+- `app/scripts/build-spec.mjs` — renders one `docs/llms.txt` instead of the
+  `docs/spec/*.json` tree; `--check` drift mode now verifies `llms.txt` and
+  flags any lingering `docs/spec/` JSON.
+- `docs/index.html` and the React `Gallery` — the landing now shows one spec
+  block (the `llms.txt` URL with a copy button) instead of three JSON URLs.
+- `app/index.html` spec-discovery block, `README.md`, `00-INDEX/INDEX-supercard-v3.md`,
+  `app/public/robots.txt`, and `app/public/sitemap.xml` — repointed to `/llms.txt`.
+- `vercel.json` — rewrites `/llms.txt` to the deployment and 301-redirects the
+  retired `/spec/:path*` URLs to `/llms.txt`.
+
+### Removed
+
+- `docs/spec/index.json` and the ten layer files (`agent-guide`, `tokens`,
+  `principles`, `grammar`, `lengths`, `blocks`, `pipeline`, `rendering`,
+  `glossary`, `example`) plus `docs/spec/PROMPT.md`. Superseded by `llms.txt`.
+
+---
+
+## [3.6.1] — "Atlas" — 2026-06-25
+
+Label-and-separator refinement. Quiets and evens out the canvas's furniture:
+every micro-label drops from UPPERCASE to sentence case, every separator
+hairline re-centers between the two beats it divides, and the React render path
+stops stamping the beat name on every block — adopting the distinct,
+content-naming editorial eyebrows the markdown source and HTML twins already
+carry. **Retroactive like V3.6.0** — the visual rules live at base level and
+re-render every card regardless of `frozen_at_version` (ADR-0013). The
+reading-layer rules (R-9/R-19, R-20, R-21) remain frozen and untouched.
+
+### Added
+
+- RENDERING § R-25 — Sentence-case labels (V3.6.1+). Eyebrow, table `th`, divider rule, and gallery section-label drop `text-transform: uppercase`; only the first letter is forced up via `::first-letter`. The +0.08em positive tracking (justified only by UPPERCASE) returns to 0.
+- RENDERING § R-26 — Centered separators (V3.6.1+). `section` / `section.divider` vertical padding is symmetric (48/48, 64/64) so each hairline is evenly gapped on both sides; beat-gap variants set top and bottom.
+
+### Changed
+
+- RENDERING § R-14 / R-10 — the editorial eyebrow is now "one label per *job*" (any block lacking a heading anchor may carry one, distinct from its neighbours), replacing "one per beat (first block)". A block with an `h2` takes no eyebrow.
+- `app/src/blocks.tsx` — `Eyebrow`/`Section` no longer derive the label from the beat name; `Section` takes an optional `eyebrow` string and renders it only when supplied. `beat` is retained as non-rendered authoring metadata.
+- `app/src/cards/gestalt-principles.tsx` — editorial eyebrows added to headingless blocks; beat-name eyebrows removed from `h2` blocks.
+- `app/src/supercard.css` — base level: `text-transform: uppercase` removed from `.eyebrow` / `th` / `section.divider .rule` / `.section-label` (with `::first-letter` caps); label tracking → `normal`; `section` and `section.divider` padding made symmetric; V3.4/V3.5 beat-gap rules set `padding-bottom`.
+- `30-CARDS/CARD-2026-05-14-gestalt-principles--draft.md` — hero meta-eyebrow dropped; checklist eyebrow tightened.
 
 ---
 

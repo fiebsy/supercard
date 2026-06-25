@@ -29,7 +29,7 @@
 
 ## Beat 1 — Hook (card-in-hero)
 
-`BLOCK-loft-card` · *the one elevated element on this card*
+`BLOCK-loft-card`
 
 HERO-CARD: **Gestalt Principles**
 
@@ -255,7 +255,7 @@ group**.
 
 ## Beat 6 — Application
 
-`BLOCK-checklist` · using the principles on purpose
+`BLOCK-checklist` · using them on purpose
 
 - [ ] Group with **whitespace** before you reach for boxes or lines: proximity is the cheapest grouping tool
 - [ ] Use a shared boundary (a card) only when you mean "these are one unit": common region is a strong, expensive signal

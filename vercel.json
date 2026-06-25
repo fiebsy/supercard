@@ -4,7 +4,10 @@
   "installCommand": "npm --prefix app install",
   "buildCommand": "npm --prefix app run build",
   "outputDirectory": "app/dist",
+  "redirects": [
+    { "source": "/spec/:path*", "destination": "/llms.txt", "permanent": true }
+  ],
   "rewrites": [
-    { "source": "/spec/:path*", "destination": "/html/spec/:path*" }
+    { "source": "/llms.txt", "destination": "/html/llms.txt" }
   ]
 }
