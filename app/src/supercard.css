@@ -348,7 +348,9 @@ section.divider h2 {
   font-size: 17px;
   line-height: 24px;
   color: var(--ink-2);
-  margin-bottom: var(--s-6);
+  /* Match the spec→Sample gap (.section-label margin-top) so the three
+   * landing sections share one 32px rhythm instead of 48 / 32. */
+  margin-bottom: var(--s-5);
 }
 .section-label {
   font-size: 11px;
@@ -389,6 +391,27 @@ a.card-link:hover {
   line-height: 21px;
   color: var(--ink-3);
   margin-top: var(--s-1);
+}
+/* A small chevron back button on a card view — mirrors the gallery sample
+ * card's forward chevron. Aligned to the 393px column so the circle sits above
+ * the card title at the same left edge as the body. */
+.card-back {
+  display: block;
+  box-sizing: border-box;
+  width: 393px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: var(--s-4) 16px 0;
+}
+.card-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--k);
+  color: var(--w);
 }
 .back-link {
   display: inline-block;
