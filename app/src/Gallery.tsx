@@ -209,10 +209,8 @@ export function Gallery() {
     <div className="canvas" style={{ paddingTop: "var(--s-6)" }}>
       <h1>Supercard</h1>
       <p className="gallery-lede">
-        Screenshot-shareable knowledge cards with one idea in focus per block —
-        a cognitive prosthesis for ADHD brains and anyone who bounces off dense
-        text. Built for how attention actually works, and grounded in deep
-        research.
+        Paste the spec into Claude and any deep-research topic becomes a
+        scannable card, one idea in focus per block. Get the gist fast.
       </p>
 
       <SpecBlock />
