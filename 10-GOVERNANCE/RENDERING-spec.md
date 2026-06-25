@@ -84,7 +84,7 @@ The `Card radius: 16pt` below applies **only** to the 1–3 bounded anchor cards
 
 **Surface tint (V3.4+, optional).** A `--surface-tint: rgba(0,0,0,0.025)` (alternately `#F7F7F7`) is permitted as a card background under R-16. It is **not** a seventh step in the ramp; it is a single off-white that sits between `--w` and `--g-06` for the specific purpose of replacing a hairline border with a tonal-contrast affordance. Cards using `--surface-tint` MUST omit the hairline; cards using the hairline MUST use `--w`. Mixing both on the same card is forbidden.
 
-The canvas is light-only. The renderer declares `color-scheme: light` on `:root` and emits `<meta name="color-scheme" content="light">` in `<head>` so iOS Safari's automatic dark-mode (and equivalents in other webviews) does not partially invert the page — that inversion leaves `--ink-2` / `--ink-3` text as low-contrast gray on near-black. A theme-aware dark variant, if ever introduced, ships as a parallel ink ramp under `@media (prefers-color-scheme: dark)`, never as an auto-inversion.
+The canvas is light-only. The renderer declares `color-scheme: only light` on `:root` and emits `<meta name="color-scheme" content="only light">` in `<head>` so iOS Safari's automatic dark-mode (and equivalents in other webviews) does not partially invert the page — that inversion leaves `--ink-2` / `--ink-3` text as low-contrast gray on near-black. **The `only` keyword is load-bearing, not decorative.** Bare `color-scheme: light` declares a *preference* the UA is still free to override; the *algorithmic* dark modes — Chrome "Auto Dark Mode for Web Contents", Android WebView force-dark, and the in-app browsers that ship it — force-darken any page that has not explicitly opted out, flipping the white canvas to near-black and dropping every ink layer to low-contrast gray (white anchor cards with their own background survive, so the failure reads as "everything but the hero card went dark"). `only light` is the CSS Color Adjust Level 1 opt-out: it *forbids* the UA from overriding the chosen scheme. (Pixel-level accessibility inverters — iOS Smart Invert, OS-level high-contrast — sit below CSS and cannot be defeated from the page; `only light` covers every UA-level dark mode, which is the case in scope here.) A theme-aware dark variant, if ever introduced, ships as a parallel ink ramp under `@media (prefers-color-scheme: dark)`, never as an auto-inversion.
 
 ## Type scale (SF Pro Rounded)
 
@@ -474,7 +474,7 @@ The renderer keeps a versioned rule library at `/renderer/v3.0/`, `/renderer/v3.
 Rendered HTML must:
 
 - Be **standalone** — `--embed-resources --standalone` in Pandoc, all CSS/JS/fonts/images inlined as `data:` URIs
-- Declare `color-scheme: light` on `:root` and emit `<meta name="color-scheme" content="light">` in `<head>` (see "Gray ramp")
+- Declare `color-scheme: only light` on `:root` and emit `<meta name="color-scheme" content="only light">` in `<head>` (see "Gray ramp") — the `only` keyword forbids UA force-darkening; bare `light` is only a preference and gets overridden by algorithmic dark modes
 - Render at 393pt mobile width as the canonical view
 - Pass the screenshot test on every section
 - Carry the corner glyph on every section as a fixed-position element

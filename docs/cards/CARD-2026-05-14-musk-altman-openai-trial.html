@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="only light">
 <title>Musk v. Altman: the OpenAI Trial — Supercard V3.0</title>
 <meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-musk-altman-openai-trial--draft.md">
 <meta name="sc:research_report" content="">
@@ -23,7 +23,12 @@
  */
 
 :root {
-  color-scheme: light;
+  /* `only light` (not bare `light`) forbids the user agent from force-darkening
+   * the page — bare `light` is still overridden by algorithmic dark modes
+   * (Chrome "Auto Dark", Android WebView force-dark, in-app browsers), which
+   * inverts the white canvas to near-black and leaves --ink-2/--ink-3 text as
+   * low-contrast gray. The canvas is light-only by design (RENDERING-spec). */
+  color-scheme: only light;
   --w: #ffffff;
   --g-06: rgba(0, 0, 0, 0.06);
   --g-12: rgba(0, 0, 0, 0.12);
@@ -31,8 +36,13 @@
   --g-60: rgba(0, 0, 0, 0.6);
   --k: #000000;
   --ink: #111111;
-  --ink-2: #333333;
-  --ink-3: #555555;
+  /* Secondary/tertiary ink muted a step (was #333 / #555) so the single
+   * per-block emphasis — black <strong>, the dark heading, the focal row —
+   * carries more contrast against everything that isn't in focus. Both still
+   * clear WCAG AA on white (#6b6b6b ≈5.1:1, #767676 =4.54:1). V3.5 cards
+   * redefine these on their own canvas and are unaffected. */
+  --ink-2: #6b6b6b;
+  --ink-3: #767676;
   --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system,
     BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
@@ -67,7 +77,10 @@
 
 html,
 body {
-  background: #e8e8e8;
+  /* V3.6 — the page surface matches the content (no grey moat). The 393pt
+   * column boundary is drawn by dotted designer guides on .canvas instead of
+   * tonal contrast. */
+  background: var(--w);
   font-family: var(--rounded);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -83,9 +96,14 @@ a {
   background: var(--w);
   min-height: 100vh;
   padding: 0 16px var(--s-8);
+  /* Designer column guides — faint dotted rules at the left/right boundary of
+   * the 393pt column, running the full content height. They replace the old
+   * grey body moat: the surface is now flush white and these mark the edge. */
+  border-left: 1px dotted var(--g-12);
+  border-right: 1px dotted var(--g-12);
 }
 
-/* V3.6.1 (ADR-0012): section vertical padding is symmetric so the bottom
+/* V3.6.1 (ADR-0013): section vertical padding is symmetric so the bottom
  * hairline sits evenly gapped between the two beats it divides — it no longer
  * hugs the section above. */
 section {
@@ -98,20 +116,17 @@ section:last-of-type {
 
 /* section label — a short editorial label that names the block's CONTENT
  * (e.g. "The founding experiment"); never a beat name, "Beat N", or a BLOCK-*
- * id. Those are authoring metadata, kept in the markdown source.
- * V3.6.1 (ADR-0012): sentence case, not UPPERCASE — the only forced cap is the
- * first letter (::first-letter), so word-shape is preserved and the positive
- * tracking that UPPERCASE required is dropped. */
+ * id. Those are authoring metadata, kept in the markdown source. UPPERCASE per
+ * the type ramp — the eyebrow is the one positively-tracked role (no word-shape
+ * to break). Non-repetition is enforced in the content, not the casing. */
 .eyebrow {
   font-size: 11px;
   line-height: 14px;
   font-weight: 600;
-  letter-spacing: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--g-60);
   margin-bottom: var(--s-3);
-}
-.eyebrow::first-letter {
-  text-transform: uppercase;
 }
 
 h1 {
@@ -149,7 +164,7 @@ em {
   font-style: italic;
 }
 .lede {
-  color: var(--ink);
+  color: var(--ink-2);
 }
 
 /* Beat 1 — anchor hero. V3.6 (R-22): flat, no elevation. Set apart by border +
@@ -158,7 +173,7 @@ em {
   background: var(--w);
   border-radius: 16px;
   border: 1px solid var(--g-12);
-  padding: var(--s-4);
+  padding: var(--s-5);
   margin: var(--s-2) 0 var(--s-3);
 }
 .hero .hook {
@@ -166,7 +181,9 @@ em {
   line-height: 26px;
   font-weight: 500;
   letter-spacing: -0.005em;
-  color: var(--ink);
+  /* Muted (was --ink) so the one bold phrase — the single emphasis the hook is
+   * built around — is the only near-black ink in the card's anchor. */
+  color: var(--ink-2);
 }
 
 ol,
@@ -213,12 +230,10 @@ td {
 }
 th {
   font-size: 11px;
-  letter-spacing: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--g-60);
   font-weight: 600;
-}
-th::first-letter {
-  text-transform: uppercase;
 }
 td:first-child {
   color: var(--g-60);
@@ -274,7 +289,7 @@ blockquote.pull {
   letter-spacing: -0.012em;
 }
 
-/* section divider — beat boundary, not paragraph break. V3.6.1 (ADR-0012):
+/* section divider — beat boundary, not paragraph break. V3.6.1 (ADR-0013):
  * symmetric padding (breathier than a regular section, but evenly gapped on
  * both sides of its hairlines). */
 section.divider {
@@ -284,7 +299,8 @@ section.divider {
 section.divider .rule {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--g-30);
   margin-bottom: var(--s-2);
 }
@@ -354,18 +370,18 @@ section.divider h2 {
   font-size: 17px;
   line-height: 24px;
   color: var(--ink-2);
-  margin-bottom: var(--s-6);
+  /* Match the spec→Sample gap (.section-label margin-top) so the three
+   * landing sections share one 32px rhythm instead of 48 / 32. */
+  margin-bottom: var(--s-5);
 }
 .section-label {
   font-size: 11px;
   line-height: 14px;
   font-weight: 600;
-  letter-spacing: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--g-60);
   margin: var(--s-5) 0 var(--s-2);
-}
-.section-label::first-letter {
-  text-transform: uppercase;
 }
 a.card-link {
   display: block;
@@ -398,6 +414,27 @@ a.card-link:hover {
   color: var(--ink-3);
   margin-top: var(--s-1);
 }
+/* A small chevron back button on a card view — mirrors the gallery sample
+ * card's forward chevron. Aligned to the 393px column so the circle sits above
+ * the card title at the same left edge as the body. */
+.card-back {
+  display: block;
+  box-sizing: border-box;
+  width: 393px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: var(--s-4) 16px 0;
+}
+.card-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--k);
+  color: var(--w);
+}
 .back-link {
   display: inline-block;
   font-family: var(--mono);
@@ -407,6 +444,19 @@ a.card-link:hover {
   padding: var(--s-5) 0 0;
 }
 .back-link:hover {
+  color: var(--k);
+}
+
+/* gallery — repo link on the minimalist landing (below the spec block) */
+.repo-link {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--g-60);
+  text-decoration: none;
+  margin-top: var(--s-5);
+}
+.repo-link:hover {
   color: var(--k);
 }
 
@@ -474,7 +524,7 @@ a.spec-link {
   color: inherit;
   border: 1px solid var(--g-12);
   border-radius: 16px;
-  padding: var(--s-4);
+  padding: var(--s-5);
   margin-bottom: var(--s-2);
   background: var(--w);
 }
@@ -608,7 +658,7 @@ a.spec-link:hover {
   background: var(--surface-tint);
   border-radius: 18px;
   border: 0;
-  padding: var(--s-4);
+  padding: var(--s-5);
   margin: var(--s-2) 0;
 }
 
@@ -715,7 +765,7 @@ a.spec-link:hover {
 /* R-15 — V3.5 default beat gap is 64pt (--s-7), up from 48pt. Opt down to 48pt
  * for dense reference cards via .beat-gap-48; up to 96/120 for poster moments.
  * Micro-spacing does NOT scale with the beat gap. */
-/* V3.6.1 (ADR-0012): symmetric top+bottom so the beat gap stays centered on
+/* V3.6.1 (ADR-0013): symmetric top+bottom so the beat gap stays centered on
  * every hairline, not just above each section. */
 .canvas.v3-5 section {
   padding-top: var(--s-7);
@@ -734,13 +784,12 @@ a.spec-link:hover {
   padding-bottom: var(--s-9);
 }
 
-/* R-20 — the eyebrow + table head read at tertiary ink (#767676, 4.54:1), not
- * --g-60. V3.6.1 (ADR-0012): labels are sentence case, so the +0.08em positive
- * tracking that UPPERCASE required is gone — neutral tracking preserves the
- * word-shape sentence case restores. */
+/* R-19 / R-20 — the eyebrow is the only positively-tracked role (+0.08em) and
+ * reads at tertiary ink (#767676, 4.54:1), not --g-60. Base CSS still carries
+ * the stale V3.0 0.07em/--g-60; these win on a V3.5 canvas. */
 .canvas.v3-5 .eyebrow,
 .canvas.v3-5 th {
-  letter-spacing: normal;
+  letter-spacing: 0.08em;
   color: var(--ink-3);
 }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="only light">
 <title>Supercard — one URL, the whole spec</title>
 <meta name="description" content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. The complete spec for agents lives in one self-contained file: /llms.txt. Plus a gallery of published cards.">
 <meta name="robots" content="index, follow">
@@ -18,7 +18,10 @@
 <meta name="sc:updated" content="2026-06-25">
 <style>
   :root {
-    color-scheme: light;
+    /* `only light` forbids UA force-darkening (Chrome Auto Dark, Android
+     * WebView force-dark, in-app browsers); bare `light` is only a preference
+     * and gets overridden. The gallery is light-only by design. */
+    color-scheme: only light;
     --w: #FFFFFF;
     --g-06: rgba(0,0,0,0.06);
     --g-12: rgba(0,0,0,0.12);
@@ -222,7 +225,6 @@
     </div>
 
     <div class="section-label">Cards</div>
-
     <a class="card-link" href="cards/CARD-2026-05-14-musk-altman-openai-trial.html">
       <div class="card-title">Musk v. Altman: the OpenAI Trial</div>
       <div class="card-meta">CARD-2026-05-14-musk-altman-openai-trial · mini · v3.0 active</div>

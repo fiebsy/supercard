@@ -6,7 +6,12 @@
  */
 
 :root {
-  color-scheme: light;
+  /* `only light` (not bare `light`) forbids the user agent from force-darkening
+   * the page — bare `light` is still overridden by algorithmic dark modes
+   * (Chrome "Auto Dark", Android WebView force-dark, in-app browsers), which
+   * inverts the white canvas to near-black and leaves --ink-2/--ink-3 text as
+   * low-contrast gray. The canvas is light-only by design (RENDERING-spec). */
+  color-scheme: only light;
   --w: #ffffff;
   --g-06: rgba(0, 0, 0, 0.06);
   --g-12: rgba(0, 0, 0, 0.12);

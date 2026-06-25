@@ -338,7 +338,7 @@ function renderCard(cardPath) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="only light">
 <title>${escapeHtml(title)} — Supercard ${ver.toUpperCase()}</title>
 ${meta}
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of

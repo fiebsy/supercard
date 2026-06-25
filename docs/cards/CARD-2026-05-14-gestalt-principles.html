@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="only light">
 <title>Gestalt Principles — Supercard V3.0</title>
 <meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-gestalt-principles--draft.md">
 <meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-gestalt-principles.md">
@@ -23,7 +23,12 @@
  */
 
 :root {
-  color-scheme: light;
+  /* `only light` (not bare `light`) forbids the user agent from force-darkening
+   * the page — bare `light` is still overridden by algorithmic dark modes
+   * (Chrome "Auto Dark", Android WebView force-dark, in-app browsers), which
+   * inverts the white canvas to near-black and leaves --ink-2/--ink-3 text as
+   * low-contrast gray. The canvas is light-only by design (RENDERING-spec). */
+  color-scheme: only light;
   --w: #ffffff;
   --g-06: rgba(0, 0, 0, 0.06);
   --g-12: rgba(0, 0, 0, 0.12);
@@ -72,7 +77,10 @@
 
 html,
 body {
-  background: #e8e8e8;
+  /* V3.6 — the page surface matches the content (no grey moat). The 393pt
+   * column boundary is drawn by dotted designer guides on .canvas instead of
+   * tonal contrast. */
+  background: var(--w);
   font-family: var(--rounded);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -88,6 +96,11 @@ a {
   background: var(--w);
   min-height: 100vh;
   padding: 0 16px var(--s-8);
+  /* Designer column guides — faint dotted rules at the left/right boundary of
+   * the 393pt column, running the full content height. They replace the old
+   * grey body moat: the surface is now flush white and these mark the edge. */
+  border-left: 1px dotted var(--g-12);
+  border-right: 1px dotted var(--g-12);
 }
 
 /* V3.6.1 (ADR-0013): section vertical padding is symmetric so the bottom
@@ -357,7 +370,9 @@ section.divider h2 {
   font-size: 17px;
   line-height: 24px;
   color: var(--ink-2);
-  margin-bottom: var(--s-6);
+  /* Match the spec→Sample gap (.section-label margin-top) so the three
+   * landing sections share one 32px rhythm instead of 48 / 32. */
+  margin-bottom: var(--s-5);
 }
 .section-label {
   font-size: 11px;
@@ -398,6 +413,27 @@ a.card-link:hover {
   line-height: 21px;
   color: var(--ink-3);
   margin-top: var(--s-1);
+}
+/* A small chevron back button on a card view — mirrors the gallery sample
+ * card's forward chevron. Aligned to the 393px column so the circle sits above
+ * the card title at the same left edge as the body. */
+.card-back {
+  display: block;
+  box-sizing: border-box;
+  width: 393px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: var(--s-4) 16px 0;
+}
+.card-back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--k);
+  color: var(--w);
 }
 .back-link {
   display: inline-block;
