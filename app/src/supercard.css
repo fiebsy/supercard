@@ -55,7 +55,10 @@
 
 html,
 body {
-  background: #e8e8e8;
+  /* V3.6 — the page surface matches the content (no grey moat). The 393pt
+   * column boundary is drawn by dotted designer guides on .canvas instead of
+   * tonal contrast. */
+  background: var(--w);
   font-family: var(--rounded);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -71,6 +74,11 @@ a {
   background: var(--w);
   min-height: 100vh;
   padding: 0 16px var(--s-8);
+  /* Designer column guides — faint dotted rules at the left/right boundary of
+   * the 393pt column, running the full content height. They replace the old
+   * grey body moat: the surface is now flush white and these mark the edge. */
+  border-left: 1px dotted var(--g-12);
+  border-right: 1px dotted var(--g-12);
 }
 
 /* V3.6.1 (ADR-0013): section vertical padding is symmetric so the bottom

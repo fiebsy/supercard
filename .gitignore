@@ -8,6 +8,7 @@ app/dist/
 firebase-debug.log
 *-debug.log
 .vercel/
+.claude/launch.json
 
 # OS / editor cruft
 .DS_Store
