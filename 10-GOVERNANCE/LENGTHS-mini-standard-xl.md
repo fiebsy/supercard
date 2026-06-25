@@ -92,15 +92,14 @@ V3.1+ cards apply per-length anchor budgets on top of the block totals above. **
 
 | Variant | Total blocks | Min anchors | Max anchors | Asterism rests |
 |---|---|---|---|---|
-| Mini | 5–8 | 2 | 3 | 0 |
-| Standard | 10–14 | 3 | 5 | 0–1 |
-| XL | 18–25 | 5 | 8 | 2–4 |
+| Mini | 5–8 | 2 | 3 | — (retired) |
+| Standard | 10–14 | 3 | 5 | — (retired) |
+| XL | 18–25 | 5 | 8 | — (retired) |
 
 Rules:
 
-1. XL cards rendering fewer than 2 asterisms MUST be re-mixed — the density grammar assumes mid-beat rests at this length.
-2. Mini cards MUST NOT use asterisms; the form is too short for them to register as rests rather than ornaments.
-3. Anchor counts that fall outside the band trigger a re-mix, not a length change — pad with content blocks or trim anchors before changing variant.
+1. **The asterism rest is retired (V3.6 — R-24).** The "Asterism rests" column above is kept for genealogy but is now always none. At XL length, a long beat breaks to an anchor or splits into multiple beats (G-9); the 64pt beat gap (R-15) carries the rest-the-eye load that mid-beat asterisms used to.
+2. Anchor counts that fall outside the band trigger a re-mix, not a length change — pad with content blocks or trim anchors before changing variant.
 
 ## L-6. Beat anchor weighting (V3.1+)
 

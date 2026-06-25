@@ -62,8 +62,8 @@ validator already encode.
 | Step | Token | Value | Use |
 |---|---|---|---|
 | 0% | --w | #FFFFFF | Page, card surface |
-| 6% | --g-06 | rgba(0,0,0,0.06) | Hairline borders, card outlines |
-| 12% | --g-12 | rgba(0,0,0,0.12) | Gridlines, subtle backgrounds |
+| 6% | --g-06 | rgba(0,0,0,0.06) | Code-chip fills, faint backgrounds (V3.6 R-23: **no longer used for borders** — too faint at mobile density) |
+| 12% | --g-12 | rgba(0,0,0,0.12) | **Hairline borders and card outlines** (V3.6 R-23, stepped up from --g-06), gridlines, subtle backgrounds |
 | 30% | --g-30 | rgba(0,0,0,0.30) | Deemphasized data, gridlines (V3.5+ R-20: **non-text only**) |
 | 60% | --g-60 | rgba(0,0,0,0.60) | Secondary text, axis labels, footnotes |
 | 100% | --k | #000000 | Body text, primary, focal data |
@@ -118,21 +118,31 @@ CSS stack:
 | --s-8 | 96 | Hero / footer; poster moments (R-15) |
 | --s-9 | 120 | Marketing-scale section gap (V3.4+ opt-in; poster / XL deep-dive — R-15) |
 
-## Shadow system
+## Shadow system — RETIRED in V3.6 (R-22)
+
+> **Retired.** The shadow system below was the V3.0–V3.5 elevation model. **R-22
+> (V3.6) retires it entirely** — no `box-shadow` and no `--shadow-*` token exist
+> in the system. An anchor card is now set apart by border + radius + padding,
+> never elevation. This applies to **every card on re-render**, regardless of
+> `frozen_at_version` (ADR-0011 — the V3.6 retroactive exception). The
+> superseded model is kept below for genealogy (P10); do not emit it.
 
 ```css
+/* RETIRED — superseded by R-22. Kept for genealogy; not emitted. */
 --shadow-flat: none;
 --shadow-subtle: 0 1px 2px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.04);
 --shadow-lofted: 0 2px 4px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06), 0 32px 80px rgba(0,0,0,0.04);
 ```
 
-| Token | Use | Lift |
+| Token | Use (pre-V3.6) | Lift |
 |---|---|---|
 | flat | Body text, dividers, footnotes, inline charts (most blocks) | 0 dp |
 | subtle | Secondary cards, callouts beside the hero | ~2 dp |
 | lofted | Hero card, key-stat anchor, loft-card block | ~8 dp |
 
-**Hard cap: 1–3 elevated elements per Supercard.** All opacity ≤ 6% per stop. Y-offset ⅓ of blur. Pure black at low opacity — never warm or cool gray (tinted shadows leak hue and break grayscale).
+The **1–3-anchor hard cap survives** (it always was the point), but it now counts
+*bounded* cards (hairline-bordered, rounded, padded), not shadowed ones — see R-22
+and Principle 4.
 
 ## R-9. Type metrics (V3.1–V3.4 — superseded by R-19 for V3.5+)
 
@@ -166,9 +176,15 @@ The eyebrow, when present, uses the existing label micro-type spec (11/14pt SF P
 
 **Why.** A reader holding a screenshot of the rendered card never asked "which beat of the author's outline is this?" — that question only exists for the author. Anything in the rendered card that exists to help the author keep track of structure (beat names, position counters, block-type labels, version metadata visible above the fold) is a leak from the production scaffold into the reader's interface. The reader gets one continuous argument; the scaffolding stays in the source file, in `<meta>` tags, and in the breakdown document.
 
-## R-11. Asterism rendering (V3.1+)
+## R-11. Asterism rendering (V3.1+ — RETIRED in V3.6 by R-24)
 
-Glyph: `⁂` (U+2042). Centered horizontally within the content column. Set at body size (17pt) and body weight (400), default ink (100% opacity). No rule above or below, no box, no background tint, no transformation. Vertical band: 32pt above and 32pt below the glyph. Use is governed by GRAMMAR § G-10.
+> **Retired.** The asterism rest is gone from the system. **R-24 (V3.6)
+> supersedes R-11 and G-10** — the `⁂` glyph (and the literal `* * *` form) never
+> render on the canvas; macro-spacing between beats (R-15, 64pt) does the
+> rest-the-eye work. Removed from **every card on re-render**, not just new ones
+> (ADR-0011). The original rule is kept below for genealogy (P10).
+
+~~Glyph: `⁂` (U+2042). Centered horizontally within the content column. Set at body size (17pt) and body weight (400), default ink (100% opacity). No rule above or below, no box, no background tint, no transformation. Vertical band: 32pt above and 32pt below the glyph. Use is governed by GRAMMAR § G-10.~~
 
 ## R-12. Anti-pattern enforcement at validation time (V3.1+)
 
@@ -184,9 +200,10 @@ V3.1+ cards are validated by `app/scripts/validate-v3-1.mjs` (invoked as `npm --
 | **Error** (exit 1) | The rendered card emits a reader-visible footer carrying renderer version, era, mode, or render date — that stamp is dev-only metadata, `<meta>`-tag or comment only (R-10) |
 | **Error** (exit 1) | A label (eyebrow, kicker, folio, badge, chip, micro-label) runs longer than 4 words (R-14) |
 | **Error** (exit 1) | A context-chip strip (`A · B · C` of three or more orphan chips) appears anywhere a single dek/lead-clause sentence would integrate the same facts (R-14) |
+| **Error** (exit 1) | An em dash (—) appears in reader-visible card content (R-24, V3.6) |
+| **Error** (exit 1) | An asterism rest (`⁂` or a literal `* * *` line) appears in card content (R-24, V3.6 — supersedes R-11/G-10) |
 | **Warning** | A `standard-text` block exceeds 75 words or 4 sentences |
-| **Warning** | A beat has > 4 consecutive content blocks without an asterism or anchor |
-| **Warning** | A beat of ≥ 5 blocks is missing the `⁂` asterism after block 4 |
+| **Warning** | A beat has > 4 consecutive content blocks without an anchor (G-9) |
 | **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band |
 | **Warning** | The cover stack departs from R-13 spacing (32 / 12 / 24 / 48pt) by more than 4pt at any join |
 | **Warning** | A label appears on some sections of a card and not others without a structural reason (R-14 — inconsistency reads as bug) |
@@ -201,7 +218,7 @@ The cover is the card's title block — the first ~200pt of vertical space. It s
 
 1. **Title** — display title role (40 / 44pt, semibold). 5 words preferred, 8 words hard cap; never a complete sentence.
 2. **Dek** — subtitle role. **V3.1–V3.4:** 19 / 26pt, medium. **V3.5+ (R-21):** the dek stops being its own size — render it at **body size (17 / 26)** in a lighter weight (400/500) or `--ink-2` (secondary ink), so weight + ink, not a fourth size step, set it apart from the title. 1 sentence preferred, 2 sentences hard cap either way. Carries the load that mode badges and context chips would otherwise carry — a briefing's date, jurisdiction, or status belongs *in* the dek prose, not in a label strip beside it.
-3. **Hero block** — the lofted Beat 1 anchor (loft-card / hook).
+3. **Hero block** — the Beat 1 anchor (loft-card / hook), a bounded card (border + radius + padding, no shadow — R-22).
 
 **Forbidden in the cover (each is a common renderer drift):**
 
@@ -225,7 +242,7 @@ The cover is the card's title block — the first ~200pt of vertical space. It s
 
 These four values are the cover. Any deviation greater than 4pt at a join is a warning (R-12); the renderer should snap to the canonical stack.
 
-**Why every item is justified:** the title is the topic; the dek is the thesis; the hero is the one elevated anchor (principle 4). Three elements, each load-bearing, each on the spec — and no fourth.
+**Why every item is justified:** the title is the topic; the dek is the thesis; the hero is the one bounded anchor (principle 4, R-22). Three elements, each load-bearing, each on the spec — and no fourth.
 
 ## R-14. Labels earn their existence (V3.1+)
 
@@ -378,6 +395,32 @@ The canon builds deep hierarchy from few sizes — Vignelli's "A Few Basic Typef
 
 - **The dek / subtitle stops being a size.** Render it at **body size (17/26)** in a lighter weight or `--ink-2` (R-13, updated). The 19pt step is retired for V3.5.
 - **The Vignelli test (authoring note).** If a beat "needs" a fourth size, differentiate by **weight or ink first** before adding a size. A size is the last lever, not the first — most apparent "need for a new size" is really a need for a heavier weight or a darker ink at an existing size.
+
+## R-22. Flat surfaces — no shadow (V3.6+)
+
+No `box-shadow` and no `--shadow-*` token exist in the system. The Shadow system above is retired (ADR-0011). An anchor card — the Beat 1 hero, a key-stat callout, a loft-card — is set apart from flat body blocks by **border + radius + padding**, never by elevation:
+
+- **Bounded card:** white surface, 1px `--g-12` hairline (R-23), 16pt radius, `--s-4` padding. This is the new meaning of "lofted" in Principle 4 and R-13: *bounded*, not *elevated*.
+- **Tinted card (R-16):** `--surface-tint` surface, no border, 18pt radius. Unchanged — it was already shadowless.
+- **The 1–3-anchor hard cap stands.** It counts bounded (or tinted) cards now, not shadowed ones. Everything else stays flat with no card shell at all.
+
+**Why.** A soft shadow on a flat grayscale poster fakes a light source the rest of the system doesn't have, and it is exactly the "chrome becomes the design" failure Principle 4 exists to suppress — reintroduced by the principle's own elevation mechanism. A border does the bounding job honestly and survives screenshot recompression better than a 4–6%-opacity shadow.
+
+## R-23. Heavier hairline (V3.6+)
+
+Hairlines step from `--g-06` (6%) to `--g-12` (12%); `--g-06` is no longer used for any border. At 393pt on white, a 6% stroke sits below reliable perception — card edges read as accidental gaps. `--g-12` was already the table-rule and hover-border tone, so this unifies on one hairline tone rather than adding a value.
+
+- **Separators** (section / list-item / divider bottoms): 0.5px `--g-12`.
+- **Card outlines** (hero, `pre`, gallery card / spec links, corner glyph): 1px `--g-12`.
+- The tinted-surface variant (R-16) still omits the border entirely.
+
+## R-24. No em dash, no asterism (V3.6+)
+
+**No em dash (U+2014) renders in reader-visible card content.** Recast each one as a comma, colon, parentheses, or two sentences. En dashes (numeric ranges) and the minus sign are unaffected, and the `## Beat N — Name` authoring heading is scaffold that never reaches the render, so neither is touched. The `.sources` list marker is a middle dot (`·`), not an em dash.
+
+**The asterism rest is retired** — R-24 supersedes R-11 and G-10. The `⁂` glyph and the literal `* * *` form never render; macro-spacing between beats (R-15, 64pt) carries the rest-the-eye load. A long content run breaks to an anchor or splits the beat (G-9); the asterism is no longer an escape hatch.
+
+The validator escalates both an em dash and an asterism in card content to **errors** (R-12). **Retroactive (ADR-0011):** R-22 / R-23 / R-24 apply to every card on re-render regardless of `frozen_at_version` — the visual rules live at the base level of `supercard.css`, and em-dash removal is a content edit applied to all existing sources. This is the deliberate exception to the frozen-at-version guarantee (ADR-0003 / P8); the reading-layer rules (R-9/R-19, R-20, R-21) remain frozen and untouched.
 
 ## Block compatibility
 

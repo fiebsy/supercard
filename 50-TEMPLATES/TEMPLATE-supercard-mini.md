@@ -93,6 +93,6 @@ If a topic naturally demands Beats 4 or 5, promote to Standard.
 V3.1 notes for Mini (revised V3.3):
 
 - Anchor budget: 2–3 anchors (L-5)
-- Mini MUST NOT use asterism rests — the form is too short
+- No asterism rests (retired system-wide in V3.6 — R-24) and no em dash in prose (R-24)
 - Bolded lead-clause still required on every prose block
 - No `BEAT N`, no `N / TOTAL`, no renderer-version footer on the canvas (R-10 V3.3, I7)

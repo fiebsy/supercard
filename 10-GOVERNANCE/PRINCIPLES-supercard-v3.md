@@ -39,11 +39,13 @@ A Supercard is defined by its grammar (the 7-beat narrative spine, the block lib
 
 ## 4. Sparing use of cards (chrome is noise)
 
-Cards (rounded, lofted, padded surfaces) are the most expensive visual primitive in the system. Reserve them for the hero and at most two other elevated moments. Everything else is flat.
+Cards (rounded, bordered, padded surfaces) are the most expensive visual primitive in the system. Reserve them for the hero and at most two other anchor moments. Everything else is flat.
 
-**Why it matters.** When every block sits in a card shell, the chrome becomes the design — and the reader stops being able to distinguish the *anchor* moments from ordinary text. The hard cap is **1–3 lofted elements per Supercard** (hero + ≤2 others).
+**Why it matters.** When every block sits in a card shell, the chrome becomes the design — and the reader stops being able to distinguish the *anchor* moments from ordinary text. The hard cap is **1–3 bounded cards per Supercard** (hero + ≤2 others).
 
-**How to apply.** Default every block to flat. Justify each lofted element by what it anchors. If you can't articulate why a block deserves elevation, leave it flat.
+**On "bounded," not "lofted" (V3.6 — R-22).** A card is set apart by **border + radius + padding**, never by a shadow. Shadows are retired system-wide: elevation on a flat grayscale poster fakes a light source the rest of the system doesn't have, and is itself the "chrome becomes the design" failure this principle exists to suppress. A hairline border does the bounding job honestly.
+
+**How to apply.** Default every block to flat (no shell at all). Justify each bounded card by what it anchors. If you can't articulate why a block deserves a card, leave it flat.
 
 ## 5. Strict grayscale (no color, ever)
 

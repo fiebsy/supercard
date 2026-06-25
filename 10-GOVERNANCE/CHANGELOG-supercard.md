@@ -5,7 +5,7 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.5.0 |
+| version | 3.6.0 |
 | owner | derick |
 | updated | 2026-06-25 |
 
@@ -13,9 +13,42 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 
 ---
 
-## [Unreleased]
+## [3.6.0] — "Atlas" — 2026-06-25
+
+Surface refinement. Flattens and quiets the canvas: shadows are retired, the
+hairline steps up so card edges read as deliberate, the asterism rest is gone,
+and the em dash is banned from reader-visible card content. **Not
+backwards-compatible by design** — unlike every prior version, the V3.6 visual
+rules apply to every card on re-render regardless of `frozen_at_version` (the
+CSS lives at base level, not under a `.canvas.v3-6` scope), and em dashes are
+stripped from all existing card sources. This is the deliberate exception to the
+frozen-at-version guarantee, recorded in ADR-0011. The reading-layer rules
+(R-9/R-19, R-20, R-21) remain frozen and untouched. Strict grayscale (P5) and
+SF Pro Rounded (P6) are unchanged.
 
 ### Added
+
+- RENDERING § R-22 — Flat surfaces, no shadow (V3.6+). The Shadow system is retired; no `box-shadow` or `--shadow-*` token exists. An anchor card is set apart by border + radius + padding. The 1–3-anchor hard cap stands but now counts bounded cards.
+- RENDERING § R-23 — Heavier hairline (V3.6+). Borders step from `--g-06` (6%) to `--g-12` (12%); `--g-06` is no longer used for any border. Separators stay 0.5px; card outlines (hero, `pre`, gallery links, glyph) go to 1px.
+- RENDERING § R-24 — No em dash, no asterism (V3.6+). The em dash (U+2014) is banned in reader-visible card content; the `.sources` marker becomes a middle dot. The asterism rest is retired (supersedes R-11 / G-10). The validator escalates both to errors.
+
+### Changed
+
+- PRINCIPLES § 4 — "bounded," not "lofted": a card is set apart by border + radius + padding, never a shadow. RENDERING § R-13 — the hero is the one bounded anchor.
+- `app/src/supercard.css` — base level: `--shadow-*` tokens and both `box-shadow` usages removed; hero gains a 1px `--g-12` border; all `--g-06` borders → `--g-12` (1px on card boxes); `.asterism` set to `display:none`; `.sources li::before` content `—` → `·`. Adds a no-op `.canvas.v3-6` scope.
+- `app/scripts/render-card.mjs` — `RENDERER_VERSION` v3.5 → v3.6; emits the `v3-6` canvas class for `frozen_at_version ≥ 3.6.0`.
+- `app/scripts/validate-v3-1.mjs` — drops the asterism warnings; adds em-dash and asterism errors (R-24); the >4-consecutive-content check now requires an anchor (the asterism is no longer an escape hatch).
+- `app/src/blocks.tsx` — `Asterism()` returns `null` (retired; was the `⁂` rest).
+
+### Removed
+
+- The `--shadow-flat` / `--shadow-subtle` / `--shadow-lofted` tokens and the `--s-asterism-band` token (R-22 / R-24).
+- The mid-beat asterism rest (R-11 / G-10), system-wide — gone from all renders, not just new cards.
+
+### Note — bundled renderer (ADR-0010)
+
+The deterministic renderer below was pending since the V3.5 publish; it ships
+with 3.6.0.
 
 - **ADR-0010 — deterministic renderer.** `app/scripts/render-card.mjs` (`npm --prefix app run render -- <card>`) replaces hand-authoring the HTML: it parses the markdown card, inlines `app/src/supercard.css` resolved to `frozen_at_version` via the `.canvas` class chain, embeds the `sc:` `<meta>` provenance + `sc:content_hash`, writes the standalone render, and upserts the `docs/index.html` gallery. The markdown card is now the *complete* reader-visible source — eyebrows/subheads/dek are authored in the card, never invented at render time.
 - `validate-v3-1.mjs` § **G10 (render-freshness)** — every card must have a current `docs/cards/{slug}.html` whose `sc:content_hash` matches the markdown, plus a gallery link. Stale/missing renders error for V3.1+ cards (legacy V3.0 cards are grandfathered to warnings). Stops Stage 5 from being silently skipped or drifting.

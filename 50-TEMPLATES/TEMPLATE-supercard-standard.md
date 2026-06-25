@@ -114,8 +114,8 @@ The 10-item ADHD scan-ability gate from PRINCIPLES — any "no" blocks the rende
 - [ ] Reading only the bold clauses yields the card's thesis (first-pass extraction)
 - [ ] No `standard-text` block exceeds 75 words or 4 sentences
 - [ ] Anchor-to-content ratio per beat is between 1:2 and 1:4
-- [ ] No beat has > 4 consecutive content blocks without an asterism or anchor
-- [ ] Every beat with ≥ 5 blocks has a centered `⁂` after block 4
+- [ ] No beat has > 4 consecutive content blocks without an anchor (break to an anchor or split the beat — the asterism rest is retired, R-24)
+- [ ] No em dash (—) in any block's prose, and no `⁂` / `* * *` anywhere (R-24)
 - [ ] Rendered canvas is free of scaffold chrome — no `BEAT N`, no `N / TOTAL` counters, no renderer-version footer (R-10 V3.3)
 - [ ] Every stat-callout has a verbal-anchor sentence; every ≥ 4-row table has a `**Takeaway**` row
 - [ ] Body renders at 17pt SF Pro Rounded, 26pt leading, ragged-right, no italic-for-emphasis

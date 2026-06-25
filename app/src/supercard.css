@@ -28,7 +28,6 @@
   --s-7: 64px;
   --s-8: 96px;
   --s-9: 120px;
-  --s-asterism-band: 32px;
   /* V3.4 — surface tint, used by .tint-card per R-16. NOT a seventh step in
    * the gray ramp; a single off-white permitted only as a card background to
    * replace a hairline with tonal contrast. */
@@ -38,9 +37,9 @@
    * Pattern 1). */
   --t-tile: 28px;
   --lh-tile: 32px;
-  --shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.04);
-  --shadow-lofted: 0 2px 4px rgba(0, 0, 0, 0.04), 0 12px 32px rgba(0, 0, 0, 0.06),
-    0 32px 80px rgba(0, 0, 0, 0.04);
+  /* V3.6 — shadows retired (R-22, flat surfaces). The hero and any anchor card
+   * are now set apart by border + radius + padding, never elevation. No
+   * --shadow-* token exists; box-shadow is not used anywhere in the system. */
 }
 
 * {
@@ -71,7 +70,7 @@ a {
 
 section {
   padding: var(--s-6) 0 var(--s-3);
-  border-bottom: 0.5px solid var(--g-06);
+  border-bottom: 0.5px solid var(--g-12);
 }
 section:last-of-type {
   border-bottom: none;
@@ -127,12 +126,13 @@ em {
   color: var(--ink);
 }
 
-/* Beat 1 — lofted hero */
+/* Beat 1 — anchor hero. V3.6 (R-22): flat, no elevation. Set apart by border +
+ * radius + padding, not a shadow. */
 .hero {
   background: var(--w);
   border-radius: 16px;
+  border: 1px solid var(--g-12);
   padding: var(--s-4);
-  box-shadow: var(--shadow-lofted);
   margin: var(--s-2) 0 var(--s-3);
 }
 .hero .hook {
@@ -155,7 +155,7 @@ li {
   letter-spacing: -0.008em;
   color: var(--ink-2);
   padding: var(--s-1) 0;
-  border-bottom: 0.5px solid var(--g-06);
+  border-bottom: 0.5px solid var(--g-12);
   display: flex;
   gap: var(--s-2);
 }
@@ -221,7 +221,7 @@ pre {
   line-height: 22px;
   color: var(--k);
   background: rgba(0, 0, 0, 0.03);
-  border: 0.5px solid var(--g-06);
+  border: 1px solid var(--g-12);
   border-radius: 8px;
   padding: var(--s-2) var(--s-3);
   margin: var(--s-2) 0;
@@ -249,7 +249,7 @@ blockquote.pull {
 /* section divider — beat boundary, not paragraph break */
 section.divider {
   padding: var(--s-7) 0 var(--s-4);
-  border-bottom: 0.5px solid var(--g-06);
+  border-bottom: 0.5px solid var(--g-12);
 }
 section.divider .rule {
   font-family: var(--mono);
@@ -295,7 +295,9 @@ section.divider h2 {
   padding-left: var(--s-3);
 }
 .sources li::before {
-  content: "—";
+  /* V3.6 (R-24): the list marker is a middle dot, not an em dash — no em dash
+   * renders anywhere on the canvas, in prose or as furniture. */
+  content: "·";
   color: var(--g-30);
   margin-right: var(--s-1);
 }
@@ -314,7 +316,7 @@ section.divider h2 {
   backdrop-filter: blur(4px);
   padding: 4px 7px;
   border-radius: 6px;
-  border: 0.5px solid var(--g-06);
+  border: 1px solid var(--g-12);
   user-select: none;
 }
 
@@ -338,11 +340,10 @@ a.card-link {
   display: block;
   text-decoration: none;
   color: inherit;
-  border: 0.5px solid var(--g-06);
+  border: 1px solid var(--g-12);
   border-radius: 16px;
   padding: var(--s-4);
   margin-bottom: var(--s-2);
-  box-shadow: var(--shadow-subtle);
   background: var(--w);
 }
 a.card-link:hover {
@@ -440,7 +441,7 @@ a.spec-link {
   display: block;
   text-decoration: none;
   color: inherit;
-  border: 0.5px solid var(--g-06);
+  border: 1px solid var(--g-12);
   border-radius: 16px;
   padding: var(--s-4);
   margin-bottom: var(--s-2);
@@ -501,16 +502,12 @@ a.spec-link:hover {
   margin-top: var(--s-3);
 }
 
-/* mid-beat asterism rest (G-10 / R-11) */
-.canvas.v3-1 .asterism {
-  display: block;
-  text-align: center;
-  font-size: 17px;
-  line-height: 26px;
-  font-weight: 400;
-  color: var(--k);
-  margin: var(--s-asterism-band) 0;
-  user-select: none;
+/* mid-beat asterism rest — RETIRED in V3.6 (R-11 / G-10 superseded by R-24).
+ * The asterism (`⁂` / `* * *`) never renders on the canvas; macro-spacing
+ * between beats does the rest-the-eye work. Hidden globally (not just on v3-6)
+ * so any older card or React twin re-renders without it. */
+.asterism {
+  display: none;
 }
 
 /* DEPRECATED in V3.3 — the beat micro-folio (R-10 V3.1/V3.2) is no longer
@@ -716,4 +713,20 @@ a.spec-link:hover {
 .canvas.v3-5 .takeaway {
   font-size: 26px;
   line-height: 32px;
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.6 surface refinement — R-22 (flat surfaces, no shadow), R-23 (heavier
+ * hairline: hairlines step from --g-06 to --g-12, anchor cards to 1px),
+ * R-24 (no em dash, no asterism). Unlike V3.1–V3.5, V3.6's visual rules are
+ * applied at the BASE level above (not scoped to .canvas.v3-6) and therefore
+ * re-render every card regardless of frozen_at_version — a deliberate
+ * departure from the frozen-at-version invariant, recorded in ADR-0011: these
+ * are corrections to defaults the steward rejected (elevation, faint borders,
+ * asterism furniture, em dashes), not a new opt-in register. The .v3-6 class
+ * is still emitted on 3.6.0+ cards for forward extensibility; it carries no
+ * overrides today.
+ * ----------------------------------------------------------------------- */
+.canvas.v3-6 {
+  /* reserved — V3.6 visual rules live at base level (see ADR-0011). */
 }

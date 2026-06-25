@@ -47,7 +47,8 @@ Authoring rules (V3 = Atlas era, current):
 - SF Pro Rounded body, SF Mono code, 393pt mobile canvas
 - Single emphasis per block (one bold phrase max)
 - Screenshot test on every section
-- 1-3 lofted elements per card max
+- 1-3 bounded cards per card max (border + radius + padding, no shadow — R-22)
+- No em dashes or asterism rests in card content (R-24)
 - 7-beat narrative spine: Hook, Evidence, Mechanism, Comparison, Counter,
   Application, Close
 - Mini = 5-8 blocks, Standard = 10-14, XL = 18-25

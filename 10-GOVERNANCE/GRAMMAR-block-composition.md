@@ -44,7 +44,7 @@ For each unit of content the breakdown produces, walk these steps **in order**. 
 3. **Apply length-variant filter** — drop candidates whose `length_variants` (in `INDEX-block-library`) don't include the card's target length.
 4. **Apply lifecycle filter** — Core/Stable only. Experimental requires an explicit ask from the user.
 5. **Apply mode's block bias** — favour the modes table's `block_bias` blocks where the choice is otherwise a tie.
-6. **Apply density budget (G-9)** — count the beat's anchor and content blocks so far. If adding the candidate would violate the 1:2–1:4 anchor-to-content ratio, or exceed 2 same-type consecutive anchors, or exceed 4 consecutive content blocks, recast or swap. Insert a mid-beat asterism rest (G-10) instead when the limit is 4 content blocks and a switch isn't warranted.
+6. **Apply density budget (G-9)** — count the beat's anchor and content blocks so far. If adding the candidate would violate the 1:2–1:4 anchor-to-content ratio, or exceed 2 same-type consecutive anchors, or exceed 4 consecutive content blocks, recast or swap. When the limit is 4 content blocks and a switch isn't warranted, split the beat (the mid-beat asterism rest is retired in V3.6 — G-10 / R-24).
 7. **Apply prose rules (G-7, G-8)** if the result is a prose block — every `standard-text`, `faq` answer, and `code` block opens with a 2–6-word bolded lead-clause (that bolded run *is* the block's one emphasis). Split at 75 words or 4 sentences.
 8. **Apply block-specific V3.1 rules** — `stat-callout` requires a verbal anchor; `table` with ≥ 4 data rows requires a `**Takeaway**` row (G-11); `pull-quote` requires attribution; `code` requires a bolded gloss.
 9. **Apply anti-pattern check** — run the unit against the anti-patterns table below. Any match → re-cast.
@@ -123,7 +123,7 @@ The tree says "stop at the first match" — but a dated list of don'ts hits SERI
 3. **Sequential** — if order matters (dated, stepwise, causal chain), treat it as sequential.
 4. **Distributional** — if the unit shows shape across a population, treat it as distributional.
 5. **Definitional** — if the unit names a term, a numbered rule, code, or an equation.
-6. **Editorial structural** — dividers, asterism rests, loft-cards, footnotes. These are *furniture*, not content; resort to them only when their structural job is the point.
+6. **Editorial structural** — dividers, loft-cards, footnotes. These are *furniture*, not content; resort to them only when their structural job is the point. (The asterism rest was retired in V3.6 — G-10 / R-24.)
 7. **Editorial prose** — anti-pattern, checklist, FAQ, pull-quote, table, key-takeaway. The catalogued prose containers.
 8. **Standard text** — the residual fallback.
 
@@ -185,17 +185,17 @@ Rules:
 
 1. Anchor-to-content ratio per beat MUST sit between **1:2** and **1:4**.
 2. No more than **2 consecutive anchors of the same type**. The third anchor MUST switch type or be re-cast as content.
-3. No more than **4 consecutive content blocks**. The fifth MUST be an anchor OR a mid-beat asterism rest (G-10).
+3. No more than **4 consecutive content blocks**. The fifth MUST be an anchor, or the beat splits (the mid-beat asterism rest is retired — see G-10).
 
-## G-10. Mid-beat asterism rest (V3.1+)
+## G-10. Mid-beat asterism rest (V3.1 — RETIRED in V3.6 by R-24)
 
-Beats containing **≥ 5 blocks** MUST insert a centered asterism (`⁂`, U+2042) after the 4th block, and again after every additional 4 blocks within the same beat.
+> **Retired.** The asterism rest is gone. **R-24 (V3.6) supersedes G-10 and
+> R-11** — no `⁂` (and no literal `* * *`) renders on the canvas. A long content
+> run now breaks to an anchor or splits the beat (G-9, rule 3); the 64pt beat gap
+> (R-15) does the rest-the-eye work the asterism used to. The original rule is
+> kept below for genealogy (P10); do not author it.
 
-- The asterism is a literal text glyph at body size and body weight. No rule, no box, no tint, no transform.
-- Vertical band: **32pt above, 32pt below** the glyph.
-- Asterisms do NOT count as blocks for density-budget purposes (G-9).
-- Beats with **≤ 4 blocks** MUST NOT use an asterism — inter-beat dividers do that work.
-- Why a glyph and not deep whitespace alone: whitespace by itself is ambiguous to ADHD readers and can read as "the page didn't finish loading" (Wichary on dinkus typography). A glyph signals intent.
+~~Beats containing **≥ 5 blocks** MUST insert a centered asterism (`⁂`, U+2042) after the 4th block, and again after every additional 4 blocks within the same beat. The asterism is a literal text glyph at body size and body weight, with a 32pt vertical band above and below; it does not count as a block for density-budget purposes (G-9), and beats of ≤ 4 blocks must not use one.~~
 
 ## G-11. Table takeaway-row requirement (V3.1+)
 
@@ -228,7 +228,7 @@ Bridges between beats use one of the five Apple-validated patterns. Position-lan
 **The five patterns** (any of these counts as a beat bridge; combinations are fine):
 
 1. **Eyebrow + tagline pair.** A short uppercase eyebrow names the topic (≤ 4 words, per R-14); a tile-sized headline (28/32, semibold) lands the claim. The dominant pattern. Example: *"The evidence / It cuts both ways."*
-2. **Two-sentence haiku.** One headline holding two clipped sentences. Example: *"M5. The chip that zips."* The break is typographic (em-dash or period); both halves live in one Display-sized block.
+2. **Two-sentence haiku.** One headline holding two clipped sentences. Example: *"M5. The chip that zips."* The break is a period or colon (the em dash is banned in card content — R-24); both halves live in one Display-sized block.
 3. **"Built to / Designed to / Engineered for" imperative.** Three-to-six-word imperative headlines. Example: *"Built for AI. From the silicon up."*
 4. **Inline "Now you can…" kicker.** A bridging sentence inside a `standard-text` block, never as a section break. Example: *"All-new heart rate sensing. Now you can track your heart rate and calories burned during workouts."*
 5. **Single-word eyebrow.** Sometimes the entire section bridge is one uppercase word. Example: *"Performance."* The eyebrow is the bridge; the headline supplies the claim; the body supplies the proof.
@@ -279,13 +279,13 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Section divider between every section | Should mark beats only |
 | Above 25 blocks in one Supercard | Split into multi-part |
 | Stat-callout without a verbal anchor (V3.1+) | A bare number can't be parsed under cognitive load — frame it in one sentence |
-| Three consecutive `standard-text` blocks in one beat (V3.1+) | Wall-of-text collapse — interrupt with an anchor or asterism |
+| Three consecutive `standard-text` blocks in one beat (V3.1+) | Wall-of-text collapse — interrupt with an anchor (the asterism is retired; G-10 / R-24) |
 | Table of ≥ 4 rows without a takeaway row (V3.1+) | Readers extract no thesis from raw rows under scan — close with a bolded verdict |
 | Italics used for emphasis (V3.1+) | Italics are worst-performing for dyslexic/ADHD readers — emphasis is bold-only |
 | All-caps body runs longer than 4 words (V3.1+) | Disables word-shape recognition — restrict to ≤ 4-word kickers and eyebrows |
 | Justified text (V3.1+) | Uneven word-spacing rivers disrupt tracking — body MUST be left-aligned, ragged-right |
 | Two or more bolded runs in one block (V3.1+) | Destroys the single-emphasis signal — one bold per block, renderer errors |
-| Deep whitespace alone as a section break (V3.1+) | Reads as "page didn't finish loading" — mid-beat rests use the asterism, not raw whitespace |
+| An em dash (—) in card prose (V3.6+) | Banned in reader-visible content — recast as a comma, colon, parentheses, or two sentences (R-24) |
 | Stacking ≥ 3 anchor blocks of the same type (V3.1+) | Checkerboard fatigue — the third anchor MUST switch type |
 | `standard-text` block exceeding 75 words (V3.1+) | Crosses chunk-collapse threshold — split into two blocks with their own lead-clauses |
 | Cover header elements outside R-13 (top-edge folios, running brand-mark, mode badge, date eyebrow, context-chip strip, kicker above the title) (V3.1+, revised V3.3) | Random labels load the cover with chrome instead of meaning — the cover permits exactly three elements (title, dek, hero), see RENDERING § R-13 |

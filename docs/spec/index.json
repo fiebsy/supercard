@@ -1,9 +1,9 @@
 {
   "spec": "supercard",
   "title": "Supercard V3 — public specification",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "era": "atlas",
-  "spec_revision": "886e27b47776",
+  "spec_revision": "b14fad266fa5",
   "sources_updated_max": "2026-06-25",
   "canonical_url": "https://berafoot.com/spec/index.json",
   "base_url": "https://berafoot.com/spec",
@@ -27,7 +27,7 @@
       "title": "Style values to render any block",
       "url": "https://berafoot.com/spec/tokens.json",
       "file": "tokens.json",
-      "summary": "Machine-readable design tokens: canvas, the six-step gray ramp, the SF Pro Rounded type scale, the 8pt spacing scale, and the shadow system. Style any block from these values alone — no other ramp, no color, ever.",
+      "summary": "Machine-readable design tokens: canvas, the six-step gray ramp, the SF Pro Rounded type scale, and the 8pt spacing scale. Style any block from these values alone — no other ramp, no color, no shadow (shadows retired in V3.6, R-22), ever.",
       "source": "10-GOVERNANCE/RENDERING-spec.md"
     },
     {
@@ -241,42 +241,42 @@
       {
         "file": "00-INDEX/INDEX-supercard-v3.md",
         "updated": "2026-06-25",
-        "sha256": "7fbee2c7e689e9517e96acf7494676cfe10dbd977a651c33ad400bf9f3ddbfcf"
+        "sha256": "f5c3af0343dea957d3cf01a4867d0f7f7eef8f145d00720850d1eabf6585fad1"
       },
       {
         "file": "10-GOVERNANCE/PRINCIPLES-supercard-v3.md",
         "updated": "2026-06-25",
-        "sha256": "5446ea29ab3fe9a082192169af11316349304817777f71c708f021b3c1214bde"
+        "sha256": "3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452"
       },
       {
         "file": "10-GOVERNANCE/GRAMMAR-block-composition.md",
         "updated": "2026-05-16",
-        "sha256": "bcccbe350959dea87a369f7fec70f00ee176390f3b4527cdf1354a2409869b26"
+        "sha256": "ad2b547eb3bd6356446e9d0791b038f42012ae34e84b395d6b25b9795b3e3e34"
       },
       {
         "file": "10-GOVERNANCE/LENGTHS-mini-standard-xl.md",
         "updated": "2026-05-16",
-        "sha256": "e8c2e487046806d887cb044fa68e7e01cbd8d626b1295b376c28c309fe06eaf0"
+        "sha256": "edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff"
       },
       {
         "file": "00-INDEX/INDEX-block-library.md",
         "updated": "2026-05-16",
-        "sha256": "5bd32ec8414bb2d38a27441b844cad83ad58abd46037e1ef9bf17b83fac15f2e"
+        "sha256": "899e9e3ebabf8fd75a5eb5bf0d81a12bcaa32a7f603a950b5d3422ffd73a5be6"
       },
       {
         "file": "10-GOVERNANCE/PIPELINE-card-assembly.md",
         "updated": "2026-05-16",
-        "sha256": "73a032381af3eeaf43d4128ebb915a92a5afb67b00b82eed72af4f0d96650ca7"
+        "sha256": "f093e06e7e1ca7d538df6f899f5cd37e043d549106d19817ddf3206df4835e5f"
       },
       {
         "file": "10-GOVERNANCE/RENDERING-spec.md",
         "updated": "2026-06-25",
-        "sha256": "898151142d3291dc7719a8659856fe549e95597a0b58ec7c294c027bcc6a6159"
+        "sha256": "fb70abe149c6310bb79b0be8025602d66e6d74bd0283ac1d5e9abee6240bc561"
       },
       {
         "file": "10-GOVERNANCE/GLOSSARY-supercard.md",
         "updated": "2026-05-16",
-        "sha256": "ea82659d8a59986b3b8a685b0c84b73fd0f865886b65e0b4e0fcff273e8b5e59"
+        "sha256": "29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2"
       },
       {
         "file": "10-GOVERNANCE/EXAMPLE-mini-supercard.md",

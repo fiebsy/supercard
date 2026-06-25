@@ -19,8 +19,8 @@
 | supersedes | |
 | related | |
 
-> **Deep-dive XL.** A 21-block view of `60-RESEARCH/BREAKDOWN-gestalt-principles.md`
-> — all 7 beats, multi-block, redundancy filter at its hardest. The breakdown
+> **Deep-dive XL.** A 21-block view of `60-RESEARCH/BREAKDOWN-gestalt-principles.md`:
+> all 7 beats, multi-block, redundancy filter at its hardest. The breakdown
 > holds the full source register, the quantification literature, the figure/ground
 > cue list, and the open questions; this card holds what a deep-dive admits
 > without restatement.
@@ -34,11 +34,11 @@
 HERO-CARD: **Gestalt Principles**
 
 > You never see raw pixels. Before you are aware of looking, your visual system
-> has already grouped, split, and completed the scene into objects — and the
+> has already grouped, split, and completed the scene into objects, and the
 > Gestalt principles are **the catalogue of rules it uses**.
 
 **Lede.** Three German psychologists asked why a row of dots looks like *a row*
-and not like *dots*. The answer became the working grammar of perception — and
+and not like *dots*. The answer became the working grammar of perception, and
 of design.
 
 ---
@@ -48,7 +48,7 @@ of design.
 `BLOCK-standard-text` · the founding experiment
 
 In 1912, Max Wertheimer flashed two lights in alternation and people saw **one
-light moving** — motion where nothing moved. The percept was a whole that
+light moving**: motion where nothing moved. The percept was a whole that
 existed in no part. That experiment, the *phi phenomenon*, launched Gestalt
 psychology: the claim that perception builds wholes first, and the parts come
 after.

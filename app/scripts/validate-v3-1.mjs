@@ -40,11 +40,13 @@
  *       its display tightening folded into the R-19 default (R-18/R-19)
  *     - (V3.5+) positive body letter-spacing re-introduced via a frontmatter
  *       override — retired by R-19 (body is −0.01em, word-spacing normal)
+ *     - (V3.6+) em dash (—) in reader-visible card content (R-24)
+ *     - (V3.6+) asterism rest (⁂ / "* * *") in card content — retired in V3.6
+ *       (R-24, supersedes R-11/G-10); macro-spacing does the rest-the-eye work
  *
  *   Warnings (exit 0, printed) — fix where possible:
  *     - standard-text block exceeds 75 words or 4 sentences
- *     - beat has > 4 consecutive content blocks without an asterism/anchor
- *     - beat with >= 5 blocks missing the asterism (⁂) rest
+ *     - beat has > 4 consecutive content blocks without an anchor (G-9)
  *     - per-beat anchor:content ratio outside the 1:2..1:4 band
  *     - (V3.4+) standard-text block exceeds 60 words (G-12 mobile cap)
  *     - (V3.4+) prose block tests above Flesch-Kincaid grade 9 (G-13)
@@ -303,8 +305,18 @@ function hasTakeawayRow(text) {
   return /^\s*\|.*\*\*Takeaway\*\*/im.test(text);
 }
 
+// V3.6 (R-24): the asterism is retired. This now detects a *violation* — the
+// `⁂` glyph or a literal `* * *` / `***` thematic-break line (a `---` beat
+// fence is permitted scaffold, stripped by the renderer, and is NOT flagged).
 function hasAsterism(text) {
-  return /⁂/.test(text);
+  return /⁂/.test(text) || /^[ \t]*(?:\*[ \t]*){3,}$/m.test(text);
+}
+
+// V3.6 (R-24): no em dash (U+2014) renders in reader-visible card content. En
+// dashes (ranges) and the minus sign are unaffected. The `## Beat N — Name`
+// heading separator is authoring scaffold and never reaches a block's bodyText.
+function hasEmDash(text) {
+  return /—/.test(text);
 }
 
 /* ------------------------------------------------------------------ *
@@ -517,6 +529,13 @@ function validateCard(path, raw) {
     for (const strip of findChipStrips(b.bodyText)) {
       push(errors, b, `context-chip strip "${strip}" — labels integrate facts in prose; promote to dek or lead-clause (R-14)`);
     }
+    // V3.6 (R-24): no em dash, no asterism rest, anywhere in card content.
+    if (hasEmDash(b.bodyText)) {
+      push(errors, b, `em dash (—) in card content — V3.6 bans the em dash in reader-visible prose; recast with a comma, colon, parentheses, or two sentences (R-24)`);
+    }
+    if (hasAsterism(b.bodyText)) {
+      push(errors, b, `asterism rest (⁂ / "* * *") in card content — retired in V3.6; macro-spacing between beats does the rest-the-eye work (R-24, supersedes R-11/G-10)`);
+    }
     if (compareVersion(fav, "3.3.0") >= 0) {
       for (const leak of findScaffoldLeaks(b.bodyText)) {
         push(errors, b, `scaffold leakage "${leak}" — beat labels and position counters do not appear in the rendered card (R-10 V3.3, I7)`);
@@ -623,16 +642,12 @@ function validateCard(path, raw) {
     byBeat.get(b.beat).push(b);
   }
   for (const [beat, list] of byBeat) {
+    // V3.6 (R-24): the asterism rest is retired — a long content run must break
+    // to an anchor (or split the beat); the ⁂ is no longer an escape hatch.
     let consecutiveContent = 0;
-    let hadAsterism = false;
     let anchors = 0;
     let contents = 0;
     for (const b of list) {
-      if (hasAsterism(b.bodyText)) {
-        hadAsterism = true;
-        consecutiveContent = 0;
-        continue;
-      }
       const k = classify(b);
       if (k === "anchor") {
         anchors++;
@@ -641,12 +656,9 @@ function validateCard(path, raw) {
         contents++;
         consecutiveContent++;
         if (consecutiveContent > 4) {
-          push(warnings, b, `beat ${beat}: > 4 consecutive content blocks without an anchor or ⁂ (G-9)`);
+          push(warnings, b, `beat ${beat}: > 4 consecutive content blocks without an anchor — break to an anchor or split the beat (G-9)`);
         }
       }
-    }
-    if (list.length >= 5 && !hadAsterism) {
-      push(warnings, { beat }, `beat ${beat}: ${list.length} blocks but no ⁂ asterism rest after block 4 (G-10)`);
     }
     if (anchors > 0 && contents > 0) {
       const ratio = contents / anchors;

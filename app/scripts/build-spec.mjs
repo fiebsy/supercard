@@ -346,17 +346,21 @@ function buildTokens() {
   }));
 
   const cssVars = parseCssVars(d.raw);
+  // V3.6 (R-22): the shadow system is retired — no --shadow-* token exists in
+  // the CSS. The Shadow-system table is kept in the spec for genealogy; we
+  // surface it as retired so consumers don't emit a box-shadow.
   const shadows = rowsAsObjects(findTable(d, "Token", "Use", "Lift")).map((r) => ({
     token: r.token,
-    css: cssVars[`--shadow-${r.token}`] || (r.token === "flat" ? "none" : null),
+    css: "none",
     use: r.use,
     lift: r.lift,
+    retired: true,
   }));
 
   return leaf(
     "tokens",
     "Style values to render any block",
-    "Machine-readable design tokens: canvas, the six-step gray ramp, the SF Pro Rounded type scale, the 8pt spacing scale, and the shadow system. Style any block from these values alone — no other ramp, no color, ever.",
+    "Machine-readable design tokens: canvas, the six-step gray ramp, the SF Pro Rounded type scale, and the 8pt spacing scale. Style any block from these values alone — no other ramp, no color, no shadow (shadows retired in V3.6, R-22), ever.",
     {
       source: SRC.rendering.path,
       provenance: provenanceOf(SRC.rendering),
@@ -374,7 +378,8 @@ function buildTokens() {
         type_scale: typeScale,
         spacing: { baseline: "8pt", tokens: spacing },
         shadows: {
-          note: "Hard cap: 1–3 elevated elements per Supercard. Opacity ≤ 6% per stop. Y-offset ⅓ of blur. Pure black at low opacity — never tinted.",
+          note: "RETIRED in V3.6 (R-22). No box-shadow or --shadow-* token exists. An anchor card is set apart by border + radius + padding, not elevation. The 1–3-anchor cap stands but counts bounded cards. Tokens kept for genealogy only; css is 'none'.",
+          retired: true,
           tokens: shadows,
         },
       },
@@ -475,7 +480,7 @@ function buildGrammar() {
         seven_beat_spine: beats,
         block_selection_procedure: procedure,
         decision_tree_precedence: precedence,
-        note: "Beats are authoring scaffolding. The rendered card labels each section with the beat NAME only — never the Beat N index or the BLOCK-* id. Full decision tree, adjacency rules, density budget (G-9), prose rules (G-7/G-8), asterism rest (G-10), table takeaway-row (G-11), and the anti-patterns table are in doc_markdown. A numeric worked example of the procedure is in the example layer.",
+        note: "Beats are authoring scaffolding. The rendered card labels each section with the beat NAME only — never the Beat N index or the BLOCK-* id. Full decision tree, adjacency rules, density budget (G-9), prose rules (G-7/G-8), table takeaway-row (G-11), and the anti-patterns table are in doc_markdown. A numeric worked example of the procedure is in the example layer.",
       },
       see_also: ["blocks", "lengths", "principles", "example"],
       doc_markdown: d.raw,

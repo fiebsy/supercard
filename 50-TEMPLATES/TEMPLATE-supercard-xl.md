@@ -81,7 +81,7 @@ HERO-CARD: {{TITLE}}
 V3.1 notes for XL (revised V3.3):
 
 - Anchor budget: 5–8 anchors (L-5)
-- XL MUST carry 2–4 asterism rests — typically one mid-beat in the multi-block beats (Evidence, Mechanism)
+- No asterism rests (retired system-wide in V3.6 — R-24). A long multi-block beat (Evidence, Mechanism) breaks to an anchor or splits into beats; the 64pt gap carries the rest. No em dash in prose (R-24)
 - Every prose block opens with a bolded 2–6-word lead-clause
 - Every ≥ 4-row table closes with a `**Takeaway**` row
 - No `BEAT N`, no `N / TOTAL`, no renderer-version footer on the canvas (R-10 V3.3, I7)

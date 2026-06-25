@@ -41,7 +41,7 @@ const CSS_PATH = resolve(repo, "app/src/supercard.css");
 
 // The renderer's own version — emitted as sc:renderer_version. Bump when the
 // emitted markup changes shape (not when a card's frozen_at_version changes).
-const RENDERER_VERSION = "v3.5";
+const RENDERER_VERSION = "v3.6";
 
 /* ---- small helpers ----------------------------------------------------- */
 
@@ -107,6 +107,7 @@ function canvasClasses(fm) {
   if (maj > 3 || (maj === 3 && min >= 1)) cls.push("v3-1");
   if (maj > 3 || (maj === 3 && min >= 4)) cls.push("v3-4");
   if (maj > 3 || (maj === 3 && min >= 5)) cls.push("v3-5");
+  if (maj > 3 || (maj === 3 && min >= 6)) cls.push("v3-6");
 
   // Beat-gap opt-outs/ins relative to the version default (R-15).
   const gap = (fm.beat_gap || "").trim();

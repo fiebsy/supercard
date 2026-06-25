@@ -2,9 +2,9 @@
   "layer": "example",
   "title": "One worked Mini-mode build, inline",
   "spec": "supercard",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "era": "atlas",
-  "spec_revision": "886e27b47776",
+  "spec_revision": "b14fad266fa5",
   "summary": "A single end-to-end worked example: topic → mode inference → ~3-sentence breakdown excerpt → 6-block selection with the GRAMMAR procedure walked per beat → constraint-gate results → frontmatter → 5 lines of rendered HTML scaffolding. Read this once before authoring your first card.",
   "source": "10-GOVERNANCE/EXAMPLE-mini-supercard.md",
   "provenance": [

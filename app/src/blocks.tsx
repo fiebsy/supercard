@@ -363,16 +363,14 @@ export function Sources({ items }: { items: ReactNode[] }) {
   );
 }
 
-/* ---- V3.1: mid-beat asterism rest (G-10 / R-11) ------------------------ */
-
+/* ---- RETIRED in V3.6: mid-beat asterism rest (was G-10 / R-11) ---------- *
+ * R-11 / G-10 are superseded by R-24 (ADR-0011): the asterism never renders.
+ * Macro-spacing between beats does the rest-the-eye work the asterism used to.
+ * The component returns null so any card still importing it emits nothing;
+ * `.asterism` is also display:none in supercard.css as a belt-and-braces hide.
+ * Do NOT mount this in new cards. */
 export function Asterism() {
-  // Literal text glyph at body size/weight, 32pt vertical bands (CSS).
-  // No box, no rule, no tint — see RENDERING-spec § R-11.
-  return (
-    <div className="asterism" aria-hidden="true">
-      ⁂
-    </div>
-  );
+  return null;
 }
 
 /* ---- Deprecated V3.1 beat micro-folio (dev-only on V3.3+) -------------- *

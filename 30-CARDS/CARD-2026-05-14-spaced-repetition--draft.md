@@ -18,12 +18,12 @@
 | supersedes | |
 | related | |
 
-> **Reference sample.** This is a fully-authored Standard Supercard — a worked
+> **Reference sample.** This is a fully-authored Standard Supercard, a worked
 > example of the V3 grammar, not a template. Each beat names the block type it
 > uses (from `INDEX-block-library`) and carries exactly one emphasized phrase.
 > Read alongside `GRAMMAR-block-composition` to see the rules in practice, and
-> alongside `60-RESEARCH/BREAKDOWN-spaced-repetition.md` — the deep-research
-> report this card is a constrained `briefing` *view* of — to see the genealogy
+> alongside `60-RESEARCH/BREAKDOWN-spaced-repetition.md`, the deep-research
+> report this card is a constrained `briefing` *view* of, to see the genealogy
 > end to end.
 
 ---
@@ -34,7 +34,7 @@
 
 HERO-CARD: **Spaced Repetition**
 
-> Reviewing material at widening intervals beats cramming — not by a little, by **roughly double the long-term retention** for the same total study time.
+> Reviewing material at widening intervals beats cramming: not by a little, by **roughly double the long-term retention** for the same total study time.
 
 **Lede.** Spaced repetition schedules each review just before you'd forget, so every recall is effortful enough to strengthen the memory and cheap enough to be worth doing.
 

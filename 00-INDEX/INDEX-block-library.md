@@ -65,7 +65,7 @@ decision-tree routing — moves.
 | BLOCK-section-divider | Section divider | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |
 | BLOCK-footnote-source | Footnote / source aggregator | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |
 | BLOCK-loft-card | Loft-card | structural | core | 3.0.0 | standard,xl | | 2026-05-16 |
-| BLOCK-asterism-rest | Asterism rest (mid-beat) | structural | core | 3.1.0 | standard,xl | | 2026-05-16 |
+| BLOCK-asterism-rest | Asterism rest (mid-beat) | structural | deprecated | 3.1.0 | — | **Retired in V3.6 (R-24, supersedes R-11/G-10)** — never renders | 2026-06-25 |
 
 ## Rules by version (per block)
 
@@ -107,13 +107,14 @@ which rules apply to which `frozen_at_version`.
 - The gloss is the block's single emphasis; no bold runs inside the code itself
 - Body weight inside `<pre>` is regular SF Mono; comments stay at body weight, not italic
 
-### BLOCK-asterism-rest (new V3.1)
+### BLOCK-asterism-rest (V3.1 — RETIRED in V3.6)
 
-- Glyph: `⁂` (U+2042)
-- Size: body (17pt) / weight 400 / 100% ink
-- Spacing: 32pt margin-block above and below
-- Use: inserted by author OR auto-inserted by the renderer after every 4 content blocks within a beat of ≥ 5 blocks (see GRAMMAR § G-10)
-- Does not count as a block for density budgets (G-9) or for total-block counts (L-5)
+> **Retired by R-24 (supersedes R-11 / G-10).** The asterism rest never renders.
+> The block id is kept (ADR-0003 contract) but is `deprecated` and emits nothing.
+> A long content run breaks to an anchor or splits the beat (G-9); the 64pt beat
+> gap (R-15) does the rest-the-eye work. Original spec, for genealogy: a centered
+> `⁂` at body size/weight with a 32pt vertical band, not counted in density
+> budgets (G-9) or total-block counts (L-5).
 
 ## V3.4 backwards compatibility
 

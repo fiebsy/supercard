@@ -5,7 +5,7 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.5.0 |
+| version | 3.6.0 |
 | owner | derick |
 | updated | 2026-06-25 |
 
@@ -113,10 +113,14 @@ ls docs/cards/
 | 0007 | Render and publish by default | Accepted | 2026-05-14 |
 | 0008 | Spec organized for agent legibility (3.2.0) | Accepted | 2026-05-16 |
 | 0009 | V3.5 reading-layer refinement (R-19/R-20/R-21) | Accepted | 2026-06-25 |
+| 0010 | Deterministic renderer (`render-card.mjs`) | Accepted | 2026-06-25 |
+| 0011 | V3.6 surface refinement (R-22/R-23/R-24, retroactive) | Accepted | 2026-06-25 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entry:
+
+**v3.6.0** — Surface refinement. Added R-22 (flat surfaces — shadows retired system-wide; the `--shadow-*` tokens are deleted and an anchor card is bounded by border + radius + padding), R-23 (heavier hairline — borders step from `--g-06` to `--g-12`, anchor cards to 1px), R-24 (no em dash in reader-visible card content; asterism rest retired — supersedes R-11/G-10). Amended Principle 4 ("bounded," not "lofted") and R-13. **Not backwards-compatible by design:** unlike every prior version, R-22/R-23/R-24's visual rules apply to every card on re-render regardless of `frozen_at_version` (the CSS lives at base level), and em dashes are stripped from all existing sources — the deliberate exception to the frozen-at-version guarantee (ADR-0011). The reading-layer rules (R-9/R-19, R-20, R-21) remain frozen and untouched. (ADR-0011.)
 
 **v3.5.0** — Reading-layer refinement. Added R-19 (body type metrics — retires R-9's positive tracking, body to 17/26 −0.01em / word-spacing normal), R-20 (text-ink ladder — `--ink` #1A1A1A / `--ink-2` #595959 / `--ink-3` #767676, all clearing WCAG 4.5:1; `#888`/`#BBB`/`--g-30` demoted to non-text), R-21 (three-size reading core — header 40 / subhead 26 / body 17, weight + ink + space do the rest). Amended R-15 (V3.5 default beat gap 48→64pt), R-13 (dek at body-size + secondary ink), and superseded R-9 / folded R-18's display tightening in as the default (dropping the sub-1.5 line-height variant). Backwards-compatible: every V3.0–V3.4 card renders identically. New constraints apply to `frozen_at_version: 3.5.0` and later only. (ADR-0009.)
 
@@ -128,7 +132,7 @@ The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most r
 - **MINOR** bumps: new Stable block promoted, length variant added to existing block
 - **PATCH** bumps: spec text clarifications, typo fixes
 - **Pre-release**: experimental work tagged `V3.next-alpha.N`
-- **Frozen-at-authored**: a card written under V3.0 stays valid forever; V3.5 doesn't retroactively reformat it
+- **Frozen-at-authored**: a card written under V3.0 stays valid forever; reading-layer versions (V3.5) don't retroactively reformat it. **Exception — V3.6 (ADR-0011):** the surface rules (no shadow, heavier hairline, no asterism, no em dash) are applied retroactively to every card on re-render, by the steward's call
 
 ## Quick links
 
