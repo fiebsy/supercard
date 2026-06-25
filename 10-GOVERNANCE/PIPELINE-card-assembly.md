@@ -131,12 +131,14 @@ Any gate failure → fix, then re-run the gate. Any invariant violation → the 
 
 ## Stage 5 — Render and publish (mandatory)
 
-Rendering is **not optional** (ADR-0007). Every card request produces a published HTML view — the user always gets the visual artifact, not just its markdown source.
+Rendering is **not optional** (ADR-0007) and is **not hand-authored** (ADR-0010). Every card request produces a published HTML view by running the renderer — never by reconstructing the HTML from this spec by hand.
 
-- **Do.** Render per `RENDERING-spec`: standalone HTML, 393pt mobile canvas, corner glyph on every section, all resources inlined. Embed the `<meta>` provenance (see frontmatter schema below — render frontmatter). Add an entry to `docs/index.html` (newest at top) linking the new render. Commit the breakdown, the card, the registry update, and the `docs/` changes; push **directly to `main`** (no feature branch, no PR; see `CLAUDE.md`).
+- **Do.** Run the renderer: `npm --prefix app run render -- 30-CARDS/CARD-{YYYY-MM-DD}-{slug}--draft.md`. It parses the markdown card, inlines `app/src/supercard.css` resolved to the card's `frozen_at_version`, embeds the five `sc:` `<meta>` tags plus `sc:content_hash`, writes the standalone HTML, and upserts the `docs/index.html` gallery entry (newest at top). Then commit the breakdown, the card, the registry update, and the `docs/` changes; push **directly to `main`** (no feature branch, no PR; see `CLAUDE.md`).
 - **Produce.** `docs/cards/CARD-{YYYY-MM-DD}-{slug}.html`, a gallery entry in `docs/index.html`, a push to `main`.
-- **Check.** Standalone HTML opens with no network. `<meta name="sc:frozen_at_version">` matches the card's `frozen_at_version`. The card's URL resolves on the live deployment.
+- **Check.** Run `npm --prefix app run validate` — **G10 (render-freshness)** must pass: the card's `sc:content_hash` matches its bytes, and it is linked in the gallery. Standalone HTML opens with no network. The card's URL resolves on the live deployment. (If you edited the card after rendering, re-run the renderer — G10 errors on a stale render.)
 - **Layers consulted.** `rendering`, `tokens`.
+
+**Why a command, not hand-authoring.** The render used to be reconstructed from this spec by hand at the end of a long task — so it got forgotten, and its layout drifted (eyebrows/subheads/dek were re-authored in the HTML and never written back to the card). The renderer makes the markdown card the complete reader-visible source and the HTML a pure function over `supercard.css`; G10 makes skipping or staling it a loud error. See ADR-0010.
 
 The markdown card stays the canonical, frozen-at-version source (ADR-0003); the HTML is a *view* of it — regenerated, never hand-edited.
 

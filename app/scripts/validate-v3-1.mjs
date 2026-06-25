@@ -54,13 +54,16 @@
  *
  * The validator is opt-in (V3.1+ only) and does not block the build.
  */
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { dirname, resolve, relative } from "node:path";
+import { dirname, resolve, relative, basename } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, "../..");
 const cardsDir = resolve(repo, "30-CARDS");
+const renderDir = resolve(repo, "docs/cards");
+const galleryPath = resolve(repo, "docs/index.html");
 
 /* ------------------------------------------------------------------ *
  * WCAG 2.2 contrast — R-20 text-ink ladder check (V3.5+).
@@ -710,6 +713,56 @@ for (const path of paths) {
   }
   totalErrors += res.errors.length;
   totalWarnings += res.warnings.length;
+}
+
+// G10 — render-freshness gate (ADR-0010). Every card in 30-CARDS/ MUST have a
+// current published render in docs/cards/ and a gallery entry. The render
+// embeds sc:content_hash = sha256 of the markdown it was built from; if the
+// card has been edited since, the hashes diverge and the render is stale. This
+// is the loud backstop that stops Stage 5 from being silently skipped.
+{
+  console.log(`\n[validate] G10 render-freshness (ADR-0010):`);
+  const gallery = existsSync(galleryPath) ? readFileSync(galleryPath, "utf8") : "";
+  for (const path of paths) {
+    if (!statSync(path).isFile()) continue;
+    const rel = relative(repo, path);
+    const slug = basename(path).replace(/--(draft|published|archived)/, "").replace(/\.md$/, "");
+    const cardRaw = readFileSync(path);
+    // Grandfather pre-ADR-0010 cards by version — the renderer grammar and
+    // content_hash are a V3.1+ concern, exactly as the content checks above
+    // skip < 3.1.0. A missing/stale render is a hard error for V3.1+ cards
+    // (so forgetting Stage 5 on a new card fails loudly) and a warning for
+    // legacy V3.0 cards (adopt them deliberately, never auto-migrated).
+    const frozen = cardRaw.toString("utf8").match(/\|\s*frozen_at_version\s*\|\s*([0-9.]+)\s*\|/)?.[1] || "3.0.0";
+    const [fmaj, fmin] = frozen.split(".").map((n) => parseInt(n, 10));
+    const legacy = fmaj < 3 || (fmaj === 3 && fmin < 1);
+    const flag = (msg) => {
+      if (legacy) { console.warn(`  warn   ${msg} (legacy V3.0 — grandfathered)`); totalWarnings++; }
+      else { console.error(`  ERROR  ${msg}`); totalErrors++; }
+    };
+    const htmlPath = resolve(renderDir, `${slug}.html`);
+    if (!existsSync(htmlPath)) {
+      flag(`${rel}: no render at docs/cards/${slug}.html — run \`npm --prefix app run render -- ${rel}\``);
+      continue;
+    }
+    const html = readFileSync(htmlPath, "utf8");
+    const embedded = html.match(/<meta name="sc:content_hash" content="([a-f0-9]+)">/)?.[1];
+    if (!embedded) {
+      console.warn(`  warn   ${rel}: render lacks sc:content_hash (legacy hand-render) — re-render to adopt the gate`);
+      totalWarnings++;
+    } else {
+      const actual = createHash("sha256").update(cardRaw).digest("hex");
+      if (actual !== embedded) {
+        flag(`${rel}: render is STALE (card edited since last render) — run \`npm --prefix app run render -- ${rel}\``);
+      } else {
+        console.log(`  ok     ${rel} -> docs/cards/${slug}.html (fresh)`);
+      }
+    }
+    if (gallery && !gallery.includes(`cards/${slug}.html`)) {
+      console.warn(`  warn   ${rel}: not linked in docs/index.html gallery — re-render to add it`);
+      totalWarnings++;
+    }
+  }
 }
 
 console.log(

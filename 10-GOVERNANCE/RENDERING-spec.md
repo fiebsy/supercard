@@ -13,6 +13,41 @@ How a Supercard source becomes a rendered HTML artifact, and how that artifact i
 
 ---
 
+## Render quickstart (read this first)
+
+You do **not** hand-write the HTML. The render is a pure function over the
+markdown card, produced by one command (ADR-0010). Everything below this section
+is the *why* — the rule library the renderer applies — not a manual build recipe.
+
+```sh
+# 1. render the card → docs/cards/{slug}.html + gallery entry
+npm --prefix app run render -- 30-CARDS/CARD-2026-06-25-v35-reading-layer--draft.md
+
+# 2. verify it (G10 render-freshness must pass)
+npm --prefix app run validate
+```
+
+The renderer (`app/scripts/render-card.mjs`):
+
+- inlines `app/src/supercard.css` **verbatim** — the single source of truth for
+  every token, type metric, and colour. Never re-state a value in the HTML.
+- resolves the card's `frozen_at_version` to the `.canvas` class chain
+  (`canvas v3-1 v3-5 …`); the cascade applies the right rule library (R-9 vs
+  R-19, etc.) automatically — you never reason about which rule is live.
+- emits the five `sc:` `<meta>` tags plus `sc:content_hash`, the fixed corner
+  glyph, and upserts `docs/index.html`.
+
+**The card carries all reader-visible text.** Eyebrows = the text after `·` on
+the `` `BLOCK-xxx` · eyebrow `` line; subheads = a `### ` line; dek/hook/stat/
+table/takeaway/sources = ordinary markdown. Nothing visible is invented at
+render time. Grammar reference: `50-TEMPLATES/TEMPLATE-supercard-*.md`.
+
+If you are reading this spec to *build* a card, you are done after the two
+commands above. The rest of this document defines the rules the stylesheet and
+validator already encode.
+
+---
+
 ## Canvas
 
 - **Mobile portrait:** 393 × 852pt (iPhone 15/16 Pro)

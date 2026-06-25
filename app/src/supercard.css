@@ -271,6 +271,18 @@ section.divider h2 {
   color: var(--ink);
 }
 
+/* focal stat — the reserved hero-number metrics (stat-callout). Reads at
+ * --ink, so it picks up #1A1A1A automatically on a V3.5 canvas. */
+.stat {
+  font-size: 56px;
+  line-height: 60px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin: var(--s-1) 0;
+}
+
 .sources li {
   font-size: 13px;
   line-height: 18px;
@@ -684,4 +696,24 @@ a.spec-link:hover {
 }
 .canvas.v3-5.beat-gap-120 section {
   padding-top: var(--s-9);
+}
+
+/* R-19 / R-20 — the eyebrow is the only positively-tracked role (+0.08em) and
+ * reads at tertiary ink (#767676, 4.54:1), not --g-60. Base CSS still carries
+ * the stale V3.0 0.07em/--g-60; these win on a V3.5 canvas. */
+.canvas.v3-5 .eyebrow,
+.canvas.v3-5 th {
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+/* R-20 — table key column is readable tertiary ink, not the sub-floor --g-60. */
+.canvas.v3-5 td:first-child {
+  color: var(--ink-3);
+}
+
+/* R-21 — the key-takeaway closer is a subhead-sized line (26/32), like .tile. */
+.canvas.v3-5 .takeaway {
+  font-size: 26px;
+  line-height: 32px;
 }

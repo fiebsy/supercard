@@ -15,6 +15,18 @@ All notable changes to the Supercard system. Format adapted from Keep a Changelo
 
 ## [Unreleased]
 
+### Added
+
+- **ADR-0010 — deterministic renderer.** `app/scripts/render-card.mjs` (`npm --prefix app run render -- <card>`) replaces hand-authoring the HTML: it parses the markdown card, inlines `app/src/supercard.css` resolved to `frozen_at_version` via the `.canvas` class chain, embeds the `sc:` `<meta>` provenance + `sc:content_hash`, writes the standalone render, and upserts the `docs/index.html` gallery. The markdown card is now the *complete* reader-visible source — eyebrows/subheads/dek are authored in the card, never invented at render time.
+- `validate-v3-1.mjs` § **G10 (render-freshness)** — every card must have a current `docs/cards/{slug}.html` whose `sc:content_hash` matches the markdown, plus a gallery link. Stale/missing renders error for V3.1+ cards (legacy V3.0 cards are grandfathered to warnings). Stops Stage 5 from being silently skipped or drifting.
+- RENDERING-spec § **Render quickstart** — the two-command operational path at the top of the spec (progressive disclosure over the 400-line rule library).
+- Optional `summary` frontmatter field — feeds the gallery blurb from the canonical source.
+
+### Changed
+
+- `app/src/supercard.css` — corrected to be fully V3.5-accurate (the single source the renderer inlines): adds the `.stat` focal-number primitive; re-inks the V3.5 eyebrow and table key column to the R-20 tertiary ink (`--ink-3`, +0.08em) where the base CSS still carried the stale V3.0 `--g-60` / 0.07em.
+- `PIPELINE-card-assembly.md` Stage 5, `SKILL.md` step 6, and the `TEMPLATE-supercard-*` grammar — render by command, not by hand; cards carry all reader-visible text.
+
 ---
 
 ## [3.5.0] — "Atlas" — 2026-06-25

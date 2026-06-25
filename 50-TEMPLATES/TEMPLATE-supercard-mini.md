@@ -14,34 +14,75 @@
 | status | draft |
 | research_report | 60-RESEARCH/BREAKDOWN-{{SLUG}}.md |
 | render | docs/cards/{{ID}}.html |
+| tags | {{TAGS}} |
+| summary | {{ONE-LINE GALLERY BLURB}} |
 
 ---
 
-## Beat 1 — Hook
+<!--
+RENDERER GRAMMAR (ADR-0010) — the card is the complete reader-visible source;
+`npm --prefix app run render -- <this file>` turns it into the HTML. Parsed as:
 
-HERO-CARD: {{TITLE}}
+  ## Beat N — Name (block-id)     section header; "Name (block-id)" is scaffold,
+                                  never rendered. The `(block-id)` is a hint only.
+  `BLOCK-xxx` · Eyebrow           REQUIRED first line. xxx = block type; the text
+                                  after `·` IS the section eyebrow (≤ 4 words,
+                                  names the content, never the position — R-14).
+  ### Subhead                     optional 26/32 .tile (table / stat sections).
+                                  Do NOT add to standard-text — its bold
+                                  lead-clause is the anchor (R-14: one label/job).
+  > **Lead.** rest                blockquote → the lofted hero hook (Beat 1 only).
+  **−0.01em**                     a standalone bold line → focal .stat (in a
+                                  stat-callout) or .takeaway (in a key-takeaway).
+  **Lead.** rest of sentence…     prose; the opening **bold** is the lead-clause.
+  | a | b |                       markdown table; a row whose first cell is
+                                  **Takeaway** becomes the verdict row (G-11).
+  - item                          list (sources in a footnote-source block).
 
-**Lede.** [One bolded 2–6-word lead-clause opens; one sentence elaboration. ≤ 75 words total. Single emphasis: the bold IS the block's emphasis.]
+Nothing visible is invented at render time. If you want an eyebrow/subhead, write
+it here. Supported block ids: loft-card, stat-callout, table, standard-text,
+key-takeaway, footnote-source, definition (others flow through the prose path).
+-->
 
-## Beat 2 — Evidence
+## Beat 1 — Hook (loft-card)
 
-STAT-CALLOUT or SPARKLINE
+`BLOCK-loft-card` · {{EYEBROW ≤ 4 WORDS}}
 
-**[focal number].** [One sentence naming what the stat means.]
+### {{Dek — one sentence thesis, renders at body size + secondary ink}}
 
-## Beat 3 — Mechanism
+> **{{Lead clause.}}** {{One-sentence elaboration of the hook.}}
 
-DEFINITION or NUMBERED-PRINCIPLE
+{{Optional lede paragraph below the hero.}}
 
-## Beat 6 — Application
+---
 
-CHECKLIST (3 items max)
+## Beat 2 — Evidence (stat-callout)
 
-## Beat 7 — Close
+`BLOCK-stat-callout` · {{EYEBROW}}
 
-KEY-TAKEAWAY
+{{One sentence setting up the number.}}
 
-**[The one phrase a reader remembers.]**
+**{{focal number}}**
+
+{{One sentence naming what the stat means.}}
+
+---
+
+## Beat 3 — Mechanism (standard-text)
+
+`BLOCK-standard-text` · {{EYEBROW}}
+
+**{{Bold lead-clause.}}** {{One sentence elaboration. ≤ 60 words.}}
+
+---
+
+## Beat 7 — Close (key-takeaway)
+
+`BLOCK-key-takeaway` · {{EYEBROW}}
+
+**{{The one phrase a reader remembers.}}**
+
+{{Optional one-line closer.}}
 
 ---
 

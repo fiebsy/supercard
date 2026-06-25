@@ -15,10 +15,21 @@
 | research_report | 60-RESEARCH/BREAKDOWN-{{SLUG}}.md |
 | render | docs/cards/{{ID}}.html |
 | tags | |
+| summary | {{ONE-LINE GALLERY BLURB}} |
 | supersedes | |
 | related | |
 
 ---
+
+<!--
+RENDERER GRAMMAR (ADR-0010): this card is rendered by
+`npm --prefix app run render -- <this file>` — never hand-authored HTML. Each
+section must open with a `` `BLOCK-xxx` · Eyebrow `` annotation line (text after
+`·` is the reader eyebrow, ≤ 4 words); `### ` is an optional subhead; the bold
+lead-clause opens prose; `**standalone bold**` is a focal stat/takeaway; a
+table row whose first cell is **Takeaway** is the verdict row. The block sketches
+below are illustrative — follow the exact grammar in TEMPLATE-supercard-mini.md.
+-->
 
 ## Beat 1 — Hook (card-in-hero)
 
