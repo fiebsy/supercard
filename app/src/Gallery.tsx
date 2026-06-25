@@ -118,8 +118,8 @@ function SpecBlock() {
     <div className="spec-link" style={{ cursor: "default" }}>
       <div className="spec-link-title">One URL. The whole spec.</div>
       <div className="card-desc" style={{ marginTop: "4px", marginBottom: "16px" }}>
-        Everything an agent needs to build, render, or judge a Supercard lives
-        in one self-contained file. Point any LLM at it; nothing else to fetch.
+        Everything an agent needs to build one, in a single file. Point any LLM
+        at it.
       </div>
 
       <div style={rowStyle}>
@@ -209,7 +209,10 @@ export function Gallery() {
     <div className="canvas" style={{ paddingTop: "var(--s-6)" }}>
       <h1>Supercard</h1>
       <p className="gallery-lede">
-        Screenshot-shareable knowledge cards, one emphasis per block.
+        Screenshot-shareable knowledge cards with one idea in focus per block —
+        a cognitive prosthesis for ADHD brains and anyone who bounces off dense
+        text. Built for how attention actually works, and grounded in deep
+        research.
       </p>
 
       <SpecBlock />
