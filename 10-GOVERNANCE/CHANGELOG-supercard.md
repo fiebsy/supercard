@@ -55,27 +55,26 @@ kept; only its JSON-tree delivery is retired. (ADR-0012, superseding ADR-0008.)
 
 ## [3.6.1] — "Atlas" — 2026-06-25
 
-Label-and-separator refinement. Quiets and evens out the canvas's furniture:
-every micro-label drops from UPPERCASE to sentence case, every separator
-hairline re-centers between the two beats it divides, and the React render path
-stops stamping the beat name on every block — adopting the distinct,
-content-naming editorial eyebrows the markdown source and HTML twins already
-carry. **Retroactive like V3.6.0** — the visual rules live at base level and
-re-render every card regardless of `frozen_at_version` (ADR-0013). The
-reading-layer rules (R-9/R-19, R-20, R-21) remain frozen and untouched.
+Eyebrow-and-separator refinement. The eyebrow stays UPPERCASE, but it stops
+repeating: the render path no longer stamps the *beat name* on every block (the
+`EVIDENCE · EVIDENCE · MECHANISM · MECHANISM …` rail), and instead carries a
+distinct editorial label that names each block's content — pairing with the
+heading as topic-to-claim where one is present. Separator hairlines re-center
+between the beats they divide. **Retroactive like V3.6.0** — the rules live at
+base level and re-render every card regardless of `frozen_at_version`
+(ADR-0013). The reading-layer rules (R-9/R-19, R-20, R-21) remain frozen.
 
 ### Added
 
-- RENDERING § R-25 — Sentence-case labels (V3.6.1+). Eyebrow, table `th`, divider rule, and gallery section-label drop `text-transform: uppercase`; only the first letter is forced up via `::first-letter`. The +0.08em positive tracking (justified only by UPPERCASE) returns to 0.
+- RENDERING § R-25 — Distinct editorial eyebrows (V3.6.1+). The eyebrow names content/topic, never the beat, and is distinct from its neighbours; on a headed block it pairs with the `h2` as a G-14 eyebrow + tagline (topic + claim, never restating). Casing is unchanged (UPPERCASE, +0.08em).
 - RENDERING § R-26 — Centered separators (V3.6.1+). `section` / `section.divider` vertical padding is symmetric (48/48, 64/64) so each hairline is evenly gapped on both sides; beat-gap variants set top and bottom.
 
 ### Changed
 
-- RENDERING § R-14 / R-10 — the editorial eyebrow is now "one label per *job*" (any block lacking a heading anchor may carry one, distinct from its neighbours), replacing "one per beat (first block)". A block with an `h2` takes no eyebrow.
 - `app/src/blocks.tsx` — `Eyebrow`/`Section` no longer derive the label from the beat name; `Section` takes an optional `eyebrow` string and renders it only when supplied. `beat` is retained as non-rendered authoring metadata.
-- `app/src/cards/gestalt-principles.tsx` — editorial eyebrows added to headingless blocks; beat-name eyebrows removed from `h2` blocks.
-- `app/src/supercard.css` — base level: `text-transform: uppercase` removed from `.eyebrow` / `th` / `section.divider .rule` / `.section-label` (with `::first-letter` caps); label tracking → `normal`; `section` and `section.divider` padding made symmetric; V3.4/V3.5 beat-gap rules set `padding-bottom`.
-- `30-CARDS/CARD-2026-05-14-gestalt-principles--draft.md` — hero meta-eyebrow dropped; checklist eyebrow tightened.
+- `app/src/cards/gestalt-principles.tsx` — a distinct editorial eyebrow on every content block (headingless blocks get a content label; headed blocks get a topic eyebrow paired with their heading); beat-name eyebrows gone.
+- `app/src/supercard.css` — base level: `section` and `section.divider` padding made symmetric (R-26); V3.4/V3.5 beat-gap rules set `padding-bottom`. Eyebrow / `th` / divider-rule / section-label casing unchanged (UPPERCASE).
+- `30-CARDS/CARD-2026-05-14-gestalt-principles--draft.md` — hero meta-eyebrow dropped; headed blocks restructured to topic-eyebrow + `### ` heading to mirror the render path; pull-quote and checklist eyebrows tightened.
 
 ---
 

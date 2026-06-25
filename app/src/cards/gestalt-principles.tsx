@@ -64,6 +64,7 @@ export function GestaltPrinciples() {
       {/* Beat 2 - Evidence: timeline */}
       <DataTable
         beat="Beat 2 · Evidence"
+        eyebrow="A century on"
         className="timeline"
         heading="It built, and outlived, a school of psychology"
         rows={[
@@ -192,6 +193,7 @@ export function GestaltPrinciples() {
       {/* Beat 3 - Mechanism: classic grouping principles */}
       <NumberedList
         beat="Beat 3 · Mechanism"
+        eyebrow="Wertheimer, 1923"
         heading="The classic grouping principles"
         steps={[
           {
@@ -269,6 +271,7 @@ export function GestaltPrinciples() {
       {/* Beat 3 - Mechanism: modern additions */}
       <DataTable
         beat="Beat 3 · Mechanism"
+        eyebrow="Modern additions"
         heading="The set is open, not fixed"
         head={["Principle", "What it adds", "Added"]}
         rows={[
@@ -312,6 +315,7 @@ export function GestaltPrinciples() {
       {/* Beat 3 - Mechanism: equation */}
       <Equation
         beat="Beat 3 · Mechanism"
+        eyebrow="Proximity, quantified"
         heading="The one principle turned into math"
         intro={
           <>
@@ -335,6 +339,7 @@ export function GestaltPrinciples() {
       {/* Beat 4 - Comparison: Gestalt vs structuralism */}
       <DataTable
         beat="Beat 4 · Comparison"
+        eyebrow="Gestalt vs structuralism"
         heading="Two accounts of how perception works"
         head={["", "Structuralism", "Gestalt"]}
         rows={[
@@ -388,6 +393,7 @@ export function GestaltPrinciples() {
       {/* Beat 5 - Counter: anti-pattern */}
       <MarkerList
         beat="Beat 5 · Counter"
+        eyebrow="Four weaknesses"
         heading="Where the Gestalt account is weak"
         marker="✕"
         items={[
@@ -437,7 +443,11 @@ export function GestaltPrinciples() {
       </Quote>
 
       {/* Beat 6 - Application: the bridge */}
-      <StandardText beat="Beat 6 · Application" heading="Why a designer should care">
+      <StandardText
+        beat="Beat 6 · Application"
+        eyebrow="From lab to layout"
+        heading="Why a designer should care"
+      >
         <p>
           Because the principles run pre-attentively and involuntarily, a
           designer who arranges proximity, similarity, common region, and
@@ -482,6 +492,7 @@ export function GestaltPrinciples() {
       {/* Beat 6 - Application: examples table */}
       <DataTable
         beat="Beat 6 · Application"
+        eyebrow="Five you've seen"
         heading="The principles, already everywhere"
         head={["You see", "The principle at work"]}
         rows={[
@@ -527,7 +538,7 @@ export function GestaltPrinciples() {
       {/* Beat 7 - Close: pull-quote */}
       <Quote
         beat="Beat 7 · Close"
-        eyebrow="The closer"
+        eyebrow="Which whole?"
         variant="pull"
         quote={
           <>

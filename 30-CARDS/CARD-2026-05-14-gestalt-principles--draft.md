@@ -57,7 +57,9 @@ after.
 
 ## Beat 2 — Evidence
 
-`BLOCK-timeline` · it built, and outlived, a school of psychology
+`BLOCK-timeline` · a century on
+
+### It built, and outlived, a school of psychology
 
 | year | event |
 |---|---|
@@ -117,7 +119,9 @@ before it groups anything**, and that partition can override the rest.
 
 ## Beat 3 — Mechanism
 
-`BLOCK-numbered-principle` · the classic grouping principles (Wertheimer, 1923)
+`BLOCK-numbered-principle` · Wertheimer, 1923
+
+### The classic grouping principles
 
 1. **Proximity:** elements close together are read as one group.
 2. **Similarity:** elements sharing color, size, or shape are grouped.
@@ -145,7 +149,9 @@ not a given.
 
 ## Beat 3 — Mechanism
 
-`BLOCK-table` · the set is open, not fixed
+`BLOCK-table` · modern additions
+
+### The set is open, not fixed
 
 | principle | what it adds | added |
 |---|---|---|
@@ -161,7 +167,9 @@ century and is still growing.
 
 ## Beat 3 — Mechanism
 
-`BLOCK-equation` · the one principle turned into math
+`BLOCK-equation` · proximity, quantified
+
+### The one principle turned into math
 
 For proximity, grouping is fully predicted by *relative* distance:
 
@@ -178,7 +186,9 @@ fitted law (Kubovy & Wagemans, 1995).
 
 ## Beat 4 — Comparison
 
-`BLOCK-comparison` · two accounts of how perception works
+`BLOCK-comparison` · Gestalt vs structuralism
+
+### Two accounts of how perception works
 
 | | Structuralism (parts-first) | Gestalt (wholes-first) |
 |---|---|---|
@@ -216,7 +226,9 @@ is the right word and "theory" is not.
 
 ## Beat 5 — Counter
 
-`BLOCK-anti-pattern` · where the Gestalt account is weak
+`BLOCK-anti-pattern` · four weaknesses
+
+### Where the Gestalt account is weak
 
 - **The explanatory theory failed.** Köhler claimed grouping reflected electrical *fields* in the brain. Lashley (1951) and Sperry (1955) disrupted cortical current flow, and shape perception survived. The mechanism was wrong.
 - **"Mere demonstrations."** The classic principles were established by compelling pictures, not measurement: descriptive rules with no predictive model for decades.
@@ -243,7 +255,9 @@ mainstream. The phenomena outlived the mechanism that was meant to explain them.
 
 ## Beat 6 — Application
 
-`BLOCK-standard-text` · why a designer should care
+`BLOCK-standard-text` · from lab to layout
+
+### Why a designer should care
 
 Because the principles run pre-attentively and involuntarily, a designer who
 arranges proximity, similarity, common region, and continuity isn't decorating:
@@ -267,7 +281,9 @@ group**.
 
 ## Beat 6 — Application
 
-`BLOCK-table` · the principles, already everywhere
+`BLOCK-table` · five you've seen
+
+### The principles, already everywhere
 
 | you see | the principle at work |
 |---|---|
@@ -291,7 +307,7 @@ rules of that organization: descriptive, replicable, and yours to design with.
 
 ## Beat 7 — Close
 
-`BLOCK-pull-quote` · the closer
+`BLOCK-pull-quote` · which whole?
 
 > "The whole is **other** than the sum of its parts."
 

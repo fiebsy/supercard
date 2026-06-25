@@ -10,7 +10,7 @@
 <meta name="sc:renderer_version" content="v3.6">
 <meta name="sc:frozen_at_version" content="3.0.0">
 <meta name="sc:rendered_at" content="2026-06-25">
-<meta name="sc:content_hash" content="b5d209397fd06054ebca20e0282beb55a2a7a2a2ad624efd7891486d9058c7c2">
+<meta name="sc:content_hash" content="eef32c2a3c3d618b64f7f6c1f8fd65e2983361244995bcedb4eb287c550f792d">
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this
      card's frozen_at_version rule library (ADR-0010). Do not hand-edit. -->
@@ -98,20 +98,17 @@ section:last-of-type {
 
 /* section label — a short editorial label that names the block's CONTENT
  * (e.g. "The founding experiment"); never a beat name, "Beat N", or a BLOCK-*
- * id. Those are authoring metadata, kept in the markdown source.
- * V3.6.1 (ADR-0013): sentence case, not UPPERCASE — the only forced cap is the
- * first letter (::first-letter), so word-shape is preserved and the positive
- * tracking that UPPERCASE required is dropped. */
+ * id. Those are authoring metadata, kept in the markdown source. UPPERCASE per
+ * the type ramp — the eyebrow is the one positively-tracked role (no word-shape
+ * to break). Non-repetition is enforced in the content, not the casing. */
 .eyebrow {
   font-size: 11px;
   line-height: 14px;
   font-weight: 600;
-  letter-spacing: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--g-60);
   margin-bottom: var(--s-3);
-}
-.eyebrow::first-letter {
-  text-transform: uppercase;
 }
 
 h1 {
@@ -213,12 +210,10 @@ td {
 }
 th {
   font-size: 11px;
-  letter-spacing: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--g-60);
   font-weight: 600;
-}
-th::first-letter {
-  text-transform: uppercase;
 }
 td:first-child {
   color: var(--g-60);
@@ -284,7 +279,8 @@ section.divider {
 section.divider .rule {
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--g-30);
   margin-bottom: var(--s-2);
 }
@@ -360,12 +356,10 @@ section.divider h2 {
   font-size: 11px;
   line-height: 14px;
   font-weight: 600;
-  letter-spacing: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--g-60);
   margin: var(--s-5) 0 var(--s-2);
-}
-.section-label::first-letter {
-  text-transform: uppercase;
 }
 a.card-link {
   display: block;
@@ -734,13 +728,12 @@ a.spec-link:hover {
   padding-bottom: var(--s-9);
 }
 
-/* R-20 — the eyebrow + table head read at tertiary ink (#767676, 4.54:1), not
- * --g-60. V3.6.1 (ADR-0013): labels are sentence case, so the +0.08em positive
- * tracking that UPPERCASE required is gone — neutral tracking preserves the
- * word-shape sentence case restores. */
+/* R-19 / R-20 — the eyebrow is the only positively-tracked role (+0.08em) and
+ * reads at tertiary ink (#767676, 4.54:1), not --g-60. Base CSS still carries
+ * the stale V3.0 0.07em/--g-60; these win on a V3.5 canvas. */
 .canvas.v3-5 .eyebrow,
 .canvas.v3-5 th {
-  letter-spacing: normal;
+  letter-spacing: 0.08em;
   color: var(--ink-3);
 }
 
@@ -796,7 +789,8 @@ after.</p>
     </section>
 
     <section>
-      <div class="eyebrow">it built, and outlived, a school of psychology</div>
+      <div class="eyebrow">a century on</div>
+      <div class="tile">It built, and outlived, a school of psychology</div>
       <table>
         <thead>
           <tr><th>year</th><th>event</th></tr>
@@ -843,7 +837,8 @@ before it groups anything</strong>, and that partition can override the rest.</p
     </section>
 
     <section>
-      <div class="eyebrow">the classic grouping principles (Wertheimer, 1923)</div>
+      <div class="eyebrow">Wertheimer, 1923</div>
+      <div class="tile">The classic grouping principles</div>
       <p>1. <strong>Proximity:</strong> elements close together are read as one group.
 2. <strong>Similarity:</strong> elements sharing color, size, or shape are grouped.
 3. <strong>Common fate:</strong> elements moving together are grouped.
@@ -864,7 +859,8 @@ not a given.</p>
     </section>
 
     <section>
-      <div class="eyebrow">the set is open, not fixed</div>
+      <div class="eyebrow">modern additions</div>
+      <div class="tile">The set is open, not fixed</div>
       <table>
         <thead>
           <tr><th>principle</th><th>what it adds</th><th>added</th></tr>
@@ -881,7 +877,8 @@ century and is still growing.</p>
     </section>
 
     <section>
-      <div class="eyebrow">the one principle turned into math</div>
+      <div class="eyebrow">proximity, quantified</div>
+      <div class="tile">The one principle turned into math</div>
       <p>For proximity, grouping is fully predicted by <em>relative</em> distance:</p>
       <p>``<code>
 log-odds = k · log(d₁ / d₂)
@@ -893,7 +890,8 @@ fitted law (Kubovy &amp; Wagemans, 1995).</p>
     </section>
 
     <section>
-      <div class="eyebrow">two accounts of how perception works</div>
+      <div class="eyebrow">Gestalt vs structuralism</div>
+      <div class="tile">Two accounts of how perception works</div>
       <table>
         <thead>
           <tr><th></th><th>Structuralism (parts-first)</th><th>Gestalt (wholes-first)</th></tr>
@@ -925,7 +923,8 @@ is the right word and "theory" is not.</p>
     </section>
 
     <section>
-      <div class="eyebrow">where the Gestalt account is weak</div>
+      <div class="eyebrow">four weaknesses</div>
+      <div class="tile">Where the Gestalt account is weak</div>
       <ul class="sources">
         <li><strong>The explanatory theory failed.</strong> Köhler claimed grouping reflected electrical <em>fields</em> in the brain. Lashley (1951) and Sperry (1955) disrupted cortical current flow, and shape perception survived. The mechanism was wrong.</li>
         <li><strong>"Mere demonstrations."</strong> The classic principles were established by compelling pictures, not measurement: descriptive rules with no predictive model for decades.</li>
@@ -946,7 +945,8 @@ mainstream. The phenomena outlived the mechanism that was meant to explain them.
     </section>
 
     <section>
-      <div class="eyebrow">why a designer should care</div>
+      <div class="eyebrow">from lab to layout</div>
+      <div class="tile">Why a designer should care</div>
       <p>Because the principles run pre-attentively and involuntarily, a designer who
 arranges proximity, similarity, common region, and continuity isn't decorating:
 they're supplying inputs to a fixed perceptual machine. Layout <em>is</em> applied
@@ -966,7 +966,8 @@ group</strong>.</p>
     </section>
 
     <section>
-      <div class="eyebrow">the principles, already everywhere</div>
+      <div class="eyebrow">five you've seen</div>
+      <div class="tile">The principles, already everywhere</div>
       <table>
         <thead>
           <tr><th>you see</th><th>the principle at work</th></tr>
@@ -989,7 +990,7 @@ rules of that organization: descriptive, replicable, and yours to design with.</
     </section>
 
     <section>
-      <div class="eyebrow">the closer</div>
+      <div class="eyebrow">which whole?</div>
       <p>&gt; "The whole is <strong>other</strong> than the sum of its parts."</p>
       <p>The school that proved it is gone. The phenomenon it named is in everything
 you've ever looked at, and the designer's job is to choose <em>which whole</em>.</p>
