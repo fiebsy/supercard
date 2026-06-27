@@ -1,55 +1,44 @@
 /*
- * Gallery — the React app's landing view. Mirrors docs/index.html, but each
- * card links to its React render (#/cards/{slug}). The standalone HTML twin is
- * still one click away via the mono link, so both render paths stay reachable
- * from one deployment.
+ * Gallery — the React app's landing view (V3.7 lander redesign). Mono
+ * `# supercard` wordmark + a GitHub icon, path-style `~/ zone` labels, a
+ * code-block spec input with an inset copy button, and a toast-style archive:
+ * the newest card shows in full, older cards collapse behind a reveal. Each
+ * card links to its React render (#/cards/{slug}); the standalone HTML twin is
+ * one click away inside the card view, so both render paths stay reachable.
  */
 import { useState } from "react";
-import type { CSSProperties } from "react";
 import { cards } from "./cards/registry";
 import type { CardEntry } from "./cards/registry";
-import { Glyph } from "./blocks";
 import {
   IconButton,
-  ICON_BTN_SIZE,
   ChevronRight,
+  ChevronDown,
   CopyIcon,
   CheckIcon,
+  GitHubIcon,
 } from "./ui";
 
+/* The full URL is what gets copied; the display drops the scheme so the mono
+ * line reads large and clean inside the input. */
 const SPEC_URL = "https://berafoot.com/llms.txt";
-const REPO_LABEL = "github.com/fiebsy/supercard";
+const SPEC_URL_DISPLAY = "berafoot.com/llms.txt";
 const REPO_URL = "https://github.com/fiebsy/supercard";
 
-/* The two action rows share one pill + one round IconButton (ui.tsx) so the
- * spec and the repo read as a matched pair — both copy-to-clipboard. The pill
- * height is pinned to the button diameter so the row is evenly aligned. */
-const rowStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-};
-const pillStyle: CSSProperties = {
-  flex: "1 1 auto",
-  minWidth: 0,
-  height: `${ICON_BTN_SIZE}px`,
-  display: "flex",
-  alignItems: "center",
-  fontFamily: "var(--mono)",
-  fontSize: "13px",
-  color: "var(--ink)",
-  background: "rgba(0,0,0,0.025)",
-  border: "1px solid var(--g-12)",
-  borderRadius: "999px",
-  padding: "0 18px",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-};
+/* A mono path label (`~/ spec`) trailed by a hairline rule — the device that
+ * separates the lander's zones in this vertical, mobile layout. */
+function ZoneLabel({ children }: { children: string }) {
+  return (
+    <div className="zone-label">
+      <span className="zone-label-text">{children}</span>
+      <span className="zone-rule" />
+    </div>
+  );
+}
 
-/* One copy-to-clipboard button; swaps the copy icon for a green check for a
- * moment after a successful copy. */
-function CopyButton({ value, label }: { value: string; label: string }) {
+/* The inset copy button. Non-black (gray fill, ink glyph); swaps to a green
+ * check for a moment after a successful copy — the one sanctioned color, and
+ * only as transient UI feedback. */
+function SpecCopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
   const copy = () => {
     const done = () => {
@@ -63,41 +52,20 @@ function CopyButton({ value, label }: { value: string; label: string }) {
     }
   };
   return (
-    <IconButton
+    <button
+      type="button"
+      className={`spec-copy${copied ? " copied" : ""}`}
       onClick={copy}
-      label={copied ? `${label} copied` : `Copy ${label}`}
-      style={{ color: copied ? "#34c759" : "var(--w)" }}
+      aria-label={copied ? "Spec URL copied" : "Copy the spec URL"}
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
-    </IconButton>
-  );
-}
-
-function SpecBlock() {
-  return (
-    <div className="spec-link" style={{ cursor: "default" }}>
-      <div className="spec-link-title">One URL. The whole spec.</div>
-      <div className="card-desc" style={{ marginTop: "4px", marginBottom: "16px" }}>
-        Everything an agent needs to build one, in a single file. Point any LLM
-        at it.
-      </div>
-
-      <div style={rowStyle}>
-        <span style={pillStyle}>{SPEC_URL}</span>
-        <CopyButton value={SPEC_URL} label="spec URL" />
-      </div>
-
-      <div style={{ ...rowStyle, marginTop: "8px" }}>
-        <span style={pillStyle}>{REPO_LABEL}</span>
-        <CopyButton value={REPO_URL} label="repo URL" />
-      </div>
-    </div>
+    </button>
   );
 }
 
 /* A peek at a published card: the real opening prose, clipped to a fixed
  * height with a fade mask over the cut, and a chevron bottom-right that opens
- * the full card. */
+ * the full card. (Refinement target — kept as-is for the lander wiring.) */
 function SampleCard({ entry }: { entry: CardEntry }) {
   return (
     <a
@@ -157,22 +125,66 @@ function SampleCard({ entry }: { entry: CardEntry }) {
 }
 
 export function Gallery() {
+  const [current, ...older] = cards;
+  const [showOlder, setShowOlder] = useState(false);
+
   return (
-    <div className="canvas" style={{ paddingTop: "var(--s-6)" }}>
-      <h1>Supercard</h1>
+    <div className="canvas" style={{ paddingTop: 0 }}>
+      <header className="landing-header">
+        <span className="wordmark"># supercard</span>
+        <a
+          className="gh-btn"
+          href={REPO_URL}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Supercard on GitHub"
+        >
+          <GitHubIcon />
+        </a>
+      </header>
+
       <p className="gallery-lede">
-        Paste the spec into Claude and any deep-research topic becomes a
-        scannable card, one idea in focus per block. Get the gist fast.
+        Paste the spec into Claude. Any deep-research topic becomes a scannable
+        card.
       </p>
 
-      <SpecBlock />
+      <ZoneLabel>~/ spec</ZoneLabel>
+      <div className="spec-title">One URL. The whole spec.</div>
+      <div className="spec-desc">Everything an agent needs, in one file.</div>
+      <div className="spec-input">
+        <span className="spec-url">{SPEC_URL_DISPLAY}</span>
+        <SpecCopyButton value={SPEC_URL} />
+      </div>
 
-      <hr className="sample-divider" />
-      {cards.map((c) => (
-        <SampleCard key={c.slug} entry={c} />
-      ))}
+      <ZoneLabel>~/ samples</ZoneLabel>
+      <SampleCard entry={current} />
 
-      <Glyph />
+      {older.length > 0 ? (
+        <>
+          <ZoneLabel>~/ older</ZoneLabel>
+          {showOlder ? (
+            <div className="older-list">
+              {older.map((c) => (
+                <SampleCard key={c.slug} entry={c} />
+              ))}
+            </div>
+          ) : (
+            <div className="older">
+              <div className="older-peek" />
+              <button
+                type="button"
+                className="older-toggle"
+                onClick={() => setShowOlder(true)}
+              >
+                View {older.length} older card{older.length === 1 ? "" : "s"}
+                <ChevronDown />
+              </button>
+            </div>
+          )}
+        </>
+      ) : null}
+
+      <div className="landing-footer">◆ supercard · v3.7 atlas</div>
     </div>
   );
 }

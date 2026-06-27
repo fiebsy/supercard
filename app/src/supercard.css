@@ -990,3 +990,185 @@ a.spec-link:hover {
   margin-bottom: var(--s-3);
   margin-left: var(--s-1);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * V3.7 landing (lander redesign). Mono `# supercard` wordmark, path-style
+ * `~/ zone` labels with a hairline rule, a code-block spec input with an inset
+ * non-black copy button, a GitHub icon, and a toast-style archive reveal.
+ * Strict grayscale: the input ground is --g-06, the copy fill --g-12, and the
+ * one allowed colour is the transient copy-success check (#34c759, UI chrome).
+ * ───────────────────────────────────────────────────────────────────────── */
+.landing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--s-6);
+}
+.wordmark {
+  font-family: var(--mono);
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink);
+  white-space: nowrap;
+}
+/* GitHub icon button — top-right, ghost circle. The mark inherits --g-60 via
+ * currentColor (see GitHubIcon in ui.tsx). */
+.gh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border: 1px solid var(--g-12);
+  border-radius: 999px;
+  color: var(--g-60);
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.gh-btn:hover {
+  color: var(--k);
+  border-color: var(--g-30);
+}
+
+/* The lede sits one step under the wordmark; the rest of the rhythm is owned by
+ * the .zone-label margins below (this overrides the earlier .gallery-lede). */
+.gallery-lede {
+  margin: var(--s-3) 0 0;
+}
+
+/* `~/ spec` — a mono path label trailed by a hairline rule that fills the row. */
+.zone-label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: var(--s-6) 0 var(--s-3);
+}
+.zone-label-text {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g-60);
+}
+.zone-rule {
+  flex: 1 1 auto;
+  height: 0;
+  border-top: 1px solid var(--g-12);
+}
+
+.spec-title {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  color: var(--ink);
+}
+.spec-desc {
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+
+/* Code-block spec input: the URL reads large, the copy button is inset and
+ * non-black (--g-12 fill, --ink glyph). */
+.spec-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 52px;
+  margin-top: var(--s-3);
+  background: var(--g-06);
+  border: 1px solid var(--g-12);
+  border-radius: 10px;
+  padding: 0 8px 0 18px;
+}
+.spec-url {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.spec-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 9px;
+  background: var(--g-12);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.spec-copy:hover {
+  background: var(--g-30);
+}
+.spec-copy.copied {
+  color: #34c759;
+}
+
+/* Toast-style archive: a masked card-edge peeks above a dashed reveal button;
+ * expanding swaps in the older sample cards. */
+.older {
+  display: flex;
+  flex-direction: column;
+}
+.older-peek {
+  align-self: center;
+  width: 88%;
+  height: 16px;
+  border: 1px solid var(--g-12);
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+  background: var(--surface-tint);
+}
+.older-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  width: 100%;
+  height: 44px;
+  border: 1px dashed var(--g-30);
+  border-radius: 999px;
+  background: var(--w);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--g-60);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.older-toggle:hover {
+  color: var(--k);
+  border-color: var(--g-60);
+}
+.older-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* Footer glyph line, in the column flow (not the fixed corner mark). */
+.landing-footer {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--g-30);
+  padding-top: var(--s-6);
+}
