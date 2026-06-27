@@ -1291,6 +1291,13 @@ a.spec-link:hover {
   background: var(--g-06);
   border: 1px solid var(--g-12);
   color: var(--ink);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+/* The whole card is the link, so the chevron deepens whenever the card is
+ * hovered — same step as the card-view back button (g-06/g-12 -> g-12/g-30). */
+.sample-card:hover .sample-open {
+  background: var(--g-12);
+  border-color: var(--g-30);
 }
 .sample-meta {
   padding-top: 6px;
