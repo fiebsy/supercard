@@ -193,9 +193,11 @@ Rules:
 > R-11** — no `⁂` (and no literal `* * *`) renders on the canvas. A long content
 > run now breaks to an anchor or splits the beat (G-9, rule 3); the 64pt beat gap
 > (R-15) does the rest-the-eye work the asterism used to. The original rule is
-> kept below for genealogy (P10); do not author it.
+> retained in the canonical source for genealogy (P10); do not author it.
 
+<!-- llms:exclude -->
 ~~Beats containing **≥ 5 blocks** MUST insert a centered asterism (`⁂`, U+2042) after the 4th block, and again after every additional 4 blocks within the same beat. The asterism is a literal text glyph at body size and body weight, with a 32pt vertical band above and below; it does not count as a block for density-budget purposes (G-9), and beats of ≤ 4 blocks must not use one.~~
+<!-- /llms:exclude -->
 
 ## G-11. Table takeaway-row requirement (V3.1+)
 

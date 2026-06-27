@@ -137,8 +137,10 @@ CSS stack:
 > in the system. An anchor card is now set apart by border + radius + padding,
 > never elevation. This applies to **every card on re-render**, regardless of
 > `frozen_at_version` (ADR-0011 — the V3.6 retroactive exception). The
-> superseded model is kept below for genealogy (P10); do not emit it.
+> superseded model is retained in the canonical source for genealogy (P10); do
+> not emit it.
 
+<!-- llms:exclude -->
 ```css
 /* RETIRED — superseded by R-22. Kept for genealogy; not emitted. */
 --shadow-flat: none;
@@ -155,14 +157,16 @@ CSS stack:
 The **1–3-anchor hard cap survives** (it always was the point), but it now counts
 *bounded* cards (hairline-bordered, rounded, padded), not shadowed ones — see R-22
 and Principle 4.
+<!-- /llms:exclude -->
 
 ## R-9. Type metrics (V3.1–V3.4 — superseded by R-19 for V3.5+)
 
 > **Superseded by R-19 for `frozen_at_version ≥ 3.5.0`.** R-9 stays in force for
 > cards frozen at V3.1.0–V3.4.x; V3.5+ cards render body type from R-19, which
 > retires the positive letter-spacing and word-spacing this rule introduced.
-> R-9 is preserved here unchanged for those older frozen cards (ADR-0003).
+> R-9 is retained in the canonical source unchanged for those older frozen cards (ADR-0003).
 
+<!-- llms:exclude -->
 The base type scale above is V3.0's authoritative reference. V3.1–V3.4 cards (those declaring `frozen_at_version: 3.1.0`–`3.4.x`) render with the following overrides on prose-bearing roles. Older cards remain on the V3.0 table per ADR-0003.
 
 | Role | V3.0 | V3.1+ |
@@ -175,6 +179,7 @@ The base type scale above is V3.0's authoritative reference. V3.1–V3.4 cards (
 | Weights permitted in body | 300–700 | **400 / 500 / 700 only** in prose; 300 reserved for the dek |
 
 Rationale: WCAG 2.2 SC 1.4.12 requires line-height ≥ 1.5× font-size — at 17pt body that's ≥ 25.5pt. The V3.0 24pt setting was a hair under spec. SF Pro Rounded uses Display-cut glyphs at all sizes; Apple's default Display tracking (−0.43pt at 17pt) compresses Rounded's apertures at body size — the +0.5pt override restores aperture clarity. Measure stays 55–66 CPL preferred, 75 CPL maximum.
+<!-- /llms:exclude -->
 
 ## R-10. No scaffold chrome in the rendered card (V3.3+ supersedes V3.1)
 
@@ -199,9 +204,11 @@ The eyebrow uses the existing label micro-type spec (11/14pt SF Pro Rounded, wei
 > supersedes R-11 and G-10** — the `⁂` glyph (and the literal `* * *` form) never
 > render on the canvas; macro-spacing between beats (R-15, 64pt) does the
 > rest-the-eye work. Removed from **every card on re-render**, not just new ones
-> (ADR-0011). The original rule is kept below for genealogy (P10).
+> (ADR-0011). The original rule is retained in the canonical source for genealogy (P10).
 
+<!-- llms:exclude -->
 ~~Glyph: `⁂` (U+2042). Centered horizontally within the content column. Set at body size (17pt) and body weight (400), default ink (100% opacity). No rule above or below, no box, no background tint, no transformation. Vertical band: 32pt above and 32pt below the glyph. Use is governed by GRAMMAR § G-10.~~
+<!-- /llms:exclude -->
 
 ## R-12. Anti-pattern enforcement at validation time (V3.1+)
 
@@ -350,6 +357,7 @@ R-17 is the operationalization of Principle 1 (screenshot autonomy) at validatio
 > accessibility caveat. R-18 remains in force only for cards frozen at V3.4.x;
 > `apple_register: true` is **not** a valid declaration on a V3.5 card.
 
+<!-- llms:exclude -->
 A V3.4 card MAY declare `apple_register: true` in its frontmatter to opt into Apple's exact body typography in place of R-9's defaults. The Apple register applies these overrides on prose-bearing roles:
 
 | Role | R-9 default (V3.1+) | Apple register (V3.4+ opt-in) |
@@ -365,6 +373,7 @@ A V3.4 card MAY declare `apple_register: true` in its frontmatter to opt into Ap
 **WCAG note.** R-9's 26pt body line-height (1.53) sits above the WCAG 2.2 SC 1.4.12 floor of 1.5. The Apple register's 25pt (1.47) sits **below** that floor. The render MUST emit a `data-wcag-note="apple-register-below-1.5"` attribute on the canvas root when `apple_register: true` is set, so downstream consumers know about the accessibility implication. Cards needing strict WCAG AA conformance stay on R-9.
 
 **Mutual exclusion.** A card declares either Apple register or R-9, not both. Mixing within a single card emits an error.
+<!-- /llms:exclude -->
 
 ## R-19. Body type metrics (V3.5+ — supersedes R-9)
 
