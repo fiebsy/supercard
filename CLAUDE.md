@@ -27,3 +27,20 @@ New session? Read, in order, before touching a card:
 
 To build a card from a topic, run `10-GOVERNANCE/PIPELINE-card-assembly.md` or
 invoke the `supercard` skill. See `README.md` for the folder map.
+
+## Before spec work (editing the published spec)
+
+`docs/llms.txt` is the published spec — the thing people paste into a chat LLM to
+get a card. It is a **generated view**: never edit it by hand. Edit the canonical
+markdown in `00-INDEX/` and `10-GOVERNANCE/`, then run
+`npm --prefix app run spec` and commit the regenerated `docs/llms.txt` with your
+change (CI fails on drift).
+
+**Before changing any token, rule, block, or the beat structure, read
+`10-GOVERNANCE/MAINTAINING-llms-txt.md`** — it is the contract for keeping the
+published spec optimal as the design system scales: the `llms:exclude` fence
+convention (genealogy and repo mechanics stay in source, out of the public spec),
+the edit playbooks, the invariants, and the verification loop (regenerate →
+drift-check → render the worked card). The lead section,
+`10-GOVERNANCE/BUILD-card-no-tools.md`, must stay self-contained and in sync with
+`app/src/supercard.css`.

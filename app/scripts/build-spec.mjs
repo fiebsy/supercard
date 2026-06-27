@@ -355,6 +355,30 @@ seven-beat spine, block grammar, machine-readable spec
  * Write, or check for drift.
  * ------------------------------------------------------------------ */
 
+/*
+ * Guard: a card EXAMPLE in the build guide must obey the rules it teaches. The
+ * em dash (U+2014) is banned in reader-visible card content (R-24); a worked
+ * card or per-block pattern that uses one teaches the wrong thing. Scan the
+ * build guide's ```html blocks, drop HTML comments (annotations don't render),
+ * and fail if an em dash remains in the markup. See MAINTAINING-llms-txt.md.
+ */
+function assertNoEmDashInCardExamples(buildRaw) {
+  const htmlBlocks = [...buildRaw.matchAll(/```html\n([\s\S]*?)```/g)].map((m) => m[1]);
+  for (const block of htmlBlocks) {
+    const rendered = block.replace(/<!--[\s\S]*?-->/g, ""); // drop non-rendering comments
+    if (rendered.includes("—")) {
+      const line = rendered.split("\n").find((l) => l.includes("—")) || "";
+      throw new Error(
+        `[build-spec] em dash (—) in a card example in BUILD-card-no-tools.md — ` +
+          `banned in card content (R-24). Recast as a comma, colon, parentheses, or two sentences.\n` +
+          `  offending line: ${line.trim()}`
+      );
+    }
+  }
+}
+
+assertNoEmDashInCardExamples(SRC.build.raw);
+
 const LLMS_TXT = renderLlmsTxt();
 
 if (CHECK) {
