@@ -120,7 +120,7 @@ beat would feel hand-wavy with one.
 - **Step 3 — length filter.** `standard-text.length_variants = mini,standard,xl`. ✓
 - **Step 4 — lifecycle.** `core`. ✓
 - **Step 5 — mode bias.** Not listed in `summary` block_bias — but every Mini accepts a single `standard-text` to carry mechanism prose the other forms can't. Tie-breaker not invoked.
-- **Step 6 — density.** Beat 3 carries 2 content blocks (`definition` + `standard-text`) and no G-9 anchor. The per-beat 1:2–1:4 ratio is a **warning-level** check (R-12), not a render-blocking error — and a 1–2-block Mini beat is structurally too short to satisfy it (a 1:2 ratio needs at least three blocks). What governs at Mini is the **card-level anchor budget** (LENGTHS § L-5: 2–3 anchors); the card runs 3 anchors against 3 content blocks, in band. So Beat 3 logs a density *warning*, not a failure. To clear even the warning, author block A as a `numbered-principle` (a G-9 anchor) instead of a `definition`.
+- **Step 6 — density.** Beat 3 carries 2 content blocks (`definition` + `standard-text`) and no G-9 anchor. The per-beat 1:2–1:4 ratio check applies only to beats that *mix* anchors and content (G-9 rule 1), so a 0-anchor beat is not ratio-checked — density is governed at the **card level** by the L-5 budget (2–3 anchors for Mini), and the card runs 3. Clean pass. (To seat an anchor inside Beat 3 anyway, author block A as a `numbered-principle` instead of a `definition`.)
 - **Step 7 — prose rules.** G-7: needs a 2–6-word bolded lead-clause. G-8: ≤ 75 words, ≤ 4 sentences. Author: "**Software does the scheduling.** Anki and SuperMemo show each card just before the learner would forget it, so the only job left is to honestly grade each recall."
 - **Step 8 — block-specific.** N/A.
 - **Step 9 — anti-pattern.** Single bolded run. Not three `standard-text` in a row. ✓
@@ -177,7 +177,7 @@ Gates run at draft completion (PIPELINE § Stage 4 — Constraint gates).
 | G4 | Redundancy filter | ✓ | Close re-frames hero; no two blocks restate the same point |
 | G5 | Screenshot test | ✓ | All 6 blocks pass; corner glyph on each section |
 | G6 | Frozen-at-version | ✓ | `frozen_at_version: 3.3.0` declared |
-| G7 | Density budget (V3.1+) | ⚠︎ | Beat 3 runs 0 anchors / 2 content — a per-beat density *warning* (R-12), not a failure: the card-level anchor budget (L-5, 2–3 for Mini) governs and the card has 3. Clear the warning by authoring the definition as a `numbered-principle`. |
+| G7 | Density budget (V3.1+) | ✓ | Beat 3 has no anchor, so the per-beat ratio check doesn't apply (it fires only on beats mixing anchors and content — G-9 rule 1); card-level density is governed by the L-5 budget, and the card runs 3 anchors (Mini 2–3 band). |
 | G8 | ADHD scan-ability gate (V3.1+) | ✓ | Bold-only read: "retrieval at the edge of forgetting → one-third the study time → software does the scheduling → spaced repetition replaces hours with timing." Yields the card's thesis. |
 
 Identity invariants (PIPELINE § Stage 4 — Identity invariants): all 6 held. No

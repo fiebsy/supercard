@@ -183,7 +183,7 @@ Every beat balances **anchor blocks** against **content blocks**:
 
 Rules:
 
-1. Anchor-to-content ratio per beat MUST sit between **1:2** and **1:4**.
+1. **Anchor-to-content ratio.** When a beat carries **both** at least one anchor and at least one content block, keep the ratio between **1:2** and **1:4**. The check applies only to mixed beats: an all-anchor or all-content beat — common at the 1–2-block beats of a Mini — is *not* ratio-checked (a 1:2 ratio needs at least three blocks), and its density is instead governed at the **card level** by the per-length anchor budget (LENGTHS § L-5). The per-beat ratio is a validator **warning** (R-12), never a render-blocking error.
 2. No more than **2 consecutive anchors of the same type**. The third anchor MUST switch type or be re-cast as content.
 3. No more than **4 consecutive content blocks**. The fifth MUST be an anchor, or the beat splits (the mid-beat asterism rest is retired — see G-10).
 

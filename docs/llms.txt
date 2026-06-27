@@ -385,7 +385,7 @@ Every beat balances **anchor blocks** against **content blocks**:
 
 Rules:
 
-1. Anchor-to-content ratio per beat MUST sit between **1:2** and **1:4**.
+1. **Anchor-to-content ratio.** When a beat carries **both** at least one anchor and at least one content block, keep the ratio between **1:2** and **1:4**. The check applies only to mixed beats: an all-anchor or all-content beat — common at the 1–2-block beats of a Mini — is *not* ratio-checked (a 1:2 ratio needs at least three blocks), and its density is instead governed at the **card level** by the per-length anchor budget (LENGTHS § L-5). The per-beat ratio is a validator **warning** (R-12), never a render-blocking error.
 2. No more than **2 consecutive anchors of the same type**. The third anchor MUST switch type or be re-cast as content.
 3. No more than **4 consecutive content blocks**. The fifth MUST be an anchor, or the beat splits (the mid-beat asterism rest is retired — see G-10).
 
@@ -1173,7 +1173,7 @@ V3.1+ cards are validated by `app/scripts/validate-v3-1.mjs` (invoked as `npm --
 | **Error** (exit 1) | An asterism rest (`⁂` or a literal `* * *` line) appears in card content (R-24, V3.6 — supersedes R-11/G-10) |
 | **Warning** | A `standard-text` block exceeds 75 words or 4 sentences |
 | **Warning** | A beat has > 4 consecutive content blocks without an anchor (G-9) |
-| **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band |
+| **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band (only checked on beats carrying both anchors and content; G-9 rule 1) |
 | **Warning** | The cover stack departs from R-13 spacing (32 / 12 / 24 / 48pt) by more than 4pt at any join |
 | **Warning** | A label appears on some sections of a card and not others without a structural reason (R-14 — inconsistency reads as bug) |
 
@@ -1681,7 +1681,7 @@ beat would feel hand-wavy with one.
 - **Step 3 — length filter.** `standard-text.length_variants = mini,standard,xl`. ✓
 - **Step 4 — lifecycle.** `core`. ✓
 - **Step 5 — mode bias.** Not listed in `summary` block_bias — but every Mini accepts a single `standard-text` to carry mechanism prose the other forms can't. Tie-breaker not invoked.
-- **Step 6 — density.** Beat 3 carries 2 content blocks (`definition` + `standard-text`) and no G-9 anchor. The per-beat 1:2–1:4 ratio is a **warning-level** check (R-12), not a render-blocking error — and a 1–2-block Mini beat is structurally too short to satisfy it (a 1:2 ratio needs at least three blocks). What governs at Mini is the **card-level anchor budget** (LENGTHS § L-5: 2–3 anchors); the card runs 3 anchors against 3 content blocks, in band. So Beat 3 logs a density *warning*, not a failure. To clear even the warning, author block A as a `numbered-principle` (a G-9 anchor) instead of a `definition`.
+- **Step 6 — density.** Beat 3 carries 2 content blocks (`definition` + `standard-text`) and no G-9 anchor. The per-beat 1:2–1:4 ratio check applies only to beats that *mix* anchors and content (G-9 rule 1), so a 0-anchor beat is not ratio-checked — density is governed at the **card level** by the L-5 budget (2–3 anchors for Mini), and the card runs 3. Clean pass. (To seat an anchor inside Beat 3 anyway, author block A as a `numbered-principle` instead of a `definition`.)
 - **Step 7 — prose rules.** G-7: needs a 2–6-word bolded lead-clause. G-8: ≤ 75 words, ≤ 4 sentences. Author: "**Software does the scheduling.** Anki and SuperMemo show each card just before the learner would forget it, so the only job left is to honestly grade each recall."
 - **Step 8 — block-specific.** N/A.
 - **Step 9 — anti-pattern.** Single bolded run. Not three `standard-text` in a row. ✓
@@ -1738,7 +1738,7 @@ Gates run at draft completion (PIPELINE § Stage 4 — Constraint gates).
 | G4 | Redundancy filter | ✓ | Close re-frames hero; no two blocks restate the same point |
 | G5 | Screenshot test | ✓ | All 6 blocks pass; corner glyph on each section |
 | G6 | Frozen-at-version | ✓ | `frozen_at_version: 3.3.0` declared |
-| G7 | Density budget (V3.1+) | ⚠︎ | Beat 3 runs 0 anchors / 2 content — a per-beat density *warning* (R-12), not a failure: the card-level anchor budget (L-5, 2–3 for Mini) governs and the card has 3. Clear the warning by authoring the definition as a `numbered-principle`. |
+| G7 | Density budget (V3.1+) | ✓ | Beat 3 has no anchor, so the per-beat ratio check doesn't apply (it fires only on beats mixing anchors and content — G-9 rule 1); card-level density is governed by the L-5 budget, and the card runs 3 anchors (Mini 2–3 band). |
 | G8 | ADHD scan-ability gate (V3.1+) | ✓ | Bold-only read: "retrieval at the edge of forgetting → one-third the study time → software does the scheduling → spaced repetition replaces hours with timing." Yields the card's thesis. |
 
 Identity invariants (PIPELINE § Stage 4 — Identity invariants): all 6 held. No
@@ -1804,7 +1804,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.7.0 · era atlas
-- **Revision:** `f634d12fe09c` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `765480cc7d48` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-06-27
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -1815,13 +1815,13 @@ Source files (the canonical markdown this view is generated from):
 
 - `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-27 — sha256 `7a6f0921677a2434130562528e87a479afba541a97da66c65bf78e75b63976bb`
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-06-25 — sha256 `3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452`
-- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `b51052a183c913056e802b706e8f0508614f4295ea6a0ceea5609f56f566421c`
+- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `f678879f9480cbf29816f323425e70a76addaaf8b0b769804b93ad34857555f2`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `2e0ebe7b60bb97d3b7dd998c5dabb6575070a948b50b17593ea8add5ce31c23e`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `f093e06e7e1ca7d538df6f899f5cd37e043d549106d19817ddf3206df4835e5f`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `33dbe50c09c5d9f78fc85bde643782a188116bb49f670f1f759d1aa14a5e4ee5`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `b5caca1c56d98a84788c50f33658f4a80f6e5d1c043699d02511693deda292a9`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2`
-- `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `7d578066ed224f521ce4aa473386342ee2f5b74b7d1525508a8da68aa8a665e3`
+- `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 
 ## Keywords
 

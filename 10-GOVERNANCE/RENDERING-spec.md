@@ -264,7 +264,7 @@ V3.1+ cards are validated by `app/scripts/validate-v3-1.mjs` (invoked as `npm --
 | **Error** (exit 1) | An asterism rest (`⁂` or a literal `* * *` line) appears in card content (R-24, V3.6 — supersedes R-11/G-10) |
 | **Warning** | A `standard-text` block exceeds 75 words or 4 sentences |
 | **Warning** | A beat has > 4 consecutive content blocks without an anchor (G-9) |
-| **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band |
+| **Warning** | Per-beat anchor-to-content ratio falls outside the 1:2–1:4 band (only checked on beats carrying both anchors and content; G-9 rule 1) |
 | **Warning** | The cover stack departs from R-13 spacing (32 / 12 / 24 / 48pt) by more than 4pt at any join |
 | **Warning** | A label appears on some sections of a card and not others without a structural reason (R-14 — inconsistency reads as bug) |
 
