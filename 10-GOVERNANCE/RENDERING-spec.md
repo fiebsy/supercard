@@ -15,9 +15,13 @@ How a Supercard source becomes a rendered HTML artifact, and how that artifact i
 
 ## Render quickstart (read this first)
 
-You do **not** hand-write the HTML. The render is a pure function over the
-markdown card, produced by one command (ADR-0010). Everything below this section
-is the *why* — the rule library the renderer applies — not a manual build recipe.
+**Pick your path by access.** *With the repo:* you do **not** hand-write the
+HTML — the render is a pure function over the markdown card, produced by one
+command (ADR-0010); run it and skip to the gates. *From this spec alone, no
+checkout:* hand-render from the token tables in this section — the HTML path is
+deliberately reproducible from the spec with no codebase (see *Two render
+paths*). Everything below is the *why* (the rule library the renderer applies)
+and, for the no-repo case, the build recipe.
 
 ```sh
 # 1. render the card → docs/cards/{slug}.html + gallery entry
@@ -42,9 +46,10 @@ the `` `BLOCK-xxx` · eyebrow `` line; subheads = a `### ` line; dek/hook/stat/
 table/takeaway/sources = ordinary markdown. Nothing visible is invented at
 render time. Grammar reference: `50-TEMPLATES/TEMPLATE-supercard-*.md`.
 
-If you are reading this spec to *build* a card, you are done after the two
-commands above. The rest of this document defines the rules the stylesheet and
-validator already encode.
+**With repo access**, if you are reading this spec to *build* a card you are done
+after the two commands above; the rest of this document defines the rules the
+stylesheet and validator already encode. **Without a checkout**, read on — those
+same rules are your hand-render recipe.
 
 ---
 

@@ -120,7 +120,7 @@ beat would feel hand-wavy with one.
 - **Step 3 — length filter.** `standard-text.length_variants = mini,standard,xl`. ✓
 - **Step 4 — lifecycle.** `core`. ✓
 - **Step 5 — mode bias.** Not listed in `summary` block_bias — but every Mini accepts a single `standard-text` to carry mechanism prose the other forms can't. Tie-breaker not invoked.
-- **Step 6 — density.** Anchor count = 2; content count = 2; ratio 1:1 — *fails* the 1:2–1:4 G-9 anchor-to-content band? The Mini-mode budget treats this as in-band because Beat 3 carries two content blocks together as one mechanism unit, and the anchor count includes Beats 1 and 2's anchors. Running ratio for the whole card so far: 2 anchors / 2 content = 1:1. The G-9 band is per beat, not card-cumulative — and Beat 3 has 0 anchors / 2 content, *fails* G-9. Re-cast: promote block A's definition to its anchor form (already anchor-equivalent at this length), and treat Beat 3 block B as the content; OR insert an anchor at the start of Beat 3. We pick the simpler fix: count the `definition` as the beat anchor for budgeting purposes (Mini relaxes G-9 here per LENGTHS § L-5, which doesn't enumerate definitions but treats Mini's beats as too short to violate the ratio). G-9 caveat documented in `STEWARDS-LOG`.
+- **Step 6 — density.** Beat 3 carries 2 content blocks (`definition` + `standard-text`) and no G-9 anchor. The per-beat 1:2–1:4 ratio is a **warning-level** check (R-12), not a render-blocking error — and a 1–2-block Mini beat is structurally too short to satisfy it (a 1:2 ratio needs at least three blocks). What governs at Mini is the **card-level anchor budget** (LENGTHS § L-5: 2–3 anchors); the card runs 3 anchors against 3 content blocks, in band. So Beat 3 logs a density *warning*, not a failure. To clear even the warning, author block A as a `numbered-principle` (a G-9 anchor) instead of a `definition`.
 - **Step 7 — prose rules.** G-7: needs a 2–6-word bolded lead-clause. G-8: ≤ 75 words, ≤ 4 sentences. Author: "**Software does the scheduling.** Anki and SuperMemo show each card just before the learner would forget it, so the only job left is to honestly grade each recall."
 - **Step 8 — block-specific.** N/A.
 - **Step 9 — anti-pattern.** Single bolded run. Not three `standard-text` in a row. ✓
@@ -134,7 +134,7 @@ beat would feel hand-wavy with one.
 - **Step 3 — length filter.** `checklist.length_variants = mini,standard,xl`. ✓
 - **Step 4 — lifecycle.** `core`. ✓
 - **Step 5 — mode bias.** Listed. ✓
-- **Step 6 — density.** Anchor count = 3 (checklist is content); content count = 3. Ratio 1:1 across the whole card so far — Mini exemption holds.
+- **Step 6 — density.** Anchor count = 3 (checklist is content); content count = 3 — within the Mini card-level anchor budget (LENGTHS § L-5: 2–3 anchors).
 - **Step 7 — prose rules.** Checklist isn't `standard-text`; each item is a single line. No lead-clause requirement.
 - **Step 8 — block-specific.** N/A.
 - **Step 9 — anti-pattern.** ✓
@@ -160,7 +160,7 @@ beat would feel hand-wavy with one.
 |---|---|---|---|---|
 | 1 | 1. Hook | `BLOCK-key-takeaway` (hero-styled) | editorial | Anchor (hero) |
 | 2 | 2. Evidence | `BLOCK-stat-callout` | numeric | Anchor |
-| 3 | 3. Mechanism | `BLOCK-definition` | definitional | Content (Mini exemption) |
+| 3 | 3. Mechanism | `BLOCK-definition` | definitional | Content |
 | 4 | 3. Mechanism | `BLOCK-standard-text` | editorial | Content |
 | 5 | 6. Application | `BLOCK-checklist` | editorial | Content |
 | 6 | 7. Close | `BLOCK-key-takeaway` | editorial | Anchor |
@@ -177,7 +177,7 @@ Gates run at draft completion (PIPELINE § Stage 4 — Constraint gates).
 | G4 | Redundancy filter | ✓ | Close re-frames hero; no two blocks restate the same point |
 | G5 | Screenshot test | ✓ | All 6 blocks pass; corner glyph on each section |
 | G6 | Frozen-at-version | ✓ | `frozen_at_version: 3.3.0` declared |
-| G7 | Density budget (V3.1+) | ⚠︎ | Beat 3 has 0 anchors / 2 content — Mini exemption documented in STEWARDS-LOG; alternative would be promoting the definition to a `numbered-principle` |
+| G7 | Density budget (V3.1+) | ⚠︎ | Beat 3 runs 0 anchors / 2 content — a per-beat density *warning* (R-12), not a failure: the card-level anchor budget (L-5, 2–3 for Mini) governs and the card has 3. Clear the warning by authoring the definition as a `numbered-principle`. |
 | G8 | ADHD scan-ability gate (V3.1+) | ✓ | Bold-only read: "retrieval at the edge of forgetting → one-third the study time → software does the scheduling → spaced repetition replaces hours with timing." Yields the card's thesis. |
 
 Identity invariants (PIPELINE § Stage 4 — Identity invariants): all 6 held. No
