@@ -359,11 +359,11 @@ section.divider h2 {
 
 /* gallery — mirrors docs/index.html */
 .gallery-lede {
-  font-size: 17px;
-  line-height: 24px;
+  /* Same size as .spec-desc (15/21) so the two body-copy lines read as a
+   * matched pair. */
+  font-size: 15px;
+  line-height: 21px;
   color: var(--ink-2);
-  /* Match the spec→Sample gap (.section-label margin-top) so the three
-   * landing sections share one 32px rhythm instead of 48 / 32. */
   margin-bottom: var(--s-5);
 }
 .section-label {
