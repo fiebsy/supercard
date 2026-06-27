@@ -1017,8 +1017,10 @@ a.spec-link:hover {
 }
 /* GitHub icon button — top-right, ghost circle. The mark inherits --g-60 via
  * currentColor (see GitHubIcon in ui.tsx). */
-/* GitHub — just the icon (no ring), right-aligned in the header. A subtle gray
- * circle appears behind it on hover. */
+/* GitHub — just the icon (no ring). The hover target is a 36px circle, but the
+ * 18px glyph is centered in it, so a negative right margin pulls the glyph's
+ * edge flush with the content edge (symmetric with the wordmark on the left).
+ * A subtle gray circle appears behind it on hover. */
 .gh-btn {
   display: inline-flex;
   align-items: center;
@@ -1026,6 +1028,7 @@ a.spec-link:hover {
   width: 36px;
   height: 36px;
   flex: 0 0 auto;
+  margin-right: -9px;
   border-radius: 999px;
   background: transparent;
   color: var(--ink);
@@ -1047,7 +1050,8 @@ a.spec-link:hover {
   display: flex;
   align-items: center;
   gap: var(--s-2);
-  margin: var(--s-6) 0 var(--s-3);
+  /* s-7 above gives each section more breathing room than the old s-6. */
+  margin: var(--s-7) 0 var(--s-3);
 }
 .zone-label-text {
   flex: 0 0 auto;
@@ -1057,7 +1061,8 @@ a.spec-link:hover {
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--g-60);
+  /* muted a step (was --g-60) so the labels recede into quiet scaffolding. */
+  color: var(--g-30);
 }
 .zone-rule {
   flex: 1 1 auto;
