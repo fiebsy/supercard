@@ -376,11 +376,13 @@ section.divider h2 {
 
 /* gallery — mirrors docs/index.html */
 .gallery-lede {
-  font-size: 17px;
-  line-height: 24px;
+  /* Same size as .spec-desc (15/21) so the two body-copy lines read as a
+   * matched pair. `balance` evens the two lines instead of a short-then-long
+   * rag. */
+  font-size: 15px;
+  line-height: 21px;
   color: var(--ink-2);
-  /* Match the spec→Sample gap (.section-label margin-top) so the three
-   * landing sections share one 32px rhythm instead of 48 / 32. */
+  text-wrap: balance;
   margin-bottom: var(--s-5);
 }
 .section-label {
@@ -1007,9 +1009,342 @@ a.spec-link:hover {
   margin-bottom: var(--s-3);
   margin-left: var(--s-1);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+ * V3.7 landing (lander redesign). Mono `# supercard` wordmark, path-style
+ * `~/ zone` labels with a hairline rule, a code-block spec input with an inset
+ * non-black copy button, a GitHub icon, and a toast-style archive reveal.
+ * Strict grayscale: the input ground is --g-06, the copy fill --g-12, and the
+ * one allowed colour is the transient copy-success check (#34c759, UI chrome).
+ * ───────────────────────────────────────────────────────────────────────── */
+.landing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--s-6);
+}
+.wordmark {
+  font-family: var(--mono);
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ink);
+  white-space: nowrap;
+}
+/* GitHub icon button — top-right, ghost circle. The mark inherits --g-60 via
+ * currentColor (see GitHubIcon in ui.tsx). */
+/* GitHub — just the icon (no ring). The hover target is a 36px circle, but the
+ * 18px glyph is centered in it, so a negative right margin pulls the glyph's
+ * edge flush with the content edge (symmetric with the wordmark on the left).
+ * A subtle gray circle appears behind it on hover. */
+.gh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  margin-right: -9px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.gh-btn:hover {
+  background: var(--g-06);
+}
+
+/* The lede sits one step under the wordmark; the rest of the rhythm is owned by
+ * the .zone-label margins below (this overrides the earlier .gallery-lede). */
+.gallery-lede {
+  margin: var(--s-3) 0 0;
+}
+
+/* `~/ spec` — a mono path label trailed by a hairline rule that fills the row. */
+.zone-label {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  /* s-7 above gives each section more breathing room than the old s-6. */
+  margin: var(--s-7) 0 var(--s-3);
+}
+.zone-label-text {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  /* muted a step (was --g-60) so the labels recede into quiet scaffolding. */
+  color: var(--g-30);
+}
+.zone-rule {
+  flex: 1 1 auto;
+  height: 0;
+  border-top: 1px solid var(--g-12);
+}
+
+.spec-title {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  color: var(--ink);
+}
+.spec-desc {
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+
+/* Code-block spec input: the URL reads large, the copy button is inset and
+ * non-black (--g-12 fill, --ink glyph). */
+/* The whole field is the copy button (click anywhere to copy). The copy glyph
+ * is positioned absolutely on the right so the URL stays centered in the field
+ * rather than being shoved off-center by the icon. */
+.spec-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 52px;
+  margin-top: var(--s-3);
+  background: var(--g-06);
+  /* No outline at rest — the --g-06 ground carries the field; the border only
+   * appears on hover (transparent here keeps the box size stable, no shift). */
+  border: 1px solid transparent;
+  /* same radius as the sample cards (16) so the input and cards read as one set */
+  border-radius: 16px;
+  padding: 0 18px;
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.spec-input:hover {
+  border-color: var(--g-30);
+}
+.spec-url {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 20px;
+  color: var(--ink);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Quiet copy indicator — no fill, floated on the right so it doesn't shift the
+ * centered URL. The whole field is the button. Sized (32) and inset (right 18,
+ * matching the input's own 18px lane) to mirror the sample card's chevron, so
+ * the two trailing affordances line up across the input and the cards. */
+.spec-copy {
+  position: absolute;
+  right: 18px;
+  top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--g-60);
+}
+/* Copy-success: the glyph swaps to a check and darkens to --ink. Monochrome. */
+.spec-copy.copied {
+  color: var(--ink);
+}
+
+/* Trailing action on a zone label (e.g. "Hide" on `~/ older` once expanded).
+ * Mono, quiet by default, darkens on hover. */
+.zone-action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g-60);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.zone-action:hover {
+  color: var(--k);
+}
+
+/* Toast-style archive: a masked card-edge peeks above a dashed reveal button;
+ * expanding swaps in the older sample cards. */
+.older {
+  display: flex;
+  flex-direction: column;
+}
+.older-peek {
+  align-self: center;
+  width: 88%;
+  height: 16px;
+  border: 1px solid var(--g-12);
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  background: var(--surface-tint);
+}
+.older-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  width: 100%;
+  height: 44px;
+  border: 1px dashed var(--g-30);
+  border-radius: 999px;
+  background: var(--w);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--g-60);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.older-toggle:hover {
+  color: var(--k);
+  border-color: var(--g-60);
+}
+.older-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* Footer glyph line, in the column flow (not the fixed corner mark). */
+.landing-footer {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--g-30);
+  padding-top: var(--s-6);
+}
+
+/* Sample card (Card B). 18px padding aligns its content's left edge with the
+ * spec input's (both contained widgets sharing a left lane). The open chevron
+ * sits in the title row so the preview runs full-width; a fade clips the cut. */
+.sample-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background: var(--w);
+  border: 1px solid var(--g-12);
+  border-radius: 16px;
+  padding: 18px;
+  transition: border-color 0.15s ease;
+}
+.sample-card:hover {
+  border-color: var(--g-30);
+}
+/* Subtle topical eyebrow above the title — same muted mono language as the
+ * `~/ zone` labels, so every card carries a one-glance bit of context. */
+.sample-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g-30);
+  margin-bottom: var(--s-1);
+}
+.sample-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+.sample-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Ghost open-chevron — non-black, matching the lander's button language. */
+.sample-open {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--g-06);
+  border: 1px solid var(--g-12);
+  color: var(--ink);
+}
+.sample-meta {
+  padding-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--g-30);
+}
+.sample-preview {
+  padding-top: var(--s-3);
+  max-height: 72px;
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--ink-2);
+}
+.sample-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 72px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 76%);
+  pointer-events: none;
+}
+
+/* Card-view back button — identical treatment to the card's forward chevron
+ * (.sample-open): same 32px circle, --g-06 fill, --g-12 border, --ink glyph. */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--g-12);
+  border-radius: 999px;
+  background: var(--g-06);
+  color: var(--ink);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.back-btn:hover {
+  background: var(--g-12);
+  border-color: var(--g-30);
+}
 </style>
 </head>
 <body>
+  <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
   <div class="canvas v3-1 v3-4 beat-gap-64">
 
     <section>

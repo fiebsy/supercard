@@ -481,6 +481,7 @@ ${css.trim()}
 </style>
 </head>
 <body>
+  <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
   <div class="${canvasClasses(fm)}">
 
 ${sections}
