@@ -2,8 +2,9 @@
 
 > Supercard is a screenshot-shareable, single-emphasis-per-block knowledge
 > artifact — a cognitive prosthesis. This file is the complete, self-contained
-> specification: everything an agent needs to build, style, render, breakdown,
-> or judge a Supercard, in one URL. Nothing to chain.
+> specification: paste it into any chat LLM with a topic and it produces the
+> finished card — one self-contained HTML file — from this page alone. Nothing
+> to fetch, nothing to chain. Start at "Build a card with no tools."
 
 ## Summary
 
@@ -26,9 +27,12 @@ This file is the single source of truth for anything "Supercard."
 2. It is **self-contained.** Every layer below — principles, grammar, lengths,
    block library, pipeline, rendering + tokens, glossary, worked example — is
    inlined here. There is no other URL to fetch and nothing to chain.
-3. To **build a card from a topic**, follow the Pipeline (Stage 0–5). To **judge
-   identity**, use the Principles. To **pick a block**, use the Grammar
-   decision tree plus the Block library.
+3. To **build a card from a topic with no tools**, start at *Build a card with no
+   tools* — the output contract, HTML skeleton, stylesheet, per-block patterns,
+   and a full worked card are all there. To **judge identity**, use the
+   Principles; to **pick a block**, use the Grammar decision tree plus the Block
+   library. (The Pipeline's file/render/git mechanics apply only with the repo
+   checked out.)
 4. The markdown in the canonical repo is the source of truth (ADR-0003); this
    file is a generated, drift-checked view of it. The `spec_revision` in
    Provenance changes iff a source doc changes — re-read if it moved since you
