@@ -1098,7 +1098,9 @@ a.spec-link:hover {
   height: 52px;
   margin-top: var(--s-3);
   background: var(--g-06);
-  border: 1px solid var(--g-12);
+  /* No outline at rest — the --g-06 ground carries the field; the border only
+   * appears on hover (transparent here keeps the box size stable, no shift). */
+  border: 1px solid transparent;
   /* same radius as the sample cards (16) so the input and cards read as one set */
   border-radius: 16px;
   padding: 0 18px;
@@ -1234,6 +1236,18 @@ a.spec-link:hover {
 }
 .sample-card:hover {
   border-color: var(--g-30);
+}
+/* Subtle topical eyebrow above the title — same muted mono language as the
+ * `~/ zone` labels, so every card carries a one-glance bit of context. */
+.sample-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g-30);
+  margin-bottom: var(--s-1);
 }
 .sample-head {
   display: flex;

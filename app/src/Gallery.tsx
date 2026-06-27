@@ -82,6 +82,7 @@ function SampleCard({ entry }: { entry: CardEntry }) {
   const href = entry.component ? `#/cards/${entry.slug}` : entry.htmlRender;
   return (
     <a href={href} className="sample-card">
+      <div className="sample-eyebrow">{entry.eyebrow}</div>
       <div className="sample-head">
         <span className="sample-title">{entry.title}</span>
         <span className="sample-open" aria-hidden="true">

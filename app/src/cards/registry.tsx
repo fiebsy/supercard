@@ -17,6 +17,8 @@ export type CardEntry = {
   title: string;
   length: string;
   mode: string;
+  /** subtle topical eyebrow shown above the title on the sample card */
+  eyebrow: string;
   /** frozen-at version, shown as a badge on the sample card (e.g. "v3.7") */
   version?: string;
   desc: string;
@@ -37,6 +39,7 @@ export const cards: CardEntry[] = [
     title: "Data, Aligned",
     length: "standard",
     mode: "reference",
+    eyebrow: "Data viz",
     version: "v3.7",
     desc: "First card frozen at 3.7.0: the cover eyebrow (R-27), grayscale bar + line charts (R-30), stat-grid + stat-callout (R-31), and the alignment fixes (R-28/R-29) — strict grayscale, one emphasis per block.",
     preview:
@@ -50,6 +53,7 @@ export const cards: CardEntry[] = [
     title: "The Reading Layer, Refined",
     length: "mini",
     mode: "reference",
+    eyebrow: "Typography",
     version: "v3.5",
     desc: "First card frozen at 3.5.0 — the reading-layer cut: R-19 body metrics, the R-20 three-step ink ladder, the R-21 three-size reading core, and 64pt beats.",
     preview:
@@ -62,6 +66,7 @@ export const cards: CardEntry[] = [
     title: "Plain Language as Substance",
     length: "mini",
     mode: "reference",
+    eyebrow: "Readability",
     version: "v3.4",
     desc: "First card frozen at 3.4.0 — the V3.4 cut: Tile head step, 64pt beat gaps (R-15), surface-tinted stat callout (R-16), eyebrow + tagline pairs (G-14).",
     preview:
@@ -74,6 +79,7 @@ export const cards: CardEntry[] = [
     title: "Gestalt Principles",
     length: "xl",
     mode: "deep-dive",
+    eyebrow: "Perception",
     version: "v3.0",
     desc: "Your visual system groups, splits, and completes a scene into objects before you're aware of looking — the Gestalt principles are the catalogue of rules it uses.",
     preview:
@@ -87,6 +93,7 @@ export const cards: CardEntry[] = [
     title: "Musk v. Altman: the OpenAI Trial",
     length: "mini",
     mode: "briefing",
+    eyebrow: "AI litigation",
     version: "v3.0",
     desc: "Two men co-founded OpenAI as a nonprofit in 2015. A decade later they are in court over whether its turn to profit broke a founding promise.",
     preview:
@@ -99,6 +106,7 @@ export const cards: CardEntry[] = [
     title: "Spaced Repetition",
     length: "standard",
     mode: "briefing",
+    eyebrow: "Learning science",
     version: "v3.0",
     desc: "Reviewing at widening intervals beats cramming — roughly double the long-term retention for the same total study time.",
     preview:
