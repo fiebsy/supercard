@@ -111,9 +111,8 @@ export function Gallery() {
       </header>
 
       <p className="gallery-lede">
-        Paste the spec into Claude.
-        <br />
-        Any deep-research topic becomes a scannable card.
+        Paste the spec into Claude. Any deep-research topic becomes a scannable
+        card.
       </p>
 
       <ZoneLabel>~/ spec</ZoneLabel>

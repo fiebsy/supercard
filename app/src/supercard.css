@@ -360,10 +360,12 @@ section.divider h2 {
 /* gallery — mirrors docs/index.html */
 .gallery-lede {
   /* Same size as .spec-desc (15/21) so the two body-copy lines read as a
-   * matched pair. */
+   * matched pair. `balance` evens the two lines instead of a short-then-long
+   * rag. */
   font-size: 15px;
   line-height: 21px;
   color: var(--ink-2);
+  text-wrap: balance;
   margin-bottom: var(--s-5);
 }
 .section-label {
@@ -1015,6 +1017,8 @@ a.spec-link:hover {
 }
 /* GitHub icon button — top-right, ghost circle. The mark inherits --g-60 via
  * currentColor (see GitHubIcon in ui.tsx). */
+/* GitHub — just the icon (no ring), right-aligned in the header. A subtle gray
+ * circle appears behind it on hover. */
 .gh-btn {
   display: inline-flex;
   align-items: center;
@@ -1022,15 +1026,14 @@ a.spec-link:hover {
   width: 36px;
   height: 36px;
   flex: 0 0 auto;
-  border: 1px solid var(--g-12);
   border-radius: 999px;
-  color: var(--g-60);
+  background: transparent;
+  color: var(--ink);
   text-decoration: none;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease;
 }
 .gh-btn:hover {
-  color: var(--k);
-  border-color: var(--g-30);
+  background: var(--g-06);
 }
 
 /* The lede sits one step under the wordmark; the rest of the rhythm is owned by
@@ -1078,18 +1081,21 @@ a.spec-link:hover {
 
 /* Code-block spec input: the URL reads large, the copy button is inset and
  * non-black (--g-12 fill, --ink glyph). */
-/* The whole field is the copy button (click anywhere to copy). */
+/* The whole field is the copy button (click anywhere to copy). The copy glyph
+ * is positioned absolutely on the right so the URL stays centered in the field
+ * rather than being shoved off-center by the icon. */
 .spec-input {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   height: 52px;
   margin-top: var(--s-3);
   background: var(--g-06);
   border: 1px solid var(--g-12);
   border-radius: 10px;
-  padding: 0 8px 0 18px;
+  padding: 0 18px;
   font-family: inherit;
   color: inherit;
   cursor: pointer;
@@ -1105,18 +1111,22 @@ a.spec-link:hover {
   font-size: 16px;
   line-height: 20px;
   color: var(--ink);
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* Quiet copy indicator — no fill, since the whole field is the button. */
+/* Quiet copy indicator — no fill, floated on the right so it doesn't shift the
+ * centered URL. The whole field is the button. */
 .spec-copy {
+  position: absolute;
+  right: 8px;
+  top: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 36px;
   height: 36px;
-  flex: 0 0 auto;
   color: var(--g-60);
 }
 /* Copy-success: the glyph swaps to a check and darkens to --ink. Monochrome. */
@@ -1274,21 +1284,21 @@ a.spec-link:hover {
   pointer-events: none;
 }
 
-/* Card-view back button — ghost circle to match the new button language
- * (replaces the old solid-black .icon-btn back affordance). */
+/* Card-view back button — identical treatment to the card's forward chevron
+ * (.sample-open): same 32px circle, --g-06 fill, --g-12 border, --ink glyph. */
 .back-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border: 1px solid var(--g-12);
   border-radius: 999px;
-  background: var(--w);
+  background: var(--g-06);
   color: var(--ink);
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 .back-btn:hover {
-  background: var(--g-06);
+  background: var(--g-12);
   border-color: var(--g-30);
 }
