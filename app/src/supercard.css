@@ -1252,12 +1252,19 @@ a.spec-link:hover {
 .sample-head {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  /* top-align so the chevron pins to the card's top-right corner, not the
+   * vertical middle of the eyebrow + title block (the eyebrow pushed it down) */
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--s-2);
 }
-.sample-title {
+/* Eyebrow + title stacked; this column takes the row's free width so the title
+ * ellipsizes while the chevron stays a fixed slot pinned to the top-right. */
+.sample-headings {
   flex: 1 1 auto;
+  min-width: 0;
+}
+.sample-title {
   min-width: 0;
   font-size: 22px;
   line-height: 28px;
