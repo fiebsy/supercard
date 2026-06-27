@@ -149,9 +149,9 @@ Test for the exceptions: identical-block runs are OK only if they present parall
 
 ## The redundancy filter
 
-Before any block ships, ask: *what unique element does this add that's not in any other block on this Supercard?*
-
-If the answer is "nothing" or "restates the thesis," cut the block.
+Defined in full at PRINCIPLES § 9 — run it on every block at draft completion:
+if a block adds no unique element (or just restates the thesis), cut it. The mode
+sets how hard it runs (aggressive for `summary`, hardest for `deep-dive`).
 
 ## G-7. Bolded lead-clause on prose blocks (V3.1+)
 

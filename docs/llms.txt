@@ -351,9 +351,9 @@ Test for the exceptions: identical-block runs are OK only if they present parall
 
 ### The redundancy filter
 
-Before any block ships, ask: *what unique element does this add that's not in any other block on this Supercard?*
-
-If the answer is "nothing" or "restates the thesis," cut the block.
+Defined in full at PRINCIPLES § 9 — run it on every block at draft completion:
+if a block adds no unique element (or just restates the thesis), cut it. The mode
+sets how hard it runs (aggressive for `summary`, hardest for `deep-dive`).
 
 ### G-7. Bolded lead-clause on prose blocks (V3.1+)
 
@@ -1804,7 +1804,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.7.0 · era atlas
-- **Revision:** `765480cc7d48` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `779ecfdceede` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-06-27
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -1815,7 +1815,7 @@ Source files (the canonical markdown this view is generated from):
 
 - `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-27 — sha256 `7a6f0921677a2434130562528e87a479afba541a97da66c65bf78e75b63976bb`
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-06-25 — sha256 `3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452`
-- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `f678879f9480cbf29816f323425e70a76addaaf8b0b769804b93ad34857555f2`
+- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `292d4a73f9c276c4fcea1a2e2d4c705ad69166146a26b8a0fc1050d76439269f`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `2e0ebe7b60bb97d3b7dd998c5dabb6575070a948b50b17593ea8add5ce31c23e`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `f093e06e7e1ca7d538df6f899f5cd37e043d549106d19817ddf3206df4835e5f`
