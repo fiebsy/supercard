@@ -27,7 +27,7 @@ export function App() {
   const cardMatch = route.match(/^\/cards\/([\w-]+)$/);
   if (cardMatch) {
     const entry = findCard(cardMatch[1]);
-    if (entry) {
+    if (entry && entry.component) {
       const Card = entry.component;
       return (
         <>

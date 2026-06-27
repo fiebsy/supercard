@@ -23,6 +23,10 @@ const SPEC_URL = "https://berafoot.com/llms.txt";
 const SPEC_URL_DISPLAY = "berafoot.com/llms.txt";
 const REPO_URL = "https://github.com/fiebsy/supercard";
 
+/* Below this many older cards, just show them inline — the collapse/toast only
+ * earns its chrome once there's enough to be worth hiding. */
+const COLLAPSE_OLDER_AT = 3;
+
 /* A mono path label (`~/ spec`) trailed by a hairline rule — the device that
  * separates the lander's zones in this vertical, mobile layout. */
 function ZoneLabel({ children }: { children: string }) {
@@ -74,8 +78,10 @@ function SpecInput() {
  * with a fade. The chevron lives in the title row so the preview runs the full
  * width with nothing floating over the faded text. */
 function SampleCard({ entry }: { entry: CardEntry }) {
+  // Cards with a React view route in-app; archive-only cards open their twin.
+  const href = entry.component ? `#/cards/${entry.slug}` : entry.htmlRender;
   return (
-    <a href={`#/cards/${entry.slug}`} className="sample-card">
+    <a href={href} className="sample-card">
       <div className="sample-head">
         <span className="sample-title">{entry.title}</span>
         <span className="sample-open" aria-hidden="true">
@@ -122,43 +128,53 @@ export function Gallery() {
       <ZoneLabel>~/ samples</ZoneLabel>
       <SampleCard entry={current} />
 
-      {older.length > 0 ? (
-        showOlder ? (
-          <>
-            <div className="zone-label">
-              <span className="zone-label-text">~/ older</span>
-              <span className="zone-rule" />
-              <button
-                type="button"
-                className="zone-action"
-                onClick={() => setShowOlder(false)}
-              >
-                Hide
-              </button>
-            </div>
-            <div className="older-list">
-              {older.map((c) => (
-                <SampleCard key={c.slug} entry={c} />
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <ZoneLabel>~/ older</ZoneLabel>
-            <div className="older">
-              <div className="older-peek" />
-              <button
-                type="button"
-                className="older-toggle"
-                onClick={() => setShowOlder(true)}
-              >
-                View {older.length} older card{older.length === 1 ? "" : "s"}
-                <ChevronDown />
-              </button>
-            </div>
-          </>
-        )
-      ) : null}
+      {older.length === 0 ? null : older.length < COLLAPSE_OLDER_AT ? (
+        // A couple of older cards — show them inline, no toast.
+        <>
+          <ZoneLabel>~/ older</ZoneLabel>
+          <div className="older-list">
+            {older.map((c) => (
+              <SampleCard key={c.slug} entry={c} />
+            ))}
+          </div>
+        </>
+      ) : showOlder ? (
+        // Enough to collapse, expanded — label carries a Hide control.
+        <>
+          <div className="zone-label">
+            <span className="zone-label-text">~/ older</span>
+            <span className="zone-rule" />
+            <button
+              type="button"
+              className="zone-action"
+              onClick={() => setShowOlder(false)}
+            >
+              Hide
+            </button>
+          </div>
+          <div className="older-list">
+            {older.map((c) => (
+              <SampleCard key={c.slug} entry={c} />
+            ))}
+          </div>
+        </>
+      ) : (
+        // Enough to collapse, collapsed — the toast reveal.
+        <>
+          <ZoneLabel>~/ older</ZoneLabel>
+          <div className="older">
+            <div className="older-peek" />
+            <button
+              type="button"
+              className="older-toggle"
+              onClick={() => setShowOlder(true)}
+            >
+              View {older.length} older cards
+              <ChevronDown />
+            </button>
+          </div>
+        </>
+      )}
 
       <div className="landing-footer">◆ supercard · v3.7 atlas</div>
     </div>

@@ -1099,7 +1099,8 @@ a.spec-link:hover {
   margin-top: var(--s-3);
   background: var(--g-06);
   border: 1px solid var(--g-12);
-  border-radius: 10px;
+  /* same radius as the sample cards (16) so the input and cards read as one set */
+  border-radius: 16px;
   padding: 0 18px;
   font-family: inherit;
   color: inherit;
@@ -1122,16 +1123,18 @@ a.spec-link:hover {
   text-overflow: ellipsis;
 }
 /* Quiet copy indicator — no fill, floated on the right so it doesn't shift the
- * centered URL. The whole field is the button. */
+ * centered URL. The whole field is the button. Sized (32) and inset (right 18,
+ * matching the input's own 18px lane) to mirror the sample card's chevron, so
+ * the two trailing affordances line up across the input and the cards. */
 .spec-copy {
   position: absolute;
-  right: 8px;
-  top: 8px;
+  right: 18px;
+  top: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   color: var(--g-60);
 }
 /* Copy-success: the glyph swaps to a check and darkens to --ink. Monochrome. */
@@ -1174,7 +1177,7 @@ a.spec-link:hover {
   height: 16px;
   border: 1px solid var(--g-12);
   border-bottom: none;
-  border-radius: 14px 14px 0 0;
+  border-radius: 16px 16px 0 0;
   background: var(--surface-tint);
 }
 .older-toggle {
@@ -1225,7 +1228,7 @@ a.spec-link:hover {
   color: inherit;
   background: var(--w);
   border: 1px solid var(--g-12);
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 18px;
   transition: border-color 0.15s ease;
 }
