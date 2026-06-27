@@ -163,6 +163,7 @@ function normalizeDoc(raw) {
 
 const SRC = {
   index: readDoc("00-INDEX/INDEX-supercard-v3.md"),
+  build: readDoc("10-GOVERNANCE/BUILD-card-no-tools.md"),
   principles: readDoc("10-GOVERNANCE/PRINCIPLES-supercard-v3.md"),
   grammar: readDoc("10-GOVERNANCE/GRAMMAR-block-composition.md"),
   lengths: readDoc("10-GOVERNANCE/LENGTHS-mini-standard-xl.md"),
@@ -198,6 +199,12 @@ const WHAT_IS_A_SUPERCARD = sectionBody(SRC.index, "what is a supercard");
  * ------------------------------------------------------------------ */
 
 const GUIDES = [
+  {
+    anchor: "build",
+    title: "Build a card with no tools — start here",
+    blurb: "The whole job for a chat LLM with no repo or renderer: the output contract (one self-contained HTML file), the build sequence, the HTML skeleton, the flat stylesheet to paste, a per-block HTML pattern set, one complete worked card, and a tool-less self-check. If all you have is this page and a topic, build from this section alone.",
+    doc: SRC.build,
+  },
   {
     anchor: "principles",
     title: "Principles — what is and isn't a Supercard",
