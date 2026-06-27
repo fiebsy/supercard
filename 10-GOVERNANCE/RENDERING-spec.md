@@ -93,6 +93,38 @@ The canvas is light-only. The renderer declares `color-scheme: only light` on `:
 
 ## Type scale (SF Pro Rounded)
 
+The canonical scale for a current card (`frozen_at_version ≥ 3.5.0`). It is a
+**three-size reading core** — Header, Subhead, Body — plus reserved and utility
+roles, the way R-21 builds deep hierarchy from few sizes with weight + ink +
+space doing the differentiation. Body metrics are R-19; text ink is R-20.
+
+| Role | Size / leading | Weight | Tracking | Note |
+|---|---|---|---|---|
+| Hero number *(reserved)* | 56 / 60 | 700 + tnum | −0.025em | poster / stat-callout only |
+| Display title / Header | 40 / 44 | 600 | −0.020em | |
+| Subhead / large card | 26 / 32 | 600 | −0.012em | merges the old Tile 28 / Section 24 / Subtitle 19 steps (R-21) |
+| Body | 17 / 26 | 400 / 500 / 700 | −0.01em (word-spacing normal) | primary ink `#1A1A1A`, secondary `#595959` (R-20) |
+| Caption | 13 / 18 | 400 | 0 to +0.005em | |
+| Eyebrow *(UPPERCASE)* | 11 / 14 | 600 | +0.08em | the only positively-tracked role |
+| Code / mono *(reserved)* | 14 / 22 | SF Mono 400 | 0 | |
+
+**The dek is not its own size.** Render it at body size (17 / 26) in a lighter
+weight or secondary ink — weight and ink set it apart from the title, not a
+fourth step (R-13 / R-21). The 19pt subtitle step is retired for current cards.
+
+**Note on the eyebrow row.** The eyebrow is the one positively-tracked role
+(+0.08em) — UPPERCASE caps have no word-shape to break, so opening their tight
+default fit is correct here and nowhere else. **R-25 (V3.6.1, ADR-0013) governs
+the eyebrow's *content*, not its case:** it names the block's content/topic and
+must be distinct from its neighbours — never the beat name, never repeated down
+a beat.
+
+<!-- llms:exclude -->
+**V3.0 reference table (frozen V3.0 cards).** The original nine-role scale. The
+body row is superseded by R-9 (V3.1–V3.4) and then R-19 (V3.5+); R-18 (V3.4)
+added the opt-in Apple register; R-21 (V3.5+) collapsed Tile / Section / Subtitle
+into the single Subhead step above. Retained for cards frozen at those versions.
+
 | Role | Size / leading | Weight | Tracking (em) |
 |---|---|---|---|
 | Hero number | 56 / 60 | Bold (700) + tnum | −0.022 |
@@ -105,11 +137,10 @@ The canvas is light-only. The renderer declares `color-scheme: only light` on `:
 | Eyebrow | 11 / 14 | Semibold UPPERCASE | +0.08 |
 | Code / equations | 14 / 22 | SF Mono Regular | 0 |
 
-**Note on the body row.** The token table lists Body as 17/24 with tracking −0.008. **R-9 (V3.1–V3.4) supersedes that row** for cards frozen at V3.1.0–V3.4.x — body renders at 17/26 with +0.03em letter-spacing and +0.06em word-spacing, left-aligned ragged, weights 400/500/700 only. **R-19 (V3.5+) supersedes R-9 in turn** for cards frozen at V3.5.0 or later — body renders at 17/26 with letter-spacing **−0.01em** and **word-spacing normal** (the positive tracking is retired; see R-19 for the why). The token row remains as the V3.0 reference. **R-18 (V3.4)** added an opt-in "Apple register" variant; **R-19 folds R-18's display tightening in as the V3.5 default** and drops the sub-1.5 line-height variant (V3.5 body stays at 26pt, ≥ 1.5).
-
-**Note on the eyebrow row.** The eyebrow stays UPPERCASE — the one positively-tracked role (+0.08em), because caps have no word-shape to break and the tracking opens their tight default fit. The earlier +0.07 figure was a stale token-table value; cards and CSS that still emit +0.07 render visibly the same and are accepted, but new renders snap to +0.08. **R-25 (V3.6.1, ADR-0013) governs the eyebrow's *content*, not its case:** an eyebrow names the block's content/topic and must be distinct from its neighbours — never the beat name, never repeated down a beat. Casing is unchanged.
-
-**Note on the Tile head row (V3.4+).** The 28/32 Tile head step is new in V3.4 and is the canonical size for the tagline half of an eyebrow + tagline pair (see G-14 Pattern 1). It sits between Display title (40/44) and Section header (24/30). V3.1–V3.3 cards do not use the Tile step.
+The earlier +0.07 eyebrow figure was a stale token-table value; cards and CSS
+that still emit +0.07 render visibly the same and are accepted, but new renders
+snap to +0.08.
+<!-- /llms:exclude -->
 
 CSS stack:
 

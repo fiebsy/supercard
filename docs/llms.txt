@@ -1063,23 +1063,31 @@ The canvas is light-only. The renderer declares `color-scheme: only light` on `:
 
 ### Type scale (SF Pro Rounded)
 
-| Role | Size / leading | Weight | Tracking (em) |
-|---|---|---|---|
-| Hero number | 56 / 60 | Bold (700) + tnum | −0.022 |
-| Display title | 40 / 44 | Semibold (600) | −0.018 |
-| Tile head (V3.4+) | 28 / 32 | Semibold (600) | −0.012 |
-| Section header | 24 / 30 | Semibold (600) | −0.012 |
-| Subtitle | 19 / 26 | Medium (500) | −0.005 |
-| Body | 17 / 24 | Regular (400) | −0.008 |
-| Caption | 13 / 18 | Regular | +0.008 |
-| Eyebrow | 11 / 14 | Semibold UPPERCASE | +0.08 |
-| Code / equations | 14 / 22 | SF Mono Regular | 0 |
+The canonical scale for a current card (`frozen_at_version ≥ 3.5.0`). It is a
+**three-size reading core** — Header, Subhead, Body — plus reserved and utility
+roles, the way R-21 builds deep hierarchy from few sizes with weight + ink +
+space doing the differentiation. Body metrics are R-19; text ink is R-20.
 
-**Note on the body row.** The token table lists Body as 17/24 with tracking −0.008. **R-9 (V3.1–V3.4) supersedes that row** for cards frozen at V3.1.0–V3.4.x — body renders at 17/26 with +0.03em letter-spacing and +0.06em word-spacing, left-aligned ragged, weights 400/500/700 only. **R-19 (V3.5+) supersedes R-9 in turn** for cards frozen at V3.5.0 or later — body renders at 17/26 with letter-spacing **−0.01em** and **word-spacing normal** (the positive tracking is retired; see R-19 for the why). The token row remains as the V3.0 reference. **R-18 (V3.4)** added an opt-in "Apple register" variant; **R-19 folds R-18's display tightening in as the V3.5 default** and drops the sub-1.5 line-height variant (V3.5 body stays at 26pt, ≥ 1.5).
+| Role | Size / leading | Weight | Tracking | Note |
+|---|---|---|---|---|
+| Hero number *(reserved)* | 56 / 60 | 700 + tnum | −0.025em | poster / stat-callout only |
+| Display title / Header | 40 / 44 | 600 | −0.020em | |
+| Subhead / large card | 26 / 32 | 600 | −0.012em | merges the old Tile 28 / Section 24 / Subtitle 19 steps (R-21) |
+| Body | 17 / 26 | 400 / 500 / 700 | −0.01em (word-spacing normal) | primary ink `#1A1A1A`, secondary `#595959` (R-20) |
+| Caption | 13 / 18 | 400 | 0 to +0.005em | |
+| Eyebrow *(UPPERCASE)* | 11 / 14 | 600 | +0.08em | the only positively-tracked role |
+| Code / mono *(reserved)* | 14 / 22 | SF Mono 400 | 0 | |
 
-**Note on the eyebrow row.** The eyebrow stays UPPERCASE — the one positively-tracked role (+0.08em), because caps have no word-shape to break and the tracking opens their tight default fit. The earlier +0.07 figure was a stale token-table value; cards and CSS that still emit +0.07 render visibly the same and are accepted, but new renders snap to +0.08. **R-25 (V3.6.1, ADR-0013) governs the eyebrow's *content*, not its case:** an eyebrow names the block's content/topic and must be distinct from its neighbours — never the beat name, never repeated down a beat. Casing is unchanged.
+**The dek is not its own size.** Render it at body size (17 / 26) in a lighter
+weight or secondary ink — weight and ink set it apart from the title, not a
+fourth step (R-13 / R-21). The 19pt subtitle step is retired for current cards.
 
-**Note on the Tile head row (V3.4+).** The 28/32 Tile head step is new in V3.4 and is the canonical size for the tagline half of an eyebrow + tagline pair (see G-14 Pattern 1). It sits between Display title (40/44) and Section header (24/30). V3.1–V3.3 cards do not use the Tile step.
+**Note on the eyebrow row.** The eyebrow is the one positively-tracked role
+(+0.08em) — UPPERCASE caps have no word-shape to break, so opening their tight
+default fit is correct here and nowhere else. **R-25 (V3.6.1, ADR-0013) governs
+the eyebrow's *content*, not its case:** it names the block's content/topic and
+must be distinct from its neighbours — never the beat name, never repeated down
+a beat.
 
 CSS stack:
 
@@ -1796,7 +1804,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.7.0 · era atlas
-- **Revision:** `ddfe4519234b` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `f634d12fe09c` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-06-27
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -1811,7 +1819,7 @@ Source files (the canonical markdown this view is generated from):
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `2e0ebe7b60bb97d3b7dd998c5dabb6575070a948b50b17593ea8add5ce31c23e`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `f093e06e7e1ca7d538df6f899f5cd37e043d549106d19817ddf3206df4835e5f`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `69b01372a6993921d15b30c7f3ddc84f3fc1c05b4d52312a0ec9abe42bfc8354`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `33dbe50c09c5d9f78fc85bde643782a188116bb49f670f1f759d1aa14a5e4ee5`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `7d578066ed224f521ce4aa473386342ee2f5b74b7d1525508a8da68aa8a665e3`
 
