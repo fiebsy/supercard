@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import { Gallery } from "./Gallery";
 import { findCard } from "./cards/registry";
+import { IconButton, ChevronLeft } from "./ui";
 
 function useHashRoute() {
   const [hash, setHash] = useState(
@@ -31,20 +32,9 @@ export function App() {
       return (
         <>
           <a className="card-back" href="#/" aria-label="Back to gallery">
-            <span className="card-back-btn">
-              <svg
-                width={17}
-                height={17}
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            </span>
+            <IconButton label="Back to gallery">
+              <ChevronLeft />
+            </IconButton>
           </a>
           <Card />
           <a className="back-link" href="#/">

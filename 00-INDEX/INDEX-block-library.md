@@ -5,9 +5,9 @@
 | id | INDEX-block-library |
 | type | index |
 | era | atlas |
-| version | 3.4.0 |
+| version | 3.7.0 |
 | owner | derick |
-| updated | 2026-05-16 |
+| updated | 2026-06-27 |
 
 The **39** V3 blocks across **7 families** (Numeric, Comparative, Sequential,
 Definitional, Distributional, Editorial, Structural). Source of truth for block
@@ -115,6 +115,21 @@ which rules apply to which `frozen_at_version`.
 > gap (R-15) does the rest-the-eye work. Original spec, for genealogy: a centered
 > `⁂` at body size/weight with a 32pt vertical band, not counted in density
 > budgets (G-9) or total-block counts (L-5).
+
+## V3.7 — first chart/numeric blocks implemented (R-30 / R-31)
+
+Through V3.6, four numeric/comparative blocks were catalogued `stable` here but
+**never built** in either render path. V3.7 implements them for real (ADR-0014):
+
+- **`bar-chart`** and **`line-chart`** (R-30) — inline-SVG, strict grayscale, one
+  focal element. Authored as a plain `| label | value |` table; the bolded value
+  cell is focal.
+- **`stat-grid`** and **`stat-callout`** (R-31) — parallel metrics on a CSS grid,
+  and the reserved 56pt hero number with its required verbal anchor.
+
+Lifecycle is unchanged (`stable`) — these were always meant to exist; V3.7 just
+makes the renderer honour the catalogue. `column-chart` and `area-chart` remain
+catalogued-but-unbuilt (out of R-30's scope). Authoring grammar: GRAMMAR § G-15.
 
 ## V3.4 backwards compatibility
 

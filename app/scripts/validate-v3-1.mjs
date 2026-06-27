@@ -231,6 +231,16 @@ const CONTENT_TYPES = new Set([
   "faq",
   "code",
 ]);
+// V3.7+ blocks that author their DATA as a markdown table (R-30/R-31). Their
+// rows are series points or parallel metrics, not comparison rows, so the G-11
+// "≥ 4 rows ⇒ Takeaway row" requirement does not apply to them.
+const DATAVIZ_TABLE_TYPES = new Set([
+  "bar-chart",
+  "line-chart",
+  "column-chart",
+  "area-chart",
+  "stat-grid",
+]);
 
 function classify(block) {
   if (block.type && ANCHOR_TYPES.has(block.type)) return "anchor";
@@ -520,7 +530,11 @@ function validateCard(path, raw) {
         push(warnings, b, `standard-text exceeds 3-sentence mobile cap (${sents} sentences; G-12)`);
       }
     }
-    if (b.type === "table" || /^\s*\|.*\|/m.test(b.bodyText)) {
+    // G-11 takeaway requirement applies to comparison/data *tables*, not to the
+    // V3.7 chart/numeric blocks that author their DATA as a markdown table
+    // (R-30/R-31) — a chart's rows are series points, not comparison rows.
+    const tableIsData = DATAVIZ_TABLE_TYPES.has(b.type);
+    if (!tableIsData && (b.type === "table" || /^\s*\|.*\|/m.test(b.bodyText))) {
       const dataRows = tableDataRows(b.bodyText);
       if (dataRows >= 4 && !hasTakeawayRow(b.bodyText)) {
         push(errors, b, `table has ${dataRows} data rows without a **Takeaway** row (G-11)`);

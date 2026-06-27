@@ -234,6 +234,15 @@ table.timeline td:first-child {
   color: var(--g-30);
 }
 
+/* V3.7 (R-28) — hairline hygiene. A table's final-row rule no longer stacks
+ * with the section divider below it: one hairline per boundary, never a doubled
+ * 0.5px pair separated by the section's padding. Base-level and retroactive
+ * (ADR-0014), like the V3.6 surface fixes — it corrects a rendering defect, not
+ * a frozen design choice. The section divider is the table's closing rule. */
+table tr:last-child td {
+  border-bottom: none;
+}
+
 /* definition block */
 .def-term {
   font-weight: 700;
@@ -433,16 +442,6 @@ a.card-link:hover {
   padding: var(--s-4) 16px 0;
   border-left: 1px dotted var(--g-12);
   border-right: 1px dotted var(--g-12);
-}
-.card-back-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  background: var(--k);
-  color: var(--w);
 }
 .back-link {
   display: inline-block;
@@ -827,4 +826,167 @@ a.spec-link:hover {
  * ----------------------------------------------------------------------- */
 .canvas.v3-6 {
   /* reserved — V3.6 visual rules live at base level (see ADR-0011). */
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.7 — header eyebrow, alignment, data-viz. R-27 (cover eyebrow), R-29
+ * (tabular alignment), R-30 (grayscale charts), R-31 (numeric anchors).
+ * Scoped to .canvas.v3-7 so every V3.0–V3.6 card stays pixel-identical; only
+ * R-28 (the doubled-rule defect fix) lives at base level above. A V3.7 card's
+ * canvas carries the inherited chain plus v3-7, e.g. class="canvas v3-1 v3-4
+ * v3-5 v3-6 v3-7". See RENDERING-spec § R-27–R-31 (ADR-0014).
+ * ----------------------------------------------------------------------- */
+
+/* R-27 — cover eyebrow (the one governed kicker above the title). A single
+ * editorial eyebrow is permitted in the kicker slot of the cover; it sits 8pt
+ * above the h1 (cover stack 32 / 8 / 12 / 24 / 48). It reuses the label
+ * micro-type already defined by .eyebrow — only the gap-to-title tightens from
+ * the content-block 16pt to 8pt. Every other label discipline (R-14/R-25)
+ * still applies: content-naming, distinct, <= 4 words. */
+.canvas.v3-7 section:first-of-type .eyebrow {
+  margin-bottom: var(--s-1);
+}
+
+/* R-29 — tabular alignment. Every comparison/data table aligns on one fixed
+ * grid at 393pt: the label column takes a fixed share, the data columns split
+ * the rest evenly, and numeric cells are tabular + right-aligned. This ends the
+ * ragged wrap where a 3-column comparison crowded and broke inconsistently. */
+.canvas.v3-7 table {
+  table-layout: fixed;
+}
+.canvas.v3-7 th,
+.canvas.v3-7 td {
+  overflow-wrap: break-word;
+}
+.canvas.v3-7 th:first-child,
+.canvas.v3-7 td:first-child {
+  width: 36%;
+}
+.canvas.v3-7 td.num,
+.canvas.v3-7 th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* R-30 — grayscale chart primitives. Bar and line charts render as inline SVG
+ * in strict grayscale: gridlines/axes at --g-12, the series at --ink-3, and
+ * exactly one focal element (bar or point) at --ink — the block's single
+ * emphasis (P2). No fill above 12%, no color, ever. The SVG viewBox is in
+ * content-px units (≈ 1 unit = 1px at 361pt), so SVG text sizes read true. */
+.canvas.v3-7 .chart {
+  margin: var(--s-3) 0;
+}
+.canvas.v3-7 .chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.canvas.v3-7 .chart .axis,
+.canvas.v3-7 .chart .grid {
+  stroke: var(--g-12);
+  stroke-width: 1;
+}
+.canvas.v3-7 .chart .bar {
+  fill: var(--ink-3);
+}
+.canvas.v3-7 .chart .bar.focal {
+  fill: var(--ink);
+}
+.canvas.v3-7 .chart .series {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.canvas.v3-7 .chart .dot {
+  fill: var(--w);
+  stroke: var(--ink-3);
+  stroke-width: 2;
+}
+.canvas.v3-7 .chart .dot.focal {
+  fill: var(--ink);
+  stroke: var(--ink);
+}
+.canvas.v3-7 .chart .c-label {
+  font-family: var(--rounded);
+  font-size: 11px;
+  fill: var(--ink-3);
+}
+.canvas.v3-7 .chart .c-value {
+  font-family: var(--rounded);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--ink-2);
+}
+.canvas.v3-7 .chart .c-value.focal {
+  fill: var(--ink);
+  font-weight: 700;
+}
+
+/* R-31 — numeric anchors. stat-grid lays 2–6 parallel metrics on a CSS grid
+ * (a big tabular number + a caption each); stat-callout reuses the reserved
+ * .stat 56pt hero number with a required verbal-anchor sentence beneath it. */
+.canvas.v3-7 .stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--s-4) var(--s-3);
+  margin: var(--s-3) 0;
+}
+.canvas.v3-7 .stat-grid.cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.canvas.v3-7 .stat-grid .num {
+  font-size: 34px;
+  line-height: 38px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.canvas.v3-7 .stat-grid .cap {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.7 — one shared round icon-button shape. The landing copy buttons, the
+ * sample-card chevron, and the card-view back button were three divergent
+ * sizes (46 / 34 / 34) with duplicated SVG; they now share .icon-btn (a
+ * perfect circle: width == height, fully rounded) from app/src/ui.tsx. Size
+ * is set per instance via inline width/height so every instance stays square.
+ * ----------------------------------------------------------------------- */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--k);
+  color: var(--w);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+/* The version tag shown next to the "Sample" badge on a showcase card. Same
+ * pill metrics as .sample-badge, neutral white fill. */
+.version-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g-60);
+  background: var(--w);
+  border: 1px solid var(--g-12);
+  border-radius: 999px;
+  padding: 3px 9px;
+  margin-bottom: var(--s-3);
+  margin-left: var(--s-1);
 }

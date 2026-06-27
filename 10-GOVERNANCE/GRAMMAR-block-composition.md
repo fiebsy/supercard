@@ -5,9 +5,9 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.4.0 |
+| version | 3.7.0 |
 | owner | derick |
-| updated | 2026-05-16 |
+| updated | 2026-06-27 |
 
 How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*. The block-selection procedure (below) is the single composed routine an agent walks for every section.
 
@@ -239,6 +239,26 @@ Bridges between beats use one of the five Apple-validated patterns. Position-lan
 - Meta-language: "In the following section…", "Let's look at…", "We'll cover…", "As mentioned above…", "As we'll see…".
 - Restatement bridges: an eyebrow or tagline that paraphrases the body below it (P9 redundancy filter applies).
 
+## G-15. Chart and numeric block authoring (V3.7+)
+
+The V3.7 numeric/chart blocks are authored as **plain markdown tables** — the
+block id selects the visual, so no new syntax enters the card (RENDERING § R-30 /
+R-31). Each opens with the usual `` `BLOCK-xxx` · Eyebrow `` annotation and an
+optional `### ` subhead.
+
+| Block | Markdown shape | Focal element |
+|---|---|---|
+| `bar-chart` | header row + `\| label \| value \|` data rows | the one **bolded** value cell goes full-ink (`\| Editorial \| **11** \|`) |
+| `line-chart` | header row + `\| point \| value \|` data rows | the one **bolded** value's point goes full-ink |
+| `stat-grid` | headerless `\| value \| caption \|` rows (2–6) | none — parallel metrics are the adjacency exception |
+| `stat-callout` | `### ` subhead, optional intro, a standalone `**number**` line, then the verbal-anchor sentence | the number (`.stat`) |
+
+Rules that still apply: exactly **one** focal element per chart (single emphasis,
+P2); a `stat-callout` MUST carry its verbal-anchor sentence (a bare number is
+forbidden); charts and stat-grids stay on the gray ramp (no color). A chart earns
+its scroll only when *magnitude* or *shape* is the point — forcing a chart where
+one number would do is the "false precision" anti-pattern.
+
 ## Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -288,7 +308,7 @@ Run on every section, including the header. Five questions per section. Any "no"
 | An em dash (—) in card prose (V3.6+) | Banned in reader-visible content — recast as a comma, colon, parentheses, or two sentences (R-24) |
 | Stacking ≥ 3 anchor blocks of the same type (V3.1+) | Checkerboard fatigue — the third anchor MUST switch type |
 | `standard-text` block exceeding 75 words (V3.1+) | Crosses chunk-collapse threshold — split into two blocks with their own lead-clauses |
-| Cover header elements outside R-13 (top-edge folios, running brand-mark, mode badge, date eyebrow, context-chip strip, kicker above the title) (V3.1+, revised V3.3) | Random labels load the cover with chrome instead of meaning — the cover permits exactly three elements (title, dek, hero), see RENDERING § R-13 |
+| Cover header elements outside R-13 (top-edge folios, running brand-mark, mode badge, date eyebrow, context-chip strip, a *second* top-edge label) (V3.1+, revised V3.3, revised V3.7) | Random labels load the cover with chrome instead of meaning — the cover permits the title, dek, hero, and (V3.7+) **one** optional editorial eyebrow above the title (R-27); see RENDERING § R-13 |
 | Beat label, beat number, or position counter rendered to the reader anywhere on the card (`BEAT 3`, `4 / 7`, `MECHANISM · 4 / 7`) (V3.3) | Author scaffolding leaking into the reader's view — R-10 (V3.3) and I7 prohibit emitting structural-outline labels to the reader |
 | Reader-visible footer carrying renderer version, era, mode, or render date (`SUPERCARD V3.3 · ATLAS · BRIEFING · 2026-05-16`) (V3.3) | Production stamp belongs in the `<meta>` block, not on the canvas — R-10 (V3.3) moves bottom-folio metadata to dev-only |
 | A label longer than 4 words anywhere on the card (V3.1+) | A label that needs five words is a sentence pretending to be a label — promote to the dek/lead-clause or cut (R-14) |

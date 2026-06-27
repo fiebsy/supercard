@@ -5,9 +5,9 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.6.2 |
+| version | 3.7.0 |
 | owner | derick |
-| updated | 2026-06-25 |
+| updated | 2026-06-27 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
@@ -117,10 +117,13 @@ ls docs/cards/
 | 0011 | V3.6 surface refinement (R-22/R-23/R-24, retroactive) | Accepted | 2026-06-25 |
 | 0012 | Single self-contained `llms.txt` spec (supersedes 0008) | Accepted | 2026-06-25 |
 | 0013 | Sentence-case labels, centered separators, editorial eyebrows (R-25/R-26) | Accepted | 2026-06-25 |
+| 0014 | V3.7 — cover eyebrow, alignment hygiene, real data-viz blocks (R-27–R-31) | Accepted | 2026-06-27 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.7.0** — Variety, on the grid. Implements the catalogued numeric/chart blocks for real in both render paths (R-30 grayscale `bar-chart` + `line-chart`, R-31 `stat-grid` + `stat-callout`), permits one disciplined editorial eyebrow above the cover title (R-27, amending R-13), and fixes two table-alignment defects (R-28 the doubled-hairline — base-level and retroactive; R-29 fixed-grid columns on mobile). Charts are authored as plain `| label | value |` tables, so no new syntax enters a card and the spec stays self-describing. Adds `CARD-2026-06-27-v37-data-and-alignment` (first card frozen at 3.7.0) and unifies the landing/sample buttons behind one round `IconButton`. Strict grayscale, single emphasis, frozen-at-version intact. (ADR-0014.)
 
 **v3.6.2** — Delivery format. The public spec is now one self-contained `llms.txt` at `https://berafoot.com/llms.txt`, replacing the V3.1–V3.6 progressive-disclosure JSON tree at `docs/spec/`. No content rule changed; `app/scripts/build-spec.mjs` inlines and normalizes the canonical markdown into one file, still drift-checked in CI. Old `/spec/*.json` URLs 301-redirect to `/llms.txt`. (ADR-0012, superseding ADR-0008.)
 

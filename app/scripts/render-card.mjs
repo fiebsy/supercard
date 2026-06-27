@@ -108,6 +108,7 @@ function canvasClasses(fm) {
   if (maj > 3 || (maj === 3 && min >= 4)) cls.push("v3-4");
   if (maj > 3 || (maj === 3 && min >= 5)) cls.push("v3-5");
   if (maj > 3 || (maj === 3 && min >= 6)) cls.push("v3-6");
+  if (maj > 3 || (maj === 3 && min >= 7)) cls.push("v3-7");
 
   // Beat-gap opt-outs/ins relative to the version default (R-15).
   const gap = (fm.beat_gap || "").trim();
@@ -225,6 +226,131 @@ function emitTable(block) {
   return html;
 }
 
+/* ---- V3.7 numeric / chart blocks (R-30, R-31) -------------------------- *
+ * Charts and the stat grid are authored as a plain markdown table — the block
+ * id, not new syntax, selects chart-vs-table (RENDERING-spec § R-30). The SVG
+ * geometry here is duplicated verbatim in app/src/blocks.tsx so a React card
+ * and its HTML twin stay pixel-identical (the parity contract). */
+
+const round1 = (x) => Math.round(x * 10) / 10;
+const isSepLine = (l) => /-/.test(l) && /^[|\s:-]+$/.test(l.trim());
+
+// Raw cell matrix for a markdown-table chunk (separator rows already dropped).
+function tableRows(block) {
+  return block
+    .split(/\n/)
+    .filter((l) => /^\|/.test(l) && !isSepLine(l))
+    .map((l) =>
+      l
+        .replace(/^\|/, "")
+        .replace(/\|\s*$/, "")
+        .split("|")
+        .map((c) => c.trim()),
+    );
+}
+
+// label/value items from a 2-col table; the single bolded cell is the focal one.
+function chartItems(block) {
+  const rows = tableRows(block);
+  if (rows.length < 2) return [];
+  return rows.slice(1).map((r) => {
+    const display = (r[1] || "").replace(/\*\*/g, "").trim();
+    const num = parseFloat((display.match(/-?[\d.]+/) || ["0"])[0]) || 0;
+    const focal = /\*\*/.test(r[0]) || /\*\*/.test(r[1] || "");
+    return { label: r[0].replace(/\*\*/g, "").trim(), value: num, display, focal };
+  });
+}
+
+function barChartSvg(items) {
+  const W = 361, labelW = 120, padR = 8, rowH = 34, barH = 20, valueW = 38;
+  const n = items.length;
+  const H = n * rowH + 4;
+  const max = Math.max(...items.map((d) => d.value), 0) || 1;
+  const barAreaW = W - labelW - padR - valueW;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="bar chart">`;
+  items.forEach((d, i) => {
+    const cy = i * rowH + rowH / 2;
+    const barW = Math.max(2, (d.value / max) * barAreaW);
+    const by = i * rowH + (rowH - barH) / 2;
+    const f = d.focal ? " focal" : "";
+    s += `<text class="c-label" x="0" y="${cy}" dominant-baseline="middle">${escapeHtml(d.label)}</text>`;
+    s += `<rect class="bar${f}" x="${labelW}" y="${by}" width="${round1(barW)}" height="${barH}" rx="3"/>`;
+    s += `<text class="c-value${f}" x="${round1(labelW + barW + 6)}" y="${cy}" dominant-baseline="middle">${escapeHtml(d.display)}</text>`;
+  });
+  return s + `</svg>`;
+}
+
+function lineChartSvg(items) {
+  const W = 361, H = 168, padL = 10, padR = 10, padT = 18, padB = 30;
+  const n = items.length;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const vals = items.map((d) => d.value);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const range = max - min || 1;
+  const x = (i) => padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
+  const y = (v) => padT + (1 - (v - min) / range) * plotH;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="line chart">`;
+  for (let g = 0; g <= 2; g++) {
+    const gy = round1(padT + (g / 2) * plotH);
+    s += `<line class="grid" x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}"/>`;
+  }
+  const pts = items.map((d, i) => `${round1(x(i))},${round1(y(d.value))}`).join(" ");
+  s += `<polyline class="series" points="${pts}"/>`;
+  items.forEach((d, i) => {
+    const f = d.focal ? " focal" : "";
+    const px = round1(x(i)), py = round1(y(d.value));
+    s += `<circle class="dot${f}" cx="${px}" cy="${py}" r="${d.focal ? 5 : 4}"/>`;
+    s += `<text class="c-value${f}" x="${px}" y="${round1(py - 9)}" text-anchor="middle">${escapeHtml(d.display)}</text>`;
+    s += `<text class="c-label" x="${px}" y="${H - 8}" text-anchor="middle">${escapeHtml(d.label)}</text>`;
+  });
+  return s + `</svg>`;
+}
+
+function emitChartSection(sec, kind) {
+  let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
+  let html = "    <section>\n";
+  html += emitEyebrow(sec.eyebrow);
+  html += tileHtml;
+  for (const c of chunks) {
+    if (/^\|/.test(c)) {
+      const items = chartItems(c);
+      if (items.length) {
+        const svg = kind === "line" ? lineChartSvg(items) : barChartSvg(items);
+        html += `      <div class="chart">${svg}</div>\n`;
+      }
+    } else {
+      html += `      <p>${inlineMd(c)}</p>\n`;
+    }
+  }
+  return html + "    </section>\n";
+}
+
+function emitStatGrid(sec) {
+  let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
+  let html = "    <section>\n";
+  html += emitEyebrow(sec.eyebrow);
+  html += tileHtml;
+  for (const c of chunks) {
+    if (/^\|/.test(c)) {
+      let rows = tableRows(c);
+      if (c.split(/\n/).some(isSepLine)) rows = rows.slice(1); // drop header row
+      if (!rows.length) continue;
+      const cls = rows.length % 3 === 0 ? "stat-grid cols-3" : "stat-grid";
+      html += `      <div class="${cls}">\n`;
+      for (const r of rows) {
+        const value = (r[0] || "").replace(/\*\*/g, "").trim();
+        const cap = (r[1] || "").replace(/\*\*/g, "").trim();
+        html += `        <div class="cell"><div class="num">${inlineMd(value)}</div><div class="cap">${inlineMd(cap)}</div></div>\n`;
+      }
+      html += "      </div>\n";
+    } else {
+      html += `      <p>${inlineMd(c)}</p>\n`;
+    }
+  }
+  return html + "    </section>\n";
+}
+
 function emitList(block, cls) {
   const items = block
     .split(/\n/)
@@ -300,6 +426,12 @@ function emitSection(title, sec) {
       return emitHero(title, sec);
     case "stat-callout":
       return emitGeneric(sec, { statMode: true });
+    case "stat-grid":
+      return emitStatGrid(sec);
+    case "bar-chart":
+      return emitChartSection(sec, "bar");
+    case "line-chart":
+      return emitChartSection(sec, "line");
     case "key-takeaway":
       return emitGeneric(sec, { takeawayMode: true });
     default:

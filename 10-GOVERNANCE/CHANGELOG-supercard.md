@@ -5,11 +5,69 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.6.2 |
+| version | 3.7.0 |
 | owner | derick |
-| updated | 2026-06-25 |
+| updated | 2026-06-27 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
+
+---
+
+## [3.7.0] — "Atlas" — 2026-06-27
+
+Variety, on the grid. The render paths only ever emitted prose, lists, and
+tables, so every card looked the same — and the chart family the block library
+advertised as `stable` was **never actually built**. V3.7 implements the
+catalogued numeric/chart blocks for real, permits one disciplined eyebrow above
+the cover title, and fixes two table-alignment defects. Strict grayscale,
+single emphasis, frozen-at-version — all intact. (ADR-0014.)
+
+### Added
+
+- **R-27 — cover eyebrow.** One optional content-naming editorial eyebrow is now
+  permitted in the kicker slot above the title (amends R-13; the "kicker above
+  the title" anti-pattern becomes a governed single-eyebrow allowance under
+  R-14/R-25 discipline).
+- **R-30 — grayscale chart primitives.** `bar-chart` and `line-chart` render as
+  inline SVG in strict grayscale (axes/gridlines `--g-12`, series `--ink-3`, one
+  focal element `--ink`). Authored as a plain `| label | value |` table — the
+  block id, not new syntax, selects chart-vs-table; the bolded value cell is
+  focal.
+- **R-31 — numeric anchors.** `stat-grid` (2–6 parallel metrics on a CSS grid)
+  and `stat-callout` (56pt hero number + required verbal anchor) enter the
+  render contract.
+- New block primitives in **both** render paths — `BarChart` / `LineChart` /
+  `StatGrid` / `StatCallout` in `app/src/blocks.tsx`, and `emitChartSection` /
+  `emitStatGrid` (+ `bar-chart` / `line-chart` / `stat-grid` switch routes) in
+  `app/scripts/render-card.mjs`. The SVG geometry is duplicated verbatim so the
+  HTML twin and the React card stay pixel-identical.
+- `CARD-2026-06-27-v37-data-and-alignment` — first card frozen at 3.7.0,
+  exercising every new rule. Published HTML twin + React twin + gallery entry.
+- `app/src/ui.tsx` — one shared round `IconButton` (a perfect circle, even
+  height/width) and icon set, replacing three divergent button shapes across the
+  landing and card views. The sample card gains a version badge.
+
+### Changed
+
+- **R-28 — hairline hygiene (base-level, retroactive).** A table's final-row
+  rule no longer stacks with the section divider below it (`table tr:last-child
+  td { border-bottom: 0 }`) — the "double line" defect. Applies to every card on
+  re-render (ADR-0011 precedent), like R-22–R-24.
+- **R-29 — tabular alignment.** V3.7 tables use a fixed column grid (label column
+  36%, data columns even, numeric cells right-aligned + tabular). Scoped to
+  `.canvas.v3-7`; older cards stay pixel-identical.
+- `supercard.css` — new `.canvas.v3-7` block (cover eyebrow gap, chart styles,
+  stat-grid, fixed table layout) plus the base R-28 fix and the shared
+  `.icon-btn` shape; removed the orphaned `.card-back-btn`.
+- `render-card.mjs` `canvasClasses()` now pushes `v3-7` for 3.7.0+ cards.
+- `GRAMMAR` (G-15 chart/numeric authoring, amended cover anti-pattern),
+  `INDEX-block-library`, `INDEX-supercard-v3` (ADR-0014 ledger row, version),
+  and the supercard templates document the new grammar.
+
+### Removed
+
+- An accidental duplicate `ADR-0014` file (byte-identical to ADR-0013, never in
+  the ledger); `0014` now carries the V3.7 cut.
 
 ---
 

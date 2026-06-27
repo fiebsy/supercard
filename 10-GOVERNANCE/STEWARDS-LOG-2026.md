@@ -15,6 +15,37 @@ Append entries via SupercardOps `logStewardEntry()` or directly.
 
 ---
 
+## 2026-06-27 — derick — [foundation]
+
+**Context.** Looking at the published cards side by side, they all read the same:
+prose, a list, a table, repeat. The screenshots that prompted this were two
+comparison tables and a mapping table — competent, but interchangeable. Three
+things were wrong under the surface. The block library had been *advertising* a
+whole chart family (`bar-chart`, `line-chart`, `stat-grid`, `stat-callout`) as
+`stable` for a year, and not one of them was ever wired into a render path — the
+catalogue was writing checks the renderer couldn't cash. A table's last-row
+hairline stacked with the section divider into a visible double line. And the
+cover couldn't open with an eyebrow, because R-13 forbade the kicker slot
+outright.
+
+**Action.** Shipped V3.7 (ADR-0014). Built the four numeric/chart blocks for real
+in *both* paths, with the SVG geometry duplicated verbatim so the HTML twin and
+the React card stay pixel-identical. Chose to author charts as a plain `| label |
+value |` table — the block id picks chart-vs-table — so no new syntax enters a
+card and an LLM reading the spec still sees legible markdown. Permitted exactly
+**one** cover eyebrow (R-27) under the same discipline as any other eyebrow,
+rather than re-opening the cover to chrome. Fixed the double line at base level
+(R-28, retroactive) and the ragged mobile columns with a fixed grid (R-29).
+
+**Follow-up.** Two render paths now carry duplicated chart geometry — the first
+real DRY violation in the system. It's small and commented as a parity pair, but
+if a third chart type lands, that's the signal to extract a shared geometry
+module both paths import, not to copy the math a third time. `column-chart` and
+`area-chart` are still catalogued-but-unbuilt; same trap as before — watch that
+the gap between catalogue and renderer doesn't silently reopen.
+
+---
+
 ## 2026-06-25 — derick — [temptation]
 
 **Context.** The V3.5 reading-layer pass (ADR-0009) measured a working render

@@ -286,6 +286,225 @@ export function DataTable({
   );
 }
 
+/* ---- V3.7 numeric / chart blocks (R-30, R-31) -------------------------- *
+ * The SVG geometry below is duplicated verbatim from app/scripts/render-card.mjs
+ * (barChartSvg / lineChartSvg) so a React card and its standalone HTML twin are
+ * the same pixels (the parity contract). One focal element per chart = the
+ * block's single emphasis (P2). */
+
+export type ChartItem = {
+  label: string;
+  value: number;
+  display?: string;
+  focal?: boolean;
+};
+
+const r1 = (x: number) => Math.round(x * 10) / 10;
+
+export function BarChart({
+  beat,
+  eyebrow,
+  heading,
+  items,
+  closer,
+}: {
+  beat: Beat;
+  eyebrow?: string;
+  heading?: string;
+  items: ChartItem[];
+  closer?: ReactNode;
+}) {
+  const W = 361,
+    labelW = 120,
+    padR = 8,
+    rowH = 34,
+    barH = 20,
+    valueW = 38;
+  const n = items.length;
+  const H = n * rowH + 4;
+  const max = Math.max(...items.map((d) => d.value), 0) || 1;
+  const barAreaW = W - labelW - padR - valueW;
+  return (
+    <Section beat={beat} eyebrow={eyebrow}>
+      {heading ? <div className="tile">{heading}</div> : null}
+      <div className="chart">
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="bar chart">
+          {items.map((d, i) => {
+            const cy = i * rowH + rowH / 2;
+            const barW = Math.max(2, (d.value / max) * barAreaW);
+            const by = i * rowH + (rowH - barH) / 2;
+            const f = d.focal ? " focal" : "";
+            return (
+              <g key={i}>
+                <text className="c-label" x={0} y={cy} dominantBaseline="middle">
+                  {d.label}
+                </text>
+                <rect
+                  className={`bar${f}`}
+                  x={labelW}
+                  y={by}
+                  width={r1(barW)}
+                  height={barH}
+                  rx={3}
+                />
+                <text
+                  className={`c-value${f}`}
+                  x={r1(labelW + barW + 6)}
+                  y={cy}
+                  dominantBaseline="middle"
+                >
+                  {d.display ?? String(d.value)}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      {closer ? <p>{closer}</p> : null}
+    </Section>
+  );
+}
+
+export function LineChart({
+  beat,
+  eyebrow,
+  heading,
+  items,
+  closer,
+}: {
+  beat: Beat;
+  eyebrow?: string;
+  heading?: string;
+  items: ChartItem[];
+  closer?: ReactNode;
+}) {
+  const W = 361,
+    H = 168,
+    padL = 10,
+    padR = 10,
+    padT = 18,
+    padB = 30;
+  const n = items.length;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const vals = items.map((d) => d.value);
+  const min = Math.min(...vals),
+    max = Math.max(...vals);
+  const range = max - min || 1;
+  const x = (i: number) =>
+    padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
+  const y = (v: number) => padT + (1 - (v - min) / range) * plotH;
+  const pts = items.map((d, i) => `${r1(x(i))},${r1(y(d.value))}`).join(" ");
+  return (
+    <Section beat={beat} eyebrow={eyebrow}>
+      {heading ? <div className="tile">{heading}</div> : null}
+      <div className="chart">
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="line chart">
+          {[0, 1, 2].map((g) => {
+            const gy = r1(padT + (g / 2) * plotH);
+            return (
+              <line
+                key={g}
+                className="grid"
+                x1={padL}
+                y1={gy}
+                x2={W - padR}
+                y2={gy}
+              />
+            );
+          })}
+          <polyline className="series" points={pts} />
+          {items.map((d, i) => {
+            const f = d.focal ? " focal" : "";
+            const px = r1(x(i)),
+              py = r1(y(d.value));
+            return (
+              <g key={i}>
+                <circle
+                  className={`dot${f}`}
+                  cx={px}
+                  cy={py}
+                  r={d.focal ? 5 : 4}
+                />
+                <text
+                  className={`c-value${f}`}
+                  x={px}
+                  y={r1(py - 9)}
+                  textAnchor="middle"
+                >
+                  {d.display ?? String(d.value)}
+                </text>
+                <text
+                  className="c-label"
+                  x={px}
+                  y={H - 8}
+                  textAnchor="middle"
+                >
+                  {d.label}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      {closer ? <p>{closer}</p> : null}
+    </Section>
+  );
+}
+
+type Metric = { value: ReactNode; caption: ReactNode };
+
+export function StatGrid({
+  beat,
+  eyebrow,
+  heading,
+  metrics,
+  closer,
+}: {
+  beat: Beat;
+  eyebrow?: string;
+  heading?: string;
+  metrics: Metric[];
+  closer?: ReactNode;
+}) {
+  const cls = metrics.length % 3 === 0 ? "stat-grid cols-3" : "stat-grid";
+  return (
+    <Section beat={beat} eyebrow={eyebrow}>
+      {heading ? <div className="tile">{heading}</div> : null}
+      <div className={cls}>
+        {metrics.map((m, i) => (
+          <div className="cell" key={i}>
+            <div className="num">{m.value}</div>
+            <div className="cap">{m.caption}</div>
+          </div>
+        ))}
+      </div>
+      {closer ? <p>{closer}</p> : null}
+    </Section>
+  );
+}
+
+export function StatCallout({
+  beat,
+  eyebrow,
+  stat,
+  anchor,
+}: {
+  beat: Beat;
+  eyebrow?: string;
+  stat: ReactNode;
+  anchor: ReactNode;
+}) {
+  // Markup matches the render-card.mjs statMode path exactly (.stat then the
+  // verbal-anchor <p>, no wrapper) so the HTML twin is pixel-identical.
+  return (
+    <Section beat={beat} eyebrow={eyebrow}>
+      <div className="stat">{stat}</div>
+      <p>{anchor}</p>
+    </Section>
+  );
+}
+
 /* ---- definitional: equation -------------------------------------------- */
 
 export function Equation({

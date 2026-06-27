@@ -439,6 +439,26 @@ Bridges between beats use one of the five Apple-validated patterns. Position-lan
 - Meta-language: "In the following section…", "Let's look at…", "We'll cover…", "As mentioned above…", "As we'll see…".
 - Restatement bridges: an eyebrow or tagline that paraphrases the body below it (P9 redundancy filter applies).
 
+### G-15. Chart and numeric block authoring (V3.7+)
+
+The V3.7 numeric/chart blocks are authored as **plain markdown tables** — the
+block id selects the visual, so no new syntax enters the card (RENDERING § R-30 /
+R-31). Each opens with the usual `` `BLOCK-xxx` · Eyebrow `` annotation and an
+optional `### ` subhead.
+
+| Block | Markdown shape | Focal element |
+|---|---|---|
+| `bar-chart` | header row + `\| label \| value \|` data rows | the one **bolded** value cell goes full-ink (`\| Editorial \| **11** \|`) |
+| `line-chart` | header row + `\| point \| value \|` data rows | the one **bolded** value's point goes full-ink |
+| `stat-grid` | headerless `\| value \| caption \|` rows (2–6) | none — parallel metrics are the adjacency exception |
+| `stat-callout` | `### ` subhead, optional intro, a standalone `**number**` line, then the verbal-anchor sentence | the number (`.stat`) |
+
+Rules that still apply: exactly **one** focal element per chart (single emphasis,
+P2); a `stat-callout` MUST carry its verbal-anchor sentence (a bare number is
+forbidden); charts and stat-grids stay on the gray ramp (no color). A chart earns
+its scroll only when *magnitude* or *shape* is the point — forcing a chart where
+one number would do is the "false precision" anti-pattern.
+
 ### Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -488,7 +508,7 @@ Run on every section, including the header. Five questions per section. Any "no"
 | An em dash (—) in card prose (V3.6+) | Banned in reader-visible content — recast as a comma, colon, parentheses, or two sentences (R-24) |
 | Stacking ≥ 3 anchor blocks of the same type (V3.1+) | Checkerboard fatigue — the third anchor MUST switch type |
 | `standard-text` block exceeding 75 words (V3.1+) | Crosses chunk-collapse threshold — split into two blocks with their own lead-clauses |
-| Cover header elements outside R-13 (top-edge folios, running brand-mark, mode badge, date eyebrow, context-chip strip, kicker above the title) (V3.1+, revised V3.3) | Random labels load the cover with chrome instead of meaning — the cover permits exactly three elements (title, dek, hero), see RENDERING § R-13 |
+| Cover header elements outside R-13 (top-edge folios, running brand-mark, mode badge, date eyebrow, context-chip strip, a *second* top-edge label) (V3.1+, revised V3.3, revised V3.7) | Random labels load the cover with chrome instead of meaning — the cover permits the title, dek, hero, and (V3.7+) **one** optional editorial eyebrow above the title (R-27); see RENDERING § R-13 |
 | Beat label, beat number, or position counter rendered to the reader anywhere on the card (`BEAT 3`, `4 / 7`, `MECHANISM · 4 / 7`) (V3.3) | Author scaffolding leaking into the reader's view — R-10 (V3.3) and I7 prohibit emitting structural-outline labels to the reader |
 | Reader-visible footer carrying renderer version, era, mode, or render date (`SUPERCARD V3.3 · ATLAS · BRIEFING · 2026-05-16`) (V3.3) | Production stamp belongs in the `<meta>` block, not on the canvas — R-10 (V3.3) moves bottom-folio metadata to dev-only |
 | A label longer than 4 words anywhere on the card (V3.1+) | A label that needs five words is a sentence pretending to be a label — promote to the dek/lead-clause or cut (R-14) |
@@ -682,6 +702,21 @@ which rules apply to which `frozen_at_version`.
 > gap (R-15) does the rest-the-eye work. Original spec, for genealogy: a centered
 > `⁂` at body size/weight with a 32pt vertical band, not counted in density
 > budgets (G-9) or total-block counts (L-5).
+
+### V3.7 — first chart/numeric blocks implemented (R-30 / R-31)
+
+Through V3.6, four numeric/comparative blocks were catalogued `stable` here but
+**never built** in either render path. V3.7 implements them for real (ADR-0014):
+
+- **`bar-chart`** and **`line-chart`** (R-30) — inline-SVG, strict grayscale, one
+  focal element. Authored as a plain `| label | value |` table; the bolded value
+  cell is focal.
+- **`stat-grid`** and **`stat-callout`** (R-31) — parallel metrics on a CSS grid,
+  and the reserved 56pt hero number with its required verbal anchor.
+
+Lifecycle is unchanged (`stable`) — these were always meant to exist; V3.7 just
+makes the renderer honour the catalogue. `column-chart` and `area-chart` remain
+catalogued-but-unbuilt (out of R-30's scope). Authoring grammar: GRAMMAR § G-15.
 
 ### V3.4 backwards compatibility
 
@@ -1124,6 +1159,12 @@ The cover is the card's title block — the first ~200pt of vertical space. It s
 
 **Permitted elements, in this exact stacking order — no others:**
 
+0. **Cover eyebrow (V3.7+, R-27)** — *optional.* A single editorial eyebrow in
+   the kicker slot **above** the title (11/14pt label micro-type). Content-naming
+   and ≤ 4 words like every eyebrow (R-14/R-25), distinct from the dek. Through
+   V3.6 this slot was forbidden (the "kicker above the title" anti-pattern); R-27
+   permits exactly one, under the same label discipline as a content-block
+   eyebrow. It is the one cover element that may be absent without losing meaning.
 1. **Title** — display title role (40 / 44pt, semibold). 5 words preferred, 8 words hard cap; never a complete sentence.
 2. **Dek** — subtitle role. **V3.1–V3.4:** 19 / 26pt, medium. **V3.5+ (R-21):** the dek stops being its own size — render it at **body size (17 / 26)** in a lighter weight (400/500) or `--ink-2` (secondary ink), so weight + ink, not a fourth size step, set it apart from the title. 1 sentence preferred, 2 sentences hard cap either way. Carries the load that mode badges and context chips would otherwise carry — a briefing's date, jurisdiction, or status belongs *in* the dek prose, not in a label strip beside it.
 3. **Hero block** — the Beat 1 anchor (loft-card / hook), a bounded card (border + radius + padding, no shadow — R-22).
@@ -1137,20 +1178,27 @@ The cover is the card's title block — the first ~200pt of vertical space. It s
 | Mode badge above or below the title (`BRIEFING`, `DEEP-DIVE`, `REFERENCE`) | The mode is carried by the corner glyph and by the URL — repeating it as cover chrome is restating identity, not adding meaning. |
 | Date eyebrow as a separate label (`BRIEFING · MAY 15, 2026`) | A bare date floating above the title gives a reader nothing to hold. If the card's claim is time-sensitive, write the date *into* the dek's first clause where it modifies a verb. |
 | Context-chip strip below the dek (`SUBJECT · JURISDICTION · STATUS`) | Three orphan chips force three separate parses; a single dek sentence integrates the same facts in one breath and earns its scroll. |
-| Any label at the top edge of the cover | The cover opens on the title; the top edge carries no chrome. |
+| More than one label at the top edge of the cover, or a top-edge label that is not a single R-27 editorial eyebrow | The cover opens on **at most one** editorial eyebrow (V3.7+); a second top-edge label, a folio, a mode badge, or a date chip is chrome (the kicker slot holds one content-naming eyebrow or nothing). |
 
-**Cover spacing stack — exact, not "around":**
+> **V3.7 amendment (R-27).** The pre-V3.7 row "Any label at the top edge of the
+> cover" is replaced by the row above. A single content-naming editorial eyebrow
+> in the kicker slot is now permitted; everything else at the top edge stays
+> forbidden. A V3.0–V3.6 card still renders with no cover eyebrow.
+
+**Cover spacing stack — exact, not "around" (V3.7 adds the eyebrow join):**
 
 | Join | Distance |
 |---|---|
-| Canvas top → title cap-height | 32pt |
+| Canvas top → cover eyebrow cap-height (if present, V3.7+) | 32pt |
+| Cover eyebrow baseline → title cap-height (V3.7+) | 8pt |
+| Canvas top → title cap-height (no eyebrow) | 32pt |
 | Title baseline → dek cap-height | 12pt |
 | Dek baseline → hero card top edge | 24pt |
 | Hero card bottom edge → first content section | 48pt (`--s-6`, beat boundary) |
 
-These four values are the cover. Any deviation greater than 4pt at a join is a warning (R-12); the renderer should snap to the canonical stack.
+These values are the cover. Any deviation greater than 4pt at a join is a warning (R-12); the renderer should snap to the canonical stack.
 
-**Why every item is justified:** the title is the topic; the dek is the thesis; the hero is the one bounded anchor (principle 4, R-22). Three elements, each load-bearing, each on the spec — and no fourth.
+**Why every item is justified:** the optional eyebrow is the kicker (topic, V3.7); the title is the headline; the dek is the thesis; the hero is the one bounded anchor (principle 4, R-22). Each is load-bearing, each on the spec — and no fifth.
 
 ### R-14. Labels earn their existence (V3.1+)
 
@@ -1343,6 +1391,44 @@ The validator flags a repeated eyebrow, a beat-name eyebrow, and an eyebrow that
 ### R-26. Centered separators (V3.6.1+)
 
 **Each section's bottom hairline is evenly gapped between the two beats it divides** — it no longer hugs the section above. `section` vertical padding is symmetric (48/48); `section.divider` is symmetric and breathier (64/64); the V3.4/V3.5 `beat-gap-*` variants set top *and* bottom. Micro-spacing inside a block is unchanged. Base-level and retroactive (ADR-0013).
+
+### R-27. Cover eyebrow (V3.7+)
+
+**The cover may open with one editorial eyebrow above the title.** Through V3.6 the kicker slot was forbidden (R-13's "kicker above the title" anti-pattern). R-27 permits **exactly one** content-naming eyebrow there, under the same discipline as any other eyebrow (R-14 / R-25): ≤ 4 words, names the card's topic, distinct from the dek, never a beat name or position counter. It uses the label micro-type (11/14pt, weight 600, UPPERCASE, +0.08em, tertiary ink) so it is typographically identical to a content-block eyebrow.
+
+- **Optional.** It is the one cover element that may be absent without losing meaning; a V3.0–V3.6 card renders with no cover eyebrow, unchanged.
+- **One, not a strip.** A second top-edge label, a folio, a mode badge, or a date chip stays forbidden (R-13, amended). The kicker holds one eyebrow or nothing.
+- **Spacing.** Canvas-top → eyebrow 32pt, eyebrow → title 8pt, then the existing 12 / 24 / 48 stack (R-13).
+
+The renderer already emits the cover eyebrow above the `h1` (it is the text after `·` on the hero block's annotation line); R-27 makes it legal and styles its gap to the title (`.canvas.v3-7 section:first-of-type .eyebrow`).
+
+### R-28. Hairline hygiene (V3.7+)
+
+**One hairline per boundary.** A table's final-row 0.5px rule no longer stacks with the `section` divider below it — the two parallel lines, separated only by the section's padding, were the "doubled line" defect. The fix is `table tr:last-child td { border-bottom: 0 }`: the section divider is the table's closing rule.
+
+Like R-22–R-24, R-28 lives at the **base level** of `supercard.css` and applies to **every card on re-render regardless of `frozen_at_version`** (ADR-0011 precedent) — it corrects a rendering defect, not a period-authentic design choice. The reading-layer rules (R-9/R-19, R-20, R-21) stay frozen and untouched.
+
+### R-29. Tabular alignment (V3.7+)
+
+**Comparison and data tables align on one fixed grid at 393pt.** With `table-layout: fixed`, the label (first) column takes a fixed share (36%), the data columns split the remainder evenly, and numeric cells (`td.num`) are tabular-figured and right-aligned. This ends the ragged, row-to-row wrap a three-column comparison showed under `table-layout: auto` on the mobile canvas, where columns crowded and broke inconsistently.
+
+Scoped to `.canvas.v3-7` so every V3.0–V3.6 card's tables stay pixel-identical. Authors mark a numeric data column with `num` where right-alignment helps; text comparisons keep the default left alignment, now on a stable grid.
+
+### R-30. Grayscale chart primitives (V3.7+)
+
+**`bar-chart` and `line-chart` render as inline SVG, strict grayscale, single emphasis.** They are the first members of the catalogued numeric/comparative chart family to enter the render contract (the ids were `stable` in the library but never built).
+
+- **Palette.** Axes and gridlines at `--g-12`; the series (bars, the line + its dots) at `--ink-3`; **exactly one focal element** — one bar, or one point — at `--ink`. That focal element is the block's single emphasis (P2). No fill above 12%, no color, ever (the "every bar solid black" and "color for emphasis" anti-patterns both fail).
+- **Authoring.** A chart is authored as a plain two-column `| label | value |` markdown table. **The block id, not new syntax, selects chart-vs-table** — `` `BLOCK-bar-chart` `` renders the same table as bars, `` `BLOCK-line-chart` `` as a line. The single **bolded** value cell (`| v3.7 | **5** |`) marks the focal element. This keeps charts legible as markdown and re-rasterisable from the spec alone.
+- **Geometry.** The SVG `viewBox` is in content-px units (width 361, ≈ 1 unit = 1px at the 361pt content width), so SVG text reads at its stated size. The exact geometry is duplicated verbatim between `render-card.mjs` (`barChartSvg` / `lineChartSvg`) and `blocks.tsx` (`BarChart` / `LineChart`) so the HTML twin and the React card are the same pixels (the parity contract).
+- **Scope.** R-30 covers bar and line. `column-chart` and `area-chart` stay catalogued-but-unbuilt.
+
+### R-31. Numeric anchors (V3.7+)
+
+**`stat-grid` and `stat-callout` enter the render contract.**
+
+- **stat-grid** — 2–6 parallel metrics, each a big tabular number (34/38, weight 700) over a caption (13/18, tertiary ink), on a CSS grid (two columns, or three when the count is a multiple of three). Authored as a headerless `| value | caption |` table. Parallel numbers on a shared dimension are the adjacency exception (GRAMMAR § Adjacency) — multiple big numbers are comparison, not multi-emphasis.
+- **stat-callout** — one 56pt hero number (the reserved `.stat` role) with a **required** verbal-anchor sentence naming what it means and its direction (the V3.1 stat-callout rule; a bare number is forbidden). Authored as a `### ` subhead, optional intro prose, a standalone `**number**` line, then the anchor sentence. It counts as an anchor block in the density budget (G-9).
 
 ### Block compatibility
 
@@ -1705,9 +1791,9 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 ## Provenance
 
-- **Spec:** supercard · version 3.6.2 · era atlas
-- **Revision:** `e95833bd7cd1` — a hash of the source markdown; changes iff a source changes.
-- **Sources last updated:** 2026-06-25
+- **Spec:** supercard · version 3.7.0 · era atlas
+- **Revision:** `af9dca5fe3d1` — a hash of the source markdown; changes iff a source changes.
+- **Sources last updated:** 2026-06-27
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
 - **Canonical repo (source of truth, ADR-0003):** https://github.com/fiebsy/supercard
@@ -1715,13 +1801,13 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 Source files (the canonical markdown this view is generated from):
 
-- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-25 — sha256 `d98bf0be09c7246131571d72768fdad4cc8b225a9be69775a0734c617c5a7f9e`
+- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-27 — sha256 `7a6f0921677a2434130562528e87a479afba541a97da66c65bf78e75b63976bb`
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-06-25 — sha256 `3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452`
-- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-05-16 — sha256 `7d0cb23ca255a5d2c05543c9cb8e8896e091ca9098b894a67400465e7dc2617e`
+- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `92c41024acb5d91e148d1d3e90a03be6ace7b2185c85d7fd2b1bb43858eb9e24`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
-- `00-INDEX/INDEX-block-library.md` — updated 2026-05-16 — sha256 `899e9e3ebabf8fd75a5eb5bf0d81a12bcaa32a7f603a950b5d3422ffd73a5be6`
+- `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `935c2da84b1952a2777ff0eb64f1360a21654cde7394aa23fe20ffb1c9aee710`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `f093e06e7e1ca7d538df6f899f5cd37e043d549106d19817ddf3206df4835e5f`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-25 — sha256 `328ceb84099947b12b883075a015652dc9484529368297716f63e7f754444389`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `4ce10b6b400ad2891fc56d958702d5baf50f47b306c5ff40456385ccb2bb1116`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `bcf6df54c65bf26dc49c937e971d90e233c475a34ab4b434e1f4271e0dd02c09`
 
