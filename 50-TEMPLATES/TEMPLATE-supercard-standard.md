@@ -97,6 +97,55 @@ KEY-TAKEAWAY or PULL-QUOTE
 
 ---
 
+## V3.7 block grammar (cover eyebrow, charts, numeric anchors)
+
+For cards `frozen_at_version: 3.7.0`+ (GRAMMAR § G-15, RENDERING § R-27/R-30/R-31):
+
+```
+## Beat 1 — Hook (loft-card)
+
+`BLOCK-loft-card` · The cover eyebrow      ← R-27: one optional eyebrow ABOVE the title (≤ 4 words)
+
+### The dek sentence (renders as the dek).
+> **The bolded hero thesis.** ...
+The lede paragraph.
+
+## Beat 2 — Evidence (bar-chart)
+
+`BLOCK-bar-chart` · Where the weight sits
+### Optional subhead lands the claim.
+| family | blocks |          ← header row, then label | value data rows
+|---|---|
+| Editorial | **11** |       ← the ONE bolded value is the full-ink focal bar (single emphasis)
+| Comparative | 7 |
+
+## Beat 3 — Mechanism (line-chart)
+
+`BLOCK-line-chart` · Trend over time
+| version | rules |
+|---|---|
+| v3.6 | 3 |
+| v3.7 | **5** |           ← bolded value = focal point
+
+## Beat 2 — Evidence (stat-grid)
+
+`BLOCK-stat-grid` · A few numbers
+| 39 | blocks |              ← headerless value | caption rows (2–6 metrics)
+| 7 | families |
+
+## Beat 2 — Evidence (stat-callout)
+
+`BLOCK-stat-callout` · The one number
+### The claim.
+Intro sentence ending in a colon:
+**0**                        ← standalone bold = the 56pt hero number
+the verbal-anchor sentence (REQUIRED — a bare number is forbidden).
+```
+
+The block id selects the visual — a `bar-chart` and a `table` are the same
+markdown table, rendered differently. Charts stay on the gray ramp (no color),
+one focal element each.
+
 ## Authoring notes
 
 - [Anything Claude or future-Derick should know about why decisions in this card were made]

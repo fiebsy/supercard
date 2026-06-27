@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="only light">
-<title>Plain Language as Substance — Supercard V3.4</title>
-<meta name="sc:source_file" content="30-CARDS/CARD-2026-05-16-v34-sample--draft.md">
-<meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-v34-sample.md">
+<title>Data, Aligned — Supercard V3.7</title>
+<meta name="sc:source_file" content="30-CARDS/CARD-2026-06-27-v37-data-and-alignment--draft.md">
+<meta name="sc:research_report" content="10-GOVERNANCE/ADR/ADR-0014-v37-header-eyebrow-alignment-dataviz--accepted.md">
 <meta name="sc:renderer_version" content="v3.6">
-<meta name="sc:frozen_at_version" content="3.4.0">
+<meta name="sc:frozen_at_version" content="3.7.0">
 <meta name="sc:rendered_at" content="2026-06-27">
-<meta name="sc:content_hash" content="034b2060cf28d6adea76ac1d72f4ee298c26b6d2fe9168f173a8a4a136a83403">
+<meta name="sc:content_hash" content="40dcbbcf36b3ab5bf47ad90f0740470699d751158140278fc2d7048756670b6a">
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this
      card's frozen_at_version rule library (ADR-0010). Do not hand-edit. -->
@@ -1010,94 +1010,103 @@ a.spec-link:hover {
 </style>
 </head>
 <body>
-  <div class="canvas v3-1 v3-4 beat-gap-64">
+  <div class="canvas v3-1 v3-4 v3-5 v3-6 v3-7">
 
     <section>
-      <div class="eyebrow">the one elevated element on this card</div>
-      <h1>Plain Language as Substance</h1>
+      <div class="eyebrow">The variety release</div>
+      <h1>Data, Aligned</h1>
+      <p class="dek">V3.7 gives every card more ways to fill the same grid: charts, numbers, and a cover that can open with an eyebrow.</p>
       <div class="hero">
-        <p class="hook"><strong>The substance survives the simplicity.</strong> A reader with no context should still get the gist of the card.</p>
+        <p class="hook"><strong>Range, without breaking the system.</strong> The shape held; v3.7 just widened what can sit inside it.</p>
       </div>
-      <p class="lede">HERO-CARD: <strong>Plain Language as Substance</strong></p>
-      <p>Short words carry real reasoning when the thinking is clear. That is the V3.4 readability cut in one line.</p>
+      <p class="lede">The chart blocks were catalogued for a year. Now they actually render, in both paths, on the same gray ramp as everything else.</p>
     </section>
 
     <section>
-      <div class="eyebrow">single focal number, surface-tinted per R-16</div>
-      <p>Most mobile readers stop reading at the third sentence. The research is consistent:</p>
-      <div class="stat">60 words</div>
-      <p>is the soft cap a paragraph should target on a phone. Past sixty, eye-tracking studies show the reader gives up before the period.</p>
+      <div class="eyebrow">The system in four numbers</div>
+      <div class="tile">One grammar, many parts.</div>
+      <div class="stat-grid">
+        <div class="cell"><div class="num">39</div><div class="cap">blocks</div></div>
+        <div class="cell"><div class="num">7</div><div class="cap">families</div></div>
+        <div class="cell"><div class="num">14</div><div class="cap">ADRs</div></div>
+        <div class="cell"><div class="num">2</div><div class="cap">render paths</div></div>
+      </div>
     </section>
 
     <section>
-      <div class="eyebrow">the bridge vocabulary, opening</div>
-      <p><strong>Five bridge patterns.</strong> A V3.4 card bridges its sections with one of five named shapes. The dominant form is an eyebrow plus tagline pair, in which the eyebrow names the topic and the tagline lands the claim.</p>
+      <div class="eyebrow">Where the blocks live</div>
+      <div class="tile">Editorial carries the most weight.</div>
+      <div class="chart"><svg viewBox="0 0 361 242" role="img" aria-label="bar chart"><text class="c-label" x="0" y="17" dominant-baseline="middle">Editorial</text><rect class="bar focal" x="120" y="7" width="195" height="20" rx="3"/><text class="c-value focal" x="321" y="17" dominant-baseline="middle">11</text><text class="c-label" x="0" y="51" dominant-baseline="middle">Comparative</text><rect class="bar" x="120" y="41" width="124.1" height="20" rx="3"/><text class="c-value" x="250.1" y="51" dominant-baseline="middle">7</text><text class="c-label" x="0" y="85" dominant-baseline="middle">Numeric</text><rect class="bar" x="120" y="75" width="88.6" height="20" rx="3"/><text class="c-value" x="214.6" y="85" dominant-baseline="middle">5</text><text class="c-label" x="0" y="119" dominant-baseline="middle">Sequential</text><rect class="bar" x="120" y="109" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="119" dominant-baseline="middle">4</text><text class="c-label" x="0" y="153" dominant-baseline="middle">Definitional</text><rect class="bar" x="120" y="143" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="153" dominant-baseline="middle">4</text><text class="c-label" x="0" y="187" dominant-baseline="middle">Distributional</text><rect class="bar" x="120" y="177" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="187" dominant-baseline="middle">4</text><text class="c-label" x="0" y="221" dominant-baseline="middle">Structural</text><rect class="bar" x="120" y="211" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="221" dominant-baseline="middle">4</text></svg></div>
+      <p>One bar goes full-ink: the family a card reaches for most.</p>
     </section>
 
     <section>
-      <div class="eyebrow">the bridge vocabulary, the other four</div>
-      <p><strong>The other four shapes.</strong> They are the two-sentence haiku, the "Built / Designed / Engineered" imperative, the inline "Now you can…" kicker, and the single-word eyebrow. All five name the content; none of them name the position.</p>
+      <div class="eyebrow">How a chart stays on brand</div>
+      <p><strong>Grayscale, single emphasis.</strong> A chart obeys the same rules as prose: every bar and line sits on the gray ramp, and exactly one element goes full-ink to carry the focus. No color, no second highlight.</p>
     </section>
 
     <section>
-      <div class="eyebrow">two things on the same axis</div>
+      <div class="eyebrow">Rules per release</div>
+      <div class="tile">The spec grows in small, deliberate cuts.</div>
+      <div class="chart"><svg viewBox="0 0 361 168" role="img" aria-label="line chart"><line class="grid" x1="10" y1="18" x2="351" y2="18"/><line class="grid" x1="10" y1="78" x2="351" y2="78"/><line class="grid" x1="10" y1="138" x2="351" y2="138"/><polyline class="series" points="10,18 78.2,78 146.4,108 214.6,108 282.8,138 351,48"/><circle class="dot" cx="10" cy="18" r="4"/><text class="c-value" x="10" y="9" text-anchor="middle">6</text><text class="c-label" x="10" y="160" text-anchor="middle">v3.1</text><circle class="dot" cx="78.2" cy="78" r="4"/><text class="c-value" x="78.2" y="69" text-anchor="middle">4</text><text class="c-label" x="78.2" y="160" text-anchor="middle">v3.4</text><circle class="dot" cx="146.4" cy="108" r="4"/><text class="c-value" x="146.4" y="99" text-anchor="middle">3</text><text class="c-label" x="146.4" y="160" text-anchor="middle">v3.5</text><circle class="dot" cx="214.6" cy="108" r="4"/><text class="c-value" x="214.6" y="99" text-anchor="middle">3</text><text class="c-label" x="214.6" y="160" text-anchor="middle">v3.6</text><circle class="dot" cx="282.8" cy="138" r="4"/><text class="c-value" x="282.8" y="129" text-anchor="middle">2</text><text class="c-label" x="282.8" y="160" text-anchor="middle">v3.6.1</text><circle class="dot focal" cx="351" cy="48" r="5"/><text class="c-value focal" x="351" y="39" text-anchor="middle">5</text><text class="c-label" x="351" y="160" text-anchor="middle">v3.7</text></svg></div>
+    </section>
+
+    <section>
+      <div class="eyebrow">Table or chart</div>
+      <div class="tile">Pick by what the reader extracts.</div>
       <table>
         <thead>
-          <tr><th></th><th>Before V3.4</th><th>After V3.4</th></tr>
+          <tr><th></th><th>Table</th><th>Chart</th></tr>
         </thead>
         <tbody>
-          <tr><td>Paragraph cap</td><td>75 words, 4 sentences (G-8)</td><td>60 words, 3 sentences (G-12)</td></tr>
-          <tr><td>Grade target</td><td>(unspecified)</td><td>Flesch–Kincaid ≤ 9 (G-13)</td></tr>
-          <tr><td>Section bridge</td><td>(unspecified)</td><td>Five-pattern vocabulary (G-14)</td></tr>
-          <tr class="takeaway-row"><td><strong>Takeaway</strong></td><td>Walls of valid prose</td><td>Beats that breathe</td></tr>
+          <tr><td>Reads as</td><td>values</td><td>shape</td></tr>
+          <tr><td>Best for</td><td>exact figures</td><td>magnitude at a glance</td></tr>
+          <tr><td>Carries focus with</td><td>a bold cell</td><td><strong>one full-ink bar</strong></td></tr>
         </tbody>
       </table>
-      <p>The cap drops from seventy-five to sixty words. The grade target moves from implicit to measured.</p>
     </section>
 
     <section>
-      <div class="eyebrow">the honest steelman</div>
-      <p><strong>Plain is not thin.</strong> Hemingway's prose tests at grade five because it carries real weight in plain words, not because the words are plain. The discipline is shorter words for the same reasoning: never shorter reasoning for shorter words.</p>
+      <div class="eyebrow">Colors on the canvas</div>
+      <div class="tile">The ramp is the whole palette.</div>
+      <p>Charts changed nothing about the rule that has held since v3.0:</p>
+      <div class="stat">0</div>
+      <p>colors. Every bar, line, and number stays on the gray ramp, and one focal element per chart carries the emphasis.</p>
     </section>
 
     <section>
-      <div class="eyebrow">so what / how to act</div>
+      <div class="eyebrow">Reach for the right one</div>
+      <div class="tile">What you have decides the block.</div>
+      <table>
+        <thead>
+          <tr><th>You have</th><th>Reach for</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>One number that matters</td><td>stat-callout</td></tr>
+          <tr><td>A few parallel metrics</td><td>stat-grid</td></tr>
+          <tr><td>Magnitudes to compare</td><td>bar chart</td></tr>
+          <tr><td>A trend over time</td><td>line chart</td></tr>
+          <tr class="takeaway-row"><td><strong>Takeaway</strong></td><td>Shape first, text last: the data picks the block.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <div class="eyebrow">Bottom line</div>
+      <p class="takeaway"><strong>More range, one grammar.</strong></p>
+      <p>V3.7 adds charts, numbers, and a cover eyebrow without a single color or a broken grid. The system gets more expressive the same way it got quieter: by rule, on the ramp, one emphasis at a time.</p>
+    </section>
+
+    <section>
       <ul class="sources">
-        <li>[ ] Draft each block's content first; ignore the bolded lead-clause until the prose is real</li>
-        <li>[ ] Run the validator's readability check on every prose block (grade level, reading ease)</li>
-        <li>[ ] Count sentences (≤ 3) and words (≤ 60) per block; split when you are over</li>
-        <li>[ ] Add the bolded lead-clause last: 2 to 6 words, noun phrase or imperative</li>
-        <li>[ ] For each section bridge, pick one of the five patterns in G-14; never write "In the next section"</li>
-      </ul>
-    </section>
-
-    <section>
-      <div class="eyebrow">bottom line</div>
-      <p><strong>Clarity of writing follows clarity of thought.</strong> Same hours, same material; the difference is whether the reader still has it in six months.</p>
-    </section>
-
-    <section>
-      <ul class="sources">
-        <li>Apple HIG: Writing guidelines (Choose simple, plain language. Prioritize clarity.)</li>
-        <li>The Economist Style Guide: five rules for plain English (Orwell heritage)</li>
-        <li>Nielsen Norman Group: Eye-tracking studies on mobile paragraph length (2018, 2021)</li>
-        <li>CDC Plain Language standard: paragraph length recommendations</li>
-        <li>WCAG 2.2 SC 1.4.12 and 3.1.5: line-height and reading-level floors</li>
-      </ul>
-    </section>
-
-    <section>
-      <p>(End-of-card notes are authoring-only and live below the close.)</p>
-      <ul class="sources">
-        <li>Chose Mini over Standard because the card is a discipline demo, not an exhaustive treatment.</li>
-        <li>Evidence section declares the surface-tinted variant (R-16) because its single stat is the page's one elevated moment.</li>
-        <li>Section gaps run at sixty-four points (R-15) because the card's Display moment earns marketing-scale breathing room.</li>
-        <li>Every prose block sits at grade seven or lower on the F-K scale; mean sentence length holds at twelve to fifteen words.</li>
-        <li>No transition uses position-language or meta-language. Each section eyebrow names the content; the first block's lead-clause does the bridge.</li>
+        <li>Supercard <code>RENDERING-spec</code> § R-27 to R-31 (V3.7 rules)</li>
+        <li>Supercard <code>ADR-0014</code>: V3.7 header eyebrow, alignment, data-viz</li>
+        <li>Supercard <code>INDEX-block-library</code>: 39 blocks across 7 families</li>
+        <li>Supercard <code>CHANGELOG-supercard</code>: version cadence</li>
       </ul>
     </section>
 
   </div>
-  <div class="glyph">◆ supercard · v3.4 atlas</div>
+  <div class="glyph">◆ supercard · v3.7 atlas</div>
 </body>
 </html>

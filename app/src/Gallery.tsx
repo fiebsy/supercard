@@ -9,21 +9,30 @@ import type { CSSProperties } from "react";
 import { cards } from "./cards/registry";
 import type { CardEntry } from "./cards/registry";
 import { Glyph } from "./blocks";
+import {
+  IconButton,
+  ICON_BTN_SIZE,
+  ChevronRight,
+  CopyIcon,
+  CheckIcon,
+} from "./ui";
 
 const SPEC_URL = "https://berafoot.com/llms.txt";
 const REPO_LABEL = "github.com/fiebsy/supercard";
 const REPO_URL = "https://github.com/fiebsy/supercard";
 
-/* The two action rows share one pill + one round icon-button shape so the
- * spec and the repo read as a matched pair — both copy-to-clipboard. */
+/* The two action rows share one pill + one round IconButton (ui.tsx) so the
+ * spec and the repo read as a matched pair — both copy-to-clipboard. The pill
+ * height is pinned to the button diameter so the row is evenly aligned. */
 const rowStyle: CSSProperties = {
   display: "flex",
-  alignItems: "stretch",
+  alignItems: "center",
   gap: "8px",
 };
 const pillStyle: CSSProperties = {
   flex: "1 1 auto",
   minWidth: 0,
+  height: `${ICON_BTN_SIZE}px`,
   display: "flex",
   alignItems: "center",
   fontFamily: "var(--mono)",
@@ -32,59 +41,11 @@ const pillStyle: CSSProperties = {
   background: "rgba(0,0,0,0.025)",
   border: "1px solid var(--g-12)",
   borderRadius: "999px",
-  padding: "12px 18px",
+  padding: "0 18px",
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
 };
-const btnStyle: CSSProperties = {
-  flex: "0 0 auto",
-  width: "46px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  background: "var(--k)",
-  border: 0,
-  borderRadius: "999px",
-  color: "var(--w)",
-  cursor: "pointer",
-  textDecoration: "none",
-};
-
-const ICON = 17;
-const svgProps = {
-  width: ICON,
-  height: ICON,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
-};
-
-function CopyIcon() {
-  return (
-    <svg {...svgProps}>
-      <rect x="9" y="9" width="13" height="13" rx="2" />
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-  );
-}
-function CheckIcon() {
-  return (
-    <svg {...svgProps}>
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
-function ChevronIcon() {
-  return (
-    <svg {...svgProps}>
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
 
 /* One copy-to-clipboard button; swaps the copy icon for a green check for a
  * moment after a successful copy. */
@@ -102,14 +63,13 @@ function CopyButton({ value, label }: { value: string; label: string }) {
     }
   };
   return (
-    <button
-      type="button"
+    <IconButton
       onClick={copy}
-      aria-label={copied ? `${label} copied` : `Copy ${label}`}
-      style={{ ...btnStyle, color: copied ? "#34c759" : "var(--w)" }}
+      label={copied ? `${label} copied` : `Copy ${label}`}
+      style={{ color: copied ? "#34c759" : "var(--w)" }}
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
-    </button>
+    </IconButton>
   );
 }
 
@@ -156,6 +116,9 @@ function SampleCard({ entry }: { entry: CardEntry }) {
       }}
     >
       <span className="sample-badge">Sample</span>
+      {entry.version ? (
+        <span className="version-badge">{entry.version}</span>
+      ) : null}
       <div className="card-title">{entry.title}</div>
       <div
         style={{
@@ -183,23 +146,11 @@ function SampleCard({ entry }: { entry: CardEntry }) {
         }}
       />
 
-      {/* chevron — opens the full card */}
-      <div
-        style={{
-          position: "absolute",
-          right: "16px",
-          bottom: "16px",
-          width: "34px",
-          height: "34px",
-          borderRadius: "999px",
-          background: "var(--k)",
-          color: "var(--w)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ChevronIcon />
+      {/* chevron — decorative; the whole card is the link that opens it */}
+      <div style={{ position: "absolute", right: "16px", bottom: "16px" }}>
+        <IconButton label="Open card">
+          <ChevronRight />
+        </IconButton>
       </div>
     </a>
   );
