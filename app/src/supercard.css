@@ -1118,8 +1118,34 @@ a.spec-link:hover {
 .spec-copy:hover {
   background: var(--g-30);
 }
+/* Copy-success feedback stays monochrome: the fill darkens and the glyph
+ * swaps to a check (both --ink), readable on the gray button. */
 .spec-copy.copied {
-  color: #34c759;
+  background: var(--g-30);
+  color: var(--ink);
+}
+
+/* Trailing action on a zone label (e.g. "Hide" on `~/ older` once expanded).
+ * Mono, quiet by default, darkens on hover. */
+.zone-action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--g-60);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.zone-action:hover {
+  color: var(--k);
 }
 
 /* Toast-style archive: a masked card-edge peeks above a dashed reveal button;

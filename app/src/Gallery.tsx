@@ -13,6 +13,7 @@ import {
   IconButton,
   ChevronRight,
   ChevronDown,
+  ChevronUp,
   CopyIcon,
   CheckIcon,
   GitHubIcon,
@@ -160,15 +161,29 @@ export function Gallery() {
       <SampleCard entry={current} />
 
       {older.length > 0 ? (
-        <>
-          <ZoneLabel>~/ older</ZoneLabel>
-          {showOlder ? (
+        showOlder ? (
+          <>
+            <div className="zone-label">
+              <span className="zone-label-text">~/ older</span>
+              <span className="zone-rule" />
+              <button
+                type="button"
+                className="zone-action"
+                onClick={() => setShowOlder(false)}
+              >
+                Hide
+                <ChevronUp />
+              </button>
+            </div>
             <div className="older-list">
               {older.map((c) => (
                 <SampleCard key={c.slug} entry={c} />
               ))}
             </div>
-          ) : (
+          </>
+        ) : (
+          <>
+            <ZoneLabel>~/ older</ZoneLabel>
             <div className="older">
               <div className="older-peek" />
               <button
@@ -180,8 +195,8 @@ export function Gallery() {
                 <ChevronDown />
               </button>
             </div>
-          )}
-        </>
+          </>
+        )
       ) : null}
 
       <div className="landing-footer">◆ supercard · v3.7 atlas</div>

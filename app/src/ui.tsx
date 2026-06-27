@@ -61,6 +61,13 @@ export function ChevronDown() {
     </svg>
   );
 }
+export function ChevronUp() {
+  return (
+    <svg {...svgProps} width={14} height={14}>
+      <polyline points="18 15 12 9 6 15" />
+    </svg>
+  );
+}
 
 /* The GitHub mark. A filled glyph (not stroked like the chevrons), so it takes
  * `fill: currentColor` — color it via the parent's `color` (e.g. .gh-btn). */
