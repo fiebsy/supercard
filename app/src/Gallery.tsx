@@ -12,7 +12,6 @@ import type { CardEntry } from "./cards/registry";
 import {
   ChevronRight,
   ChevronDown,
-  ChevronUp,
   CopyIcon,
   CheckIcon,
   GitHubIcon,
@@ -35,10 +34,11 @@ function ZoneLabel({ children }: { children: string }) {
   );
 }
 
-/* The inset copy button. Non-black (gray fill, ink glyph); swaps to a green
- * check for a moment after a successful copy — the one sanctioned color, and
- * only as transient UI feedback. */
-function SpecCopyButton({ value }: { value: string }) {
+/* The spec input is itself the copy button — the whole field is clickable, so
+ * the copy glyph is just a quiet indicator (no fill). The glyph swaps to a
+ * check for a moment after a successful copy (monochrome — readable on the
+ * field, not a colored badge). */
+function SpecInput() {
   const [copied, setCopied] = useState(false);
   const copy = () => {
     const done = () => {
@@ -46,7 +46,7 @@ function SpecCopyButton({ value }: { value: string }) {
       setTimeout(() => setCopied(false), 1600);
     };
     if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(value).then(done, done);
+      navigator.clipboard.writeText(SPEC_URL).then(done, done);
     } else {
       done();
     }
@@ -54,11 +54,17 @@ function SpecCopyButton({ value }: { value: string }) {
   return (
     <button
       type="button"
-      className={`spec-copy${copied ? " copied" : ""}`}
+      className="spec-input"
       onClick={copy}
       aria-label={copied ? "Spec URL copied" : "Copy the spec URL"}
     >
-      {copied ? <CheckIcon /> : <CopyIcon />}
+      <span className="spec-url">{SPEC_URL_DISPLAY}</span>
+      <span
+        className={`spec-copy${copied ? " copied" : ""}`}
+        aria-hidden="true"
+      >
+        {copied ? <CheckIcon /> : <CopyIcon />}
+      </span>
     </button>
   );
 }
@@ -112,11 +118,7 @@ export function Gallery() {
 
       <ZoneLabel>~/ spec</ZoneLabel>
       <div className="spec-title">One URL. The whole spec.</div>
-      <div className="spec-desc">Everything an agent needs, in one file.</div>
-      <div className="spec-input">
-        <span className="spec-url">{SPEC_URL_DISPLAY}</span>
-        <SpecCopyButton value={SPEC_URL} />
-      </div>
+      <SpecInput />
 
       <ZoneLabel>~/ samples</ZoneLabel>
       <SampleCard entry={current} />
@@ -133,7 +135,6 @@ export function Gallery() {
                 onClick={() => setShowOlder(false)}
               >
                 Hide
-                <ChevronUp />
               </button>
             </div>
             <div className="older-list">
