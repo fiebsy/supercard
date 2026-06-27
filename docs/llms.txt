@@ -1092,6 +1092,8 @@ No blocks were added, removed, deprecated, or had their length-compatibility cha
 
 The dynamic assembly pipeline. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble blocks*; this doc says *how to get from a request to a finished card* — research, the intermediate breakdown, mode-driven adaptation, and the published render. This is the **operational manual**; `agent-guide` is a thin router that points here for the build sequence.
 
+**Repo-resident pipeline — skip the file mechanics if you have no repository.** This section is how the in-repo build agent turns a request into *files* in this repo: a research report in `60-RESEARCH/`, a markdown card in `30-CARDS/`, an HTML render in `docs/`, committed to git. A chat LLM with no repo does **not** run this — it builds and emits the HTML directly per *Build a card with no tools*. The concepts here still inform that build (the four modes, the breakdown→card *lossy view*, the constraint gates); the file paths, `npm` commands, frontmatter, and git steps do not apply to you.
+
 ---
 
 ### The shape of the pipeline
@@ -1212,88 +1214,11 @@ Any gate failure → fix, then re-run the gate. Any invariant violation → the 
 
 ### Stage 5 — Render and publish (mandatory)
 
-Rendering is **not optional** (ADR-0007) and is **not hand-authored** (ADR-0010). Every card request produces a published HTML view by running the renderer — never by reconstructing the HTML from this spec by hand.
-
-- **Do.** Run the renderer: `npm --prefix app run render -- 30-CARDS/CARD-{YYYY-MM-DD}-{slug}--draft.md`. It parses the markdown card, inlines `app/src/supercard.css` resolved to the card's `frozen_at_version`, embeds the five `sc:` `<meta>` tags plus `sc:content_hash`, writes the standalone HTML, and upserts the `docs/index.html` gallery entry (newest at top). Then commit the breakdown, the card, the registry update, and the `docs/` changes; push **directly to `main`** (no feature branch, no PR; see `CLAUDE.md`).
-- **Produce.** `docs/cards/CARD-{YYYY-MM-DD}-{slug}.html`, a gallery entry in `docs/index.html`, a push to `main`.
-- **Check.** Run `npm --prefix app run validate` — **G10 (render-freshness)** must pass: the card's `sc:content_hash` matches its bytes, and it is linked in the gallery. Standalone HTML opens with no network. The card's URL resolves on the live deployment. (If you edited the card after rendering, re-run the renderer — G10 errors on a stale render.)
-- **Layers consulted.** `rendering`, `tokens`.
-
-**Why a command, not hand-authoring.** The render used to be reconstructed from this spec by hand at the end of a long task — so it got forgotten, and its layout drifted (eyebrows/subheads/dek were re-authored in the HTML and never written back to the card). The renderer makes the markdown card the complete reader-visible source and the HTML a pure function over `supercard.css`; G10 makes skipping or staling it a loud error. See ADR-0010.
-
-The markdown card stays the canonical, frozen-at-version source (ADR-0003); the HTML is a *view* of it — regenerated, never hand-edited.
+*Repo-resident: the in-repo agent runs the renderer and commits the result; a no-repo LLM emits the finished HTML directly (see "Build a card with no tools"). The mechanics below apply only with a checkout.*
 
 ### Frontmatter contract — BREAKDOWN and CARD and RENDER
 
-Frontmatter is how the genealogy stays navigable. Every breakdown, card, and render carries the fields below. This is one contract, published in one place — agents do not need to reconstruct it across multiple docs.
-
-#### `BREAKDOWN-{slug}.md` frontmatter (in `60-RESEARCH/`)
-
-| Field | Required | Source / form | Notes |
-|---|---|---|---|
-| `id` | ✓ | `BREAKDOWN-{slug}` | Matches filename. |
-| `type` | ✓ | `breakdown` | Constant. |
-| `topic` | ✓ | free text | The plain-English topic, one phrase. |
-| `slug` | ✓ | kebab-case | Used to derive `id` and card filenames. |
-| `era` | ✓ | `atlas` | Era name (ADR-0001). |
-| `owner` | ✓ | author handle | One person. |
-| `created` | ✓ | `YYYY-MM-DD` | First write. |
-| `updated` | ✓ | `YYYY-MM-DD` | Stamp on every extend-pass. |
-| `status` | ✓ | one of `active`, `extending`, `superseded` | `extending` is the lock during a re-research pass. |
-| `modes_derived` | ✓ | csv of mode names | Which modes have produced a card from this report. |
-| `derived_cards` | ✓ | csv of CARD ids | Closes the loop — every card descended from this report. |
-| `source_count` | ✓ | integer | Source register row count. |
-| `confidence` | ✓ | one of `high`, `mixed`, `low` | Aggregate of §Confidence assessment. |
-| `supersedes` |  | id | Set when this extends an earlier report. |
-| `related_reports` |  | csv of ids | Adjacent topics. |
-
-#### `CARD-{YYYY-MM-DD}-{slug}--{status}.md` frontmatter (in `30-CARDS/`)
-
-| Field | Required | Source / form | Notes |
-|---|---|---|---|
-| `id` | ✓ | `CARD-{YYYY-MM-DD}-{slug}` | Matches filename minus the `--{status}` suffix. |
-| `type` | ✓ | `card` | Constant. |
-| `length` | ✓ | one of `mini`, `standard`, `xl` | Drives the template; must match the block count budget. |
-| `era` | ✓ | `atlas` | Era name. |
-| `version` | ✓ | SemVer | Spec version this card was authored against. |
-| `frozen_at_version` | ✓ | SemVer | Render-time rule library; renderer applies *this* version's rules forever (ADR-0003). |
-| `lifecycle` | ✓ | one of `core`, `stable`, `experimental`, `deprecated` | Card-level lifecycle. |
-| `owner` | ✓ | author handle | One person. |
-| `created` | ✓ | `YYYY-MM-DD` | First write. |
-| `status` | ✓ | one of `draft`, `published`, `archived` | Mirrors the filename `--{status}` suffix. |
-| `research_report` | ✓ | path to `60-RESEARCH/BREAKDOWN-{slug}.md` | The breakdown this card descends from (ADR-0006). |
-| `render` | ✓ | path to `docs/cards/{id}.html` | The published render. |
-| `tags` |  | csv | Topic tags for the gallery. |
-| `supersedes` |  | id | Set when this replaces an earlier card. |
-| `related` |  | csv of ids | Adjacent cards. |
-| `source_file` | rendered | path | Filled by the renderer into HTML `<meta>`. |
-| `renderer_version` | rendered | SemVer | Filled by the renderer. |
-| `rendered_at` | rendered | ISO datetime | Filled by the renderer. |
-| `source_commit` | rendered | sha | Filled when available. |
-| `content_hash` | rendered | sha256 | Filled when available. |
-
-#### Render `<meta>` block (in HTML `<head>`)
-
-Every published HTML render embeds the rendering provenance as `<meta>` tags. These are the `sc:`-prefixed names referenced by `RENDERING § Output contract`:
-
-| Meta name | Source field | Required |
-|---|---|---|
-| `sc:source_file` | card's `source_file` (the markdown path) | ✓ |
-| `sc:research_report` | card's `research_report` | ✓ |
-| `sc:renderer_version` | renderer's own version | ✓ |
-| `sc:frozen_at_version` | card's `frozen_at_version` | ✓ |
-| `sc:rendered_at` | render-time ISO datetime | ✓ |
-| `sc:source_commit` | git sha at render time |  |
-| `sc:content_hash` | sha256 of the markdown card | |
-
-Together: the breakdown's frontmatter is the genealogy *root*, the card's frontmatter points back at it, and the render's `<meta>` closes the loop pointing back through both. An agent reading any of the three artifacts can navigate to the others.
-
-### What you end up with
-
-- `60-RESEARCH/BREAKDOWN-{slug}.md` — the deep research report, kept and registered.
-- `60-RESEARCH/INDEX-research-reports.md` — registry row updated.
-- `30-CARDS/CARD-{date}-{slug}--draft.md` (or `-part-N`) — the card(s).
-- `docs/cards/CARD-{date}-{slug}.html` — the published render, in the gallery, viewable online.
+*Repo-resident: the file-frontmatter contract for the BREAKDOWN / CARD / RENDER artifacts. A no-repo LLM emits HTML, not these files; the full contract lives in the canonical source.*
 
 Same research, re-runnable: change the mode, re-run Stages 3–5, get a different card and render from the same report. The breakdown is the asset; cards are views; renders are how the views are seen.
 
@@ -1307,41 +1232,12 @@ How a Supercard source becomes a rendered HTML artifact, and how that artifact i
 
 ### Render quickstart (read this first)
 
-**Pick your path by access.** *With the repo:* you do **not** hand-write the
-HTML — the render is a pure function over the markdown card, produced by one
-command (ADR-0010); run it and skip to the gates. *From this spec alone, no
-checkout:* hand-render from the token tables in this section — the HTML path is
-deliberately reproducible from the spec with no codebase (see *Two render
-paths*). Everything below is the *why* (the rule library the renderer applies)
-and, for the no-repo case, the build recipe.
-
-```sh
-# 1. render the card → docs/cards/{slug}.html + gallery entry
-npm --prefix app run render -- 30-CARDS/CARD-2026-06-25-v35-reading-layer--draft.md
-
-# 2. verify it (G10 render-freshness must pass)
-npm --prefix app run validate
-```
-
-The renderer (`app/scripts/render-card.mjs`):
-
-- inlines `app/src/supercard.css` **verbatim** — the single source of truth for
-  every token, type metric, and colour. Never re-state a value in the HTML.
-- resolves the card's `frozen_at_version` to the `.canvas` class chain
-  (`canvas v3-1 v3-5 …`); the cascade applies the right rule library (R-9 vs
-  R-19, etc.) automatically — you never reason about which rule is live.
-- emits the five `sc:` `<meta>` tags plus `sc:content_hash`, the fixed corner
-  glyph, and upserts `docs/index.html`.
-
-**The card carries all reader-visible text.** Eyebrows = the text after `·` on
-the `` `BLOCK-xxx` · eyebrow `` line; subheads = a `### ` line; dek/hook/stat/
-table/takeaway/sources = ordinary markdown. Nothing visible is invented at
-render time. Grammar reference: `50-TEMPLATES/TEMPLATE-supercard-*.md`.
-
-**With repo access**, if you are reading this spec to *build* a card you are done
-after the two commands above; the rest of this document defines the rules the
-stylesheet and validator already encode. **Without a checkout**, read on — those
-same rules are your hand-render recipe.
+**Pick your path by access.** *No repo (a chat LLM):* you hand-render the card
+yourself — the complete recipe (HTML skeleton, the stylesheet to paste, per-block
+patterns, a worked card) is in *Build a card with no tools*; everything below is
+the rule library behind it, for the *why* and the edge cases. *With the repo:*
+you do **not** hand-write the HTML — run the renderer (a pure function over the
+markdown card, ADR-0010) and skip to the gates.
 
 ---
 
@@ -1791,45 +1687,6 @@ Rendered HTML must:
 - Embed provenance as `<meta>` tags in the HTML `<head>`: `sc:source_file`, `sc:research_report`, `sc:renderer_version`, `sc:frozen_at_version`, `sc:rendered_at` (and `sc:source_commit`, `sc:content_hash` where available). These five are mandatory and reader-invisible — they carry the production-metadata stamp that R-10 (V3.3) moves out of the rendered chrome. `sc:research_report` closes the genealogy loop — the render points back through the card to the `60-RESEARCH/` report it descends from.
 - **Corner glyph viewport-persistent (V3.4+).** The corner glyph element renders with `position: fixed` and remains in the viewport at every scroll position. Cards over 2,000pt total height MUST be tested with an automated scroll-screenshot pass before publish — every 800pt slice must capture the glyph.
 
-### Publishing (mandatory — ADR-0007)
-
-Rendering is not optional. Every card request renders **and publishes**:
-
-- The render is written to `docs/cards/CARD-{YYYY-MM-DD}-{slug}.html` — one standalone file per card. Multi-part `deep-dive` cards each get `...-part-N.html`.
-- An entry is added to the `docs/index.html` **gallery** (newest at top), linking the new render.
-- The `docs/` changes are committed and pushed. `docs/` is served as the pages site, so the card becomes a live URL — this is the "view it online" deliverable.
-- Renders are **views, never sources** — never hand-edited. Re-render from the markdown card (the frozen-at-version canonical source, ADR-0003) instead.
-
-See `docs/README.md` for the published-site structure.
-
-### Two render paths
-
-A card has one canonical source — the markdown in `30-CARDS/` — and **two**
-render paths. Both are views; both are re-derived from the markdown, never
-hand-edited.
-
-| | HTML path | React path |
-|---|---|---|
-| Artifact | `docs/cards/CARD-{date}-{slug}.html` — one standalone file, all resources inlined | `app/src/cards/{slug}.tsx` — a component composed from block primitives |
-| Needs the codebase? | **No.** Reproducible from this spec alone — an agent working from read-only guidance can produce it without a checkout. | **Yes.** Requires the `app/` Vite project. |
-| Hosted on | GitHub Pages (`docs/`) | Vercel (`app/dist`, via `vercel.json`) |
-| Gallery | `docs/index.html` | `app/src/cards/registry.tsx` + `app/src/Gallery.tsx` |
-
-**The HTML path is the floor.** It is mandatory on every card request (ADR-0007)
-and is the one that must stay reproducible from the spec with no codebase. The
-React path is the bonus an agent *with* repo access can also produce.
-
-**Pixel parity is the contract.** `app/src/supercard.css` is ported verbatim
-from this spec's tokens and from the HTML renders, so a React-rendered card and
-its standalone HTML twin are the same card at the same pixels. The block
-components in `app/src/blocks.tsx` are keyed one-to-one to `INDEX-block-library`
-ids and emit the same markup the HTML renderer does.
-
-**Both paths ship from one deployment.** The `app/` build copies `docs/` into
-`app/dist/html/`, so the Vercel deployment serves the React gallery at `/` and
-the canonical standalone HTML twins at `/html/cards/CARD-...html`. See
-`app/README.md`.
-
 ---
 
 ## Glossary — definitions for every cross-layer term
@@ -2126,7 +1983,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.7.0 · era atlas
-- **Revision:** `ba2c06714fad` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `9007ea36c02f` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-06-27
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -2141,8 +1998,8 @@ Source files (the canonical markdown this view is generated from):
 - `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `292d4a73f9c276c4fcea1a2e2d4c705ad69166146a26b8a0fc1050d76439269f`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `2e0ebe7b60bb97d3b7dd998c5dabb6575070a948b50b17593ea8add5ce31c23e`
-- `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `f093e06e7e1ca7d538df6f899f5cd37e043d549106d19817ddf3206df4835e5f`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `b5caca1c56d98a84788c50f33658f4a80f6e5d1c043699d02511693deda292a9`
+- `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `64a812d2fa5aaaeaf6e258866dc3ece265a47a7194f85339587ca8302fd6a596`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `3f54bc23b34d11468f0b3af108e731f6c5384f17aec13b02d144843610c8f038`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 

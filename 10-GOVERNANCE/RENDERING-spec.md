@@ -15,14 +15,14 @@ How a Supercard source becomes a rendered HTML artifact, and how that artifact i
 
 ## Render quickstart (read this first)
 
-**Pick your path by access.** *With the repo:* you do **not** hand-write the
-HTML — the render is a pure function over the markdown card, produced by one
-command (ADR-0010); run it and skip to the gates. *From this spec alone, no
-checkout:* hand-render from the token tables in this section — the HTML path is
-deliberately reproducible from the spec with no codebase (see *Two render
-paths*). Everything below is the *why* (the rule library the renderer applies)
-and, for the no-repo case, the build recipe.
+**Pick your path by access.** *No repo (a chat LLM):* you hand-render the card
+yourself — the complete recipe (HTML skeleton, the stylesheet to paste, per-block
+patterns, a worked card) is in *Build a card with no tools*; everything below is
+the rule library behind it, for the *why* and the edge cases. *With the repo:*
+you do **not** hand-write the HTML — run the renderer (a pure function over the
+markdown card, ADR-0010) and skip to the gates.
 
+<!-- llms:exclude -->
 ```sh
 # 1. render the card → docs/cards/{slug}.html + gallery entry
 npm --prefix app run render -- 30-CARDS/CARD-2026-06-25-v35-reading-layer--draft.md
@@ -48,8 +48,8 @@ render time. Grammar reference: `50-TEMPLATES/TEMPLATE-supercard-*.md`.
 
 **With repo access**, if you are reading this spec to *build* a card you are done
 after the two commands above; the rest of this document defines the rules the
-stylesheet and validator already encode. **Without a checkout**, read on — those
-same rules are your hand-render recipe.
+stylesheet and validator already encode.
+<!-- /llms:exclude -->
 
 ---
 
@@ -578,6 +578,7 @@ Rendered HTML must:
 - Embed provenance as `<meta>` tags in the HTML `<head>`: `sc:source_file`, `sc:research_report`, `sc:renderer_version`, `sc:frozen_at_version`, `sc:rendered_at` (and `sc:source_commit`, `sc:content_hash` where available). These five are mandatory and reader-invisible — they carry the production-metadata stamp that R-10 (V3.3) moves out of the rendered chrome. `sc:research_report` closes the genealogy loop — the render points back through the card to the `60-RESEARCH/` report it descends from.
 - **Corner glyph viewport-persistent (V3.4+).** The corner glyph element renders with `position: fixed` and remains in the viewport at every scroll position. Cards over 2,000pt total height MUST be tested with an automated scroll-screenshot pass before publish — every 800pt slice must capture the glyph.
 
+<!-- llms:exclude -->
 ## Publishing (mandatory — ADR-0007)
 
 Rendering is not optional. Every card request renders **and publishes**:
@@ -616,3 +617,4 @@ ids and emit the same markup the HTML renderer does.
 `app/dist/html/`, so the Vercel deployment serves the React gallery at `/` and
 the canonical standalone HTML twins at `/html/cards/CARD-...html`. See
 `app/README.md`.
+<!-- /llms:exclude -->

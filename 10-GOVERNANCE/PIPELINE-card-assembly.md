@@ -11,6 +11,8 @@
 
 The dynamic assembly pipeline. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble blocks*; this doc says *how to get from a request to a finished card* — research, the intermediate breakdown, mode-driven adaptation, and the published render. This is the **operational manual**; `agent-guide` is a thin router that points here for the build sequence.
 
+**Repo-resident pipeline — skip the file mechanics if you have no repository.** This section is how the in-repo build agent turns a request into *files* in this repo: a research report in `60-RESEARCH/`, a markdown card in `30-CARDS/`, an HTML render in `docs/`, committed to git. A chat LLM with no repo does **not** run this — it builds and emits the HTML directly per *Build a card with no tools*. The concepts here still inform that build (the four modes, the breakdown→card *lossy view*, the constraint gates); the file paths, `npm` commands, frontmatter, and git steps do not apply to you.
+
 ---
 
 ## The shape of the pipeline
@@ -131,6 +133,9 @@ Any gate failure → fix, then re-run the gate. Any invariant violation → the 
 
 ## Stage 5 — Render and publish (mandatory)
 
+*Repo-resident: the in-repo agent runs the renderer and commits the result; a no-repo LLM emits the finished HTML directly (see "Build a card with no tools"). The mechanics below apply only with a checkout.*
+
+<!-- llms:exclude -->
 Rendering is **not optional** (ADR-0007) and is **not hand-authored** (ADR-0010). Every card request produces a published HTML view by running the renderer — never by reconstructing the HTML from this spec by hand.
 
 - **Do.** Run the renderer: `npm --prefix app run render -- 30-CARDS/CARD-{YYYY-MM-DD}-{slug}--draft.md`. It parses the markdown card, inlines `app/src/supercard.css` resolved to the card's `frozen_at_version`, embeds the five `sc:` `<meta>` tags plus `sc:content_hash`, writes the standalone HTML, and upserts the `docs/index.html` gallery entry (newest at top). Then commit the breakdown, the card, the registry update, and the `docs/` changes; push **directly to `main`** (no feature branch, no PR; see `CLAUDE.md`).
@@ -141,9 +146,13 @@ Rendering is **not optional** (ADR-0007) and is **not hand-authored** (ADR-0010)
 **Why a command, not hand-authoring.** The render used to be reconstructed from this spec by hand at the end of a long task — so it got forgotten, and its layout drifted (eyebrows/subheads/dek were re-authored in the HTML and never written back to the card). The renderer makes the markdown card the complete reader-visible source and the HTML a pure function over `supercard.css`; G10 makes skipping or staling it a loud error. See ADR-0010.
 
 The markdown card stays the canonical, frozen-at-version source (ADR-0003); the HTML is a *view* of it — regenerated, never hand-edited.
+<!-- /llms:exclude -->
 
 ## Frontmatter contract — BREAKDOWN and CARD and RENDER
 
+*Repo-resident: the file-frontmatter contract for the BREAKDOWN / CARD / RENDER artifacts. A no-repo LLM emits HTML, not these files; the full contract lives in the canonical source.*
+
+<!-- llms:exclude -->
 Frontmatter is how the genealogy stays navigable. Every breakdown, card, and render carries the fields below. This is one contract, published in one place — agents do not need to reconstruct it across multiple docs.
 
 ### `BREAKDOWN-{slug}.md` frontmatter (in `60-RESEARCH/`)
@@ -213,5 +222,6 @@ Together: the breakdown's frontmatter is the genealogy *root*, the card's frontm
 - `60-RESEARCH/INDEX-research-reports.md` — registry row updated.
 - `30-CARDS/CARD-{date}-{slug}--draft.md` (or `-part-N`) — the card(s).
 - `docs/cards/CARD-{date}-{slug}.html` — the published render, in the gallery, viewable online.
+<!-- /llms:exclude -->
 
 Same research, re-runnable: change the mode, re-run Stages 3–5, get a different card and render from the same report. The breakdown is the asset; cards are views; renders are how the views are seen.
