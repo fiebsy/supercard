@@ -324,7 +324,7 @@ Copy its shape.
 
   <section>
     <h1>Spaced repetition</h1>
-    <p class="dek">Same retention as cramming, for a third of the hours — paid in timing, not effort.</p>
+    <p class="dek">Same retention as cramming for a third of the hours: paid in timing, not effort.</p>
     <div class="hero">
       <p class="hook"><strong>Retrieval at the edge of forgetting.</strong> A recall attempt at the longest interval you can still answer strengthens memory more than re-reading ever does.</p>
     </div>
@@ -1987,7 +1987,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.7.0 · era atlas
-- **Revision:** `9007ea36c02f` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `6cf20f50ecfb` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-06-27
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -1997,7 +1997,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 Source files (the canonical markdown this view is generated from):
 
 - `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-27 — sha256 `7a6f0921677a2434130562528e87a479afba541a97da66c65bf78e75b63976bb`
-- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-06-27 — sha256 `d11076d26545d7fb1e304ad471a568f39f611f03a0d87a19331f395be3558425`
+- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-06-27 — sha256 `a89c2a1d6438a1836296c7532d947ad405b2374753208516fdb60777aa94817c`
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-06-25 — sha256 `3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452`
 - `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `292d4a73f9c276c4fcea1a2e2d4c705ad69166146a26b8a0fc1050d76439269f`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`

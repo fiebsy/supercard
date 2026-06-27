@@ -272,7 +272,7 @@ Copy its shape.
 
   <section>
     <h1>Spaced repetition</h1>
-    <p class="dek">Same retention as cramming, for a third of the hours — paid in timing, not effort.</p>
+    <p class="dek">Same retention as cramming for a third of the hours: paid in timing, not effort.</p>
     <div class="hero">
       <p class="hook"><strong>Retrieval at the edge of forgetting.</strong> A recall attempt at the longest interval you can still answer strengthens memory more than re-reading ever does.</p>
     </div>
