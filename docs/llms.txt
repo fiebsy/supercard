@@ -60,6 +60,7 @@ knowledge. It is self-contained; build from it alone. Do not act from memory.
 
 The 14 foundational principles of the Supercard format (10 V3.0 + 2 V3.1 + 2 V3.4). PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
 
+---
 
 ### 1. Screenshot autonomy (non-negotiable)
 
@@ -212,6 +213,7 @@ V3.0 cards are exempt — they're frozen at their authored version per ADR-0003.
 
 How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*. The block-selection procedure (below) is the single composed routine an agent walks for every section.
 
+---
 
 ### The seven-beat narrative spine
 
@@ -528,6 +530,7 @@ Run on every section, including the header. Five questions per section. Any "no"
 
 Length is a **prop**, not a fork. Same content model, same grammar, same identity — only emphasis, density, and depth vary.
 
+---
 
 ### The three variants
 
@@ -653,6 +656,47 @@ line with the decision tree's own logic:
 Block ids are unchanged (ADR-0003 contract). Only the family field — used for
 decision-tree routing — moves.
 
+| id | name | family | lifecycle | version | length_variants | supersedes | last_review |
+|---|---|---|---|---|---|---|---|
+| BLOCK-stat-callout | Stat callout | numeric | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-stat-grid | Stat grid | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-sparkline | Sparkline | numeric | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-gauge-progress | Gauge / progress | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-annotated-data-point | Annotated single data point | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-comparison | Comparison block | comparative | core | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-bar-chart | Bar chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-column-chart | Column chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-slope-chart | Slope / bump chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-scatter-quadrant | Scatter / quadrant | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-dot-plot | Dot plot | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-bullet-chart | Bullet chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-timeline | Timeline | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-process-flow | Process / flow | sequential | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-line-chart | Line chart | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-area-chart | Area chart | sequential | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-definition | Definition | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-numbered-principle | Numbered principle | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-equation | Equation | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-code | Code | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-histogram | Histogram / distribution | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-heatmap | Heatmap | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-waffle | Waffle | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-small-multiples | Small multiples | distributional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-standard-text | Standard text | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-pull-quote | Pull quote | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-quote-as-evidence | Quote-as-evidence | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-flashcard-list | Flashcard list | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-anti-pattern | Anti-pattern | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-checklist | Checklist | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-annotated-visual | Annotated visual | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-image-caption | Image with caption | editorial | stable | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-table | Table | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-faq | FAQ | editorial | stable | 3.0.0 | standard,xl | | 2026-04-29 |
+| BLOCK-key-takeaway | Key takeaway / TL;DR | editorial | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
+| BLOCK-section-divider | Section divider | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-footnote-source | Footnote / source aggregator | structural | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-loft-card | Loft-card | structural | core | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-asterism-rest | Asterism rest (mid-beat) | structural | deprecated | 3.1.0 | — | **Retired in V3.6 (R-24, supersedes R-11/G-10)** — never renders | 2026-06-25 |
 
 ### Rules by version (per block)
 
@@ -728,6 +772,7 @@ No blocks were added, removed, deprecated, or had their length-compatibility cha
 
 The dynamic assembly pipeline. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble blocks*; this doc says *how to get from a request to a finished card* — research, the intermediate breakdown, mode-driven adaptation, and the published render. This is the **operational manual**; `agent-guide` is a thin router that points here for the build sequence.
 
+---
 
 ### The shape of the pipeline
 
@@ -938,6 +983,7 @@ Same research, re-runnable: change the mode, re-run Stages 3–5, get a differen
 
 How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
+---
 
 ### Render quickstart (read this first)
 
@@ -1505,6 +1551,7 @@ the canonical standalone HTML twins at `/html/cards/CARD-...html`. See
 One place to disambiguate the system's nouns. Every term that appears across
 multiple layers is defined here, with its canonical source layer cited.
 
+---
 
 ### Artifacts
 
@@ -1564,6 +1611,7 @@ mode inference → ~3-sentence breakdown excerpt → 6-block selection with the
 decision tree applied → constraint-gate results → frontmatter → 5 lines of
 rendered HTML scaffolding. Read this once before authoring your first card.
 
+---
 
 ### 0. The request
 
@@ -1792,7 +1840,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.7.0 · era atlas
-- **Revision:** `af9dca5fe3d1` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `21d80dac85db` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-06-27
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -1805,7 +1853,7 @@ Source files (the canonical markdown this view is generated from):
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-06-25 — sha256 `3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452`
 - `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `92c41024acb5d91e148d1d3e90a03be6ace7b2185c85d7fd2b1bb43858eb9e24`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
-- `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `935c2da84b1952a2777ff0eb64f1360a21654cde7394aa23fe20ffb1c9aee710`
+- `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `2e0ebe7b60bb97d3b7dd998c5dabb6575070a948b50b17593ea8add5ce31c23e`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `f093e06e7e1ca7d538df6f899f5cd37e043d549106d19817ddf3206df4835e5f`
 - `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `4ce10b6b400ad2891fc56d958702d5baf50f47b306c5ff40456385ccb2bb1116`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2`

@@ -94,6 +94,29 @@ function sectionBody(doc, fragment) {
 }
 
 /*
+ * Strip `<!-- llms:exclude -->` … `<!-- /llms:exclude -->` regions.
+ *
+ * Content inside these markers stays in the canonical source markdown (the full
+ * audit trail — genealogy, retired/superseded rules, frozen-version renderer
+ * libraries) but is omitted from the generated public spec. This keeps the
+ * builder-facing llms.txt free of rules an agent authoring a current-version
+ * card must never emit, without deleting anything from the repo. The markers
+ * each sit on their own line; the strip runs before normalizeDoc so any fenced
+ * code blocks inside an excluded region are removed wholesale, never half-parsed.
+ */
+function stripLlmsExcluded(raw) {
+  const out = [];
+  let excluding = false;
+  for (const line of raw.split("\n")) {
+    if (/^\s*<!--\s*llms:exclude\s*-->\s*$/.test(line)) { excluding = true; continue; }
+    if (/^\s*<!--\s*\/llms:exclude\s*-->\s*$/.test(line)) { excluding = false; continue; }
+    if (!excluding) out.push(line);
+  }
+  // Collapse the 3+ blank-line gaps an excised region can leave behind.
+  return out.join("\n").replace(/\n{3,}/g, "\n\n");
+}
+
+/*
  * Normalize a canonical doc for inlining under a single H1.
  *
  *   - drop the leading `# Title` line and the `| key | value |` metadata table
@@ -120,12 +143,13 @@ function normalizeDoc(raw) {
       continue;
     }
     if (!inFence && !headerDone) {
+      if (/^\s*$/.test(line)) { out.push(line); continue; } // blank line in the header zone
       if (/^\s*\|/.test(line)) continue; // drop leading metadata-table rows
       if (/^---\s*$/.test(line)) {
         headerDone = true; // drop the header separator rule, body starts after
         continue;
       }
-      if (/^##\s/.test(line)) headerDone = true; // body started without a rule
+      headerDone = true; // first real body line (prose or heading) — header is done; fall through
     }
     const demoted = !inFence ? line.replace(/^(#{1,6})(\s)/, "#$1$2") : line;
     out.push(demoted);
@@ -232,7 +256,7 @@ function renderLlmsTxt() {
   const contents = GUIDES.map((g) => `- [${g.title}](#${g.anchor}) — ${g.blurb}`).join("\n");
 
   const guideSections = GUIDES.map(
-    (g) => `## ${g.title}\n\n${normalizeDoc(g.doc.raw)}`
+    (g) => `## ${g.title}\n\n${normalizeDoc(stripLlmsExcluded(g.doc.raw))}`
   ).join("\n\n---\n\n");
 
   const provenanceSources = Object.values(SRC)

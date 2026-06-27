@@ -9,6 +9,8 @@
 | owner | derick |
 | updated | 2026-06-27 |
 
+---
+
 The **39** V3 blocks across **7 families** (Numeric, Comparative, Sequential,
 Definitional, Distributional, Editorial, Structural). Source of truth for block
 lifecycle and length compatibility. Each block has (or will have) a full spec
