@@ -10,7 +10,6 @@ import { useState } from "react";
 import { cards } from "./cards/registry";
 import type { CardEntry } from "./cards/registry";
 import {
-  IconButton,
   ChevronRight,
   ChevronDown,
   ChevronUp,
@@ -64,63 +63,24 @@ function SpecCopyButton({ value }: { value: string }) {
   );
 }
 
-/* A peek at a published card: the real opening prose, clipped to a fixed
- * height with a fade mask over the cut, and a chevron bottom-right that opens
- * the full card. (Refinement target — kept as-is for the lander wiring.) */
+/* A peek at a published card (Card B): the title shares a row with a ghost
+ * open-chevron, a trimmed mono meta line, then the real opening prose clipped
+ * with a fade. The chevron lives in the title row so the preview runs the full
+ * width with nothing floating over the faded text. */
 function SampleCard({ entry }: { entry: CardEntry }) {
   return (
-    <a
-      href={`#/cards/${entry.slug}`}
-      style={{
-        position: "relative",
-        display: "block",
-        height: "240px",
-        overflow: "hidden",
-        textDecoration: "none",
-        color: "inherit",
-        background: "var(--w)",
-        border: "1px solid var(--g-12)",
-        borderRadius: "18px",
-        padding: "var(--s-5)",
-      }}
-    >
-      <span className="sample-badge">Sample</span>
-      {entry.version ? (
-        <span className="version-badge">{entry.version}</span>
-      ) : null}
-      <div className="card-title">{entry.title}</div>
-      <div
-        style={{
-          fontFamily: "var(--mono)",
-          fontSize: "11px",
-          color: "var(--g-30)",
-          marginBottom: "var(--s-3)",
-        }}
-      >
-        {entry.id} · {entry.length} · {entry.mode}
-      </div>
-      <p>{entry.preview}</p>
-
-      {/* fade mask over the clipped text */}
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: "110px",
-          background:
-            "linear-gradient(to bottom, rgba(255,255,255,0), var(--w) 78%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* chevron — decorative; the whole card is the link that opens it */}
-      <div style={{ position: "absolute", right: "16px", bottom: "16px" }}>
-        <IconButton label="Open card">
+    <a href={`#/cards/${entry.slug}`} className="sample-card">
+      <div className="sample-head">
+        <span className="sample-title">{entry.title}</span>
+        <span className="sample-open" aria-hidden="true">
           <ChevronRight />
-        </IconButton>
+        </span>
       </div>
+      <div className="sample-meta">
+        {entry.version} · {entry.length} · {entry.mode}
+      </div>
+      <p className="sample-preview">{entry.preview}</p>
+      <div className="sample-fade" />
     </a>
   );
 }

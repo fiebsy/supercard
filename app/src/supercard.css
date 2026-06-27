@@ -1198,3 +1198,98 @@ a.spec-link:hover {
   color: var(--g-30);
   padding-top: var(--s-6);
 }
+
+/* Sample card (Card B). 18px padding aligns its content's left edge with the
+ * spec input's (both contained widgets sharing a left lane). The open chevron
+ * sits in the title row so the preview runs full-width; a fade clips the cut. */
+.sample-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background: var(--w);
+  border: 1px solid var(--g-12);
+  border-radius: 18px;
+  padding: 18px;
+  transition: border-color 0.15s ease;
+}
+.sample-card:hover {
+  border-color: var(--g-30);
+}
+.sample-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+.sample-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Ghost open-chevron — non-black, matching the lander's button language. */
+.sample-open {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--g-06);
+  border: 1px solid var(--g-12);
+  color: var(--ink);
+}
+.sample-meta {
+  padding-top: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--g-30);
+}
+.sample-preview {
+  padding-top: var(--s-3);
+  max-height: 72px;
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--ink-2);
+}
+.sample-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 72px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 76%);
+  pointer-events: none;
+}
+
+/* Card-view back button — ghost circle to match the new button language
+ * (replaces the old solid-black .icon-btn back affordance). */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--g-12);
+  border-radius: 999px;
+  background: var(--w);
+  color: var(--ink);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.back-btn:hover {
+  background: var(--g-06);
+  border-color: var(--g-30);
+}

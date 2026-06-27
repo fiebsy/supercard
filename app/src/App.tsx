@@ -6,7 +6,7 @@
 import { useEffect, useState } from "react";
 import { Gallery } from "./Gallery";
 import { findCard } from "./cards/registry";
-import { IconButton, ChevronLeft } from "./ui";
+import { ChevronLeft } from "./ui";
 
 function useHashRoute() {
   const [hash, setHash] = useState(
@@ -32,9 +32,9 @@ export function App() {
       return (
         <>
           <a className="card-back" href="#/" aria-label="Back to gallery">
-            <IconButton label="Back to gallery">
+            <span className="back-btn">
               <ChevronLeft />
-            </IconButton>
+            </span>
           </a>
           <Card />
           <a className="back-link" href="#/">
