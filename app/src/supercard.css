@@ -1128,13 +1128,13 @@ a.spec-link:hover {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* Quiet copy indicator — no fill, floated on the right so it doesn't shift the
- * centered URL. The whole field is the button. Sized (32) and inset (right 18,
- * matching the input's own 18px lane) to mirror the sample card's chevron, so
- * the two trailing affordances line up across the input and the cards. */
+/* Quiet copy indicator — no fill, just the glyph, floated on the right. With
+ * no circle to anchor (unlike the card chevron), the glyph itself must read as
+ * 18px from the edge to mirror the URL's 18px left padding. The 17px glyph is
+ * centered in a 32px box (7.5px each side), so right = 18 - 7.5 ≈ 10. */
 .spec-copy {
   position: absolute;
-  right: 18px;
+  right: 10px;
   top: 10px;
   display: inline-flex;
   align-items: center;
