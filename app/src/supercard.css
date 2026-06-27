@@ -1093,7 +1093,7 @@ a.spec-link:hover {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   height: 52px;
   margin-top: var(--s-3);
@@ -1119,7 +1119,11 @@ a.spec-link:hover {
   font-size: 16px;
   line-height: 20px;
   color: var(--ink);
-  text-align: center;
+  /* Left-aligned: a URL is a read-left-to-right link, not display text. The
+   * copy button stays pinned to the right edge (the canonical copy-field
+   * pattern), so reserve its lane here so a long URL never runs under it. */
+  text-align: left;
+  padding-right: var(--s-5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
