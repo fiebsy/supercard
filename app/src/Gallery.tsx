@@ -95,7 +95,6 @@ function SampleCard({ entry }: { entry: CardEntry }) {
         {entry.version} · {entry.length} · {entry.mode}
       </div>
       <p className="sample-preview">{entry.preview}</p>
-      <div className="sample-fade" />
     </a>
   );
 }

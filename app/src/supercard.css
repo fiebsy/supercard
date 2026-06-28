@@ -1224,11 +1224,12 @@ a.spec-link:hover {
 
 /* Sample card (Card B). 18px padding aligns its content's left edge with the
  * spec input's (both contained widgets sharing a left lane). The open chevron
- * sits in the title row so the preview runs full-width; a fade clips the cut.
- * Fixed height + a flex-fill preview let the opening prose run all the way down
- * to the card's bottom edge, where the fade masks the bleed (no white void
- * between the clipped text and the border). No bottom padding — the preview
- * bleeds flush to the edge and the fade does the trimming. */
+ * sits in the title row so the preview runs full-width. Fixed height + a
+ * flex-fill preview let the opening prose run all the way down to the card's
+ * bottom edge, where a gradient mask on the prose itself dissolves its last
+ * lines into the card (.sample-preview) — the cut reads as an intentional fade,
+ * not a hard clip, with no white void between the text and the border. No
+ * bottom padding — the preview bleeds flush to the edge and the mask trims. */
 .sample-card {
   position: relative;
   display: flex;
@@ -1317,32 +1318,22 @@ a.spec-link:hover {
 }
 .sample-preview {
   padding-top: var(--s-3);
-  /* fill the remaining card height down to the bottom edge — the text runs all
-   * the way down, and the fade below masks the cut. */
+  /* Fill the remaining card height down to the bottom edge: the prose runs all
+   * the way down and the mask below dissolves its last lines into the card, so
+   * the cut reads as an intentional fade rather than a hard clip. */
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
   font-size: 16px;
   line-height: 24px;
   color: var(--ink-2);
-}
-.sample-fade {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 120px;
-  /* Stronger fade: the white ramps in higher (solid by ~60%) so the prose is
-   * cut off well above the bottom edge, not just at it. */
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 60%);
-  /* Subtle progressive blur on the prose underneath: the backdrop blur is
-   * faded in by a mask so the top of the band stays sharp and the text goes
-   * soft as it approaches the cut, reinforcing the white ramp. */
-  -webkit-backdrop-filter: blur(2.5px);
-  backdrop-filter: blur(2.5px);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 50%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 50%);
-  pointer-events: none;
+  /* Fade the prose itself to transparent toward the bottom edge. The card is
+   * white, so a fade-to-transparent is a clean fade-to-white applied per-pixel
+   * to the glyphs — the last visible line softly disappears near the edge
+   * instead of a blurred half-line smeared mid-height with a white void beneath
+   * it. Replaces the old white-overlay + backdrop-blur band (.sample-fade). */
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 97%);
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 97%);
 }
 
 /* Card-view back button — identical treatment to the card's forward chevron
