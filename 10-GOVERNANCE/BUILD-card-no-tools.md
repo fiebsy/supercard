@@ -5,9 +5,9 @@
 | id | BUILD-card-no-tools |
 | type | guide |
 | era | atlas |
-| version | 3.7.0 |
+| version | 3.8.0 |
 | owner | derick |
-| updated | 2026-06-27 |
+| updated | 2026-06-28 |
 
 ---
 
@@ -192,6 +192,16 @@ table tr:last-child td{border-bottom:none}
 .sources li{font-size:13px;line-height:18px;color:var(--g-60);display:list-item;border:0;padding:0}
 .sources li::before{content:"·";color:var(--g-30);margin-right:var(--s-1)}
 
+/* flashcard-list — a compact Q/A study list; dt = question (the row's one
+   emphasis, primary ink), dd = answer (secondary ink). No bold; the weight +
+   ink contrast is the emphasis. Parallel questions are the adjacency exception. */
+.flashcards{margin:var(--s-3) 0}
+.flashcards .fc{padding:var(--s-2) 0;border-bottom:.5px solid var(--g-12)}
+.flashcards .fc:first-child{padding-top:0}
+.flashcards .fc:last-child{padding-bottom:0;border-bottom:none}
+.flashcards dt{font-size:17px;line-height:24px;font-weight:600;letter-spacing:-.01em;color:var(--ink);margin-bottom:2px}
+.flashcards dd{font-size:17px;line-height:26px;font-weight:400;letter-spacing:-.01em;color:var(--ink-2)}
+
 /* corner glyph — fixed, lands on every screenshot */
 .glyph{position:fixed;bottom:16px;left:50%;transform:translateX(calc(196px - 100% - 4px));font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--g-30);background:rgba(255,255,255,.85);backdrop-filter:blur(4px);padding:4px 7px;border-radius:6px;border:1px solid var(--g-12)}
 ```
@@ -247,6 +257,15 @@ emphasis** — never two per block.
   <rect x="140" y="40"  width="40" height="100" fill="#1a1a1a"/>  <!-- focal -->
   <rect x="220" y="100" width="40" height="40"  fill="#767676"/>
 </svg></div>
+
+<!-- flashcard-list — 5 to 10 Q/A pairs, the highest-yield recall items. No
+     bold: the dt (question) is the emphasis via weight + ink, the dd (answer)
+     is muted. Each side stays to a few words. -->
+<dl class="flashcards">
+  <div class="fc"><dt>What does spacing buy you?</dt><dd>Cramming's retention for about a third of the study time.</dd></div>
+  <div class="fc"><dt>When should you review a card?</dt><dd>Just before you would otherwise forget it.</dd></div>
+  <div class="fc"><dt>What resets the forgetting curve?</dt><dd>A successful recall at the longest interval you can still answer.</dd></div>
+</dl>
 
 <!-- section divider — only between beats, never between every block -->
 <section class="divider"><div class="eyebrow">NEXT MOVEMENT</div><h2>The claim it lands</h2></section>

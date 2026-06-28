@@ -5,9 +5,9 @@
 | id | INDEX-block-library |
 | type | index |
 | era | atlas |
-| version | 3.7.0 |
+| version | 3.8.0 |
 | owner | derick |
-| updated | 2026-06-27 |
+| updated | 2026-06-28 |
 
 ---
 
@@ -109,6 +109,14 @@ which rules apply to which `frozen_at_version`.
 - The gloss is the block's single emphasis; no bold runs inside the code itself
 - Body weight inside `<pre>` is regular SF Mono; comments stay at body weight, not italic
 
+### BLOCK-flashcard-list (built V3.8)
+
+- Render contract: **REQUIRED** as of V3.8 — `stable` in the library since 3.0.0 but unbuilt until now (R-32, ADR-0015), the same path the charts took at V3.7
+- Authored as a headerless `| question | answer |` markdown table; the block id selects the `<dl class="flashcards">` render (no new syntax — the R-30 convention)
+- Q/A discipline: question ≤ 12 words, answer ≤ 20 words / one sentence; **5–10 pairs** ("the ten best"), not a glossary dump (GRAMMAR § G-16)
+- Single emphasis is the question (`dt`, primary ink); the answer (`dd`) is secondary ink. **No markdown bold** — the parallel questions are the adjacency exception, not multi-emphasis, so a 10-row list never trips R-12
+- Counts as a **content block** in the density budget (G-9), like a checklist
+
 ### BLOCK-asterism-rest (V3.1 — RETIRED in V3.6)
 
 > **Retired by R-24 (supersedes R-11 / G-10).** The asterism rest never renders.
@@ -132,6 +140,23 @@ Through V3.6, four numeric/comparative blocks were catalogued `stable` here but
 Lifecycle is unchanged (`stable`) — these were always meant to exist; V3.7 just
 makes the renderer honour the catalogue. `column-chart` and `area-chart` remain
 catalogued-but-unbuilt (out of R-30's scope). Authoring grammar: GRAMMAR § G-15.
+
+## V3.8 — flashcard-list built (R-32)
+
+Through V3.7, `BLOCK-flashcard-list` was catalogued `stable` (since 3.0.0) and
+routed by the decision tree ("flashcard-style Q/A list → Flashcard list") but
+**never built** in either render path — exactly the state the chart blocks were
+in before V3.7. V3.8 implements it for real (ADR-0015):
+
+- **`flashcard-list`** (R-32) — a compact Q/A study list rendered as a
+  `<dl class="flashcards">`, strict grayscale, hairline-separated rows. The
+  question is the row's single emphasis; the answer is secondary ink. Authored
+  as a headerless `| question | answer |` table. Authoring grammar: GRAMMAR
+  § G-16.
+
+Lifecycle is unchanged (`stable`) — it was always meant to exist; V3.8 makes the
+renderer honour the catalogue. Length compatibility is unchanged
+(`standard,xl`): ten Q/A pairs is a Standard/XL-scale section, not a Mini one.
 
 ## V3.4 backwards compatibility
 

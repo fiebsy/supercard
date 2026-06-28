@@ -5,13 +5,53 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.7.0 |
+| version | 3.8.0 |
 | owner | derick |
-| updated | 2026-06-27 |
+| updated | 2026-06-28 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
 
 ---
+
+## [3.8.0] — "Atlas" — 2026-06-28
+
+The recall companion. The block library has advertised `flashcard-list` as
+`stable` since 3.0.0 and the decision tree has routed Q/A content to it, but it
+was **never actually built** in either render path — the same gap V3.7 closed
+for the chart family. V3.8 implements it for real. Strict grayscale, single
+emphasis, frozen-at-version — all intact. (ADR-0015.)
+
+### Added
+
+- **R-32 — flashcard list.** `flashcard-list` enters the render contract: a
+  compact Q/A study list rendered as a hairline-separated
+  `<dl class="flashcards">`. The question (`dt`) is the row's single emphasis at
+  primary ink; the answer (`dd`) is secondary ink. No markdown bold — the
+  parallel questions are the adjacency exception, so a 10-row list never trips
+  the single-emphasis gate (R-12).
+- **G-16 — flashcard-list authoring.** Q/A pairs only; question ≤ 12 words,
+  answer ≤ 20 words / one sentence; **5–10 pairs** ("the ten best"), not a
+  glossary dump. Authored as a headerless `| question | answer |` table — the
+  block id, not new syntax, selects the `<dl>` (the R-30 convention).
+- New block primitives in **both** render paths — `Flashcards` in
+  `app/src/blocks.tsx`, and `emitFlashcards` (plus `v3-8` in the canvas class
+  chain) in `app/scripts/render-card.mjs` — duplicating the markup verbatim so
+  the HTML twin and the React card stay pixel-identical (the parity contract).
+- `.canvas.v3-8 .flashcards` styles in `app/src/supercard.css`, mirrored into
+  the flat stylesheet and a per-block HTML pattern in `BUILD-card-no-tools.md`.
+
+### Changed
+
+- The validator (`validate-v3-1.mjs`) adds `flashcard-list` to the data-table
+  set, so its Q/A rows are exempt from the G-11 "≥ 4 rows ⇒ Takeaway row"
+  requirement (charts and stat-grid already were).
+
+### Unchanged
+
+- `flashcard-list` keeps its `stable` lifecycle and `standard,xl` length
+  compatibility — V3.8 honours the catalogue, it does not re-scope the block.
+  Every V3.0–V3.7 card stays pixel-identical (the styles are scoped to
+  `.canvas.v3-8`).
 
 ## [3.7.0] — "Atlas" — 2026-06-27
 

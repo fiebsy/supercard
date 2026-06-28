@@ -5,9 +5,9 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.7.0 |
+| version | 3.8.0 |
 | owner | derick |
-| updated | 2026-06-27 |
+| updated | 2026-06-28 |
 
 How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*. The block-selection procedure (below) is the single composed routine an agent walks for every section.
 
@@ -261,6 +261,35 @@ forbidden); charts and stat-grids stay on the gray ramp (no color). A chart earn
 its scroll only when *magnitude* or *shape* is the point — forcing a chart where
 one number would do is the "false precision" anti-pattern.
 
+## G-16. Flashcard-list authoring (V3.8+)
+
+The `flashcard-list` block distills a topic into a short, scannable set of
+**question and answer pairs** the reader can self-test against. It is the
+Application-beat (Beat 6) recall companion to the checklist: where a checklist
+lists *actions*, a flashcard list lists *the things worth remembering*.
+
+- **Q/A pairs, nothing else.** Each row is one question and one answer. No
+  multi-part questions, no answer that needs its own sub-list.
+- **Few words per side.** The question is ≤ 12 words; the answer is ≤ 20 words
+  and one sentence. A flashcard that needs a paragraph is a `definition` or a
+  `faq`, not a flashcard. (This is tighter than the G-12 prose cap by design:
+  the block earns its density from brevity.)
+- **Pick the ten best.** A flashcard list holds **5–10** pairs — the
+  highest-yield recall items for the topic, not every fact. Above ten, the set
+  stops being a study list and becomes a glossary dump; split the beat or cut to
+  the ten that matter. (5–10 is the same "parallel set" envelope as stat-grid's
+  2–6 metrics, sized up for text rows.)
+- **Single emphasis is the question.** The question is the row's one near-black
+  element (the `dt`); the answer is secondary ink (the `dd`). The parallel
+  questions down the list are the **adjacency exception** (like stat-grid's
+  parallel numbers or a checklist's repeated rows), *not* multi-emphasis — the
+  block carries no markdown `**bold**`, so a 10-row list never trips the
+  single-emphasis gate. The eyebrow (and an optional `### ` subhead) names the
+  deck's topic and is the block's screenshot anchor.
+- **Authored as a headerless `| question | answer |` table.** The block id, not
+  new syntax, selects the `<dl>` render (the R-30 convention shared with the
+  charts and stat-grid). Render contract: RENDERING § R-32.
+
 ## Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -323,3 +352,4 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Position-language transition between beats (`Next up`, `Section 4`, `Now we move to…`) (V3.4+) | Author-outline scaffolding leaking into the reader's view — same family as R-10/I7 violations, just at the seam |
 | Meta-language transition between beats (`In the following section`, `Let's look at…`, `As mentioned above`) (V3.4+) | The reader doesn't need to be told that the author is about to make a point — they need the point |
 | Transition eyebrow or tagline that paraphrases the body below it (V3.4+) | Redundancy filter (P9) at the section seam — the bridge must add a frame, not restate the claim |
+| Flashcard list longer than ten pairs, or with paragraph-length answers (V3.8+) | A study list is the ten highest-yield recall items in few words each — past ten, or once an answer needs a paragraph, it is a glossary dump or a `faq`, not a flashcard (G-16) |

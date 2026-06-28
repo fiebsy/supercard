@@ -5,9 +5,9 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.7.0 |
+| version | 3.8.0 |
 | owner | derick |
-| updated | 2026-06-27 |
+| updated | 2026-06-28 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
@@ -118,10 +118,13 @@ ls docs/cards/
 | 0012 | Single self-contained `llms.txt` spec (supersedes 0008) | Accepted | 2026-06-25 |
 | 0013 | Sentence-case labels, centered separators, editorial eyebrows (R-25/R-26) | Accepted | 2026-06-25 |
 | 0014 | V3.7 — cover eyebrow, alignment hygiene, real data-viz blocks (R-27–R-31) | Accepted | 2026-06-27 |
+| 0015 | V3.8 — build the catalogued `flashcard-list` block (R-32) | Accepted | 2026-06-28 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.8.0** — The recall companion. Builds the catalogued-but-unbuilt `flashcard-list` into both render paths (R-32) — a compact Q/A study list rendered as a hairline-separated `<dl class="flashcards">`, the question the row's single emphasis and the answer secondary ink. Authored as a headerless `| question | answer |` table (the R-30 "block id, not new syntax" convention), capped at the 5–10 highest-yield pairs (G-16). The questions are the adjacency exception, so the block carries no bold and never trips the single-emphasis gate. Strict grayscale, single emphasis, frozen-at-version intact. (ADR-0015.)
 
 **v3.7.0** — Variety, on the grid. Implements the catalogued numeric/chart blocks for real in both render paths (R-30 grayscale `bar-chart` + `line-chart`, R-31 `stat-grid` + `stat-callout`), permits one disciplined editorial eyebrow above the cover title (R-27, amending R-13), and fixes two table-alignment defects (R-28 the doubled-hairline — base-level and retroactive; R-29 fixed-grid columns on mobile). Charts are authored as plain `| label | value |` tables, so no new syntax enters a card and the spec stays self-describing. Adds `CARD-2026-06-27-v37-data-and-alignment` (first card frozen at 3.7.0) and unifies the landing/sample buttons behind one round `IconButton`. Strict grayscale, single emphasis, frozen-at-version intact. (ADR-0014.)
 
