@@ -172,7 +172,7 @@ export function Gallery() {
               className="older-toggle"
               onClick={() => setShowOlder(true)}
             >
-              View {older.length} older cards
+              View {older.length} older formats
               <ChevronDown />
             </button>
           </div>
