@@ -1222,19 +1222,20 @@ a.spec-link:hover {
   padding-top: var(--s-6);
 }
 
-/* Sample card (Card B). 18px padding aligns its content's left edge with the
- * spec input's (both contained widgets sharing a left lane). The open chevron
- * sits in the title row so the preview runs full-width. Fixed height + a
- * flex-fill preview let the opening prose run all the way down to the card's
- * bottom edge, where a gradient mask on the prose itself dissolves its last
- * lines into the card (.sample-preview) — the cut reads as an intentional fade,
- * not a hard clip, with no white void between the text and the border. No
- * bottom padding — the preview bleeds flush to the edge and the mask trims. */
+/* Sample card (Card B). A faithful peek at the card's actual cover: it renders
+ * the same eyebrow -> Display title -> dek stack the opened card opens with,
+ * reusing the real .canvas type classes (.sample-cover carries them) so the
+ * landing teaser reads as the top of the card itself, not a separate widget.
+ * 18px padding aligns its content's left edge with the spec input's. The open
+ * chevron is pinned to the top-right corner; the cover prose runs the full
+ * width beneath it and a gradient mask dissolves its last lines into the card,
+ * so the cut reads as an intentional fade, not a hard clip. No bottom padding —
+ * the cover bleeds flush to the edge and the mask trims. */
 .sample-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 232px;
+  height: 260px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -1247,49 +1248,45 @@ a.spec-link:hover {
 .sample-card:hover {
   border-color: var(--g-30);
 }
-/* Subtle topical eyebrow above the title — same muted mono language as the
- * `~/ zone` labels, so every card carries a one-glance bit of context. */
-.sample-eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
-  line-height: 14px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--g-30);
-  margin-bottom: var(--s-1);
-}
-.sample-head {
-  display: flex;
-  flex-direction: row;
-  /* top-align so the chevron pins to the card's top-right corner, not the
-   * vertical middle of the eyebrow + title block (the eyebrow pushed it down) */
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--s-2);
-}
-/* Eyebrow + title stacked; this column takes the row's free width so the title
- * ellipsizes while the chevron stays a fixed slot pinned to the top-right. */
-.sample-headings {
+/* The cover stack — carries the real card's version classes so its eyebrow, h1
+ * and dek render at the exact metrics the opened card uses. .canvas brings page
+ * layout (fixed 393px width, 100vh min-height, padding, dotted side guides)
+ * that has no place inside the card frame, so it is reset here; only the
+ * scoped type rules (.canvas.v3-5 h1, .dek, .eyebrow, p) are kept. The mask
+ * fades the stack to transparent toward the bottom edge — a clean fade-to-white
+ * on the white card, applied per-pixel to the glyphs, so the last visible line
+ * softly disappears near the edge rather than ending in a hard clip. */
+.sample-cover {
   flex: 1 1 auto;
+  min-height: 0;
   min-width: 0;
-}
-.sample-title {
-  /* block so overflow/ellipsis apply — an inline span ignores them, letting a
-   * long title run full-width straight under the chevron instead of clipping */
-  display: block;
-  min-width: 0;
-  font-size: 22px;
-  line-height: 28px;
-  font-weight: 600;
-  letter-spacing: -0.012em;
-  color: var(--ink);
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  /* reset the .canvas page-layout chrome — keep only its scoped type rules */
+  width: auto;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 98%);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 98%);
 }
-/* Ghost open-chevron — non-black, matching the lander's button language. */
+/* The cover eyebrow sits 8pt above the title (the R-27 cover gap), tighter than
+ * the 16pt content-block default, since here it always opens a card. Reserve a
+ * right lane so the eyebrow never runs under the corner chevron. */
+.sample-cover .eyebrow {
+  margin-bottom: var(--s-1);
+  padding-right: 44px;
+}
+/* The title is the real Display ramp (40/44), wrapping like the opened card's
+ * h1. It runs the full card width — the chevron sits in the eyebrow's reserved
+ * lane above it, so the title needs no right inset of its own. */
+/* Ghost open-chevron — pinned to the card's top-right corner (out of flow, so
+ * it never inflates the eyebrow->title gap). Non-black, matching the lander's
+ * button language. */
 .sample-open {
+  position: absolute;
+  top: 18px;
+  right: 18px;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
@@ -1308,32 +1305,6 @@ a.spec-link:hover {
 .sample-card:hover .sample-open {
   background: var(--g-12);
   border-color: transparent;
-}
-.sample-meta {
-  padding-top: 6px;
-  font-family: var(--mono);
-  font-size: 11px;
-  line-height: 16px;
-  color: var(--g-30);
-}
-.sample-preview {
-  padding-top: var(--s-3);
-  /* Fill the remaining card height down to the bottom edge: the prose runs all
-   * the way down and the mask below dissolves its last lines into the card, so
-   * the cut reads as an intentional fade rather than a hard clip. */
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
-  font-size: 16px;
-  line-height: 24px;
-  color: var(--ink-2);
-  /* Fade the prose itself to transparent toward the bottom edge. The card is
-   * white, so a fade-to-transparent is a clean fade-to-white applied per-pixel
-   * to the glyphs — the last visible line softly disappears near the edge
-   * instead of a blurred half-line smeared mid-height with a white void beneath
-   * it. Replaces the old white-overlay + backdrop-blur band (.sample-fade). */
-  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 97%);
-  mask-image: linear-gradient(to bottom, #000 58%, transparent 97%);
 }
 
 /* Card-view back button — identical treatment to the card's forward chevron

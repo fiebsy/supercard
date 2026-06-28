@@ -73,28 +73,24 @@ function SpecInput() {
   );
 }
 
-/* A peek at a published card (Card B): the title shares a row with a ghost
- * open-chevron, a trimmed mono meta line, then the real opening prose clipped
- * with a fade. The chevron lives in the title row so the preview runs the full
- * width with nothing floating over the faded text. */
+/* A peek at a published card (Card B): a faithful mini-render of the card's
+ * actual cover — the same eyebrow -> Display title -> dek stack the opened card
+ * opens with, in the real .canvas type metrics. A ghost open-chevron is pinned
+ * to the top-right corner; the cover prose runs full width beneath it and a
+ * gradient mask dissolves its last lines into the card. */
 function SampleCard({ entry }: { entry: CardEntry }) {
   // Cards with a React view route in-app; archive-only cards open their twin.
   const href = entry.component ? `#/cards/${entry.slug}` : entry.htmlRender;
   return (
     <a href={href} className="sample-card">
-      <div className="sample-head">
-        <div className="sample-headings">
-          <div className="sample-eyebrow">{entry.eyebrow}</div>
-          <span className="sample-title">{entry.title}</span>
-        </div>
-        <span className="sample-open" aria-hidden="true">
-          <ChevronRight />
-        </span>
+      <div className="sample-cover canvas v3-1 v3-4 v3-5 v3-6 v3-7">
+        <div className="eyebrow">{entry.eyebrow}</div>
+        <h1>{entry.title}</h1>
+        <p className="dek">{entry.preview}</p>
       </div>
-      <div className="sample-meta">
-        {entry.version} · {entry.length} · {entry.mode}
-      </div>
-      <p className="sample-preview">{entry.preview}</p>
+      <span className="sample-open" aria-hidden="true">
+        <ChevronRight />
+      </span>
     </a>
   );
 }
