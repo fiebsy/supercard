@@ -120,8 +120,8 @@ export function Gallery() {
       </header>
 
       <p className="gallery-lede">
-        Paste the spec into any chat, like Claude or ChatGPT. Any topic becomes
-        a scannable card.
+        Paste the spec into Claude or ChatGPT. Any topic becomes one scannable
+        card.
       </p>
 
       <ZoneLabel>~/ spec</ZoneLabel>
