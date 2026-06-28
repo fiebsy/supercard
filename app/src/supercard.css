@@ -1224,18 +1224,23 @@ a.spec-link:hover {
 
 /* Sample card (Card B). 18px padding aligns its content's left edge with the
  * spec input's (both contained widgets sharing a left lane). The open chevron
- * sits in the title row so the preview runs full-width; a fade clips the cut. */
+ * sits in the title row so the preview runs full-width; a fade clips the cut.
+ * Fixed height + a flex-fill preview let the opening prose run all the way down
+ * to the card's bottom edge, where the fade masks the bleed (no white void
+ * between the clipped text and the border). No bottom padding — the preview
+ * bleeds flush to the edge and the fade does the trimming. */
 .sample-card {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 232px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
   background: var(--w);
   border: 1px solid var(--g-12);
   border-radius: 16px;
-  padding: 18px;
+  padding: 18px 18px 0;
   transition: border-color 0.15s ease;
 }
 .sample-card:hover {
@@ -1312,7 +1317,10 @@ a.spec-link:hover {
 }
 .sample-preview {
   padding-top: var(--s-3);
-  max-height: 72px;
+  /* fill the remaining card height down to the bottom edge — the text runs all
+   * the way down, and the fade below masks the cut. */
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
   font-size: 16px;
   line-height: 24px;
@@ -1323,8 +1331,10 @@ a.spec-link:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 72px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 76%);
+  height: 96px;
+  /* gradient holds transparent longer and only goes solid near the very bottom,
+   * so the text visibly bleeds to the card edge instead of whiting out early. */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 92%);
   pointer-events: none;
 }
 
