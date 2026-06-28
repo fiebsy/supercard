@@ -1346,3 +1346,51 @@ a.spec-link:hover {
   background: var(--g-12);
   border-color: var(--g-30);
 }
+
+/* ----------------------------------------------------------------------- *
+ * V3.8 — flashcard list (R-32, ADR-0015). Builds the catalogued-but-unbuilt
+ * BLOCK-flashcard-list into the render contract, the same way V3.7 (R-30/R-31)
+ * built the chart and stat blocks. A compact Q/A study list: each row pairs a
+ * prompt (the dt — the row's one near-black emphasis) with a short answer (the
+ * dd — secondary ink). The parallel questions are the adjacency exception (like
+ * stat-grid's parallel numbers), NOT multi-emphasis. Rows are hairline-
+ * separated; strict grayscale, no chrome. Authored as a headerless
+ * `| question | answer |` markdown table — the block id, not new syntax,
+ * selects the dl (the R-30 convention). Scoped to .canvas.v3-8 so every
+ * V3.0–V3.7 card stays pixel-identical; a V3.8 card carries the inherited chain
+ * plus v3-8, e.g. class="canvas v3-1 v3-4 v3-5 v3-6 v3-7 v3-8".
+ * ----------------------------------------------------------------------- */
+.canvas.v3-8 .flashcards {
+  margin: var(--s-3) 0;
+}
+.canvas.v3-8 .flashcards .fc {
+  padding: var(--s-2) 0;
+  border-bottom: 0.5px solid var(--g-12);
+}
+.canvas.v3-8 .flashcards .fc:first-child {
+  padding-top: 0;
+}
+.canvas.v3-8 .flashcards .fc:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+/* The question — the row's single emphasis. Primary ink, semibold (weight, not
+ * a <strong> run, so the block carries no markdown bold for the validator to
+ * read as multi-emphasis). */
+.canvas.v3-8 .flashcards dt {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+/* The answer — the dive-deeper layer. Secondary ink, regular weight. The base
+ * `* { margin: 0 }` reset already clears the browser's default dd indent. */
+.canvas.v3-8 .flashcards dd {
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+}

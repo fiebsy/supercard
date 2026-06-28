@@ -231,15 +231,18 @@ const CONTENT_TYPES = new Set([
   "faq",
   "code",
 ]);
-// V3.7+ blocks that author their DATA as a markdown table (R-30/R-31). Their
-// rows are series points or parallel metrics, not comparison rows, so the G-11
-// "≥ 4 rows ⇒ Takeaway row" requirement does not apply to them.
+// Blocks that author their DATA as a markdown table but are not comparison
+// tables. V3.7's charts/stat-grid (R-30/R-31) carry series points or parallel
+// metrics; V3.8's flashcard-list (R-32) carries Q/A pairs. Their rows are not
+// rows of comparison data, so the G-11 "≥ 4 rows ⇒ Takeaway row" requirement
+// does not apply to them.
 const DATAVIZ_TABLE_TYPES = new Set([
   "bar-chart",
   "line-chart",
   "column-chart",
   "area-chart",
   "stat-grid",
+  "flashcard-list",
 ]);
 
 function classify(block) {

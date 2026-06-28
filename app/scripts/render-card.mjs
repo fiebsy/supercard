@@ -109,6 +109,7 @@ function canvasClasses(fm) {
   if (maj > 3 || (maj === 3 && min >= 5)) cls.push("v3-5");
   if (maj > 3 || (maj === 3 && min >= 6)) cls.push("v3-6");
   if (maj > 3 || (maj === 3 && min >= 7)) cls.push("v3-7");
+  if (maj > 3 || (maj === 3 && min >= 8)) cls.push("v3-8");
 
   // Beat-gap opt-outs/ins relative to the version default (R-15).
   const gap = (fm.beat_gap || "").trim();
@@ -351,6 +352,39 @@ function emitStatGrid(sec) {
   return html + "    </section>\n";
 }
 
+/* ---- V3.8 flashcard list (R-32) ---------------------------------------- *
+ * A flashcard list is authored as a headerless `| question | answer |`
+ * markdown table — the block id (not new syntax) selects the <dl> visual, the
+ * same convention the V3.7 charts use (R-30). Each row becomes one Q/A pair;
+ * the dt (question) is the row's single near-black emphasis, the dd (answer)
+ * is secondary ink. The markup is duplicated in app/src/blocks.tsx (Flashcards)
+ * so the HTML twin and the React card are the same pixels (the parity
+ * contract). */
+function emitFlashcards(sec) {
+  let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
+  let html = "    <section>\n";
+  html += emitEyebrow(sec.eyebrow);
+  html += tileHtml;
+  for (const c of chunks) {
+    if (/^\|/.test(c)) {
+      let rows = tableRows(c);
+      if (c.split(/\n/).some(isSepLine)) rows = rows.slice(1); // drop any header row
+      rows = rows.filter((r) => (r[0] || "").trim() || (r[1] || "").trim());
+      if (!rows.length) continue;
+      html += `      <dl class="flashcards">\n`;
+      for (const r of rows) {
+        const q = (r[0] || "").replace(/\*\*/g, "").trim();
+        const a = (r[1] || "").replace(/\*\*/g, "").trim();
+        html += `        <div class="fc"><dt>${inlineMd(q)}</dt><dd>${inlineMd(a)}</dd></div>\n`;
+      }
+      html += "      </dl>\n";
+    } else {
+      html += `      <p>${inlineMd(c)}</p>\n`;
+    }
+  }
+  return html + "    </section>\n";
+}
+
 function emitList(block, cls) {
   const items = block
     .split(/\n/)
@@ -428,6 +462,8 @@ function emitSection(title, sec) {
       return emitGeneric(sec, { statMode: true });
     case "stat-grid":
       return emitStatGrid(sec);
+    case "flashcard-list":
+      return emitFlashcards(sec);
     case "bar-chart":
       return emitChartSection(sec, "bar");
     case "line-chart":

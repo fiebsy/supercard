@@ -505,6 +505,41 @@ export function StatCallout({
   );
 }
 
+/* ---- V3.8 editorial: flashcard list (R-32) ----------------------------- *
+ * Markup matches app/src/scripts/render-card.mjs (emitFlashcards) exactly — a
+ * <dl class="flashcards"> of Q/A pairs — so the HTML twin is pixel-identical
+ * (the parity contract). The question (dt) is the row's single emphasis at
+ * --ink; the answer (dd) is secondary ink. Parallel questions are the
+ * adjacency exception, not multi-emphasis. */
+
+type Card = { q: ReactNode; a: ReactNode };
+
+export function Flashcards({
+  beat,
+  eyebrow,
+  heading,
+  cards,
+}: {
+  beat: Beat;
+  eyebrow?: string;
+  heading?: string;
+  cards: Card[];
+}) {
+  return (
+    <Section beat={beat} eyebrow={eyebrow}>
+      {heading ? <div className="tile">{heading}</div> : null}
+      <dl className="flashcards">
+        {cards.map((c, i) => (
+          <div className="fc" key={i}>
+            <dt>{c.q}</dt>
+            <dd>{c.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </Section>
+  );
+}
+
 /* ---- definitional: equation -------------------------------------------- */
 
 export function Equation({

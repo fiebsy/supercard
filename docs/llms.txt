@@ -244,6 +244,16 @@ table tr:last-child td{border-bottom:none}
 .sources li{font-size:13px;line-height:18px;color:var(--g-60);display:list-item;border:0;padding:0}
 .sources li::before{content:"·";color:var(--g-30);margin-right:var(--s-1)}
 
+/* flashcard-list — a compact Q/A study list; dt = question (the row's one
+   emphasis, primary ink), dd = answer (secondary ink). No bold; the weight +
+   ink contrast is the emphasis. Parallel questions are the adjacency exception. */
+.flashcards{margin:var(--s-3) 0}
+.flashcards .fc{padding:var(--s-2) 0;border-bottom:.5px solid var(--g-12)}
+.flashcards .fc:first-child{padding-top:0}
+.flashcards .fc:last-child{padding-bottom:0;border-bottom:none}
+.flashcards dt{font-size:17px;line-height:24px;font-weight:600;letter-spacing:-.01em;color:var(--ink);margin-bottom:2px}
+.flashcards dd{font-size:17px;line-height:26px;font-weight:400;letter-spacing:-.01em;color:var(--ink-2)}
+
 /* corner glyph — fixed, lands on every screenshot */
 .glyph{position:fixed;bottom:16px;left:50%;transform:translateX(calc(196px - 100% - 4px));font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--g-30);background:rgba(255,255,255,.85);backdrop-filter:blur(4px);padding:4px 7px;border-radius:6px;border:1px solid var(--g-12)}
 ```
@@ -299,6 +309,15 @@ emphasis** — never two per block.
   <rect x="140" y="40"  width="40" height="100" fill="#1a1a1a"/>  <!-- focal -->
   <rect x="220" y="100" width="40" height="40"  fill="#767676"/>
 </svg></div>
+
+<!-- flashcard-list — 5 to 10 Q/A pairs, the highest-yield recall items. No
+     bold: the dt (question) is the emphasis via weight + ink, the dd (answer)
+     is muted. Each side stays to a few words. -->
+<dl class="flashcards">
+  <div class="fc"><dt>What does spacing buy you?</dt><dd>Cramming's retention for about a third of the study time.</dd></div>
+  <div class="fc"><dt>When should you review a card?</dt><dd>Just before you would otherwise forget it.</dd></div>
+  <div class="fc"><dt>What resets the forgetting curve?</dt><dd>A successful recall at the longest interval you can still answer.</dd></div>
+</dl>
 
 <!-- section divider — only between beats, never between every block -->
 <section class="divider"><div class="eyebrow">NEXT MOVEMENT</div><h2>The claim it lands</h2></section>
@@ -785,6 +804,35 @@ forbidden); charts and stat-grids stay on the gray ramp (no color). A chart earn
 its scroll only when *magnitude* or *shape* is the point — forcing a chart where
 one number would do is the "false precision" anti-pattern.
 
+### G-16. Flashcard-list authoring (V3.8+)
+
+The `flashcard-list` block distills a topic into a short, scannable set of
+**question and answer pairs** the reader can self-test against. It is the
+Application-beat (Beat 6) recall companion to the checklist: where a checklist
+lists *actions*, a flashcard list lists *the things worth remembering*.
+
+- **Q/A pairs, nothing else.** Each row is one question and one answer. No
+  multi-part questions, no answer that needs its own sub-list.
+- **Few words per side.** The question is ≤ 12 words; the answer is ≤ 20 words
+  and one sentence. A flashcard that needs a paragraph is a `definition` or a
+  `faq`, not a flashcard. (This is tighter than the G-12 prose cap by design:
+  the block earns its density from brevity.)
+- **Pick the ten best.** A flashcard list holds **5–10** pairs — the
+  highest-yield recall items for the topic, not every fact. Above ten, the set
+  stops being a study list and becomes a glossary dump; split the beat or cut to
+  the ten that matter. (5–10 is the same "parallel set" envelope as stat-grid's
+  2–6 metrics, sized up for text rows.)
+- **Single emphasis is the question.** The question is the row's one near-black
+  element (the `dt`); the answer is secondary ink (the `dd`). The parallel
+  questions down the list are the **adjacency exception** (like stat-grid's
+  parallel numbers or a checklist's repeated rows), *not* multi-emphasis — the
+  block carries no markdown `**bold**`, so a 10-row list never trips the
+  single-emphasis gate. The eyebrow (and an optional `### ` subhead) names the
+  deck's topic and is the block's screenshot anchor.
+- **Authored as a headerless `| question | answer |` table.** The block id, not
+  new syntax, selects the `<dl>` render (the R-30 convention shared with the
+  charts and stat-grid). Render contract: RENDERING § R-32.
+
 ### Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -847,6 +895,7 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Position-language transition between beats (`Next up`, `Section 4`, `Now we move to…`) (V3.4+) | Author-outline scaffolding leaking into the reader's view — same family as R-10/I7 violations, just at the seam |
 | Meta-language transition between beats (`In the following section`, `Let's look at…`, `As mentioned above`) (V3.4+) | The reader doesn't need to be told that the author is about to make a point — they need the point |
 | Transition eyebrow or tagline that paraphrases the body below it (V3.4+) | Redundancy filter (P9) at the section seam — the bridge must add a frame, not restate the claim |
+| Flashcard list longer than ten pairs, or with paragraph-length answers (V3.8+) | A study list is the ten highest-yield recall items in few words each — past ten, or once an answer needs a paragraph, it is a glossary dump or a `faq`, not a flashcard (G-16) |
 
 ---
 
@@ -1062,6 +1111,14 @@ which rules apply to which `frozen_at_version`.
 - The gloss is the block's single emphasis; no bold runs inside the code itself
 - Body weight inside `<pre>` is regular SF Mono; comments stay at body weight, not italic
 
+#### BLOCK-flashcard-list (built V3.8)
+
+- Render contract: **REQUIRED** as of V3.8 — `stable` in the library since 3.0.0 but unbuilt until now (R-32, ADR-0015), the same path the charts took at V3.7
+- Authored as a headerless `| question | answer |` markdown table; the block id selects the `<dl class="flashcards">` render (no new syntax — the R-30 convention)
+- Q/A discipline: question ≤ 12 words, answer ≤ 20 words / one sentence; **5–10 pairs** ("the ten best"), not a glossary dump (GRAMMAR § G-16)
+- Single emphasis is the question (`dt`, primary ink); the answer (`dd`) is secondary ink. **No markdown bold** — the parallel questions are the adjacency exception, not multi-emphasis, so a 10-row list never trips R-12
+- Counts as a **content block** in the density budget (G-9), like a checklist
+
 #### BLOCK-asterism-rest (V3.1 — RETIRED in V3.6)
 
 > **Retired by R-24 (supersedes R-11 / G-10).** The asterism rest never renders.
@@ -1085,6 +1142,23 @@ Through V3.6, four numeric/comparative blocks were catalogued `stable` here but
 Lifecycle is unchanged (`stable`) — these were always meant to exist; V3.7 just
 makes the renderer honour the catalogue. `column-chart` and `area-chart` remain
 catalogued-but-unbuilt (out of R-30's scope). Authoring grammar: GRAMMAR § G-15.
+
+### V3.8 — flashcard-list built (R-32)
+
+Through V3.7, `BLOCK-flashcard-list` was catalogued `stable` (since 3.0.0) and
+routed by the decision tree ("flashcard-style Q/A list → Flashcard list") but
+**never built** in either render path — exactly the state the chart blocks were
+in before V3.7. V3.8 implements it for real (ADR-0015):
+
+- **`flashcard-list`** (R-32) — a compact Q/A study list rendered as a
+  `<dl class="flashcards">`, strict grayscale, hairline-separated rows. The
+  question is the row's single emphasis; the answer is secondary ink. Authored
+  as a headerless `| question | answer |` table. Authoring grammar: GRAMMAR
+  § G-16.
+
+Lifecycle is unchanged (`stable`) — it was always meant to exist; V3.8 makes the
+renderer honour the catalogue. Length compatibility is unchanged
+(`standard,xl`): ten Q/A pairs is a Standard/XL-scale section, not a Mini one.
 
 ### V3.4 backwards compatibility
 
@@ -1662,6 +1736,31 @@ Scoped to `.canvas.v3-7` so every V3.0–V3.6 card's tables stay pixel-identical
 - **stat-grid** — 2–6 parallel metrics, each a big tabular number (34/38, weight 700) over a caption (13/18, tertiary ink), on a CSS grid (two columns, or three when the count is a multiple of three). Authored as a headerless `| value | caption |` table. Parallel numbers on a shared dimension are the adjacency exception (GRAMMAR § Adjacency) — multiple big numbers are comparison, not multi-emphasis.
 - **stat-callout** — one 56pt hero number (the reserved `.stat` role) with a **required** verbal-anchor sentence naming what it means and its direction (the V3.1 stat-callout rule; a bare number is forbidden). Authored as a `### ` subhead, optional intro prose, a standalone `**number**` line, then the anchor sentence. It counts as an anchor block in the density budget (G-9).
 
+### R-32. Flashcard list (V3.8+)
+
+**`flashcard-list` enters the render contract.** It was `stable` in the block
+library from 3.0.0 but never built in either render path — the same
+catalogued-but-unbuilt state the charts were in before V3.7. R-32 builds it
+(ADR-0015), following the R-30/R-31 pattern exactly.
+
+- **Markup.** A `<dl class="flashcards">` of Q/A pairs, each pair a
+  `<div class="fc"><dt>question</dt><dd>answer</dd></div>`. Rows are
+  hairline-separated (0.5px `--g-12`), no card shell, no chrome.
+- **Palette and emphasis.** The question (`dt`) is the row's single emphasis at
+  `--ink` (primary), semibold; the answer (`dd`) is `--ink-2` (secondary),
+  regular weight. The weight + ink contrast carries the emphasis, so the block
+  contains **no markdown bold** — a 10-row list therefore never trips the
+  single-emphasis gate (R-12). The parallel questions are the adjacency
+  exception (GRAMMAR § Adjacency), like stat-grid's parallel numbers.
+- **Authoring.** A headerless `| question | answer |` markdown table. **The
+  block id, not new syntax, selects the `<dl>`** — the convention shared with
+  the charts (R-30) and stat-grid (R-31). Authoring discipline (Q/A word caps,
+  the 5–10-pair "ten best" budget) is GRAMMAR § G-16.
+- **Scope.** `.canvas.v3-8` so every V3.0–V3.7 card stays pixel-identical. The
+  SVG-free markup is duplicated verbatim between `render-card.mjs`
+  (`emitFlashcards`) and `blocks.tsx` (`Flashcards`) so the HTML twin and the
+  React card are the same pixels (the parity contract).
+
 ### Block compatibility
 
 Every block in `20-BLOCKS/` declares:
@@ -1986,9 +2085,9 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 ## Provenance
 
-- **Spec:** supercard · version 3.7.0 · era atlas
-- **Revision:** `6cf20f50ecfb` — a hash of the source markdown; changes iff a source changes.
-- **Sources last updated:** 2026-06-27
+- **Spec:** supercard · version 3.8.0 · era atlas
+- **Revision:** `3eeb2fbff7ef` — a hash of the source markdown; changes iff a source changes.
+- **Sources last updated:** 2026-06-28
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
 - **Canonical repo (source of truth, ADR-0003):** https://github.com/fiebsy/supercard
@@ -1996,14 +2095,14 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 Source files (the canonical markdown this view is generated from):
 
-- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-27 — sha256 `7a6f0921677a2434130562528e87a479afba541a97da66c65bf78e75b63976bb`
-- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-06-27 — sha256 `a89c2a1d6438a1836296c7532d947ad405b2374753208516fdb60777aa94817c`
+- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-28 — sha256 `f4a3ebeb9a8c9177cf4acab3f5b3a63fc40fe7525a7c6f3d54da321841d52527`
+- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-06-28 — sha256 `3c6a56a39739d4ee1b38427265bce4ab13cee244ff50b1c2019e0db5ab1db49d`
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-06-25 — sha256 `3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452`
-- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-27 — sha256 `292d4a73f9c276c4fcea1a2e2d4c705ad69166146a26b8a0fc1050d76439269f`
+- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-28 — sha256 `1cc686e00e46db277f40dc7b31ba5a69ffc6bfadbbef6c7324bc8b01aaf31222`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
-- `00-INDEX/INDEX-block-library.md` — updated 2026-06-27 — sha256 `2e0ebe7b60bb97d3b7dd998c5dabb6575070a948b50b17593ea8add5ce31c23e`
+- `00-INDEX/INDEX-block-library.md` — updated 2026-06-28 — sha256 `92191084b8c676d8cbd9d1699da54a955370b4b03574f217c4b15a207efb6545`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `64a812d2fa5aaaeaf6e258866dc3ece265a47a7194f85339587ca8302fd6a596`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-27 — sha256 `3f54bc23b34d11468f0b3af108e731f6c5384f17aec13b02d144843610c8f038`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-28 — sha256 `cebb81612e1ddb5371de98e5134781b538f9458e0fc0922dc643459052bad903`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 

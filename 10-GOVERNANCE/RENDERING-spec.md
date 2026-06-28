@@ -5,9 +5,9 @@
 | id | RENDERING-spec |
 | type | governance |
 | era | atlas |
-| version | 3.7.0 |
+| version | 3.8.0 |
 | owner | derick |
-| updated | 2026-06-27 |
+| updated | 2026-06-28 |
 
 How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
@@ -548,6 +548,31 @@ Scoped to `.canvas.v3-7` so every V3.0–V3.6 card's tables stay pixel-identical
 
 - **stat-grid** — 2–6 parallel metrics, each a big tabular number (34/38, weight 700) over a caption (13/18, tertiary ink), on a CSS grid (two columns, or three when the count is a multiple of three). Authored as a headerless `| value | caption |` table. Parallel numbers on a shared dimension are the adjacency exception (GRAMMAR § Adjacency) — multiple big numbers are comparison, not multi-emphasis.
 - **stat-callout** — one 56pt hero number (the reserved `.stat` role) with a **required** verbal-anchor sentence naming what it means and its direction (the V3.1 stat-callout rule; a bare number is forbidden). Authored as a `### ` subhead, optional intro prose, a standalone `**number**` line, then the anchor sentence. It counts as an anchor block in the density budget (G-9).
+
+## R-32. Flashcard list (V3.8+)
+
+**`flashcard-list` enters the render contract.** It was `stable` in the block
+library from 3.0.0 but never built in either render path — the same
+catalogued-but-unbuilt state the charts were in before V3.7. R-32 builds it
+(ADR-0015), following the R-30/R-31 pattern exactly.
+
+- **Markup.** A `<dl class="flashcards">` of Q/A pairs, each pair a
+  `<div class="fc"><dt>question</dt><dd>answer</dd></div>`. Rows are
+  hairline-separated (0.5px `--g-12`), no card shell, no chrome.
+- **Palette and emphasis.** The question (`dt`) is the row's single emphasis at
+  `--ink` (primary), semibold; the answer (`dd`) is `--ink-2` (secondary),
+  regular weight. The weight + ink contrast carries the emphasis, so the block
+  contains **no markdown bold** — a 10-row list therefore never trips the
+  single-emphasis gate (R-12). The parallel questions are the adjacency
+  exception (GRAMMAR § Adjacency), like stat-grid's parallel numbers.
+- **Authoring.** A headerless `| question | answer |` markdown table. **The
+  block id, not new syntax, selects the `<dl>`** — the convention shared with
+  the charts (R-30) and stat-grid (R-31). Authoring discipline (Q/A word caps,
+  the 5–10-pair "ten best" budget) is GRAMMAR § G-16.
+- **Scope.** `.canvas.v3-8` so every V3.0–V3.7 card stays pixel-identical. The
+  SVG-free markup is duplicated verbatim between `render-card.mjs`
+  (`emitFlashcards`) and `blocks.tsx` (`Flashcards`) so the HTML twin and the
+  React card are the same pixels (the parity contract).
 
 ## Block compatibility
 
