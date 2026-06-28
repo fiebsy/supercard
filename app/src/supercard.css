@@ -1331,10 +1331,17 @@ a.spec-link:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 96px;
-  /* gradient holds transparent longer and only goes solid near the very bottom,
-   * so the text visibly bleeds to the card edge instead of whiting out early. */
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 92%);
+  height: 120px;
+  /* Stronger fade: the white ramps in higher (solid by ~60%) so the prose is
+   * cut off well above the bottom edge, not just at it. */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 60%);
+  /* Subtle progressive blur on the prose underneath: the backdrop blur is
+   * faded in by a mask so the top of the band stays sharp and the text goes
+   * soft as it approaches the cut, reinforcing the white ramp. */
+  -webkit-backdrop-filter: blur(2.5px);
+  backdrop-filter: blur(2.5px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 50%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 50%);
   pointer-events: none;
 }
 
