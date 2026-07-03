@@ -19,6 +19,12 @@
  * cards (frozen_at_version >= 3.3.0).
  */
 import type { ReactNode } from "react";
+import {
+  barChartGeometry,
+  lineChartGeometry,
+  columnChartGeometry,
+  areaChartGeometry,
+} from "./chart-geometry.mjs";
 
 /* ---- section scaffold -------------------------------------------------- */
 
@@ -286,11 +292,13 @@ export function DataTable({
   );
 }
 
-/* ---- V3.7 numeric / chart blocks (R-30, R-31) -------------------------- *
- * The SVG geometry below is duplicated verbatim from app/scripts/render-card.mjs
- * (barChartSvg / lineChartSvg) so a React card and its standalone HTML twin are
- * the same pixels (the parity contract). One focal element per chart = the
- * block's single emphasis (P2). */
+/* ---- V3.7/V3.9 numeric / chart blocks (R-30, R-31, R-35) ---------------- *
+ * All chart math lives in ./chart-geometry.mjs — the ONE home both render
+ * paths import (R-35 extracted the duplicated V3.7 math when the third chart
+ * type landed). These components serialize the same numbers render-card.mjs
+ * does, so a React card and its standalone HTML twin are the same pixels (the
+ * parity contract). One focal element per chart = the block's single
+ * emphasis (P2). */
 
 export type ChartItem = {
   label: string;
@@ -299,61 +307,31 @@ export type ChartItem = {
   focal?: boolean;
 };
 
-const r1 = (x: number) => Math.round(x * 10) / 10;
-
-export function BarChart({
-  beat,
-  eyebrow,
-  heading,
-  items,
-  closer,
-}: {
+type ChartBlockProps = {
   beat: Beat;
   eyebrow?: string;
   heading?: string;
   items: ChartItem[];
   closer?: ReactNode;
-}) {
-  const W = 361,
-    labelW = 120,
-    padR = 8,
-    rowH = 34,
-    barH = 20,
-    valueW = 38;
-  const n = items.length;
-  const H = n * rowH + 4;
-  const max = Math.max(...items.map((d) => d.value), 0) || 1;
-  const barAreaW = W - labelW - padR - valueW;
+};
+
+export function BarChart({ beat, eyebrow, heading, items, closer }: ChartBlockProps) {
+  const g = barChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <div className="tile">{heading}</div> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="bar chart">
-          {items.map((d, i) => {
-            const cy = i * rowH + rowH / 2;
-            const barW = Math.max(2, (d.value / max) * barAreaW);
-            const by = i * rowH + (rowH - barH) / 2;
-            const f = d.focal ? " focal" : "";
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="bar chart">
+          {g.rows.map((r, i) => {
+            const f = r.focal ? " focal" : "";
             return (
               <g key={i}>
-                <text className="c-label" x={0} y={cy} dominantBaseline="middle">
-                  {d.label}
+                <text className="c-label" x={r.labelX} y={r.cy} dominantBaseline="middle">
+                  {r.label}
                 </text>
-                <rect
-                  className={`bar${f}`}
-                  x={labelW}
-                  y={by}
-                  width={r1(barW)}
-                  height={barH}
-                  rx={3}
-                />
-                <text
-                  className={`c-value${f}`}
-                  x={r1(labelW + barW + 6)}
-                  y={cy}
-                  dominantBaseline="middle"
-                >
-                  {d.display ?? String(d.value)}
+                <rect className={`bar${f}`} x={r.barX} y={r.barY} width={r.barW} height={r.barH} rx={3} />
+                <text className={`c-value${f}`} x={r.valueX} y={r.cy} dominantBaseline="middle">
+                  {r.display}
                 </text>
               </g>
             );
@@ -365,82 +343,93 @@ export function BarChart({
   );
 }
 
-export function LineChart({
-  beat,
-  eyebrow,
-  heading,
-  items,
-  closer,
-}: {
-  beat: Beat;
-  eyebrow?: string;
-  heading?: string;
-  items: ChartItem[];
-  closer?: ReactNode;
-}) {
-  const W = 361,
-    H = 168,
-    padL = 10,
-    padR = 10,
-    padT = 18,
-    padB = 30;
-  const n = items.length;
-  const plotW = W - padL - padR;
-  const plotH = H - padT - padB;
-  const vals = items.map((d) => d.value);
-  const min = Math.min(...vals),
-    max = Math.max(...vals);
-  const range = max - min || 1;
-  const x = (i: number) =>
-    padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
-  const y = (v: number) => padT + (1 - (v - min) / range) * plotH;
-  const pts = items.map((d, i) => `${r1(x(i))},${r1(y(d.value))}`).join(" ");
+export function LineChart({ beat, eyebrow, heading, items, closer }: ChartBlockProps) {
+  const g = lineChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <div className="tile">{heading}</div> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="line chart">
-          {[0, 1, 2].map((g) => {
-            const gy = r1(padT + (g / 2) * plotH);
-            return (
-              <line
-                key={g}
-                className="grid"
-                x1={padL}
-                y1={gy}
-                x2={W - padR}
-                y2={gy}
-              />
-            );
-          })}
-          <polyline className="series" points={pts} />
-          {items.map((d, i) => {
-            const f = d.focal ? " focal" : "";
-            const px = r1(x(i)),
-              py = r1(y(d.value));
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="line chart">
+          {g.grid.map((gl, i) => (
+            <line key={i} className="grid" x1={gl.x1} y1={gl.y} x2={gl.x2} y2={gl.y} />
+          ))}
+          <polyline className="series" points={g.polyline} />
+          {g.points.map((p, i) => {
+            const f = p.focal ? " focal" : "";
             return (
               <g key={i}>
-                <circle
-                  className={`dot${f}`}
-                  cx={px}
-                  cy={py}
-                  r={d.focal ? 5 : 4}
-                />
-                <text
-                  className={`c-value${f}`}
-                  x={px}
-                  y={r1(py - 9)}
-                  textAnchor="middle"
-                >
-                  {d.display ?? String(d.value)}
+                <circle className={`dot${f}`} cx={p.x} cy={p.y} r={p.r} />
+                <text className={`c-value${f}`} x={p.x} y={p.valueY} textAnchor={p.anchor}>
+                  {p.display}
                 </text>
-                <text
-                  className="c-label"
-                  x={px}
-                  y={H - 8}
-                  textAnchor="middle"
-                >
-                  {d.label}
+                <text className="c-label" x={p.x} y={p.labelY} textAnchor={p.anchor}>
+                  {p.label}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      {closer ? <p>{closer}</p> : null}
+    </Section>
+  );
+}
+
+/* column-chart (V3.9, R-35) — vertical magnitude comparison. Labels must be
+ * short (≤ 8 chars, G-15); longer labels belong on the horizontal BarChart. */
+export function ColumnChart({ beat, eyebrow, heading, items, closer }: ChartBlockProps) {
+  const g = columnChartGeometry(items);
+  return (
+    <Section beat={beat} eyebrow={eyebrow}>
+      {heading ? <div className="tile">{heading}</div> : null}
+      <div className="chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="column chart">
+          <line className="axis" x1={0} y1={g.baseY} x2={g.W} y2={g.baseY} />
+          {g.cols.map((c, i) => {
+            const f = c.focal ? " focal" : "";
+            return (
+              <g key={i}>
+                <rect className={`bar${f}`} x={c.x} y={c.y} width={c.w} height={c.h} rx={3} />
+                <text className={`c-value${f}`} x={c.cx} y={c.valueY} textAnchor="middle">
+                  {c.display}
+                </text>
+                <text className="c-label" x={c.cx} y={c.labelY} textAnchor="middle">
+                  {c.label}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      {closer ? <p>{closer}</p> : null}
+    </Section>
+  );
+}
+
+/* area-chart (V3.9, R-35) — the line-chart frame plus the one permitted fill
+ * (under-curve volume at --g-06; the grayscale contract caps fills at 12%). */
+export function AreaChart({ beat, eyebrow, heading, items, closer }: ChartBlockProps) {
+  const g = areaChartGeometry(items);
+  return (
+    <Section beat={beat} eyebrow={eyebrow}>
+      {heading ? <div className="tile">{heading}</div> : null}
+      <div className="chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="area chart">
+          {g.grid.map((gl, i) => (
+            <line key={i} className="grid" x1={gl.x1} y1={gl.y} x2={gl.x2} y2={gl.y} />
+          ))}
+          <path className="area" d={g.areaPath} />
+          <polyline className="series" points={g.polyline} />
+          {g.points.map((p, i) => {
+            const f = p.focal ? " focal" : "";
+            return (
+              <g key={i}>
+                <circle className={`dot${f}`} cx={p.x} cy={p.y} r={p.r} />
+                <text className={`c-value${f}`} x={p.x} y={p.valueY} textAnchor={p.anchor}>
+                  {p.display}
+                </text>
+                <text className="c-label" x={p.x} y={p.labelY} textAnchor={p.anchor}>
+                  {p.label}
                 </text>
               </g>
             );
@@ -574,18 +563,23 @@ export function Quote({
   eyebrow,
   variant,
   quote,
+  attrib,
   children,
 }: {
   beat: Beat;
   eyebrow?: string;
   variant: "evidence" | "pull";
   quote: ReactNode;
+  /* The short source line under the quote (required on pull-quotes, V3.1).
+   * Renders as <p class="attrib"> — caption-sized tertiary ink (R-33). */
+  attrib?: ReactNode;
   children?: ReactNode;
 }) {
   const pull = variant === "pull";
   return (
     <Section beat={beat} eyebrow={eyebrow}>
       <blockquote className={pull ? "pull" : undefined}>{quote}</blockquote>
+      {attrib ? <p className="attrib">{attrib}</p> : null}
       {children ? <p>{children}</p> : null}
     </Section>
   );
@@ -695,6 +689,9 @@ export function MicroFolio({
 
 /* ---- the corner glyph — on every section's screenshot ------------------ */
 
-export function Glyph({ version = "v3.0" }: { version?: string } = {}) {
-  return <div className="glyph">◆ supercard · {version} atlas</div>;
+export function Glyph(_props: { version?: string } = {}) {
+  // Identity only — no version, era, mode, or date in reader-visible chrome
+  // (R-10). The production stamp lives in the <meta> tags / registry, never
+  // on the canvas. The `version` prop is accepted for back-compat and ignored.
+  return <div className="glyph">✦ berafoot.com</div>;
 }

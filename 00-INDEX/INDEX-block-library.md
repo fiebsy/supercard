@@ -5,9 +5,9 @@
 | id | INDEX-block-library |
 | type | index |
 | era | atlas |
-| version | 3.8.0 |
+| version | 3.9.0 |
 | owner | derick |
-| updated | 2026-06-28 |
+| updated | 2026-07-03 |
 
 ---
 
@@ -36,7 +36,7 @@ decision-tree routing — moves.
 | BLOCK-annotated-data-point | Annotated single data point | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-comparison | Comparison block | comparative | core | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-bar-chart | Bar chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-column-chart | Column chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-column-chart | Column chart | comparative | stable | 3.0.0 | standard,xl | | 2026-07-03 |
 | BLOCK-slope-chart | Slope / bump chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-scatter-quadrant | Scatter / quadrant | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-dot-plot | Dot plot | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
@@ -44,7 +44,7 @@ decision-tree routing — moves.
 | BLOCK-timeline | Timeline | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-process-flow | Process / flow | sequential | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-line-chart | Line chart | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-area-chart | Area chart | sequential | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-area-chart | Area chart | sequential | stable | 3.0.0 | standard,xl | | 2026-07-03 |
 | BLOCK-definition | Definition | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-numbered-principle | Numbered principle | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-equation | Equation | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
@@ -138,8 +138,28 @@ Through V3.6, four numeric/comparative blocks were catalogued `stable` here but
   and the reserved 56pt hero number with its required verbal anchor.
 
 Lifecycle is unchanged (`stable`) — these were always meant to exist; V3.7 just
-makes the renderer honour the catalogue. `column-chart` and `area-chart` remain
-catalogued-but-unbuilt (out of R-30's scope). Authoring grammar: GRAMMAR § G-15.
+makes the renderer honour the catalogue. `column-chart` and `area-chart` stayed
+catalogued-but-unbuilt (out of R-30's scope) until V3.9 built them (R-35).
+Authoring grammar: GRAMMAR § G-15.
+
+## V3.9 — chart family completed + list-family renders fixed (R-33 / R-35)
+
+V3.9 closes the catalogue-vs-renderer gap the stewards' log has tracked since
+V3.7:
+
+- **`column-chart`** and **`area-chart`** (R-35) — the last two
+  catalogued-but-unbuilt chart ids enter both render paths. Same authoring
+  grammar as bar/line (a plain `| label | value |` table, one bolded focal
+  value — G-15). All four charts now draw from one shared geometry module
+  (`app/src/chart-geometry.mjs`) instead of duplicated math.
+- **The list-bearing blocks render as catalogued** (R-33) — `checklist` (✓
+  rows), `anti-pattern` (✗ rows), `numbered-principle` / `process-flow`
+  (numbered rows), `timeline` (tabular date column), `section-divider`
+  (divider treatment), `pull-quote` / `quote-as-evidence` (real blockquotes
+  with attribution), `equation` / `code` (real `<pre>`). Through V3.8 these
+  fell through the HTML renderer's generic path — every list rendered as
+  footnote fine print and quotes rendered as literal `>` text. Lifecycle is
+  unchanged; the renderer now honours the catalogue.
 
 ## V3.8 — flashcard-list built (R-32)
 

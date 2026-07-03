@@ -79,6 +79,9 @@ a {
   background: var(--w);
   min-height: 100vh;
   padding: 0 16px var(--s-8);
+  /* V3.9 (R-34) — long-token insurance, inherited by every text element: a
+   * long URL, token, or compound never escapes the 361pt content column. */
+  overflow-wrap: break-word;
   /* Designer column guides — faint dotted rules at the left/right boundary of
    * the 393pt column, running the full content height. They replace the old
    * grey body moat: the surface is now flush white and these mark the edge. */
@@ -196,9 +199,17 @@ li:last-child {
   min-width: 18px;
 }
 
+/* V3.9 (R-34) — `table-layout: fixed` + cell wrapping move from the v3-7
+ * scope to base level. Under auto layout a 4-column table of unbreakable
+ * tokens (`#1A1A1A`, `17.4:1`) sums past the 361pt column and overflows the
+ * canvas — a rendering defect on the mobile canvas, not a frozen design
+ * choice, so it is retroactive like R-28 (ADR-0011 precedent). The v3-7
+ * label-column share (36%) and `.num` alignment stay scoped — those are
+ * design decisions, not defect fixes. */
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   margin: var(--s-2) 0;
   font-size: 15px;
 }
@@ -210,6 +221,7 @@ td {
   line-height: 20px;
   color: var(--ink-2);
   vertical-align: top;
+  overflow-wrap: break-word;
 }
 th {
   font-size: 11px;
@@ -227,11 +239,15 @@ tr.focal td {
 tr.focal td strong {
   color: var(--k);
 }
+/* timeline — the date column reads tabular and semibold. Ink is --ink-3 (not
+ * --g-30): dates are text, and text never drops below the 4.5:1 floor (R-20's
+ * split applies at base too — this class was never emitted before V3.9, so no
+ * frozen render depended on the old value). No nowrap: the fixed table grid
+ * (R-34) owns column width, and an over-long date wraps instead of overflowing. */
 table.timeline td:first-child {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  white-space: nowrap;
-  color: var(--g-30);
+  color: var(--ink-3);
 }
 
 /* V3.7 (R-28) — hairline hygiene. A table's final-row rule no longer stacks
@@ -1401,4 +1417,74 @@ a.spec-link:hover {
   font-weight: 400;
   letter-spacing: -0.01em;
   color: var(--ink-2);
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.9 — rendering robustness (R-33 faithful markdown rendering, R-34
+ * mobile-fit and rhythm hardening, R-35 completed chart family; ADR-0016).
+ * Like V3.6's R-22–R-24 and V3.7's R-28, everything in this block corrects
+ * rendering DEFECTS, not period design choices, so it lives at base level /
+ * end-of-cascade and applies to every card on re-render regardless of
+ * frozen_at_version (the ADR-0011 retroactive precedent). The reading-layer
+ * rules (R-9/R-19, R-20, R-21) stay frozen and untouched. The .v3-9 canvas
+ * class is still emitted on 3.9.0+ cards for forward extensibility; the new
+ * chart primitives reuse the .canvas.v3-7 .chart contract via the class chain.
+ * ----------------------------------------------------------------------- */
+
+/* R-34 — one beat gap per card, measured for real. Only p:last-child was
+ * zeroed before, so a section ending in a list / table / chart / stat-grid
+ * ran 12–16px taller than a prose section and the beat rhythm wobbled.
+ * !important is deliberate: every version-scoped block margin
+ * (.canvas.v3-7 .chart, .stat-grid, .flashcards, …) outranks this reset and
+ * would otherwise each need a :last-child variant. */
+.canvas section > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* R-34 / R-13 — the cover join is 32pt from canvas top to the first line,
+ * regardless of the card's beat-gap variant (the beat gap governs the space
+ * BETWEEN beats, not the canvas edge). !important is deliberate: every
+ * beat-gap scope (v3-4/v3-5 × 48/64/96/120) would otherwise need its own
+ * first-of-type override. */
+.canvas section:first-of-type {
+  padding-top: var(--s-5) !important;
+}
+
+/* R-34 / R-13 — the cover stack's exact joins: title baseline → dek is the
+ * 12pt step (h1 carried 16px through V3.8), and dek → hero card top is 24pt
+ * (the hero's old 12px top margin always collapsed under the dek's margin, so
+ * the join measured 16px). Adjacent-margin collapse makes 24 the effective
+ * join whichever dek margin the card's version scope sets. */
+.canvas h1 {
+  margin-bottom: var(--s-2);
+}
+.canvas .hero {
+  margin-top: var(--s-4);
+}
+
+/* R-33 — quote attribution: the short source line under a blockquote.
+ * Caption-sized tertiary ink; declared with .canvas specificity so it beats
+ * the v3-1/v3-5 paragraph metrics above. */
+.canvas p.attrib {
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+
+/* R-33 — body-size list variants. The renderer used to stamp class="sources"
+ * on every list, shrinking checklists and anti-pattern lists to 13px fine
+ * print. Checklist (✓) and anti-pattern (✗) rows reuse the base li metrics;
+ * only their marker glyph differs. Numbered principles / process flows use
+ * <ol> with the existing tabular .marker. */
+.canvas ul.checklist .marker,
+.canvas ul.antipattern .marker {
+  min-width: 22px;
+}
+
+/* R-35 — the area chart's one permitted fill (the under-curve volume), at the
+ * 6% step: the grayscale contract allows no fill above 12% (R-30). Scoped to
+ * the same .chart contract the v3-7 charts use. */
+.canvas.v3-7 .chart .area {
+  fill: var(--g-06);
 }

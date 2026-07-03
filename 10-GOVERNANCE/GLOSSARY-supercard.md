@@ -30,7 +30,7 @@ multiple layers is defined here, with its canonical source layer cited.
 | Anchor block | A structurally emphatic block: stat-callout, pull-quote, key-takeaway, numbered-principle, or table-with-takeaway-row. Anchors give the reader re-entry landings. Counted in the per-length anchor budget (LENGTHS § L-5). | GRAMMAR § G-9 |
 | Content block | A non-anchor block carrying body content: standard-text, faq, code, or table-without-takeaway. | GRAMMAR § G-9 |
 | Hero | The Beat 1 bounded anchor — card-in-hero (border + radius + padding, no shadow — V3.6 R-22). Always one of the 1–3 bounded cards. | GRAMMAR (Hook beat), LENGTHS, RENDERING § R-22 |
-| Loft / lofted element | A block that sits in an elevated card shell (rounded, padded, shadowed). Hard cap of 1–3 lofted elements per Supercard; the hero is always one. | PRINCIPLES 4, RENDERING shadow system |
+| Loft / lofted element | A block set apart in a bounded card shell (rounded, hairline-bordered, padded — never shadowed since V3.6, R-22). Hard cap of 1–3 bounded cards per Supercard; the hero is always one. | PRINCIPLES 4, RENDERING § R-22 |
 | Beat | One of the seven narrative spine sections: Hook, Evidence, Mechanism, Comparison, Counter, Application, Close. Authoring scaffolding — the rendered card shows the beat name only. | GRAMMAR seven-beat spine |
 | Mode | The intent of a card request: `summary`, `briefing`, `deep-dive`, `reference`. Biases research depth, length variant, block selection, and redundancy posture. | PIPELINE modes |
 
@@ -51,6 +51,7 @@ multiple layers is defined here, with its canonical source layer cited.
 | Micro-folio | **Deprecated in V3.3.** The 11pt small-caps `BEAT N · BEAT-NAME · POSITION / TOTAL` label V3.1–V3.2 emitted at the top edge of every beat and the bottom edge of every card. R-10 (V3.3) prohibits emitting it on the rendered canvas — it leaked the author's seven-beat scaffold into the reader's view. The CSS class survives gated to dev-mode for renderer diagnostics; the React component is dev-only. | RENDERING § R-10 (V3.3) |
 | Eyebrow | A short editorial label above a beat's first block (e.g., `The medical study`). V3.3+: optional, naming the *content* — never the position. Beat numbers and counters are prohibited (R-10). | RENDERING § R-10 (V3.3), R-14 |
 | Dek | The subtitle below the title on the cover — the thesis sentence. Carries the load that mode badges and context chips would otherwise carry. 1 sentence preferred, 2 sentences hard cap. | RENDERING § R-13 |
+| Attribution | The short source line under a quote (`<p class="attrib">`, caption-sized tertiary ink). Required on pull-quotes; a longer follow-up after a quote is commentary and stays body prose. | RENDERING § R-33, V3.1 pull-quote rule |
 | Kicker | A short editorial label above the title or a section heading. Bound by R-14 (must earn its existence; ≤ 4 words). | RENDERING § R-14 |
 | Asterism rest | **Retired in V3.6 (R-24, supersedes R-11/G-10).** Was a centered `⁂` glyph mid-beat as a "rest the eye" device. Removed from all renders; the 64pt beat gap (R-15) now does that work, and a long content run breaks to an anchor or splits the beat (G-9). | RENDERING § R-24 (retired R-11/G-10) |
 | Section divider | The block that marks a beat boundary. Chapter break, not paragraph break. Never used between every section. | INDEX-block-library, GRAMMAR anti-patterns |

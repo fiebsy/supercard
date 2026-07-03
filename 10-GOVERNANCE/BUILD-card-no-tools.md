@@ -5,9 +5,9 @@
 | id | BUILD-card-no-tools |
 | type | guide |
 | era | atlas |
-| version | 3.8.0 |
+| version | 3.9.0 |
 | owner | derick |
-| updated | 2026-06-28 |
+| updated | 2026-07-03 |
 
 ---
 
@@ -109,14 +109,14 @@ the title; every other eyebrow opens its section.
 
 ## The stylesheet (paste verbatim)
 
-This is the flat, current (V3.7) stylesheet — the effective values a card renders
+This is the flat, current (V3.9) stylesheet — the effective values a card renders
 with. Paste it whole into the `<style>`; do not restate values elsewhere.
 
 ```css
 :root{
   color-scheme:only light;
   --w:#fff; --k:#000;
-  --g-12:rgba(0,0,0,.12); --g-30:rgba(0,0,0,.30); --g-60:rgba(0,0,0,.60);
+  --g-06:rgba(0,0,0,.06); --g-12:rgba(0,0,0,.12); --g-30:rgba(0,0,0,.30); --g-60:rgba(0,0,0,.60);
   --ink:#1a1a1a; --ink-2:#595959; --ink-3:#767676;   /* text-ink ladder — every step ≥ 4.5:1 on white */
   --rounded:ui-rounded,"SF Pro Rounded","SF Pro",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
@@ -124,14 +124,19 @@ with. Paste it whole into the `<style>`; do not restate values elsewhere.
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--w);font-family:var(--rounded);color:var(--ink);-webkit-font-smoothing:antialiased}
-.canvas{width:393px;margin:0 auto;background:var(--w);min-height:100vh;padding:0 16px var(--s-8)}
+/* overflow-wrap: nothing ever escapes the 393px canvas — long URLs and tokens wrap */
+.canvas{width:393px;margin:0 auto;background:var(--w);min-height:100vh;padding:0 16px var(--s-8);overflow-wrap:break-word}
 
 /* a beat is one section: 64pt symmetric gap, one hairline per boundary */
 section{padding:var(--s-7) 0;border-bottom:.5px solid var(--g-12)}
 section:last-of-type{border-bottom:none}
+/* the beat gap is ONE value: a trailing list/table/chart drops its bottom margin */
+section>:last-child{margin-bottom:0}
+/* the cover opens 32pt from the canvas top (the beat gap governs BETWEEN beats) */
+section:first-of-type{padding-top:var(--s-5)}
 
-/* cover */
-h1{font-size:40px;line-height:44px;font-weight:600;letter-spacing:-.02em;margin-bottom:var(--s-3)}
+/* cover — joins are exact: top 32 / title→dek 12 / dek→hero 24 */
+h1{font-size:40px;line-height:44px;font-weight:600;letter-spacing:-.02em;margin-bottom:var(--s-2)}
 .dek{font-size:17px;line-height:26px;font-weight:500;letter-spacing:-.01em;color:var(--ink-2);margin-bottom:var(--s-3)}
 
 /* section label — names CONTENT, never the beat; uppercase, the one positively-tracked role */
@@ -149,7 +154,7 @@ strong{font-weight:700;color:var(--ink)}   /* the ONE emphasis per block */
 em{font-style:italic}                       /* titles / foreign terms only — never emphasis */
 
 /* hero — the one bounded anchor: border + radius + padding, no shadow */
-.hero{background:var(--w);border:1px solid var(--g-12);border-radius:16px;padding:var(--s-5);margin:var(--s-2) 0 var(--s-3)}
+.hero{background:var(--w);border:1px solid var(--g-12);border-radius:16px;padding:var(--s-5);margin:var(--s-4) 0 var(--s-3)}
 .hero .hook{font-size:19px;line-height:26px;font-weight:500;letter-spacing:-.005em;color:var(--ink-2)}
 
 /* lists — checklist / numbered-principle */
@@ -170,9 +175,10 @@ li:last-child{border-bottom:none}
 .stat-grid .num{font-size:34px;line-height:38px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
 .stat-grid .cap{font-size:13px;line-height:18px;color:var(--ink-3);margin-top:2px}
 
-/* quote / pull-quote */
+/* quote / pull-quote — the short line after a quote is its attribution */
 blockquote{font-size:19px;line-height:26px;font-weight:500;letter-spacing:-.005em;color:var(--ink);border-left:2px solid var(--k);padding-left:var(--s-3);margin:var(--s-1) 0 var(--s-3)}
 blockquote.pull{font-size:24px;line-height:30px;font-weight:600;letter-spacing:-.012em}
+.attrib{font-size:13px;line-height:18px;letter-spacing:0;color:var(--ink-3)}
 
 /* code */
 pre{font-family:var(--mono);font-size:14px;line-height:22px;color:var(--k);background:rgba(0,0,0,.03);border:1px solid var(--g-12);border-radius:8px;padding:var(--s-2) var(--s-3);margin:var(--s-2) 0;overflow-x:auto}
@@ -186,6 +192,8 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 tr.focal td,tr.focal td strong{color:var(--k)}
 tr.takeaway-row td{color:var(--ink);font-weight:600}
 table tr:last-child td{border-bottom:none}
+/* timeline — a dated table; the date column is tabular and semibold */
+table.timeline td:first-child{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-3)}
 
 /* sources */
 .sources{padding-left:var(--s-3)}
@@ -231,16 +239,29 @@ emphasis** — never two per block.
 <!-- definition — the named term is the emphasis -->
 <p><span class="def-term">Retrieval at the edge of forgetting.</span> Recalling an item at the longest interval you can still answer strengthens memory more than re-reading.</p>
 
-<!-- numbered-principle / checklist — subordinate actions share one verb -->
+<!-- numbered-principle / process-flow — subordinate actions share one verb -->
 <ol>
   <li><span class="marker">1</span><span>Grade each recall honestly.</span></li>
   <li><span class="marker">2</span><span>One deck per topic.</span></li>
   <li><span class="marker">3</span><span>Review daily.</span></li>
 </ol>
 
-<!-- pull-quote (Close) / quote-as-evidence (Evidence·Counter) — verbatim, with attribution -->
+<!-- checklist — same rows, a ✓ marker instead of a numeral -->
+<ul>
+  <li><span class="marker">✓</span><span>Review before you would forget, not after.</span></li>
+  <li><span class="marker">✓</span><span>Keep answers to one sentence.</span></li>
+</ul>
+
+<!-- anti-pattern — the list of don'ts; ✗ marker -->
+<ul>
+  <li><span class="marker">✗</span><span>Rereading highlights instead of recalling.</span></li>
+  <li><span class="marker">✗</span><span>One giant deck for every subject.</span></li>
+</ul>
+
+<!-- pull-quote (Close) / quote-as-evidence (Evidence·Counter) — verbatim; the
+     attribution line is required and reads small in tertiary ink -->
 <blockquote class="pull">Memory is the residue of thought.</blockquote>
-<p class="sources"><span>Daniel Willingham</span></p>
+<p class="attrib">Daniel Willingham</p>
 
 <!-- table — ≥ 4 rows close with a bold Takeaway row; mark a focal data column `num` -->
 <table>
@@ -250,12 +271,40 @@ emphasis** — never two per block.
   <tr class="takeaway-row"><td>Spacing roughly doubles recall.</td><td class="num">2×</td></tr>
 </table>
 
-<!-- bar-chart — inline SVG, grayscale, exactly one focal bar at --ink -->
+<!-- timeline — a dated table; the date column carries class="timeline" styling -->
+<table class="timeline">
+  <tr><th>Year</th><th>Event</th></tr>
+  <tr><td>1885</td><td>Ebbinghaus charts the forgetting curve</td></tr>
+  <tr><td>1985</td><td>SuperMemo ships the first scheduler</td></tr>
+</table>
+
+<!-- bar-chart — inline SVG, grayscale, exactly one focal bar at --ink.
+     Horizontal bars when labels are words (they get a label lane). -->
 <div class="chart"><svg viewBox="0 0 320 160">
   <line x1="40" y1="140" x2="310" y2="140" stroke="rgba(0,0,0,.12)"/>
   <rect x="60"  y="80"  width="40" height="60"  fill="#767676"/>
   <rect x="140" y="40"  width="40" height="100" fill="#1a1a1a"/>  <!-- focal -->
   <rect x="220" y="100" width="40" height="40"  fill="#767676"/>
+</svg></div>
+
+<!-- column-chart — vertical bars for SHORT labels (≤ 8 chars: years, versions).
+     Same palette: series #767676, ONE focal column #1a1a1a, axis 12% gray. -->
+<div class="chart"><svg viewBox="0 0 320 170">
+  <line x1="0" y1="140" x2="320" y2="140" stroke="rgba(0,0,0,.12)"/>
+  <rect x="40"  y="90" width="48" height="50" rx="3" fill="#767676"/>
+  <rect x="136" y="40" width="48" height="100" rx="3" fill="#1a1a1a"/>  <!-- focal -->
+  <rect x="232" y="70" width="48" height="70" rx="3" fill="#767676"/>
+  <text x="64"  y="158" text-anchor="middle" font-size="11" fill="#767676">2019</text>
+  <text x="160" y="158" text-anchor="middle" font-size="11" fill="#767676">2022</text>
+  <text x="256" y="158" text-anchor="middle" font-size="11" fill="#767676">2025</text>
+</svg></div>
+
+<!-- area-chart — a line whose under-curve VOLUME is the point; the fill is the
+     one permitted fill, at 6% black. Keep edge labels anchored inward. -->
+<div class="chart"><svg viewBox="0 0 320 150">
+  <path d="M 10 130 L 10 100 L 110 80 L 210 50 L 310 30 L 310 130 Z" fill="rgba(0,0,0,.06)"/>
+  <polyline points="10,100 110,80 210,50 310,30" fill="none" stroke="#767676" stroke-width="2"/>
+  <circle cx="310" cy="30" r="5" fill="#1a1a1a"/>  <!-- focal -->
 </svg></div>
 
 <!-- flashcard-list — 5 to 10 Q/A pairs, the highest-yield recall items. No
@@ -342,6 +391,7 @@ Tool-less version of the gates. Any "no" means fix it, not ship it.
 7. **No scaffold** — no "Beat N", no "3 / 7" counter, no block-type label on the canvas? Each eyebrow names content and is distinct?
 8. **No em dash** in card text; the `.sources` marker is a middle dot.
 9. **Length** — block count in the mode's band (Mini 5–8 / Standard 10–14 / XL 18–25); split above 25.
+10. **Fit** — nothing escapes the 393px canvas: tables keep the fixed grid, long tokens wrap, chart text stays inside its `viewBox` (anchor edge labels inward), and every beat gap is the same height.
 
 Everything below this section — Principles, Grammar, Lengths, the Block library —
 is the reasoning and the full rule set behind these steps. Read on when you need
