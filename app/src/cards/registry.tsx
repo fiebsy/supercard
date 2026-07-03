@@ -34,6 +34,19 @@ export type CardEntry = {
 
 export const cards: CardEntry[] = [
   {
+    slug: "v39-rendering-robustness",
+    id: "CARD-2026-07-03-v39-rendering-robustness",
+    title: "Rendered as Written",
+    length: "standard",
+    mode: "briefing",
+    eyebrow: "Robustness",
+    version: "v3.9",
+    desc: "First card frozen at 3.9.0: the R-35 column + area charts, the R-33 checkmark checklists, numbered flows, and real quotes with attribution, and the R-34 measured fit — every beat gap identical, nothing escaping 393px.",
+    preview:
+      "Every catalogued block now renders as catalogued, and every card fits the canvas it ships on. The grammar always had the variety; the render layer was quietly flattening it into prose and fine print. V3.9 makes the renderer keep the catalogue's promises.",
+    htmlRender: "html/cards/CARD-2026-07-03-v39-rendering-robustness.html",
+  },
+  {
     slug: "v37-data-and-alignment",
     id: "CARD-2026-06-27-v37-data-and-alignment",
     title: "Data, Aligned",
