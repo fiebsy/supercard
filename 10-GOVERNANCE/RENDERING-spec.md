@@ -145,11 +145,11 @@ snap to +0.08.
 CSS stack:
 
 ```css
---rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+--rounded: ui-rounded, "SF Pro Rounded", "SF Pro", Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
 --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
 ```
 
-`ui-rounded` first — standardized CSS keyword that resolves to SF Pro Rounded on Apple platforms.
+`ui-rounded` first — standardized CSS keyword that resolves to SF Pro Rounded on Apple platforms. `Inter` is the preferred fallback where SF Pro Rounded isn't available (non-Apple platforms, when locally installed), ahead of the generic system stack.
 
 ## Spacing tokens (8pt baseline)
 

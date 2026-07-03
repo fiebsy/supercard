@@ -118,7 +118,7 @@ with. Paste it whole into the `<style>`; do not restate values elsewhere.
   --w:#fff; --k:#000;
   --g-06:rgba(0,0,0,.06); --g-12:rgba(0,0,0,.12); --g-30:rgba(0,0,0,.30); --g-60:rgba(0,0,0,.60);
   --ink:#1a1a1a; --ink-2:#595959; --ink-3:#767676;   /* text-ink ladder — every step ≥ 4.5:1 on white */
-  --rounded:ui-rounded,"SF Pro Rounded","SF Pro",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;
+  --rounded:ui-rounded,"SF Pro Rounded","SF Pro",Inter,-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
   --s-1:8px; --s-2:12px; --s-3:16px; --s-4:24px; --s-5:32px; --s-7:64px; --s-8:96px;
 }
