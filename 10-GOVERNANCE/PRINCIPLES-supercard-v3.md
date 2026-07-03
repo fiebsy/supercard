@@ -61,7 +61,7 @@ SF Pro Rounded for body and display, SF Mono for code and equations. The CSS key
 
 **Why it matters.** The rounded variant of SF Pro carries warmth that pure SF Pro doesn't — it reads as cognitive-prosthesis (a thinking aid) rather than corporate (a deliverable). That tonal difference is the entire reason a Supercard feels different from a slide deck.
 
-**How to apply.** Always declare the full font stack (`ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, ...`). Inline the font on the container, not via a Tailwind class.
+**How to apply.** Always declare the full font stack (`ui-rounded, "SF Pro Rounded", "SF Pro", Inter, -apple-system, BlinkMacSystemFont, system-ui, ...`) — Inter is the preferred fallback where SF Pro Rounded isn't available. Inline the font on the container, not via a Tailwind class.
 
 ## 7. Authoring friction is a feature
 

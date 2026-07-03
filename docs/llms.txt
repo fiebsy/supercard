@@ -170,7 +170,7 @@ with. Paste it whole into the `<style>`; do not restate values elsewhere.
   --w:#fff; --k:#000;
   --g-06:rgba(0,0,0,.06); --g-12:rgba(0,0,0,.12); --g-30:rgba(0,0,0,.30); --g-60:rgba(0,0,0,.60);
   --ink:#1a1a1a; --ink-2:#595959; --ink-3:#767676;   /* text-ink ladder — every step ≥ 4.5:1 on white */
-  --rounded:ui-rounded,"SF Pro Rounded","SF Pro",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;
+  --rounded:ui-rounded,"SF Pro Rounded","SF Pro",Inter,-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
   --s-1:8px; --s-2:12px; --s-3:16px; --s-4:24px; --s-5:32px; --s-7:64px; --s-8:96px;
 }
@@ -505,7 +505,7 @@ SF Pro Rounded for body and display, SF Mono for code and equations. The CSS key
 
 **Why it matters.** The rounded variant of SF Pro carries warmth that pure SF Pro doesn't — it reads as cognitive-prosthesis (a thinking aid) rather than corporate (a deliverable). That tonal difference is the entire reason a Supercard feels different from a slide deck.
 
-**How to apply.** Always declare the full font stack (`ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, ...`). Inline the font on the container, not via a Tailwind class.
+**How to apply.** Always declare the full font stack (`ui-rounded, "SF Pro Rounded", "SF Pro", Inter, -apple-system, BlinkMacSystemFont, system-ui, ...`) — Inter is the preferred fallback where SF Pro Rounded isn't available. Inline the font on the container, not via a Tailwind class.
 
 ### 7. Authoring friction is a feature
 
@@ -1468,11 +1468,11 @@ a beat.
 CSS stack:
 
 ```css
---rounded: ui-rounded, "SF Pro Rounded", "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+--rounded: ui-rounded, "SF Pro Rounded", "SF Pro", Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
 --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
 ```
 
-`ui-rounded` first — standardized CSS keyword that resolves to SF Pro Rounded on Apple platforms.
+`ui-rounded` first — standardized CSS keyword that resolves to SF Pro Rounded on Apple platforms. `Inter` is the preferred fallback where SF Pro Rounded isn't available (non-Apple platforms, when locally installed), ahead of the generic system stack.
 
 ### Spacing tokens (8pt baseline)
 
@@ -2262,7 +2262,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.9.0 · era atlas
-- **Revision:** `3c8bd46e309c` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `bd37530ca0b9` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-07-03
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -2272,13 +2272,13 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 Source files (the canonical markdown this view is generated from):
 
 - `00-INDEX/INDEX-supercard-v3.md` — updated 2026-07-03 — sha256 `cfd77fdfc52c184a12e64fba22fd7446ce85efe2640237442617321efd550b07`
-- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `ba9284d7322a594fe979571bd820bdea13c0b0e51bbc54a8f194c6042a1f3cd7`
-- `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-07-03 — sha256 `f1b7eef16825e039cddb7ddd73c7e792bff0b85371cfbcd6499305ddf6beb830`
+- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `1e89c3ae12cbf6703e8b0278c35109b809c9cd32e25b24c6b44e8e2428a2993e`
+- `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-07-03 — sha256 `47cb3d24a86289df28363171a47afdd41458d2640d90a977da26caf92fd19a0c`
 - `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-07-03 — sha256 `8953c6834bbff3d8e76ae6ae71d825c06919380009d8e2765531a06598c41296`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-07-03 — sha256 `0190e168406594039ca3e773866d9282695e663be7a0ff014bf406015f26eb95`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `64a812d2fa5aaaeaf6e258866dc3ece265a47a7194f85339587ca8302fd6a596`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-07-03 — sha256 `59b98bdc78e5a3cb09d0277395cb7b94c3895abdfb6530d44e0af80069cf8bbb`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-07-03 — sha256 `dad6706ea61ce0512beb72a6a4b1dd0de2856b8e24be82c3ca15dbfa279e229d`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `9bbb7552abe25d0de1e0308ea92d7766bb3949a9a9b6a52b18cc0d1c1ff22a69`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 
