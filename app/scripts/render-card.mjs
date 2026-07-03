@@ -257,6 +257,17 @@ function emitTable(block, cls = "") {
   for (const r of body) {
     const isTakeaway = /takeaway/i.test(r[0].replace(/\*/g, ""));
     const tag = isTakeaway ? ' class="takeaway-row"' : "";
+    // A `| **Takeaway** | verdict | |` row spans the verdict across the full
+    // grid (matching the React DataTable's colSpan cell) — a one-clause
+    // verdict crammed into one fixed-layout column is unreadable. A takeaway
+    // row carrying multiple content cells (verdict + focal value) keeps its
+    // cells, per the BUILD per-block pattern.
+    const rest = r.slice(1).map((c) => c.trim()).filter(Boolean);
+    if (isTakeaway && r[0].replace(/\*/g, "").trim().toLowerCase() === "takeaway" && rest.length === 1) {
+      const verdict = inlineMd(rest[0]).replace(/<\/?strong>/g, "");
+      html += `          <tr${tag}><td colspan="${head.length}"><strong>${verdict}</strong></td></tr>\n`;
+      continue;
+    }
     html += `          <tr${tag}>` + r.map((c) => `<td>${inlineMd(c)}</td>`).join("") + "</tr>\n";
   }
   html += "        </tbody>\n      </table>\n";
