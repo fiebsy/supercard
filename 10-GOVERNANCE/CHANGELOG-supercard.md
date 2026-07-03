@@ -5,13 +5,96 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.8.0 |
+| version | 3.9.0 |
 | owner | derick |
-| updated | 2026-06-28 |
+| updated | 2026-07-03 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
 
 ---
+
+## [3.9.0] — "Atlas" — 2026-07-03
+
+Rendering robustness. A measured audit of the published renders (headless
+Chromium at 393px: scroll-width, bounding boxes, SVG bboxes, per-section gap
+deltas) found the HTML renderer mis-rendering a large slice of the catalogued
+grammar — quotes as literal `>` text, equations as mangled paragraphs, every
+list as 13px footnote fine print, authoring notes leaking onto the canvas —
+plus real mobile overflow and a beat gap that wasn't actually uniform. V3.9
+fixes the render layer end to end and completes the chart family. Strict
+grayscale, single emphasis, frozen-at-version *content* — all intact.
+(ADR-0016.)
+
+### Added
+
+- **R-35 — completed chart family.** `column-chart` (vertical magnitude,
+  labels ≤ 8 chars) and `area-chart` (cumulative trend, `--g-06` under-curve
+  fill) enter both render paths — the last two catalogued-but-unbuilt chart
+  ids. Authoring grammar joins G-15's table (same `| label | value |` shape,
+  one bolded focal value).
+- **`app/src/chart-geometry.mjs`** — the one home of all four charts' math,
+  imported by `render-card.mjs` *and* `blocks.tsx` (with a hand-written
+  `.d.mts` type surface). The stewards'-log extraction trigger ("a third chart
+  type lands") fired; the parity contract is now structural.
+- **`<p class="attrib">`** — quote attribution: caption-sized tertiary ink
+  under a blockquote; the `Quote` primitive gains an `attrib` prop.
+
+### Fixed (R-33 — faithful markdown rendering; base level, retroactive)
+
+- Quote blocks render as real `<blockquote>`s (`.pull` on pull-quote) instead
+  of literal `&gt;` paragraphs.
+- Fenced code renders as `<pre>` instead of being shredded into `<p>``<code>`
+  fragments (the `equation` block was unreadable in a published card).
+- List treatment is selected by block id: `.sources` fine print is reserved
+  for `footnote-source`; `checklist` renders body-size ✓ rows (checkbox
+  `[ ]` shorthand stripped); `anti-pattern` ✗ rows; `numbered-principle` /
+  `process-flow` render `<ol>` with tabular numeral markers. Wrapped list
+  items fold their continuation lines instead of truncating mid-sentence.
+- `section-divider` renders on `section.divider`; `timeline` tables get their
+  catalogued tabular date column (ink stepped `--g-30` → `--ink-3`: dates are
+  text, R-20).
+- Scaffold never renders (I7): only beat / Sources / divider (or
+  `BLOCK-`-annotated) sections reach the canvas — four published cards had
+  their **Authoring notes** on the reader-visible canvas. The template's
+  `HERO-CARD:` line is dropped. Skips are logged loudly at render time.
+- The corner glyph is identity-only (`✦ berafoot.com`) — the old
+  `◆ supercard · vN.N atlas` glyph was version-and-era chrome R-10 itself
+  prohibits. Both render paths unified.
+
+### Fixed (R-34 — mobile fit and rhythm; base level, retroactive)
+
+- Viewport `width=393` (was `device-width`): the fixed 393px canvas no longer
+  overflows 375/390px phones — it scales.
+- `table-layout: fixed` + cell `overflow-wrap` promoted from the V3.7 scope to
+  base level: a 4-column table on the V3.5 card measured 370px in a 359px
+  column. R-29's design half (36% label column, `.num`) stays scoped.
+- `overflow-wrap: break-word` on the canvas — long-token/URL insurance,
+  inherited everywhere.
+- `section > :last-child` margin zeroed: sections ending in a list / table /
+  chart / stat-grid ran 12–16px taller than prose sections. Measured after:
+  every gap in every published card is exactly 97px (48pt cards) or 129px
+  (64pt cards), dividers excepted by design.
+- The cover stack snaps to R-13's exact joins: canvas top → first line 32pt
+  regardless of beat-gap variant; title → dek 12pt; dek → hero 24pt.
+- Chart text stays inside the viewBox: line/area edge labels anchor inward,
+  22px value headroom, bar labels clip to the 120px lane, wide values clamp to
+  the right edge, column labels clip to the column lane.
+
+### Changed
+
+- `RENDERER_VERSION` → `v3.9`; the canvas class chain adds `v3-9`.
+- The spec's own stale surfaces repaired: PRINCIPLES ADHD-gate Q6/Q7 no longer
+  *require* the asterism R-24 retired (the published spec contradicted
+  itself), Q10 no longer states the superseded R-9 tracking as universal; the
+  GRAMMAR decision tree drops its live asterism branch; the glossary's loft
+  definition stops saying "shadowed" (R-22).
+
+### Unchanged
+
+- Card markdown sources: zero content edits. The frozen-at-version *content*
+  guarantee holds; R-33/R-34 are view-layer defect repair under the ADR-0011
+  retroactive exception. The reading-layer rules (R-9/R-19, R-20, R-21) stay
+  frozen.
 
 ## [3.8.0] — "Atlas" — 2026-06-28
 

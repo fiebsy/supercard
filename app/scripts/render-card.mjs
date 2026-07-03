@@ -31,6 +31,12 @@ import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative, basename } from "node:path";
+import {
+  barChartGeometry,
+  lineChartGeometry,
+  columnChartGeometry,
+  areaChartGeometry,
+} from "../src/chart-geometry.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, "../..");
@@ -41,7 +47,7 @@ const CSS_PATH = resolve(repo, "app/src/supercard.css");
 
 // The renderer's own version — emitted as sc:renderer_version. Bump when the
 // emitted markup changes shape (not when a card's frozen_at_version changes).
-const RENDERER_VERSION = "v3.6";
+const RENDERER_VERSION = "v3.9";
 
 /* ---- small helpers ----------------------------------------------------- */
 
@@ -110,6 +116,7 @@ function canvasClasses(fm) {
   if (maj > 3 || (maj === 3 && min >= 6)) cls.push("v3-6");
   if (maj > 3 || (maj === 3 && min >= 7)) cls.push("v3-7");
   if (maj > 3 || (maj === 3 && min >= 8)) cls.push("v3-8");
+  if (maj > 3 || (maj === 3 && min >= 9)) cls.push("v3-9");
 
   // Beat-gap opt-outs/ins relative to the version default (R-15).
   const gap = (fm.beat_gap || "").trim();
@@ -147,11 +154,25 @@ function splitSections(body) {
   return out;
 }
 
+// Only beat sections, the Sources section, and section dividers render. Any
+// other `## ` section in the card — Authoring notes, gate results, migration
+// notes — is production scaffold and MUST NOT reach the reader (R-10, I7).
+// Through V3.8 the renderer rendered every section, which leaked one card's
+// authoring notes into its published render (fixed in V3.9, R-33).
+function isRenderableSection(sec) {
+  const h = sec.header;
+  if (/^beat\b/i.test(h) || /^sources\b/i.test(h) || /section divider/i.test(h)) return true;
+  // A section that explicitly carries a `BLOCK-…` annotation is content too.
+  return sec.lines.some((l) => /^`BLOCK-[a-z0-9-]+`/i.test(l.trim()));
+}
+
 // First non-blank line of a section is the `BLOCK-xxx` · eyebrow annotation.
 // The text after the middle dot IS the reader-facing eyebrow (R-14: names the
 // content, never the position, <= 4 words). Everything after is block body.
 function parseSection(sec) {
-  let blockId = "standard-text";
+  // A "## Sources" section defaults to the footnote-source block even when it
+  // carries no annotation — the aggregated-source list is its whole job.
+  let blockId = /^sources\b/i.test(sec.header) ? "footnote-source" : "standard-text";
   let eyebrow = "";
   let idx = 0;
   for (; idx < sec.lines.length; idx++) {
@@ -169,17 +190,31 @@ function parseSection(sec) {
 }
 
 // Group body lines into paragraph-ish units: blank lines separate, but a
-// markdown table (consecutive | … | lines) and list (- …) stay together.
+// markdown table (consecutive | … | lines), a list (- …), and a fenced code
+// block (``` … ```, blank lines included) each stay one chunk. Fences kept
+// whole here render as <pre> downstream (R-33) instead of being shredded into
+// paragraphs, which through V3.8 mangled every equation/code block.
 function chunk(lines) {
   const out = [];
   let buf = [];
+  let inFence = false;
   const flush = () => {
     if (buf.length) out.push(buf.join("\n").trim());
     buf = [];
   };
   for (const l of lines) {
-    if (isBlank(l)) flush();
-    else buf.push(l);
+    if (/^```/.test(l.trim())) {
+      if (!inFence) flush(); // fence opens its own chunk
+      buf.push(l);
+      if (inFence) flush(); // closing fence completes the chunk
+      inFence = !inFence;
+    } else if (inFence) {
+      buf.push(l); // blank lines inside a fence stay in the chunk
+    } else if (isBlank(l)) {
+      flush();
+    } else {
+      buf.push(l);
+    }
   }
   flush();
   return out.filter(Boolean);
@@ -200,7 +235,7 @@ function takeLeadingTile(chunks) {
   return ["", chunks];
 }
 
-function emitTable(block) {
+function emitTable(block, cls = "") {
   const rows = block
     .split(/\n/)
     .filter((l) => /^\|/.test(l) && !/^\|\s*-+/.test(l.replace(/\|/g, "|")))
@@ -215,7 +250,8 @@ function emitTable(block) {
   const data = rows.filter((r) => !r.every((c) => /^:?-+:?$/.test(c)));
   if (!data.length) return "";
   const [head, ...body] = data;
-  let html = "      <table>\n        <thead>\n          <tr>";
+  const attr = cls ? ` class="${cls}"` : "";
+  let html = `      <table${attr}>\n        <thead>\n          <tr>`;
   html += head.map((h) => `<th>${inlineMd(h)}</th>`).join("");
   html += "</tr>\n        </thead>\n        <tbody>\n";
   for (const r of body) {
@@ -233,7 +269,6 @@ function emitTable(block) {
  * geometry here is duplicated verbatim in app/src/blocks.tsx so a React card
  * and its HTML twin stay pixel-identical (the parity contract). */
 
-const round1 = (x) => Math.round(x * 10) / 10;
 const isSepLine = (l) => /-/.test(l) && /^[|\s:-]+$/.test(l.trim());
 
 // Raw cell matrix for a markdown-table chunk (separator rows already dropped).
@@ -262,49 +297,65 @@ function chartItems(block) {
   });
 }
 
+// The SVG serializers below consume app/src/chart-geometry.mjs — the one home
+// of the chart math (R-35). blocks.tsx maps the same geometry to JSX, so the
+// HTML twin and the React card stay the same pixels without duplicated math.
+
 function barChartSvg(items) {
-  const W = 361, labelW = 120, padR = 8, rowH = 34, barH = 20, valueW = 38;
-  const n = items.length;
-  const H = n * rowH + 4;
-  const max = Math.max(...items.map((d) => d.value), 0) || 1;
-  const barAreaW = W - labelW - padR - valueW;
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="bar chart">`;
-  items.forEach((d, i) => {
-    const cy = i * rowH + rowH / 2;
-    const barW = Math.max(2, (d.value / max) * barAreaW);
-    const by = i * rowH + (rowH - barH) / 2;
-    const f = d.focal ? " focal" : "";
-    s += `<text class="c-label" x="0" y="${cy}" dominant-baseline="middle">${escapeHtml(d.label)}</text>`;
-    s += `<rect class="bar${f}" x="${labelW}" y="${by}" width="${round1(barW)}" height="${barH}" rx="3"/>`;
-    s += `<text class="c-value${f}" x="${round1(labelW + barW + 6)}" y="${cy}" dominant-baseline="middle">${escapeHtml(d.display)}</text>`;
-  });
+  const g = barChartGeometry(items);
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="bar chart">`;
+  for (const r of g.rows) {
+    const f = r.focal ? " focal" : "";
+    s += `<text class="c-label" x="${r.labelX}" y="${r.cy}" dominant-baseline="middle">${escapeHtml(r.label)}</text>`;
+    s += `<rect class="bar${f}" x="${r.barX}" y="${r.barY}" width="${r.barW}" height="${r.barH}" rx="3"/>`;
+    s += `<text class="c-value${f}" x="${r.valueX}" y="${r.cy}" dominant-baseline="middle">${escapeHtml(r.display)}</text>`;
+  }
   return s + `</svg>`;
 }
 
 function lineChartSvg(items) {
-  const W = 361, H = 168, padL = 10, padR = 10, padT = 18, padB = 30;
-  const n = items.length;
-  const plotW = W - padL - padR;
-  const plotH = H - padT - padB;
-  const vals = items.map((d) => d.value);
-  const min = Math.min(...vals), max = Math.max(...vals);
-  const range = max - min || 1;
-  const x = (i) => padL + (n === 1 ? plotW / 2 : (i / (n - 1)) * plotW);
-  const y = (v) => padT + (1 - (v - min) / range) * plotH;
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="line chart">`;
-  for (let g = 0; g <= 2; g++) {
-    const gy = round1(padT + (g / 2) * plotH);
-    s += `<line class="grid" x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}"/>`;
+  const g = lineChartGeometry(items);
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="line chart">`;
+  for (const gl of g.grid) {
+    s += `<line class="grid" x1="${gl.x1}" y1="${gl.y}" x2="${gl.x2}" y2="${gl.y}"/>`;
   }
-  const pts = items.map((d, i) => `${round1(x(i))},${round1(y(d.value))}`).join(" ");
-  s += `<polyline class="series" points="${pts}"/>`;
-  items.forEach((d, i) => {
-    const f = d.focal ? " focal" : "";
-    const px = round1(x(i)), py = round1(y(d.value));
-    s += `<circle class="dot${f}" cx="${px}" cy="${py}" r="${d.focal ? 5 : 4}"/>`;
-    s += `<text class="c-value${f}" x="${px}" y="${round1(py - 9)}" text-anchor="middle">${escapeHtml(d.display)}</text>`;
-    s += `<text class="c-label" x="${px}" y="${H - 8}" text-anchor="middle">${escapeHtml(d.label)}</text>`;
-  });
+  s += `<polyline class="series" points="${g.polyline}"/>`;
+  for (const p of g.points) {
+    const f = p.focal ? " focal" : "";
+    s += `<circle class="dot${f}" cx="${p.x}" cy="${p.y}" r="${p.r}"/>`;
+    s += `<text class="c-value${f}" x="${p.x}" y="${p.valueY}" text-anchor="${p.anchor}">${escapeHtml(p.display)}</text>`;
+    s += `<text class="c-label" x="${p.x}" y="${p.labelY}" text-anchor="${p.anchor}">${escapeHtml(p.label)}</text>`;
+  }
+  return s + `</svg>`;
+}
+
+function columnChartSvg(items) {
+  const g = columnChartGeometry(items);
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="column chart">`;
+  s += `<line class="axis" x1="0" y1="${g.baseY}" x2="${g.W}" y2="${g.baseY}"/>`;
+  for (const c of g.cols) {
+    const f = c.focal ? " focal" : "";
+    s += `<rect class="bar${f}" x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" rx="3"/>`;
+    s += `<text class="c-value${f}" x="${c.cx}" y="${c.valueY}" text-anchor="middle">${escapeHtml(c.display)}</text>`;
+    s += `<text class="c-label" x="${c.cx}" y="${c.labelY}" text-anchor="middle">${escapeHtml(c.label)}</text>`;
+  }
+  return s + `</svg>`;
+}
+
+function areaChartSvg(items) {
+  const g = areaChartGeometry(items);
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="area chart">`;
+  for (const gl of g.grid) {
+    s += `<line class="grid" x1="${gl.x1}" y1="${gl.y}" x2="${gl.x2}" y2="${gl.y}"/>`;
+  }
+  s += `<path class="area" d="${g.areaPath}"/>`;
+  s += `<polyline class="series" points="${g.polyline}"/>`;
+  for (const p of g.points) {
+    const f = p.focal ? " focal" : "";
+    s += `<circle class="dot${f}" cx="${p.x}" cy="${p.y}" r="${p.r}"/>`;
+    s += `<text class="c-value${f}" x="${p.x}" y="${p.valueY}" text-anchor="${p.anchor}">${escapeHtml(p.display)}</text>`;
+    s += `<text class="c-label" x="${p.x}" y="${p.labelY}" text-anchor="${p.anchor}">${escapeHtml(p.label)}</text>`;
+  }
   return s + `</svg>`;
 }
 
@@ -317,7 +368,11 @@ function emitChartSection(sec, kind) {
     if (/^\|/.test(c)) {
       const items = chartItems(c);
       if (items.length) {
-        const svg = kind === "line" ? lineChartSvg(items) : barChartSvg(items);
+        const svg =
+          kind === "line" ? lineChartSvg(items)
+          : kind === "column" ? columnChartSvg(items)
+          : kind === "area" ? areaChartSvg(items)
+          : barChartSvg(items);
         html += `      <div class="chart">${svg}</div>\n`;
       }
     } else {
@@ -385,19 +440,80 @@ function emitFlashcards(sec) {
   return html + "    </section>\n";
 }
 
-function emitList(block, cls) {
-  const items = block
-    .split(/\n/)
-    .filter((l) => /^[-*]\s+/.test(l))
-    .map((l) => l.replace(/^[-*]\s+/, "").trim());
+/*
+ * List rendering is selected by BLOCK id (R-33). Through V3.8 every list was
+ * emitted as the 13px footnote `.sources` style — so checklists rendered as
+ * fine print with literal "[ ]" markers. Each list-bearing block now gets its
+ * catalogued treatment:
+ *
+ *   footnote-source  → <ul class="sources">          (the only fine-print list)
+ *   checklist        → body-size rows, ✓ marker      ("[ ]"/"[x]" stripped)
+ *   anti-pattern     → body-size rows, ✗ marker
+ *   numbered-principle / process-flow
+ *                    → <ol>, tabular numeral markers  (also parses "1." lines)
+ *   anything else    → plain body-size rows, no marker
+ */
+const LIST_STYLES = {
+  "footnote-source": { tag: "ul", cls: "sources" },
+  sources: { tag: "ul", cls: "sources" },
+  checklist: { tag: "ul", cls: "checklist", marker: () => "✓" },
+  "anti-pattern": { tag: "ul", cls: "antipattern", marker: () => "✗" },
+  "numbered-principle": { tag: "ol", marker: (i) => String(i + 1) },
+  "process-flow": { tag: "ol", marker: (i) => String(i + 1) },
+};
+
+function emitList(block, blockId) {
+  // Fold wrapped (indented continuation) lines into their item — dropping
+  // them truncated multi-line items mid-sentence through V3.8.
+  const items = [];
+  for (const l of block.split(/\n/)) {
+    if (/^([-*]|\d+\.)\s+/.test(l)) {
+      items.push(
+        l
+          .replace(/^([-*]|\d+\.)\s+/, "")
+          .replace(/^\[[ xX]\]\s*/, "") // checkbox syntax is authoring shorthand
+          .trim(),
+      );
+    } else if (!isBlank(l) && items.length) {
+      items[items.length - 1] += " " + l.trim();
+    }
+  }
   if (!items.length) return "";
-  const c = cls ? ` class="${cls}"` : "";
+  const style = LIST_STYLES[blockId] || { tag: "ul" };
+  const cls = style.cls ? ` class="${style.cls}"` : "";
+  const li = (it, i) =>
+    style.marker
+      ? `        <li><span class="marker">${style.marker(i)}</span><span>${inlineMd(it)}</span></li>`
+      : `        <li>${inlineMd(it)}</li>`;
   return (
-    `      <ul${c}>\n` +
-    items.map((it) => `        <li>${inlineMd(it)}</li>`).join("\n") +
-    `\n      </ul>\n`
+    `      <${style.tag}${cls}>\n` +
+    items.map(li).join("\n") +
+    `\n      </${style.tag}>\n`
   );
 }
+
+// A fenced ``` chunk → <pre>, verbatim and escaped (no inline markdown).
+const isFence = (c) => /^```/.test(c.trim());
+function emitPre(c) {
+  const inner = c
+    .split(/\n/)
+    .filter((l) => !/^```/.test(l.trim()))
+    .join("\n");
+  return `      <pre>${escapeHtml(inner)}</pre>\n`;
+}
+
+// A `> …` chunk → <blockquote> (class "pull" on the pull-quote block).
+const isQuote = (c) => /^>\s?/.test(c);
+function emitQuote(c, blockId) {
+  const text = c.replace(/^>\s?/gm, "").replace(/\n/g, " ").trim();
+  const cls = blockId === "pull-quote" ? ' class="pull"' : "";
+  return `      <blockquote${cls}>${inlineMd(text)}</blockquote>\n`;
+}
+
+// The short line following a quote is its attribution (required on
+// pull-quotes, V3.1). Longer follow-ups are commentary and stay body prose.
+const isAttribution = (c) =>
+  !isQuote(c) && !/^\|/.test(c) && !/\*\*/.test(c) && c.split(/\s+/).length <= 12 && !/\n/.test(c);
 
 const isStandaloneBold = (c) => /^\*\*[^*]+\*\*$/.test(c.trim());
 const boldInner = (c) => c.trim().replace(/^\*\*([^*]+)\*\*$/, "$1");
@@ -412,6 +528,7 @@ function emitHero(title, sec) {
   for (const c of chunks) {
     if (/^###\s+/.test(c)) dek = c.replace(/^###\s+/, "").trim();
     else if (/^>\s+/.test(c)) hook = c.replace(/^>\s*/gm, "").replace(/\n/g, " ").trim();
+    else if (/^HERO-CARD:/i.test(c)) continue; // template scaffold, never rendered (I7)
     else rest.push(c);
   }
   let html = "    <section>\n";
@@ -433,9 +550,17 @@ function emitGeneric(sec, { statMode = false, takeawayMode = false } = {}) {
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   let usedTakeaway = false;
+  const isQuoteBlock = sec.blockId === "pull-quote" || sec.blockId === "quote-as-evidence";
+  let prevWasQuote = false;
   for (const c of chunks) {
-    if (/^\|/.test(c)) html += emitTable(c);
-    else if (/^[-*]\s+/m.test(c)) html += emitList(c, "sources");
+    const afterQuote = prevWasQuote;
+    prevWasQuote = false;
+    if (isFence(c)) html += emitPre(c);
+    else if (isQuote(c)) {
+      html += emitQuote(c, sec.blockId);
+      prevWasQuote = isQuoteBlock;
+    } else if (/^\|/.test(c)) html += emitTable(c, sec.blockId === "timeline" ? "timeline" : "");
+    else if (/^([-*]|\d+\.)\s+/m.test(c)) html += emitList(c, sec.blockId);
     else if (isStandaloneBold(c)) {
       if (takeawayMode && !usedTakeaway) {
         html += `      <p class="takeaway"><strong>${inlineMd(boldInner(c)).replace(/<\/?strong>/g, "")}</strong></p>\n`;
@@ -445,12 +570,28 @@ function emitGeneric(sec, { statMode = false, takeawayMode = false } = {}) {
       } else {
         html += `      <p>${inlineMd(c)}</p>\n`;
       }
+    } else if (afterQuote && isAttribution(c)) {
+      html += `      <p class="attrib">${inlineMd(c)}</p>\n`;
     } else {
       html += `      <p>${inlineMd(c)}</p>\n`;
     }
   }
   html += "    </section>\n";
   return html;
+}
+
+// section-divider — the beat-boundary block (chapter break, not paragraph
+// break). Renders on its own `.divider` section so the breathier symmetric
+// padding applies; the content is the divider's one orienting line.
+function emitDivider(sec) {
+  let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
+  let html = '    <section class="divider">\n';
+  html += emitEyebrow(sec.eyebrow);
+  html += tileHtml;
+  for (const c of chunks) {
+    html += `      <p>${inlineMd(c)}</p>\n`;
+  }
+  return html + "    </section>\n";
 }
 
 function emitSection(title, sec) {
@@ -468,6 +609,12 @@ function emitSection(title, sec) {
       return emitChartSection(sec, "bar");
     case "line-chart":
       return emitChartSection(sec, "line");
+    case "column-chart":
+      return emitChartSection(sec, "column");
+    case "area-chart":
+      return emitChartSection(sec, "area");
+    case "section-divider":
+      return emitDivider(sec);
     case "key-takeaway":
       return emitGeneric(sec, { takeawayMode: true });
     default:
@@ -488,7 +635,13 @@ function renderCard(cardPath) {
   const ver = versionLabel(fm);
   const sourceRel = relative(repo, cardPath);
 
-  const sections = splitSections(body)
+  const allSections = splitSections(body);
+  const skipped = allSections.filter((s) => !isRenderableSection(s));
+  for (const s of skipped) {
+    console.log(`[render]   scaffold section skipped (never rendered): "## ${s.header}"`);
+  }
+  const sections = allSections
+    .filter(isRenderableSection)
     .map((sec) => emitSection(title, parseSection(sec)))
     .join("\n");
 
@@ -505,7 +658,7 @@ function renderCard(cardPath) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=393, initial-scale=1">
 <meta name="color-scheme" content="only light">
 <title>${escapeHtml(title)} — Supercard ${ver.toUpperCase()}</title>
 ${meta}
@@ -522,7 +675,7 @@ ${css.trim()}
 
 ${sections}
   </div>
-  <div class="glyph">◆ supercard · ${ver} atlas</div>
+  <div class="glyph">✦ berafoot.com</div>
 </body>
 </html>
 `;

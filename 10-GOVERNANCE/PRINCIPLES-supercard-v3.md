@@ -5,9 +5,9 @@
 | id | PRINCIPLES-supercard-v3 |
 | type | governance |
 | era | atlas |
-| version | 3.5.0 |
+| version | 3.9.0 |
 | owner | derick |
-| updated | 2026-06-25 |
+| updated | 2026-07-03 |
 
 The 14 foundational principles of the Supercard format (10 V3.0 + 2 V3.1 + 2 V3.4). PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
 
@@ -148,11 +148,11 @@ Runs alongside the screenshot test on every V3.1+ card before publication. Ten q
 3. Does reading only the bold clauses top-to-bottom yield the card's thesis?
 4. Does no `standard-text` block exceed 75 words or 4 sentences?
 5. Does the anchor-to-content ratio per beat sit between 1:2 and 1:4?
-6. Does no beat contain more than 4 consecutive content blocks without an asterism or anchor break?
-7. Does every beat of ≥ 5 blocks contain at least one centered asterism (⁂)?
+6. Does no beat contain more than 4 consecutive content blocks without an anchor break? *(The mid-beat asterism was the alternative break through V3.5 — retired in V3.6 by R-24.)*
+7. Does every beat of ≥ 5 blocks break its content run with an anchor, or split into two beats (G-9)? *(Through V3.5 this question required a centered asterism (⁂); R-24 retired the glyph — never author one.)*
 8. Is the rendered canvas free of scaffold chrome — no `BEAT N`, no `N / TOTAL` counters, no renderer-version footer (R-10 V3.3)?
 9. Is every `stat-callout` accompanied by a verbal-anchor sentence, and every `table` of ≥ 4 rows closed by a bolded takeaway row?
-10. Does body text render at 17pt SF Pro Rounded, 26pt leading, +0.5pt tracking, left-aligned ragged-right, with no italic-for-emphasis runs?
+10. Does body text render at 17pt SF Pro Rounded, 26pt leading, left-aligned ragged-right, with no italic-for-emphasis runs — tracking per the card's frozen version (R-9 for V3.1–V3.4, R-19's −0.01em for V3.5+)?
 11. **(V3.4+)** Does every prose block clear the readability floor — Flesch–Kincaid grade ≤ 9, average sentence ≤ 20 words?
 12. **(V3.4+)** Does every prose block sit at or below the mobile paragraph cap — ≤ 3 sentences and ≤ 60 words?
 

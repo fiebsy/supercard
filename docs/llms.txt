@@ -161,14 +161,14 @@ the title; every other eyebrow opens its section.
 
 ### The stylesheet (paste verbatim)
 
-This is the flat, current (V3.7) stylesheet — the effective values a card renders
+This is the flat, current (V3.9) stylesheet — the effective values a card renders
 with. Paste it whole into the `<style>`; do not restate values elsewhere.
 
 ```css
 :root{
   color-scheme:only light;
   --w:#fff; --k:#000;
-  --g-12:rgba(0,0,0,.12); --g-30:rgba(0,0,0,.30); --g-60:rgba(0,0,0,.60);
+  --g-06:rgba(0,0,0,.06); --g-12:rgba(0,0,0,.12); --g-30:rgba(0,0,0,.30); --g-60:rgba(0,0,0,.60);
   --ink:#1a1a1a; --ink-2:#595959; --ink-3:#767676;   /* text-ink ladder — every step ≥ 4.5:1 on white */
   --rounded:ui-rounded,"SF Pro Rounded","SF Pro",-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",Roboto,sans-serif;
   --mono:ui-monospace,"SF Mono",Menlo,Monaco,Consolas,monospace;
@@ -176,14 +176,19 @@ with. Paste it whole into the `<style>`; do not restate values elsewhere.
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--w);font-family:var(--rounded);color:var(--ink);-webkit-font-smoothing:antialiased}
-.canvas{width:393px;margin:0 auto;background:var(--w);min-height:100vh;padding:0 16px var(--s-8)}
+/* overflow-wrap: nothing ever escapes the 393px canvas — long URLs and tokens wrap */
+.canvas{width:393px;margin:0 auto;background:var(--w);min-height:100vh;padding:0 16px var(--s-8);overflow-wrap:break-word}
 
 /* a beat is one section: 64pt symmetric gap, one hairline per boundary */
 section{padding:var(--s-7) 0;border-bottom:.5px solid var(--g-12)}
 section:last-of-type{border-bottom:none}
+/* the beat gap is ONE value: a trailing list/table/chart drops its bottom margin */
+section>:last-child{margin-bottom:0}
+/* the cover opens 32pt from the canvas top (the beat gap governs BETWEEN beats) */
+section:first-of-type{padding-top:var(--s-5)}
 
-/* cover */
-h1{font-size:40px;line-height:44px;font-weight:600;letter-spacing:-.02em;margin-bottom:var(--s-3)}
+/* cover — joins are exact: top 32 / title→dek 12 / dek→hero 24 */
+h1{font-size:40px;line-height:44px;font-weight:600;letter-spacing:-.02em;margin-bottom:var(--s-2)}
 .dek{font-size:17px;line-height:26px;font-weight:500;letter-spacing:-.01em;color:var(--ink-2);margin-bottom:var(--s-3)}
 
 /* section label — names CONTENT, never the beat; uppercase, the one positively-tracked role */
@@ -201,7 +206,7 @@ strong{font-weight:700;color:var(--ink)}   /* the ONE emphasis per block */
 em{font-style:italic}                       /* titles / foreign terms only — never emphasis */
 
 /* hero — the one bounded anchor: border + radius + padding, no shadow */
-.hero{background:var(--w);border:1px solid var(--g-12);border-radius:16px;padding:var(--s-5);margin:var(--s-2) 0 var(--s-3)}
+.hero{background:var(--w);border:1px solid var(--g-12);border-radius:16px;padding:var(--s-5);margin:var(--s-4) 0 var(--s-3)}
 .hero .hook{font-size:19px;line-height:26px;font-weight:500;letter-spacing:-.005em;color:var(--ink-2)}
 
 /* lists — checklist / numbered-principle */
@@ -222,9 +227,10 @@ li:last-child{border-bottom:none}
 .stat-grid .num{font-size:34px;line-height:38px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
 .stat-grid .cap{font-size:13px;line-height:18px;color:var(--ink-3);margin-top:2px}
 
-/* quote / pull-quote */
+/* quote / pull-quote — the short line after a quote is its attribution */
 blockquote{font-size:19px;line-height:26px;font-weight:500;letter-spacing:-.005em;color:var(--ink);border-left:2px solid var(--k);padding-left:var(--s-3);margin:var(--s-1) 0 var(--s-3)}
 blockquote.pull{font-size:24px;line-height:30px;font-weight:600;letter-spacing:-.012em}
+.attrib{font-size:13px;line-height:18px;letter-spacing:0;color:var(--ink-3)}
 
 /* code */
 pre{font-family:var(--mono);font-size:14px;line-height:22px;color:var(--k);background:rgba(0,0,0,.03);border:1px solid var(--g-12);border-radius:8px;padding:var(--s-2) var(--s-3);margin:var(--s-2) 0;overflow-x:auto}
@@ -238,6 +244,8 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 tr.focal td,tr.focal td strong{color:var(--k)}
 tr.takeaway-row td{color:var(--ink);font-weight:600}
 table tr:last-child td{border-bottom:none}
+/* timeline — a dated table; the date column is tabular and semibold */
+table.timeline td:first-child{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink-3)}
 
 /* sources */
 .sources{padding-left:var(--s-3)}
@@ -283,16 +291,29 @@ emphasis** — never two per block.
 <!-- definition — the named term is the emphasis -->
 <p><span class="def-term">Retrieval at the edge of forgetting.</span> Recalling an item at the longest interval you can still answer strengthens memory more than re-reading.</p>
 
-<!-- numbered-principle / checklist — subordinate actions share one verb -->
+<!-- numbered-principle / process-flow — subordinate actions share one verb -->
 <ol>
   <li><span class="marker">1</span><span>Grade each recall honestly.</span></li>
   <li><span class="marker">2</span><span>One deck per topic.</span></li>
   <li><span class="marker">3</span><span>Review daily.</span></li>
 </ol>
 
-<!-- pull-quote (Close) / quote-as-evidence (Evidence·Counter) — verbatim, with attribution -->
+<!-- checklist — same rows, a ✓ marker instead of a numeral -->
+<ul>
+  <li><span class="marker">✓</span><span>Review before you would forget, not after.</span></li>
+  <li><span class="marker">✓</span><span>Keep answers to one sentence.</span></li>
+</ul>
+
+<!-- anti-pattern — the list of don'ts; ✗ marker -->
+<ul>
+  <li><span class="marker">✗</span><span>Rereading highlights instead of recalling.</span></li>
+  <li><span class="marker">✗</span><span>One giant deck for every subject.</span></li>
+</ul>
+
+<!-- pull-quote (Close) / quote-as-evidence (Evidence·Counter) — verbatim; the
+     attribution line is required and reads small in tertiary ink -->
 <blockquote class="pull">Memory is the residue of thought.</blockquote>
-<p class="sources"><span>Daniel Willingham</span></p>
+<p class="attrib">Daniel Willingham</p>
 
 <!-- table — ≥ 4 rows close with a bold Takeaway row; mark a focal data column `num` -->
 <table>
@@ -302,12 +323,40 @@ emphasis** — never two per block.
   <tr class="takeaway-row"><td>Spacing roughly doubles recall.</td><td class="num">2×</td></tr>
 </table>
 
-<!-- bar-chart — inline SVG, grayscale, exactly one focal bar at --ink -->
+<!-- timeline — a dated table; the date column carries class="timeline" styling -->
+<table class="timeline">
+  <tr><th>Year</th><th>Event</th></tr>
+  <tr><td>1885</td><td>Ebbinghaus charts the forgetting curve</td></tr>
+  <tr><td>1985</td><td>SuperMemo ships the first scheduler</td></tr>
+</table>
+
+<!-- bar-chart — inline SVG, grayscale, exactly one focal bar at --ink.
+     Horizontal bars when labels are words (they get a label lane). -->
 <div class="chart"><svg viewBox="0 0 320 160">
   <line x1="40" y1="140" x2="310" y2="140" stroke="rgba(0,0,0,.12)"/>
   <rect x="60"  y="80"  width="40" height="60"  fill="#767676"/>
   <rect x="140" y="40"  width="40" height="100" fill="#1a1a1a"/>  <!-- focal -->
   <rect x="220" y="100" width="40" height="40"  fill="#767676"/>
+</svg></div>
+
+<!-- column-chart — vertical bars for SHORT labels (≤ 8 chars: years, versions).
+     Same palette: series #767676, ONE focal column #1a1a1a, axis 12% gray. -->
+<div class="chart"><svg viewBox="0 0 320 170">
+  <line x1="0" y1="140" x2="320" y2="140" stroke="rgba(0,0,0,.12)"/>
+  <rect x="40"  y="90" width="48" height="50" rx="3" fill="#767676"/>
+  <rect x="136" y="40" width="48" height="100" rx="3" fill="#1a1a1a"/>  <!-- focal -->
+  <rect x="232" y="70" width="48" height="70" rx="3" fill="#767676"/>
+  <text x="64"  y="158" text-anchor="middle" font-size="11" fill="#767676">2019</text>
+  <text x="160" y="158" text-anchor="middle" font-size="11" fill="#767676">2022</text>
+  <text x="256" y="158" text-anchor="middle" font-size="11" fill="#767676">2025</text>
+</svg></div>
+
+<!-- area-chart — a line whose under-curve VOLUME is the point; the fill is the
+     one permitted fill, at 6% black. Keep edge labels anchored inward. -->
+<div class="chart"><svg viewBox="0 0 320 150">
+  <path d="M 10 130 L 10 100 L 110 80 L 210 50 L 310 30 L 310 130 Z" fill="rgba(0,0,0,.06)"/>
+  <polyline points="10,100 110,80 210,50 310,30" fill="none" stroke="#767676" stroke-width="2"/>
+  <circle cx="310" cy="30" r="5" fill="#1a1a1a"/>  <!-- focal -->
 </svg></div>
 
 <!-- flashcard-list — 5 to 10 Q/A pairs, the highest-yield recall items. No
@@ -394,6 +443,7 @@ Tool-less version of the gates. Any "no" means fix it, not ship it.
 7. **No scaffold** — no "Beat N", no "3 / 7" counter, no block-type label on the canvas? Each eyebrow names content and is distinct?
 8. **No em dash** in card text; the `.sources` marker is a middle dot.
 9. **Length** — block count in the mode's band (Mini 5–8 / Standard 10–14 / XL 18–25); split above 25.
+10. **Fit** — nothing escapes the 393px canvas: tables keep the fixed grid, long tokens wrap, chart text stays inside its `viewBox` (anchor edge labels inward), and every beat gap is the same height.
 
 Everything below this section — Principles, Grammar, Lengths, the Block library —
 is the reasoning and the full rule set behind these steps. Read on when you need
@@ -542,11 +592,11 @@ Runs alongside the screenshot test on every V3.1+ card before publication. Ten q
 3. Does reading only the bold clauses top-to-bottom yield the card's thesis?
 4. Does no `standard-text` block exceed 75 words or 4 sentences?
 5. Does the anchor-to-content ratio per beat sit between 1:2 and 1:4?
-6. Does no beat contain more than 4 consecutive content blocks without an asterism or anchor break?
-7. Does every beat of ≥ 5 blocks contain at least one centered asterism (⁂)?
+6. Does no beat contain more than 4 consecutive content blocks without an anchor break? *(The mid-beat asterism was the alternative break through V3.5 — retired in V3.6 by R-24.)*
+7. Does every beat of ≥ 5 blocks break its content run with an anchor, or split into two beats (G-9)? *(Through V3.5 this question required a centered asterism (⁂); R-24 retired the glyph — never author one.)*
 8. Is the rendered canvas free of scaffold chrome — no `BEAT N`, no `N / TOTAL` counters, no renderer-version footer (R-10 V3.3)?
 9. Is every `stat-callout` accompanied by a verbal-anchor sentence, and every `table` of ≥ 4 rows closed by a bolded takeaway row?
-10. Does body text render at 17pt SF Pro Rounded, 26pt leading, +0.5pt tracking, left-aligned ragged-right, with no italic-for-emphasis runs?
+10. Does body text render at 17pt SF Pro Rounded, 26pt leading, left-aligned ragged-right, with no italic-for-emphasis runs — tracking per the card's frozen version (R-9 for V3.1–V3.4, R-19's −0.01em for V3.5+)?
 11. **(V3.4+)** Does every prose block clear the readability floor — Flesch–Kincaid grade ≤ 9, average sentence ≤ 20 words?
 12. **(V3.4+)** Does every prose block sit at or below the mobile paragraph cap — ≤ 3 sentences and ≤ 60 words?
 
@@ -642,9 +692,11 @@ Is the content a DISTRIBUTION?
 Is the content STRUCTURAL FURNITURE (navigation/rest, not content)?
 
 - beat boundary → Section divider
-- mid-beat rest after every 4 content blocks in a beat of ≥ 5 → Asterism rest *(V3.1+; see G-10)*
 - elevated callout earning loft → Loft-card
 - aggregated sources → Footnote / source aggregator
+
+*(The mid-beat asterism rest was a branch here through V3.5 — retired in V3.6
+by R-24; a long content run breaks to an anchor or splits the beat, G-9.)*
 
 Is the content EDITORIAL PROSE (the residuals)?
 
@@ -784,19 +836,27 @@ Bridges between beats use one of the five Apple-validated patterns. Position-lan
 - Meta-language: "In the following section…", "Let's look at…", "We'll cover…", "As mentioned above…", "As we'll see…".
 - Restatement bridges: an eyebrow or tagline that paraphrases the body below it (P9 redundancy filter applies).
 
-### G-15. Chart and numeric block authoring (V3.7+)
+### G-15. Chart and numeric block authoring (V3.7+; column/area added V3.9)
 
-The V3.7 numeric/chart blocks are authored as **plain markdown tables** — the
+The numeric/chart blocks are authored as **plain markdown tables** — the
 block id selects the visual, so no new syntax enters the card (RENDERING § R-30 /
-R-31). Each opens with the usual `` `BLOCK-xxx` · Eyebrow `` annotation and an
-optional `### ` subhead.
+R-31 / R-35). Each opens with the usual `` `BLOCK-xxx` · Eyebrow `` annotation and
+an optional `### ` subhead.
 
 | Block | Markdown shape | Focal element |
 |---|---|---|
 | `bar-chart` | header row + `\| label \| value \|` data rows | the one **bolded** value cell goes full-ink (`\| Editorial \| **11** \|`) |
+| `column-chart` (V3.9+) | header row + `\| label \| value \|` data rows | the one **bolded** value's column goes full-ink |
 | `line-chart` | header row + `\| point \| value \|` data rows | the one **bolded** value's point goes full-ink |
+| `area-chart` (V3.9+) | header row + `\| point \| value \|` data rows | the one **bolded** value's point goes full-ink |
 | `stat-grid` | headerless `\| value \| caption \|` rows (2–6) | none — parallel metrics are the adjacency exception |
 | `stat-callout` | `### ` subhead, optional intro, a standalone `**number**` line, then the verbal-anchor sentence | the number (`.stat`) |
+
+**Picking within the family.** Horizontal `bar-chart` when labels are words (it
+reserves a label lane); vertical `column-chart` when labels are short tokens —
+**≤ 8 characters** (years, versions, single words); `line-chart` for a trend;
+`area-chart` only when the *cumulative volume under the curve* is the point,
+not just the trend line.
 
 Rules that still apply: exactly **one** focal element per chart (single emphasis,
 P2); a `stat-callout` MUST carry its verbal-anchor sentence (a bare number is
@@ -1038,7 +1098,7 @@ decision-tree routing — moves.
 | BLOCK-annotated-data-point | Annotated single data point | numeric | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-comparison | Comparison block | comparative | core | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-bar-chart | Bar chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-column-chart | Column chart | comparative | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-column-chart | Column chart | comparative | stable | 3.0.0 | standard,xl | | 2026-07-03 |
 | BLOCK-slope-chart | Slope / bump chart | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-scatter-quadrant | Scatter / quadrant | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-dot-plot | Dot plot | comparative | stable | 3.0.0 | standard,xl | | 2026-04-29 |
@@ -1046,7 +1106,7 @@ decision-tree routing — moves.
 | BLOCK-timeline | Timeline | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
 | BLOCK-process-flow | Process / flow | sequential | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-line-chart | Line chart | sequential | stable | 3.0.0 | standard,xl | | 2026-04-29 |
-| BLOCK-area-chart | Area chart | sequential | stable | 3.0.0 | standard,xl | | 2026-05-16 |
+| BLOCK-area-chart | Area chart | sequential | stable | 3.0.0 | standard,xl | | 2026-07-03 |
 | BLOCK-definition | Definition | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-numbered-principle | Numbered principle | definitional | core | 3.0.0 | mini,standard,xl | | 2026-04-29 |
 | BLOCK-equation | Equation | definitional | stable | 3.0.0 | standard,xl | | 2026-04-29 |
@@ -1140,8 +1200,28 @@ Through V3.6, four numeric/comparative blocks were catalogued `stable` here but
   and the reserved 56pt hero number with its required verbal anchor.
 
 Lifecycle is unchanged (`stable`) — these were always meant to exist; V3.7 just
-makes the renderer honour the catalogue. `column-chart` and `area-chart` remain
-catalogued-but-unbuilt (out of R-30's scope). Authoring grammar: GRAMMAR § G-15.
+makes the renderer honour the catalogue. `column-chart` and `area-chart` stayed
+catalogued-but-unbuilt (out of R-30's scope) until V3.9 built them (R-35).
+Authoring grammar: GRAMMAR § G-15.
+
+### V3.9 — chart family completed + list-family renders fixed (R-33 / R-35)
+
+V3.9 closes the catalogue-vs-renderer gap the stewards' log has tracked since
+V3.7:
+
+- **`column-chart`** and **`area-chart`** (R-35) — the last two
+  catalogued-but-unbuilt chart ids enter both render paths. Same authoring
+  grammar as bar/line (a plain `| label | value |` table, one bolded focal
+  value — G-15). All four charts now draw from one shared geometry module
+  (`app/src/chart-geometry.mjs`) instead of duplicated math.
+- **The list-bearing blocks render as catalogued** (R-33) — `checklist` (✓
+  rows), `anti-pattern` (✗ rows), `numbered-principle` / `process-flow`
+  (numbered rows), `timeline` (tabular date column), `section-divider`
+  (divider treatment), `pull-quote` / `quote-as-evidence` (real blockquotes
+  with attribution), `equation` / `code` (real `<pre>`). Through V3.8 these
+  fell through the HTML renderer's generic path — every list rendered as
+  footnote fine print and quotes rendered as literal `>` text. Lifecycle is
+  unchanged; the renderer now honours the catalogue.
 
 ### V3.8 — flashcard-list built (R-32)
 
@@ -1726,8 +1806,8 @@ Scoped to `.canvas.v3-7` so every V3.0–V3.6 card's tables stay pixel-identical
 
 - **Palette.** Axes and gridlines at `--g-12`; the series (bars, the line + its dots) at `--ink-3`; **exactly one focal element** — one bar, or one point — at `--ink`. That focal element is the block's single emphasis (P2). No fill above 12%, no color, ever (the "every bar solid black" and "color for emphasis" anti-patterns both fail).
 - **Authoring.** A chart is authored as a plain two-column `| label | value |` markdown table. **The block id, not new syntax, selects chart-vs-table** — `` `BLOCK-bar-chart` `` renders the same table as bars, `` `BLOCK-line-chart` `` as a line. The single **bolded** value cell (`| v3.7 | **5** |`) marks the focal element. This keeps charts legible as markdown and re-rasterisable from the spec alone.
-- **Geometry.** The SVG `viewBox` is in content-px units (width 361, ≈ 1 unit = 1px at the 361pt content width), so SVG text reads at its stated size. The exact geometry is duplicated verbatim between `render-card.mjs` (`barChartSvg` / `lineChartSvg`) and `blocks.tsx` (`BarChart` / `LineChart`) so the HTML twin and the React card are the same pixels (the parity contract).
-- **Scope.** R-30 covers bar and line. `column-chart` and `area-chart` stay catalogued-but-unbuilt.
+- **Geometry.** The SVG `viewBox` is in content-px units (width 361, ≈ 1 unit = 1px at the 361pt content width), so SVG text reads at its stated size. Since V3.9 the geometry lives once in `app/src/chart-geometry.mjs` and both render paths (`render-card.mjs` and `blocks.tsx`) import it, so the HTML twin and the React card are the same pixels (the parity contract, R-35).
+- **Scope.** R-30 covers bar and line. `column-chart` and `area-chart` entered the contract in V3.9 (R-35), which also moved the shared math for all four into `app/src/chart-geometry.mjs`.
 
 ### R-31. Numeric anchors (V3.7+)
 
@@ -1760,6 +1840,101 @@ catalogued-but-unbuilt state the charts were in before V3.7. R-32 builds it
   SVG-free markup is duplicated verbatim between `render-card.mjs`
   (`emitFlashcards`) and `blocks.tsx` (`Flashcards`) so the HTML twin and the
   React card are the same pixels (the parity contract).
+
+### R-33. Faithful markdown rendering (V3.9+, retroactive)
+
+**Every catalogued block renders as its catalogued treatment — nothing falls
+through to a wrong default.** Through V3.8 the HTML renderer had blind spots
+that broke published cards: quote blocks rendered as literal `>` paragraphs,
+fenced code was shredded into mangled paragraphs, every list was emitted as
+13pt footnote fine print, section dividers lost their divider treatment, and a
+card's authoring-notes section leaked onto the reader's canvas. R-33 closes
+them:
+
+- **Quotes.** A `>` chunk renders as a real `<blockquote>` (`.pull` on the
+  pull-quote block). The short line that follows a quote is its attribution and
+  renders as `<p class="attrib">` (caption-sized tertiary ink); a longer
+  follow-up is commentary and stays body prose. Attribution is required on
+  pull-quotes (the V3.1 rule).
+- **Code and equations.** A fenced ``` block renders as `<pre>`, verbatim and
+  escaped.
+- **Lists by block id.** `footnote-source` is the *only* fine-print list
+  (`.sources`). `checklist` renders body-size rows with a ✓ marker (the
+  `[ ]` checkbox syntax is authoring shorthand and never renders);
+  `anti-pattern` the same with ✗; `numbered-principle` and `process-flow`
+  render `<ol>` with tabular numeral markers; any other list is plain
+  body-size rows. Wrapped (indented continuation) lines fold into their item
+  instead of being dropped mid-sentence.
+- **Structure.** `section-divider` renders on `section.divider` (the breathier
+  symmetric padding); `timeline` tables carry `class="timeline"` (tabular
+  semibold date column).
+- **Scaffold never renders (I7).** Only beat sections, the Sources section,
+  and section dividers (or any section carrying a `BLOCK-…` annotation) reach
+  the canvas. `Authoring notes`, `Metadata`, gate tables, and the template's
+  `HERO-CARD:` line are production scaffold and are skipped — loudly, in the
+  render log.
+- **The corner glyph is identity-only.** It reads `✦ berafoot.com` — no
+  version, era, mode, or date. The pre-V3.9 glyph carried `vN.N atlas`, which
+  contradicted R-10's own ban on reader-visible version chrome; the production
+  stamp lives in the `<meta>` tags.
+
+Like R-22–R-24 and R-28, R-33 lives at the base level and applies to **every
+card on re-render regardless of `frozen_at_version`** (ADR-0011 precedent): it
+corrects rendering defects, not period design choices. The reading-layer rules
+(R-9/R-19, R-20, R-21) stay frozen and untouched. (ADR-0016.)
+
+### R-34. Mobile-fit and rhythm hardening (V3.9+, retroactive)
+
+**Nothing escapes the 393pt canvas, and the beat gap is one value for real.**
+
+- **Viewport.** The render declares `<meta name="viewport" content="width=393">`
+  (not `device-width`): the canvas is a fixed 393pt column, and on narrower
+  phones (375/390 CSS px) `device-width` made it overflow with a horizontal
+  scroll. `width=393` scales the whole canvas to the device instead.
+- **Tables.** `table-layout: fixed` and cell `overflow-wrap` move from the
+  V3.7 scope to base level — under auto layout a four-column table of
+  unbreakable tokens summed past the content column and overflowed the canvas.
+  (R-29's *design* half — the 36% label share and `.num` alignment — stays
+  scoped to V3.7+.)
+- **Long tokens.** The canvas carries `overflow-wrap: break-word`, inherited
+  by every text element, so a long URL or compound never escapes the column.
+- **One beat gap, measured.** `section > :last-child` drops its bottom margin:
+  through V3.8 only trailing *paragraphs* were zeroed, so a section ending in
+  a list, table, chart, or stat grid ran 12–16pt taller and the rhythm
+  wobbled.
+- **The cover stack snaps to R-13.** Canvas top → first line 32pt (whatever
+  the card's beat-gap variant — the beat gap governs space *between* beats,
+  not the canvas edge), title → dek 12pt, dek → hero 24pt.
+- **Chart text stays inside the viewBox.** Line/area charts anchor their edge
+  labels inward and reserve 22px of headroom; bar labels clip to their 120px
+  lane; a wide value on a near-max bar clamps to the right edge; column labels
+  clip to their column lane. `.chart svg` is `overflow: visible`, so anything
+  past the viewBox would paint into the page gutter.
+
+Base-level and retroactive like R-33 (ADR-0011 precedent; ADR-0016).
+
+### R-35. Completed chart family (V3.9+)
+
+**`column-chart` and `area-chart` enter the render contract** — the last two
+catalogued-but-unbuilt chart ids (R-30 built bar and line; these were out of
+its scope). Same contract throughout:
+
+- **Authoring.** A plain `| label | value |` markdown table; the block id
+  selects the visual; the one **bolded** value marks the focal element
+  (GRAMMAR § G-15). No new syntax enters a card.
+- **column-chart** — vertical magnitude comparison: columns from a shared
+  baseline (axis at `--g-12`), series at `--ink-3`, exactly one focal column
+  at `--ink`, value above each column, label below it. Labels stay **≤ 8
+  characters** — longer labels belong on the horizontal `bar-chart`, which
+  reserves a label lane (G-15).
+- **area-chart** — cumulative trend where under-curve volume matters: the
+  line-chart frame plus a closed fill at `--g-06`, the one permitted fill
+  under the "no fill above 12%" rule (R-30).
+- **One geometry module.** All chart math now lives in
+  `app/src/chart-geometry.mjs`, imported by *both* render paths — the
+  extraction the stewards' log called for when a third chart type landed. The
+  parity contract is now structural, not copy-discipline: the HTML twin and
+  the React card serialize the same numbers.
 
 ### Block compatibility
 
@@ -1815,7 +1990,7 @@ multiple layers is defined here, with its canonical source layer cited.
 | Anchor block | A structurally emphatic block: stat-callout, pull-quote, key-takeaway, numbered-principle, or table-with-takeaway-row. Anchors give the reader re-entry landings. Counted in the per-length anchor budget (LENGTHS § L-5). | GRAMMAR § G-9 |
 | Content block | A non-anchor block carrying body content: standard-text, faq, code, or table-without-takeaway. | GRAMMAR § G-9 |
 | Hero | The Beat 1 bounded anchor — card-in-hero (border + radius + padding, no shadow — V3.6 R-22). Always one of the 1–3 bounded cards. | GRAMMAR (Hook beat), LENGTHS, RENDERING § R-22 |
-| Loft / lofted element | A block that sits in an elevated card shell (rounded, padded, shadowed). Hard cap of 1–3 lofted elements per Supercard; the hero is always one. | PRINCIPLES 4, RENDERING shadow system |
+| Loft / lofted element | A block set apart in a bounded card shell (rounded, hairline-bordered, padded — never shadowed since V3.6, R-22). Hard cap of 1–3 bounded cards per Supercard; the hero is always one. | PRINCIPLES 4, RENDERING § R-22 |
 | Beat | One of the seven narrative spine sections: Hook, Evidence, Mechanism, Comparison, Counter, Application, Close. Authoring scaffolding — the rendered card shows the beat name only. | GRAMMAR seven-beat spine |
 | Mode | The intent of a card request: `summary`, `briefing`, `deep-dive`, `reference`. Biases research depth, length variant, block selection, and redundancy posture. | PIPELINE modes |
 
@@ -1836,6 +2011,7 @@ multiple layers is defined here, with its canonical source layer cited.
 | Micro-folio | **Deprecated in V3.3.** The 11pt small-caps `BEAT N · BEAT-NAME · POSITION / TOTAL` label V3.1–V3.2 emitted at the top edge of every beat and the bottom edge of every card. R-10 (V3.3) prohibits emitting it on the rendered canvas — it leaked the author's seven-beat scaffold into the reader's view. The CSS class survives gated to dev-mode for renderer diagnostics; the React component is dev-only. | RENDERING § R-10 (V3.3) |
 | Eyebrow | A short editorial label above a beat's first block (e.g., `The medical study`). V3.3+: optional, naming the *content* — never the position. Beat numbers and counters are prohibited (R-10). | RENDERING § R-10 (V3.3), R-14 |
 | Dek | The subtitle below the title on the cover — the thesis sentence. Carries the load that mode badges and context chips would otherwise carry. 1 sentence preferred, 2 sentences hard cap. | RENDERING § R-13 |
+| Attribution | The short source line under a quote (`<p class="attrib">`, caption-sized tertiary ink). Required on pull-quotes; a longer follow-up after a quote is commentary and stays body prose. | RENDERING § R-33, V3.1 pull-quote rule |
 | Kicker | A short editorial label above the title or a section heading. Bound by R-14 (must earn its existence; ≤ 4 words). | RENDERING § R-14 |
 | Asterism rest | **Retired in V3.6 (R-24, supersedes R-11/G-10).** Was a centered `⁂` glyph mid-beat as a "rest the eye" device. Removed from all renders; the 64pt beat gap (R-15) now does that work, and a long content run breaks to an anchor or splits the beat (G-9). | RENDERING § R-24 (retired R-11/G-10) |
 | Section divider | The block that marks a beat boundary. Chapter break, not paragraph break. Never used between every section. | INDEX-block-library, GRAMMAR anti-patterns |
@@ -2085,9 +2261,9 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 ## Provenance
 
-- **Spec:** supercard · version 3.8.0 · era atlas
-- **Revision:** `3eeb2fbff7ef` — a hash of the source markdown; changes iff a source changes.
-- **Sources last updated:** 2026-06-28
+- **Spec:** supercard · version 3.9.0 · era atlas
+- **Revision:** `3c8bd46e309c` — a hash of the source markdown; changes iff a source changes.
+- **Sources last updated:** 2026-07-03
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
 - **Canonical repo (source of truth, ADR-0003):** https://github.com/fiebsy/supercard
@@ -2095,15 +2271,15 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 Source files (the canonical markdown this view is generated from):
 
-- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-06-28 — sha256 `f4a3ebeb9a8c9177cf4acab3f5b3a63fc40fe7525a7c6f3d54da321841d52527`
-- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-06-28 — sha256 `3c6a56a39739d4ee1b38427265bce4ab13cee244ff50b1c2019e0db5ab1db49d`
-- `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-06-25 — sha256 `3c6eb1a63e80538cd7b93d0a3e585845d8f2822b2233fe038b6ab4d8ca466452`
-- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-06-28 — sha256 `1cc686e00e46db277f40dc7b31ba5a69ffc6bfadbbef6c7324bc8b01aaf31222`
+- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-07-03 — sha256 `cfd77fdfc52c184a12e64fba22fd7446ce85efe2640237442617321efd550b07`
+- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `ba9284d7322a594fe979571bd820bdea13c0b0e51bbc54a8f194c6042a1f3cd7`
+- `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-07-03 — sha256 `f1b7eef16825e039cddb7ddd73c7e792bff0b85371cfbcd6499305ddf6beb830`
+- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-07-03 — sha256 `8953c6834bbff3d8e76ae6ae71d825c06919380009d8e2765531a06598c41296`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
-- `00-INDEX/INDEX-block-library.md` — updated 2026-06-28 — sha256 `92191084b8c676d8cbd9d1699da54a955370b4b03574f217c4b15a207efb6545`
+- `00-INDEX/INDEX-block-library.md` — updated 2026-07-03 — sha256 `0190e168406594039ca3e773866d9282695e663be7a0ff014bf406015f26eb95`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-05-16 — sha256 `64a812d2fa5aaaeaf6e258866dc3ece265a47a7194f85339587ca8302fd6a596`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-06-28 — sha256 `cebb81612e1ddb5371de98e5134781b538f9458e0fc0922dc643459052bad903`
-- `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `29fd6b70a1473b407325f5bb81b2853924cfa0427843d1a9a4f90f7b7ac5d4d2`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-07-03 — sha256 `59b98bdc78e5a3cb09d0277395cb7b94c3895abdfb6530d44e0af80069cf8bbb`
+- `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `9bbb7552abe25d0de1e0308ea92d7766bb3949a9a9b6a52b18cc0d1c1ff22a69`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 
 ## Keywords

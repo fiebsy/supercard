@@ -5,9 +5,9 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.8.0 |
+| version | 3.9.0 |
 | owner | derick |
-| updated | 2026-06-28 |
+| updated | 2026-07-03 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
@@ -119,10 +119,13 @@ ls docs/cards/
 | 0013 | Sentence-case labels, centered separators, editorial eyebrows (R-25/R-26) | Accepted | 2026-06-25 |
 | 0014 | V3.7 — cover eyebrow, alignment hygiene, real data-viz blocks (R-27–R-31) | Accepted | 2026-06-27 |
 | 0015 | V3.8 — build the catalogued `flashcard-list` block (R-32) | Accepted | 2026-06-28 |
+| 0016 | V3.9 — rendering robustness: faithful markdown, mobile fit, completed charts (R-33–R-35) | Accepted | 2026-07-03 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.9.0** — Rendering robustness. A measured Chromium audit of the published renders found the HTML renderer mis-rendering much of the catalogued grammar; V3.9 fixes the render layer end to end. R-33 (faithful markdown rendering — real blockquotes with attribution, fenced code as `<pre>`, list treatment by block id with ✓/✗/numeral markers, dividers and timelines styled, authoring-notes scaffold never rendered, identity-only corner glyph), R-34 (mobile fit and rhythm — `width=393` viewport, base-level fixed tables + overflow-wrap, one measured beat gap, R-13-exact cover joins, chart text clamped inside the viewBox), R-35 (chart family completed — `column-chart` + `area-chart` built, all four charts drawing from one shared `chart-geometry.mjs` both render paths import). R-33/R-34 are base-level and retroactive (ADR-0011 precedent — defect repair, not design drift); card sources are untouched. Also repairs the spec's own stale surfaces (ADHD gate vs. R-24, decision-tree asterism branch, glossary loft definition). (ADR-0016.)
 
 **v3.8.0** — The recall companion. Builds the catalogued-but-unbuilt `flashcard-list` into both render paths (R-32) — a compact Q/A study list rendered as a hairline-separated `<dl class="flashcards">`, the question the row's single emphasis and the answer secondary ink. Authored as a headerless `| question | answer |` table (the R-30 "block id, not new syntax" convention), capped at the 5–10 highest-yield pairs (G-16). The questions are the adjacency exception, so the block carries no bold and never trips the single-emphasis gate. Strict grayscale, single emphasis, frozen-at-version intact. (ADR-0015.)
 

@@ -15,6 +15,46 @@ Append entries via SupercardOps `logStewardEntry()` or directly.
 
 ---
 
+## 2026-07-03 — claude (for derick) — [drift]
+
+**Context.** The request was "more variety, but every card keeps looking
+great" — and the published renders showed why both halves were failing.
+Measured in headless Chromium at 393px, not eyeballed: a checklist rendering
+as 13px footnote fine print with literal `[ ]` markers, a Koffka quote
+rendering as a literal `>` paragraph, the one equation in the archive
+shredded into `<p>``<code>` fragments, four cards with their **Authoring
+notes** printed on the reader-visible canvas, a 370px table in a 359px
+column, and a "uniform" beat gap that measured 97px after prose but 109–145px
+after a list or chart. The deeper pattern: the generic emitter was a silent
+default — anything it didn't recognize *became prose or fine print* rather
+than failing loudly, so the catalogue's variety collapsed to "prose, a list,
+a table" not because authors chose that but because the renderer did. And the
+corner glyph was carrying `v3.8 atlas` — version chrome R-10 itself bans.
+
+**Action.** Shipped V3.9 (ADR-0016): R-33 makes every catalogued block render
+as catalogued (quotes, code, ✓/✗/numbered lists, dividers, timelines, and
+scaffold-section skipping — logged loudly); R-34 makes the fit and rhythm
+*measured* properties (width=393 viewport, base-level fixed tables,
+overflow-wrap, last-child margin reset, R-13-exact cover joins, viewBox-safe
+chart text); R-35 builds `column-chart` + `area-chart` and extracts all chart
+math into `chart-geometry.mjs` — the extraction trigger my 06-27 entry set
+("a third chart type lands") fired exactly as predicted. Also repaired the
+spec teaching against itself: the ADHD gate still *required* asterisms two
+versions after R-24 banned them.
+
+**Follow-up.** Two `!important`s entered the stylesheet (cover join,
+last-child reset) — each commented, each cheaper than a per-scope override
+matrix, but if a third lands, restructure the beat-gap scoping instead. The
+audit script lives on as a pattern: gap deltas and bbox checks caught what six
+version reviews of reading the CSS did not — consider promoting a headless
+measurement pass into the validator (G-gate) rather than trusting discipline.
+Watch `gauge-progress`, `waffle`, `heatmap`, `slope-chart`, `scatter-quadrant`,
+`dot-plot`, `histogram`, `small-multiples`, `sparkline`, `annotated-data-point`:
+still catalogued with no dedicated render treatment (they degrade to tables /
+prose gracefully now, but the catalogue-vs-renderer gap is not fully closed).
+
+---
+
 ## 2026-06-27 — derick — [foundation]
 
 **Context.** Looking at the published cards side by side, they all read the same:

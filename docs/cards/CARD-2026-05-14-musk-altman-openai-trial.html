@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=393, initial-scale=1">
 <meta name="color-scheme" content="only light">
 <title>Musk v. Altman: the OpenAI Trial — Supercard V3.0</title>
 <meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-musk-altman-openai-trial--draft.md">
 <meta name="sc:research_report" content="">
-<meta name="sc:renderer_version" content="v3.6">
+<meta name="sc:renderer_version" content="v3.9">
 <meta name="sc:frozen_at_version" content="3.0.0">
-<meta name="sc:rendered_at" content="2026-06-27">
+<meta name="sc:rendered_at" content="2026-07-03">
 <meta name="sc:content_hash" content="38d779651967a0a4152416047a56c020fd99fbcc89c7f1d5b56e8d8693a92c07">
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this
@@ -96,6 +96,9 @@ a {
   background: var(--w);
   min-height: 100vh;
   padding: 0 16px var(--s-8);
+  /* V3.9 (R-34) — long-token insurance, inherited by every text element: a
+   * long URL, token, or compound never escapes the 361pt content column. */
+  overflow-wrap: break-word;
   /* Designer column guides — faint dotted rules at the left/right boundary of
    * the 393pt column, running the full content height. They replace the old
    * grey body moat: the surface is now flush white and these mark the edge. */
@@ -213,9 +216,17 @@ li:last-child {
   min-width: 18px;
 }
 
+/* V3.9 (R-34) — `table-layout: fixed` + cell wrapping move from the v3-7
+ * scope to base level. Under auto layout a 4-column table of unbreakable
+ * tokens (`#1A1A1A`, `17.4:1`) sums past the 361pt column and overflows the
+ * canvas — a rendering defect on the mobile canvas, not a frozen design
+ * choice, so it is retroactive like R-28 (ADR-0011 precedent). The v3-7
+ * label-column share (36%) and `.num` alignment stay scoped — those are
+ * design decisions, not defect fixes. */
 table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
   margin: var(--s-2) 0;
   font-size: 15px;
 }
@@ -227,6 +238,7 @@ td {
   line-height: 20px;
   color: var(--ink-2);
   vertical-align: top;
+  overflow-wrap: break-word;
 }
 th {
   font-size: 11px;
@@ -244,11 +256,15 @@ tr.focal td {
 tr.focal td strong {
   color: var(--k);
 }
+/* timeline — the date column reads tabular and semibold. Ink is --ink-3 (not
+ * --g-30): dates are text, and text never drops below the 4.5:1 floor (R-20's
+ * split applies at base too — this class was never emitted before V3.9, so no
+ * frozen render depended on the old value). No nowrap: the fixed table grid
+ * (R-34) owns column width, and an over-long date wraps instead of overflowing. */
 table.timeline td:first-child {
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  white-space: nowrap;
-  color: var(--g-30);
+  color: var(--ink-3);
 }
 
 /* V3.7 (R-28) — hairline hygiene. A table's final-row rule no longer stacks
@@ -1110,7 +1126,7 @@ a.spec-link:hover {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   height: 52px;
   margin-top: var(--s-3);
@@ -1136,18 +1152,22 @@ a.spec-link:hover {
   font-size: 16px;
   line-height: 20px;
   color: var(--ink);
-  text-align: center;
+  /* Left-aligned: a URL is a read-left-to-right link, not display text. The
+   * copy button stays pinned to the right edge (the canonical copy-field
+   * pattern), so reserve its lane here so a long URL never runs under it. */
+  text-align: left;
+  padding-right: var(--s-5);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* Quiet copy indicator — no fill, floated on the right so it doesn't shift the
- * centered URL. The whole field is the button. Sized (32) and inset (right 18,
- * matching the input's own 18px lane) to mirror the sample card's chevron, so
- * the two trailing affordances line up across the input and the cards. */
+/* Quiet copy indicator — no fill, just the glyph, floated on the right. With
+ * no circle to anchor (unlike the card chevron), the glyph itself must read as
+ * 18px from the edge to mirror the URL's 18px left padding. The 17px glyph is
+ * centered in a 32px box (7.5px each side), so right = 18 - 7.5 ≈ 10. */
 .spec-copy {
   position: absolute;
-  right: 18px;
+  right: 10px;
   top: 10px;
   display: inline-flex;
   align-items: center;
@@ -1237,18 +1257,24 @@ a.spec-link:hover {
 
 /* Sample card (Card B). 18px padding aligns its content's left edge with the
  * spec input's (both contained widgets sharing a left lane). The open chevron
- * sits in the title row so the preview runs full-width; a fade clips the cut. */
+ * sits in the title row so the preview runs full-width. Fixed height + a
+ * flex-fill preview let the opening prose run all the way down to the card's
+ * bottom edge, where a gradient mask on the prose itself dissolves its last
+ * lines into the card (.sample-preview) — the cut reads as an intentional fade,
+ * not a hard clip, with no white void between the text and the border. No
+ * bottom padding — the preview bleeds flush to the edge and the mask trims. */
 .sample-card {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 232px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
   background: var(--w);
   border: 1px solid var(--g-12);
   border-radius: 16px;
-  padding: 18px;
+  padding: 18px 18px 0;
   transition: border-color 0.15s ease;
 }
 .sample-card:hover {
@@ -1269,12 +1295,22 @@ a.spec-link:hover {
 .sample-head {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  /* top-align so the chevron pins to the card's top-right corner, not the
+   * vertical middle of the eyebrow + title block (the eyebrow pushed it down) */
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--s-2);
 }
-.sample-title {
+/* Eyebrow + title stacked; this column takes the row's free width so the title
+ * ellipsizes while the chevron stays a fixed slot pinned to the top-right. */
+.sample-headings {
   flex: 1 1 auto;
+  min-width: 0;
+}
+.sample-title {
+  /* block so overflow/ellipsis apply — an inline span ignores them, letting a
+   * long title run full-width straight under the chevron instead of clipping */
+  display: block;
   min-width: 0;
   font-size: 22px;
   line-height: 28px;
@@ -1297,6 +1333,14 @@ a.spec-link:hover {
   background: var(--g-06);
   border: 1px solid var(--g-12);
   color: var(--ink);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+/* The whole card is the link, so on card hover the chevron fills a step
+ * (g-06 -> g-12) and drops its ring (border hidden) — a quiet fill-in rather
+ * than a heavier outline. */
+.sample-card:hover .sample-open {
+  background: var(--g-12);
+  border-color: transparent;
 }
 .sample-meta {
   padding-top: 6px;
@@ -1307,20 +1351,22 @@ a.spec-link:hover {
 }
 .sample-preview {
   padding-top: var(--s-3);
-  max-height: 72px;
+  /* Fill the remaining card height down to the bottom edge: the prose runs all
+   * the way down and the mask below dissolves its last lines into the card, so
+   * the cut reads as an intentional fade rather than a hard clip. */
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
   font-size: 16px;
   line-height: 24px;
   color: var(--ink-2);
-}
-.sample-fade {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 72px;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), var(--w) 76%);
-  pointer-events: none;
+  /* Fade the prose itself to transparent toward the bottom edge. The card is
+   * white, so a fade-to-transparent is a clean fade-to-white applied per-pixel
+   * to the glyphs — the last visible line softly disappears near the edge
+   * instead of a blurred half-line smeared mid-height with a white void beneath
+   * it. Replaces the old white-overlay + backdrop-blur band (.sample-fade). */
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 97%);
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 97%);
 }
 
 /* Card-view back button — identical treatment to the card's forward chevron
@@ -1341,6 +1387,124 @@ a.spec-link:hover {
   background: var(--g-12);
   border-color: var(--g-30);
 }
+
+/* ----------------------------------------------------------------------- *
+ * V3.8 — flashcard list (R-32, ADR-0015). Builds the catalogued-but-unbuilt
+ * BLOCK-flashcard-list into the render contract, the same way V3.7 (R-30/R-31)
+ * built the chart and stat blocks. A compact Q/A study list: each row pairs a
+ * prompt (the dt — the row's one near-black emphasis) with a short answer (the
+ * dd — secondary ink). The parallel questions are the adjacency exception (like
+ * stat-grid's parallel numbers), NOT multi-emphasis. Rows are hairline-
+ * separated; strict grayscale, no chrome. Authored as a headerless
+ * `| question | answer |` markdown table — the block id, not new syntax,
+ * selects the dl (the R-30 convention). Scoped to .canvas.v3-8 so every
+ * V3.0–V3.7 card stays pixel-identical; a V3.8 card carries the inherited chain
+ * plus v3-8, e.g. class="canvas v3-1 v3-4 v3-5 v3-6 v3-7 v3-8".
+ * ----------------------------------------------------------------------- */
+.canvas.v3-8 .flashcards {
+  margin: var(--s-3) 0;
+}
+.canvas.v3-8 .flashcards .fc {
+  padding: var(--s-2) 0;
+  border-bottom: 0.5px solid var(--g-12);
+}
+.canvas.v3-8 .flashcards .fc:first-child {
+  padding-top: 0;
+}
+.canvas.v3-8 .flashcards .fc:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+/* The question — the row's single emphasis. Primary ink, semibold (weight, not
+ * a <strong> run, so the block carries no markdown bold for the validator to
+ * read as multi-emphasis). */
+.canvas.v3-8 .flashcards dt {
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+/* The answer — the dive-deeper layer. Secondary ink, regular weight. The base
+ * `* { margin: 0 }` reset already clears the browser's default dd indent. */
+.canvas.v3-8 .flashcards dd {
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.9 — rendering robustness (R-33 faithful markdown rendering, R-34
+ * mobile-fit and rhythm hardening, R-35 completed chart family; ADR-0016).
+ * Like V3.6's R-22–R-24 and V3.7's R-28, everything in this block corrects
+ * rendering DEFECTS, not period design choices, so it lives at base level /
+ * end-of-cascade and applies to every card on re-render regardless of
+ * frozen_at_version (the ADR-0011 retroactive precedent). The reading-layer
+ * rules (R-9/R-19, R-20, R-21) stay frozen and untouched. The .v3-9 canvas
+ * class is still emitted on 3.9.0+ cards for forward extensibility; the new
+ * chart primitives reuse the .canvas.v3-7 .chart contract via the class chain.
+ * ----------------------------------------------------------------------- */
+
+/* R-34 — one beat gap per card, measured for real. Only p:last-child was
+ * zeroed before, so a section ending in a list / table / chart / stat-grid
+ * ran 12–16px taller than a prose section and the beat rhythm wobbled.
+ * !important is deliberate: every version-scoped block margin
+ * (.canvas.v3-7 .chart, .stat-grid, .flashcards, …) outranks this reset and
+ * would otherwise each need a :last-child variant. */
+.canvas section > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* R-34 / R-13 — the cover join is 32pt from canvas top to the first line,
+ * regardless of the card's beat-gap variant (the beat gap governs the space
+ * BETWEEN beats, not the canvas edge). !important is deliberate: every
+ * beat-gap scope (v3-4/v3-5 × 48/64/96/120) would otherwise need its own
+ * first-of-type override. */
+.canvas section:first-of-type {
+  padding-top: var(--s-5) !important;
+}
+
+/* R-34 / R-13 — the cover stack's exact joins: title baseline → dek is the
+ * 12pt step (h1 carried 16px through V3.8), and dek → hero card top is 24pt
+ * (the hero's old 12px top margin always collapsed under the dek's margin, so
+ * the join measured 16px). Adjacent-margin collapse makes 24 the effective
+ * join whichever dek margin the card's version scope sets. */
+.canvas h1 {
+  margin-bottom: var(--s-2);
+}
+.canvas .hero {
+  margin-top: var(--s-4);
+}
+
+/* R-33 — quote attribution: the short source line under a blockquote.
+ * Caption-sized tertiary ink; declared with .canvas specificity so it beats
+ * the v3-1/v3-5 paragraph metrics above. */
+.canvas p.attrib {
+  font-size: 13px;
+  line-height: 18px;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+
+/* R-33 — body-size list variants. The renderer used to stamp class="sources"
+ * on every list, shrinking checklists and anti-pattern lists to 13px fine
+ * print. Checklist (✓) and anti-pattern (✗) rows reuse the base li metrics;
+ * only their marker glyph differs. Numbered principles / process flows use
+ * <ol> with the existing tabular .marker. */
+.canvas ul.checklist .marker,
+.canvas ul.antipattern .marker {
+  min-width: 22px;
+}
+
+/* R-35 — the area chart's one permitted fill (the under-curve volume), at the
+ * 6% step: the grayscale contract allows no fill above 12% (R-30). Scoped to
+ * the same .chart contract the v3-7 charts use. */
+.canvas.v3-7 .chart .area {
+  fill: var(--g-06);
+}
 </style>
 </head>
 <body>
@@ -1353,8 +1517,7 @@ a.spec-link:hover {
       <div class="hero">
         <p class="hook">Two men co-founded OpenAI as a nonprofit in 2015. A decade later they are in federal court over one question: did Elon Musk's early donation <strong>legally bind OpenAI to stay a nonprofit forever?</strong></p>
       </div>
-      <p class="lede">HERO-CARD: <strong>Musk v. Altman</strong></p>
-      <p><strong>Lede.</strong> Musk says he was duped into bankrolling a charity that quietly became
+      <p class="lede"><strong>Lede.</strong> Musk says he was duped into bankrolling a charity that quietly became
 an ~$800B company; OpenAI says no such promise was ever made and Musk is a rival
 with regrets. As of mid-May 2026 the trial is in closing arguments in Oakland.</p>
     </section>
@@ -1379,10 +1542,10 @@ even then <strong>only as advice</strong>.</p>
 
     <section>
       <div class="eyebrow">how to read the outcome</div>
-      <ul class="sources">
-        <li>[ ] Watch the two phases separately — a liability finding is not the same as a $130B award or a corporate unwind</li>
-        <li>[ ] Treat the jury verdict as advisory — Judge Gonzalez Rogers can override it and decides remedies alone</li>
-        <li>[ ] Track the real stakes — Musk wants the for-profit conversion reversed and Altman ousted, not just damages</li>
+      <ul class="checklist">
+        <li><span class="marker">✓</span><span>Watch the two phases separately — a liability finding is not the same as a $130B award or a corporate unwind</span></li>
+        <li><span class="marker">✓</span><span>Treat the jury verdict as advisory — Judge Gonzalez Rogers can override it and decides remedies alone</span></li>
+        <li><span class="marker">✓</span><span>Track the real stakes — Musk wants the for-profit conversion reversed and Altman ousted, not just damages</span></li>
       </ul>
     </section>
 
@@ -1403,17 +1566,7 @@ jury and a judge holding the final word, it won't be the last word.</p>
       <p>Full sourcing in <code>40-LAB/BREAKDOWN-musk-altman-openai-trial.md</code>.</p>
     </section>
 
-    <section>
-      <ul class="sources">
-        <li>Mode <code>summary</code> → Mini. Beats 4 (Comparison) and 5 (Counter) are deliberately</li>
-        <li>Beat 2 uses a single <code>stat-callout</code> ($38M) rather than a grid: the load-bearing</li>
-        <li>Beat 3 chose <code>definition</code> over <code>numbered-principle</code>: the mechanism of this</li>
-        <li>Only the hero is lofted — 1 of the 1–3 elevation budget. Beats 2, 3, 6, 7 are</li>
-        <li>The ~$38M figure is what trial filings and OpenAI use; Wikipedia cites ~$44M</li>
-      </ul>
-    </section>
-
   </div>
-  <div class="glyph">◆ supercard · v3.0 atlas</div>
+  <div class="glyph">✦ berafoot.com</div>
 </body>
 </html>

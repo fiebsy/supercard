@@ -5,9 +5,9 @@
 | id | RENDERING-spec |
 | type | governance |
 | era | atlas |
-| version | 3.8.0 |
+| version | 3.9.0 |
 | owner | derick |
-| updated | 2026-06-28 |
+| updated | 2026-07-03 |
 
 How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
@@ -539,8 +539,8 @@ Scoped to `.canvas.v3-7` so every V3.0–V3.6 card's tables stay pixel-identical
 
 - **Palette.** Axes and gridlines at `--g-12`; the series (bars, the line + its dots) at `--ink-3`; **exactly one focal element** — one bar, or one point — at `--ink`. That focal element is the block's single emphasis (P2). No fill above 12%, no color, ever (the "every bar solid black" and "color for emphasis" anti-patterns both fail).
 - **Authoring.** A chart is authored as a plain two-column `| label | value |` markdown table. **The block id, not new syntax, selects chart-vs-table** — `` `BLOCK-bar-chart` `` renders the same table as bars, `` `BLOCK-line-chart` `` as a line. The single **bolded** value cell (`| v3.7 | **5** |`) marks the focal element. This keeps charts legible as markdown and re-rasterisable from the spec alone.
-- **Geometry.** The SVG `viewBox` is in content-px units (width 361, ≈ 1 unit = 1px at the 361pt content width), so SVG text reads at its stated size. The exact geometry is duplicated verbatim between `render-card.mjs` (`barChartSvg` / `lineChartSvg`) and `blocks.tsx` (`BarChart` / `LineChart`) so the HTML twin and the React card are the same pixels (the parity contract).
-- **Scope.** R-30 covers bar and line. `column-chart` and `area-chart` stay catalogued-but-unbuilt.
+- **Geometry.** The SVG `viewBox` is in content-px units (width 361, ≈ 1 unit = 1px at the 361pt content width), so SVG text reads at its stated size. Since V3.9 the geometry lives once in `app/src/chart-geometry.mjs` and both render paths (`render-card.mjs` and `blocks.tsx`) import it, so the HTML twin and the React card are the same pixels (the parity contract, R-35).
+- **Scope.** R-30 covers bar and line. `column-chart` and `area-chart` entered the contract in V3.9 (R-35), which also moved the shared math for all four into `app/src/chart-geometry.mjs`.
 
 ## R-31. Numeric anchors (V3.7+)
 
@@ -573,6 +573,101 @@ catalogued-but-unbuilt state the charts were in before V3.7. R-32 builds it
   SVG-free markup is duplicated verbatim between `render-card.mjs`
   (`emitFlashcards`) and `blocks.tsx` (`Flashcards`) so the HTML twin and the
   React card are the same pixels (the parity contract).
+
+## R-33. Faithful markdown rendering (V3.9+, retroactive)
+
+**Every catalogued block renders as its catalogued treatment — nothing falls
+through to a wrong default.** Through V3.8 the HTML renderer had blind spots
+that broke published cards: quote blocks rendered as literal `>` paragraphs,
+fenced code was shredded into mangled paragraphs, every list was emitted as
+13pt footnote fine print, section dividers lost their divider treatment, and a
+card's authoring-notes section leaked onto the reader's canvas. R-33 closes
+them:
+
+- **Quotes.** A `>` chunk renders as a real `<blockquote>` (`.pull` on the
+  pull-quote block). The short line that follows a quote is its attribution and
+  renders as `<p class="attrib">` (caption-sized tertiary ink); a longer
+  follow-up is commentary and stays body prose. Attribution is required on
+  pull-quotes (the V3.1 rule).
+- **Code and equations.** A fenced ``` block renders as `<pre>`, verbatim and
+  escaped.
+- **Lists by block id.** `footnote-source` is the *only* fine-print list
+  (`.sources`). `checklist` renders body-size rows with a ✓ marker (the
+  `[ ]` checkbox syntax is authoring shorthand and never renders);
+  `anti-pattern` the same with ✗; `numbered-principle` and `process-flow`
+  render `<ol>` with tabular numeral markers; any other list is plain
+  body-size rows. Wrapped (indented continuation) lines fold into their item
+  instead of being dropped mid-sentence.
+- **Structure.** `section-divider` renders on `section.divider` (the breathier
+  symmetric padding); `timeline` tables carry `class="timeline"` (tabular
+  semibold date column).
+- **Scaffold never renders (I7).** Only beat sections, the Sources section,
+  and section dividers (or any section carrying a `BLOCK-…` annotation) reach
+  the canvas. `Authoring notes`, `Metadata`, gate tables, and the template's
+  `HERO-CARD:` line are production scaffold and are skipped — loudly, in the
+  render log.
+- **The corner glyph is identity-only.** It reads `✦ berafoot.com` — no
+  version, era, mode, or date. The pre-V3.9 glyph carried `vN.N atlas`, which
+  contradicted R-10's own ban on reader-visible version chrome; the production
+  stamp lives in the `<meta>` tags.
+
+Like R-22–R-24 and R-28, R-33 lives at the base level and applies to **every
+card on re-render regardless of `frozen_at_version`** (ADR-0011 precedent): it
+corrects rendering defects, not period design choices. The reading-layer rules
+(R-9/R-19, R-20, R-21) stay frozen and untouched. (ADR-0016.)
+
+## R-34. Mobile-fit and rhythm hardening (V3.9+, retroactive)
+
+**Nothing escapes the 393pt canvas, and the beat gap is one value for real.**
+
+- **Viewport.** The render declares `<meta name="viewport" content="width=393">`
+  (not `device-width`): the canvas is a fixed 393pt column, and on narrower
+  phones (375/390 CSS px) `device-width` made it overflow with a horizontal
+  scroll. `width=393` scales the whole canvas to the device instead.
+- **Tables.** `table-layout: fixed` and cell `overflow-wrap` move from the
+  V3.7 scope to base level — under auto layout a four-column table of
+  unbreakable tokens summed past the content column and overflowed the canvas.
+  (R-29's *design* half — the 36% label share and `.num` alignment — stays
+  scoped to V3.7+.)
+- **Long tokens.** The canvas carries `overflow-wrap: break-word`, inherited
+  by every text element, so a long URL or compound never escapes the column.
+- **One beat gap, measured.** `section > :last-child` drops its bottom margin:
+  through V3.8 only trailing *paragraphs* were zeroed, so a section ending in
+  a list, table, chart, or stat grid ran 12–16pt taller and the rhythm
+  wobbled.
+- **The cover stack snaps to R-13.** Canvas top → first line 32pt (whatever
+  the card's beat-gap variant — the beat gap governs space *between* beats,
+  not the canvas edge), title → dek 12pt, dek → hero 24pt.
+- **Chart text stays inside the viewBox.** Line/area charts anchor their edge
+  labels inward and reserve 22px of headroom; bar labels clip to their 120px
+  lane; a wide value on a near-max bar clamps to the right edge; column labels
+  clip to their column lane. `.chart svg` is `overflow: visible`, so anything
+  past the viewBox would paint into the page gutter.
+
+Base-level and retroactive like R-33 (ADR-0011 precedent; ADR-0016).
+
+## R-35. Completed chart family (V3.9+)
+
+**`column-chart` and `area-chart` enter the render contract** — the last two
+catalogued-but-unbuilt chart ids (R-30 built bar and line; these were out of
+its scope). Same contract throughout:
+
+- **Authoring.** A plain `| label | value |` markdown table; the block id
+  selects the visual; the one **bolded** value marks the focal element
+  (GRAMMAR § G-15). No new syntax enters a card.
+- **column-chart** — vertical magnitude comparison: columns from a shared
+  baseline (axis at `--g-12`), series at `--ink-3`, exactly one focal column
+  at `--ink`, value above each column, label below it. Labels stay **≤ 8
+  characters** — longer labels belong on the horizontal `bar-chart`, which
+  reserves a label lane (G-15).
+- **area-chart** — cumulative trend where under-curve volume matters: the
+  line-chart frame plus a closed fill at `--g-06`, the one permitted fill
+  under the "no fill above 12%" rule (R-30).
+- **One geometry module.** All chart math now lives in
+  `app/src/chart-geometry.mjs`, imported by *both* render paths — the
+  extraction the stewards' log called for when a third chart type landed. The
+  parity contract is now structural, not copy-discipline: the HTML twin and
+  the React card serialize the same numbers.
 
 ## Block compatibility
 

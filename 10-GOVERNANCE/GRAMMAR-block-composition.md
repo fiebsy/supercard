@@ -5,9 +5,9 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.8.0 |
+| version | 3.9.0 |
 | owner | derick |
-| updated | 2026-06-28 |
+| updated | 2026-07-03 |
 
 How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*. The block-selection procedure (below) is the single composed routine an agent walks for every section.
 
@@ -95,9 +95,11 @@ Is the content a DISTRIBUTION?
 Is the content STRUCTURAL FURNITURE (navigation/rest, not content)?
 
 - beat boundary → Section divider
-- mid-beat rest after every 4 content blocks in a beat of ≥ 5 → Asterism rest *(V3.1+; see G-10)*
 - elevated callout earning loft → Loft-card
 - aggregated sources → Footnote / source aggregator
+
+*(The mid-beat asterism rest was a branch here through V3.5 — retired in V3.6
+by R-24; a long content run breaks to an anchor or splits the beat, G-9.)*
 
 Is the content EDITORIAL PROSE (the residuals)?
 
@@ -241,19 +243,27 @@ Bridges between beats use one of the five Apple-validated patterns. Position-lan
 - Meta-language: "In the following section…", "Let's look at…", "We'll cover…", "As mentioned above…", "As we'll see…".
 - Restatement bridges: an eyebrow or tagline that paraphrases the body below it (P9 redundancy filter applies).
 
-## G-15. Chart and numeric block authoring (V3.7+)
+## G-15. Chart and numeric block authoring (V3.7+; column/area added V3.9)
 
-The V3.7 numeric/chart blocks are authored as **plain markdown tables** — the
+The numeric/chart blocks are authored as **plain markdown tables** — the
 block id selects the visual, so no new syntax enters the card (RENDERING § R-30 /
-R-31). Each opens with the usual `` `BLOCK-xxx` · Eyebrow `` annotation and an
-optional `### ` subhead.
+R-31 / R-35). Each opens with the usual `` `BLOCK-xxx` · Eyebrow `` annotation and
+an optional `### ` subhead.
 
 | Block | Markdown shape | Focal element |
 |---|---|---|
 | `bar-chart` | header row + `\| label \| value \|` data rows | the one **bolded** value cell goes full-ink (`\| Editorial \| **11** \|`) |
+| `column-chart` (V3.9+) | header row + `\| label \| value \|` data rows | the one **bolded** value's column goes full-ink |
 | `line-chart` | header row + `\| point \| value \|` data rows | the one **bolded** value's point goes full-ink |
+| `area-chart` (V3.9+) | header row + `\| point \| value \|` data rows | the one **bolded** value's point goes full-ink |
 | `stat-grid` | headerless `\| value \| caption \|` rows (2–6) | none — parallel metrics are the adjacency exception |
 | `stat-callout` | `### ` subhead, optional intro, a standalone `**number**` line, then the verbal-anchor sentence | the number (`.stat`) |
+
+**Picking within the family.** Horizontal `bar-chart` when labels are words (it
+reserves a label lane); vertical `column-chart` when labels are short tokens —
+**≤ 8 characters** (years, versions, single words); `line-chart` for a trend;
+`area-chart` only when the *cumulative volume under the curve* is the point,
+not just the trend line.
 
 Rules that still apply: exactly **one** focal element per chart (single emphasis,
 P2); a `stat-callout` MUST carry its verbal-anchor sentence (a bare number is
