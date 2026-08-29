@@ -233,11 +233,19 @@ export function MarkerList({
   intro?: ReactNode;
   closer?: ReactNode;
 }) {
+  // The HTML renderer stamps `checklist` / `antipattern` on the list, and
+  // `.canvas ul.checklist .marker` widens the marker lane from 18px to 22px so
+  // a ✓ or ✗ sits on the same edge a numeral does. This path stamped nothing,
+  // so the same card rendered with a 4px narrower lane here than in its HTML
+  // twin — a parity break the R-35 contract does not allow. Derived from the
+  // marker so a caller cannot get it wrong.
+  const variant =
+    marker === "✓" ? "checklist" : marker === "✗" ? "antipattern" : undefined;
   return (
     <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2 className="tile">{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
-      <ul role="list">
+      <ul className={variant} role="list">
         {items.map((it, i) => (
           <li key={i}>
             <span className="marker">{marker}</span>

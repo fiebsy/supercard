@@ -158,6 +158,8 @@ CSS stack:
 
 `ui-rounded` first — standardized CSS keyword that resolves to SF Pro Rounded on Apple platforms. `Inter` is the preferred fallback where SF Pro Rounded isn't available (non-Apple platforms, when locally installed), ahead of the generic system stack.
 
+**`<em>` is a synthesized slant, not an italic face.** SF Pro Rounded ships no italic, so `font-style: italic` on this stack is the browser mechanically shearing the upright glyphs. That is acceptable for the two things R-19 permits italics for — a title and a foreign term, a word or two at a time — and it is why emphasis is `<strong>` and never `<em>`: a synthesized slant across a clause reads as a rendering artifact, not as emphasis. Never set `font-synthesis: none` here; it would erase the slant rather than fix it, and the two permitted uses would silently lose their only visual mark.
+
 ## Spacing tokens (8pt baseline)
 
 | Token | px | Use |

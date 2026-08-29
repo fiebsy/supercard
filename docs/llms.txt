@@ -1535,6 +1535,8 @@ CSS stack:
 
 `ui-rounded` first — standardized CSS keyword that resolves to SF Pro Rounded on Apple platforms. `Inter` is the preferred fallback where SF Pro Rounded isn't available (non-Apple platforms, when locally installed), ahead of the generic system stack.
 
+**`<em>` is a synthesized slant, not an italic face.** SF Pro Rounded ships no italic, so `font-style: italic` on this stack is the browser mechanically shearing the upright glyphs. That is acceptable for the two things R-19 permits italics for — a title and a foreign term, a word or two at a time — and it is why emphasis is `<strong>` and never `<em>`: a synthesized slant across a clause reads as a rendering artifact, not as emphasis. Never set `font-synthesis: none` here; it would erase the slant rather than fix it, and the two permitted uses would silently lose their only visual mark.
+
 ### Spacing tokens (8pt baseline)
 
 | Token | px | Use |
@@ -2476,7 +2478,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.10.0 · era atlas
-- **Revision:** `5bb358b87120` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `7ab4a549b40a` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-08-29
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -2492,7 +2494,7 @@ Source files (the canonical markdown this view is generated from):
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-07-03 — sha256 `0190e168406594039ca3e773866d9282695e663be7a0ff014bf406015f26eb95`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-08-29 — sha256 `3cf0a916e4f69a3e55787a12c4f35d2ab759ed3bfd5f446b96bc18fbb8e9e303`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-08-29 — sha256 `3f77ac47a179b517844eac73818edc8a0553f0b17f10c5d754b299d31c6a9e59`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-08-29 — sha256 `fa9aba2bc29ecc831f69c4e3965c47c42271173fd8fab129007134d20ab6e29e`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `9bbb7552abe25d0de1e0308ea92d7766bb3949a9a9b6a52b18cc0d1c1ff22a69`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 
