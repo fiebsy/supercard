@@ -154,7 +154,7 @@ one focal element each.
 
 ---
 
-## V3.1 authoring checklist (run before publishing)
+## Authoring checklist (run before publishing)
 
 The 10-item ADHD scan-ability gate from PRINCIPLES — any "no" blocks the render.
 

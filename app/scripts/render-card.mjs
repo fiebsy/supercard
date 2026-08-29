@@ -809,7 +809,7 @@ ${css.trim()}
 
 ${sections}
   </main>
-  <div class="glyph">✦ berafoot.com</div>
+  <footer class="glyph">✦ berafoot.com</footer>
 </body>
 </html>
 `;
@@ -827,9 +827,11 @@ function galleryEntry(slug, title, fm, prevDesc) {
   const desc = (fm.summary || prevDesc || fm.tags || "").trim();
   // A heading, not a styled div: the gallery lists every published card, and
   // through V3.9 it offered a screen reader or an outline view exactly one
-  // heading (its own <h1>) for the whole list (R-36).
+  // heading (its own <h1>) for the whole list (R-36). h3, because the page's
+  // section labels ("The spec", "Cards") are the h2s that divide it and a card
+  // sits inside one.
   return `    <a class="card-link" href="cards/${slug}.html">
-      <h2 class="card-title">${escapeHtml(title)}</h2>
+      <h3 class="card-title">${escapeHtml(title)}</h3>
       <div class="card-meta">${escapeHtml(meta)}</div>
       ${desc ? `<div class="card-desc">${escapeHtml(desc)}</div>` : ""}
     </a>`;

@@ -14,6 +14,7 @@
 | status | draft |
 | mode | summary |
 | tags | ai, openai, litigation, musk, altman |
+| summary | Musk says his early donation legally bound OpenAI to stay a nonprofit; OpenAI says no such promise was ever made. A summary-mode Mini on the trial, its two surviving claims and why the jury's verdict is only advice. |
 | supersedes | |
 | related | |
 

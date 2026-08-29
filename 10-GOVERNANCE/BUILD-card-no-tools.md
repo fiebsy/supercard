@@ -81,7 +81,7 @@ fill the slots, and drop the per-block patterns into the sections.
 <body>
 <main class="canvas">
 
-  <!-- COVER (Beat 1). Optional one-word kicker, title, dek, hero. -->
+  <!-- COVER (Beat 1). Optional cover eyebrow (<= 4 words), title, dek, hero. -->
   <section>
     <div class="eyebrow">OPTIONAL KICKER</div>
     <h1>Five-word title, not a sentence</h1>
@@ -102,7 +102,7 @@ fill the slots, and drop the per-block patterns into the sections.
   </section>
 
 </main>
-<div class="glyph">✦ berafoot.com</div>
+<footer class="glyph">✦ berafoot.com</footer>
 </body>
 </html>
 ```
@@ -138,10 +138,11 @@ with. Paste it whole into the `<style>`; do not restate values elsewhere.
      the g-ramp draws rules and fills, and a rule token is never a `color`. */
   --text-emphasis:var(--ink); --text-body:var(--ink-2); --text-quiet:var(--ink-3);
   --rule-hairline:var(--g-12); --fill-chip:var(--g-06); --surface-page:var(--w);
+  --fill-select:var(--g-12);
 }
 /* the selection fill is on the ramp: unstyled, every browser paints a saturated
    blue, the one hue that could otherwise reach a grayscale canvas */
-::selection{background:var(--g-12);color:var(--ink)}
+::selection{background:var(--fill-select);color:var(--text-emphasis)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--w);font-family:var(--rounded);color:var(--ink);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 /* overflow-wrap: nothing ever escapes the 393px canvas — long URLs and tokens wrap */
@@ -180,9 +181,13 @@ em{font-style:italic}                       /* titles / foreign terms only — n
 .hero .hook{font-size:19px;line-height:26px;font-weight:500;letter-spacing:-.005em;color:var(--ink-2)}
 
 /* lists — checklist / numbered-principle */
-ol,ul{list-style:none}
+ol,ul{list-style:none;margin:0 0 var(--s-2)}  /* the reset zeroed this; a list still needs its block gap */
 li{font-size:17px;line-height:26px;letter-spacing:-.01em;color:var(--ink-2);padding:var(--s-1) 0;border-bottom:.5px solid var(--g-12);display:flex;gap:var(--s-2)}
 li:last-child{border-bottom:none}
+/* a row is a flex box, so its spans have to be allowed to shrink; without this
+   one long token in a checklist pushes the whole page past 393 */
+li{min-width:0}
+li>span:last-child{min-width:0;overflow-wrap:anywhere}
 /* R-37: the marker is content (a checklist vs an anti-pattern list vs a
    numbered process), so it takes text ink. --g-30 measures 2.10:1 and is a
    non-text step by R-20. */
@@ -243,7 +248,7 @@ table.timeline td:first-child{font-variant-numeric:tabular-nums;font-weight:600;
 /* corner glyph — fixed, lands on every screenshot */
 /* R-37/R-43: the mark has to be readable (it is how a cropped screenshot is
    traced back), and it clamps to the viewport so it cannot leave the screen. */
-.glyph{position:fixed;bottom:16px;left:50%;transform:translateX(calc(min(196px,50vw) - 100% - 4px));font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--text-quiet);background:rgba(255,255,255,.85);backdrop-filter:blur(4px);padding:4px 7px;border-radius:6px;border:1px solid var(--rule-hairline)}
+.glyph{position:fixed;bottom:16px;left:50%;transform:translateX(calc(min(196px,50vw) - 100% - 4px));font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--text-quiet);background:var(--w);padding:4px 7px;border-radius:6px;border:1px solid var(--rule-hairline)}
 ```
 
 ## Per-block HTML patterns
@@ -318,7 +323,7 @@ emphasis** — never two per block.
      R-38: every chart carries role="img" and an aria-label built from its OWN
      rows — "label value, label value… X is the focal value." Naming the shape
      ("bar chart") tells a listener the picture and withholds the point. -->
-<div class="chart"><svg viewBox="0 0 320 160" role="img" aria-label="Bar chart. Massed 40, Spaced 80. Spaced is the focal value.">
+<div class="chart"><svg viewBox="0 0 320 160" role="img" aria-label="Bar chart. Massed: 40, Spaced: 80. Spaced is the focal value.">
   <line x1="40" y1="140" x2="310" y2="140" stroke="rgba(0,0,0,.12)"/>
   <rect x="60"  y="80"  width="40" height="60"  fill="#767676"/>
   <rect x="140" y="40"  width="40" height="100" fill="#1a1a1a"/>  <!-- focal -->
@@ -327,7 +332,7 @@ emphasis** — never two per block.
 
 <!-- column-chart — vertical bars for SHORT labels (≤ 8 chars: years, versions).
      Same palette: series #767676, ONE focal column #1a1a1a, axis 12% gray. -->
-<div class="chart"><svg viewBox="0 0 320 170" role="img" aria-label="Column chart. 2019 5, 2022 10, 2025 7. 2022 is the focal value.">
+<div class="chart"><svg viewBox="0 0 320 170" role="img" aria-label="Column chart. 2019: 5, 2022: 10, 2025: 7. 2022 is the focal value.">
   <line x1="0" y1="140" x2="320" y2="140" stroke="rgba(0,0,0,.12)"/>
   <rect x="40"  y="90" width="48" height="50" rx="3" fill="#767676"/>
   <rect x="136" y="40" width="48" height="100" rx="3" fill="#1a1a1a"/>  <!-- focal -->
@@ -339,11 +344,17 @@ emphasis** — never two per block.
 
 <!-- area-chart — a line whose under-curve VOLUME is the point; the fill is the
      one permitted fill, at 6% black. Keep edge labels anchored inward. -->
-<div class="chart"><svg viewBox="0 0 320 150" role="img" aria-label="Area chart. The trend rises to its focal final point.">
+<div class="chart"><svg viewBox="0 0 320 150" role="img" aria-label="Area chart. 2019: 30, 2022: 50, 2025: 80, 2028: 100. 2028 is the focal value.">
   <path d="M 10 130 L 10 100 L 110 80 L 210 50 L 310 30 L 310 130 Z" fill="rgba(0,0,0,.06)"/>
   <polyline points="10,100 110,80 210,50 310,30" fill="none" stroke="#767676" stroke-width="2"/>
   <circle cx="310" cy="30" r="5" fill="#1a1a1a"/>  <!-- focal -->
 </svg></div>
+
+<!-- equation / code — a fenced block. It is the one element that can still run
+     past the column (white-space: pre opts out of the canvas wrap), so it
+     scrolls, the trailing mask is the visual cue, and tabindex + a name make
+     that cue reachable without a pointer. -->
+<pre tabindex="0" role="region" aria-label="Code">S(n) = n(n + 1) / 2</pre>
 
 <!-- flashcard-list — 5 to 10 Q/A pairs, the highest-yield recall items. No
      bold: the dt (question) is the emphasis via weight + ink, the dd (answer)
@@ -412,7 +423,7 @@ Copy its shape.
   </section>
 
 </main>
-<div class="glyph">✦ berafoot.com</div>
+<footer class="glyph">✦ berafoot.com</footer>
 </body>
 </html>
 ```

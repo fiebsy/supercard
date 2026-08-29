@@ -725,5 +725,7 @@ export function Glyph(_props: { version?: string } = {}) {
   // Identity only — no version, era, mode, or date in reader-visible chrome
   // (R-10). The production stamp lives in the <meta> tags / registry, never
   // on the canvas. The `version` prop is accepted for back-compat and ignored.
-  return <div className="glyph">✦ berafoot.com</div>;
+  // <footer>, not a div: the mark is the card's provenance line, and a bare
+  // div sits in no landmark at all (R-40).
+  return <footer className="glyph">✦ berafoot.com</footer>;
 }

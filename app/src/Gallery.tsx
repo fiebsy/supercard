@@ -208,14 +208,17 @@ export function Gallery() {
               aria-controls="older-cards"
               onClick={() => toggle(true)}
             >
-              View {older.length} older formats
+              Show {older.length} older cards
               <ChevronDown />
             </button>
           </div>
         </>
       )}
 
-      <footer className="landing-footer">◆ supercard · v3.10 atlas</footer>
+      {/* The same mark the cards carry. It used to stamp the era and version
+          here, which is chrome R-10 keeps off a card and a string that goes
+          stale every release. */}
+      <footer className="landing-footer">✦ berafoot.com</footer>
     </main>
   );
 }

@@ -69,7 +69,7 @@ The `Card radius: 16pt` below applies **only** to the 1–3 bounded anchor cards
 
 - **Mobile portrait:** 393 × 852pt (iPhone 15/16 Pro)
 - **Outer gutter:** 16pt
-- **Content width:** 361pt
+- **Content width:** 361pt declared. The render measures **359pt**: the dotted column guides are 1px `border-left` / `border-right` on `.canvas`, and `box-sizing: border-box` makes them eat 2pt of the 393. Every type metric, table share and chart `viewBox` is written against 361, so a chart scales by 0.55%. The two are reconciled by leaving the archive alone: restoring 361 would reflow every published card for two pixels, which is design drift rather than defect repair (ADR-0003). Draw the guides without a border if the grid ever has to be exact.
 - **Internal card pad:** 32pt (`--s-5`; the 24pt figure predates the V3.6 flat-surface cut, where the pad took over the separation a shadow used to do)
 - **Card radius:** 16pt (concentric with iOS 26) — *bounded anchor cards only, not the page*
 - **Hairline:** 0.5px solid rgba(0,0,0,0.06)
@@ -769,6 +769,16 @@ logical CSS properties (`text-align: start`, `margin-inline-end`,
 `padding-inline-start`, `border-inline-start`) in place of physical ones.
 Identical in LTR, correct in principle.
 
+Three affordances the render owes a reader who is not using a pointer: a beat
+is a **named region** (`aria-labelledby` on the section, pointing at the
+eyebrow, which R-25 already requires to be distinct within a card), a list keeps
+its **list role** explicitly (`list-style: none` plus `display: flex` on the row
+is exactly what makes WebKit drop it, so a checklist stopped being a list of N
+things for the readers who cannot see the check column), and the **code panel
+is focusable and named** (it scrolls, and R-43's trailing mask is a cue only a
+pointer can act on). The corner mark is a `<footer>`: it is the card's
+provenance line, and a bare div sits in no landmark at all.
+
 The same holds for the gallery, which is ordinary web UI and gets no
 print-artifact exemptions: `<main>`, `<footer>`, an `<h2>` per card entry, one
 visible `:focus-visible` ring in ink on every control, a 44pt minimum control
@@ -820,6 +830,12 @@ it.**
   row list's font, colour, marker and padding but inherited its hairline, so
   every source line carried a separator its 13/18 leading had already made
   unnecessary.
+- **A flex row lets its text shrink.** The canvas sets `overflow-wrap` and R-34
+  promises that a long URL, token or compound never escapes the column, but a
+  list row is `display: flex`, so its spans are flex items with the default
+  `min-width: auto` and refuse to shrink below their content. One long token in
+  a checklist measured the page at 439px. `li` and its text lane take
+  `min-width: 0`, and the lane takes `overflow-wrap: anywhere`.
 - **A scrollable panel says it scrolls.** `white-space: pre` opts out of the
   canvas-wide `overflow-wrap`, so a long equation or code line is the one thing
   on a card that can still run past the column. It scrolls rather than

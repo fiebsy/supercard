@@ -108,6 +108,59 @@ grayscale, single emphasis and frozen-at-version content are intact.
   R-20 promises. `.tint-card` redeclares `--text-quiet` one rung up, which is
   the argument for role tokens in one declaration.
 
+Found by the verify pass, after the rules above had shipped:
+
+- **R-34's fit promise did not hold for a list row.** A row is `display: flex`,
+  so its spans are flex items with the default `min-width: auto` and refuse to
+  shrink below their content. One long token in a checklist measured the page
+  at 439px against a 393px canvas.
+- **A chart's accessible name ran its labels and values together.** "R-33 6,
+  R-34 6, R-35 2" read aloud is six numbers with nothing marking where a label
+  ends. They are separated by a colon now.
+- **The scroll cue was pointer-only.** R-43's trailing mask says "this
+  scrolls", and a keyboard cannot act on it: Safari and Firefox do not make a
+  scroll container focusable on their own, so the code panel carries
+  `tabindex="0"` and a name.
+- **Lists had lost their list role**, `<footer>` was a div in both render
+  paths, and the gallery's outline was flat: section labels were divs while the
+  card titles were the only headings. Labels are `h2` and cards `h3` now.
+- **`:focus-visible` set `border-radius`,** which reshapes the focused element
+  rather than its ring, snapping a card from 16px to 4px the moment a keyboard
+  reached it. Introduced earlier in this same version.
+- **Hover latched on touch.** Every hover state moves behind
+  `@media (hover: hover)`; `:active` stays outside, because press feedback is
+  direct manipulation and belongs on every input.
+- **The copy button reported success unconditionally.** Both the promise
+  rejection and the `execCommand` throw ran the success path, so a copy that
+  did not happen said it did. It now says what to do instead.
+- **The card-view links laid out at the viewport edge.** They were bare
+  siblings of the card with no column wrapper, so on any window wider than
+  393px they sat at x=0 while everything else was centred.
+- **A hash route change moved nothing.** No document title, no focus: a screen
+  reader stayed where it was in the gallery while a different card rendered
+  under it.
+- **The "Hide" control was styled as the label beside it** and was an ~30x14
+  target. It reads as a control now, at 54x28.
+- Smaller: `--ink-2`'s contrast was recorded as "≈5.1:1" and measures 5.33:1;
+  `::selection` was borrowing a rule token as a fill; `pre` carried the one raw
+  `rgba()` ground left on the canvas; `a.spec-link:hover` repainted the colour
+  it already had; the `.older-toggle` had a fixed height under a label with a
+  count in it; the corner mark stamped an era-and-version string that R-10
+  keeps off a card and that goes stale every release.
+- The published recipe carries all of the above, plus the list block margin its
+  own reset had zeroed and never restored.
+- The V3.0 trial card had no `summary`, so its gallery entry rendered its raw
+  tag list. The three frozen cards' authored prose is untouched: rewriting it
+  would be the ADR-0003 violation, not a fix.
+
+### Known and left alone
+
+- **The content column measures 359pt, not the declared 361.** The dotted
+  column guides are 1px borders on `.canvas` and `box-sizing: border-box` makes
+  them eat 2pt. Restoring 361 would reflow every published card for two pixels,
+  which is design drift rather than defect repair. Recorded in RENDERING-spec
+  beside the canvas figures.
+
 ### Changed
 
 - `app/src/supercard.css` — role tier on `:root` and redeclared on

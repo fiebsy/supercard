@@ -178,7 +178,9 @@ export function chartDescription(kind, items) {
   const noun = CHART_NOUN[kind] || "Chart";
   if (!items || !items.length) return noun;
   const pairs = items
-    .map((it) => `${it.label} ${it.display ?? it.value}`)
+    // "R-33: 6, R-34: 6" — read aloud, the bare-space form is a run of six
+    // numbers with nothing marking where a label ends and its value begins.
+    .map((it) => `${it.label}: ${it.display ?? it.value}`)
     .join(", ");
   const focal = items.find((it) => it.focal);
   const emphasis = focal ? ` ${focal.label} is the focal value.` : "";

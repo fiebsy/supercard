@@ -39,7 +39,7 @@
   /* Secondary/tertiary ink muted a step (was #333 / #555) so the single
    * per-block emphasis — black <strong>, the dark heading, the focal row —
    * carries more contrast against everything that isn't in focus. Both still
-   * clear WCAG AA on white (#6b6b6b ≈5.1:1, #767676 =4.54:1). V3.5 cards
+   * clear WCAG AA on white (#6b6b6b 5.33:1, #767676 =4.54:1). V3.5 cards
    * redefine these on their own canvas and are unaffected. */
   --ink-2: #6b6b6b;
   --ink-3: #767676;
@@ -105,6 +105,8 @@
   --rule-hairline: var(--g-12); /* borders, separators, anchor-card outlines */
   --rule-grid: var(--g-12); /* chart axes and gridlines */
   --fill-chip: var(--g-06); /* code-chip ground, the area chart's one fill */
+  --fill-panel: rgba(0, 0, 0, 0.03); /* the code panel's ground, one step under --g-06 */
+  --fill-select: var(--g-12); /* the selection highlight */
   --surface-page: var(--w); /* the canvas and every anchor card */
   --surface-quiet: var(--surface-tint); /* the R-16 tinted card, alternately */
 }
@@ -143,8 +145,12 @@ a {
  * only light` exists for exactly that reason); this closes the other door.
  * --g-12 keeps every ink step legible through the highlight. */
 ::selection {
-  background: var(--rule-hairline);
-  color: var(--ink);
+  /* A highlight is a fill, not a rule: --rule-hairline is declared for borders
+   * and separators, and borrowing it because the value is right today is the
+   * habit R-39 exists to break. --fill-select is its own role at the same
+   * step, so a future hairline change cannot drag the highlight with it. */
+  background: var(--fill-select);
+  color: var(--text-emphasis);
 }
 
 .canvas {
@@ -265,6 +271,18 @@ li {
 li:last-child {
   border-bottom: none;
 }
+/* R-34 promised that a long URL, token or compound never escapes the column,
+ * and the canvas sets overflow-wrap for it. A list row is `display: flex`, so
+ * its spans are flex items with the default `min-width: auto` and refuse to
+ * shrink below their content: one long token in a checklist pushed the page
+ * to 439px. The row and its text lane can shrink now, and the text breaks. */
+li {
+  min-width: 0;
+}
+li > span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
 /* V3.10 (R-37) — the marker is content, not furniture. A checkmark, a cross
  * and a numeral are the difference between a checklist, an anti-pattern list
  * and a numbered process; read the markers alone and you still know which
@@ -379,7 +397,7 @@ pre {
   /* --text-emphasis, not --k: `strong` is the canvas's darkest ink, and a code
    * panel reading pure black put a second maximum on the page. */
   color: var(--text-emphasis);
-  background: rgba(0, 0, 0, 0.03);
+  background: var(--fill-panel);
   border: 1px solid var(--rule-hairline);
   border-radius: 8px;
   padding: var(--s-2) var(--s-3);
@@ -391,6 +409,10 @@ pre {
    * well not be there, and a screenshot silently loses the tail. */
   overflow-x: auto;
   overscroll-behavior-x: contain;
+  /* The trailing mask says "this scrolls" to a pointer. A keyboard reaches a
+   * scroll container only if it is focusable, and Safari and Firefox do not
+   * make one focusable on their own, so the renderer emits tabindex="0" and a
+   * name on the panel. The ring is the same one every control gets. */
   -webkit-mask-image: linear-gradient(
     to right,
     #000 0,
@@ -624,12 +646,6 @@ a.card-link {
   margin-bottom: var(--s-2);
   background: var(--w);
 }
-a.card-link:hover {
-  /* --rule-hairline IS --g-12, so setting the hover border to --g-12 declared
-   * a state and rendered none. One step up the ramp, matching the gallery's
-   * own copy of this rule, which had it right. */
-  border-color: var(--g-30);
-}
 .card-title {
   font-size: 24px;
   line-height: 30px;
@@ -662,6 +678,17 @@ a.card-link:hover {
   border-left: 1px dotted var(--rule-hairline);
   border-right: 1px dotted var(--rule-hairline);
 }
+/* The two card-view links, inside the column rather than at the viewport
+ * edge. As bare siblings of the card they laid out at x=0 while .canvas and
+ * .card-back were centred, so on any window wider than 393px they hung off
+ * the left of everything else on the page. */
+.card-foot {
+  width: 393px;
+  margin: 0 auto;
+  padding: 0 16px var(--s-8);
+  display: flex;
+  gap: var(--s-3);
+}
 .back-link {
   display: inline-block;
   font-family: var(--mono);
@@ -669,9 +696,6 @@ a.card-link:hover {
   color: var(--text-label);
   text-decoration: none;
   padding: var(--s-5) 0 0;
-}
-.back-link:hover {
-  color: var(--k);
 }
 
 /* gallery — repo link on the minimalist landing (below the spec block) */
@@ -682,9 +706,6 @@ a.card-link:hover {
   color: var(--text-label);
   text-decoration: none;
   margin-top: var(--s-5);
-}
-.repo-link:hover {
-  color: var(--k);
 }
 
 /*
@@ -732,9 +753,6 @@ a.card-link:hover {
   text-decoration-color: var(--g-12);
   text-underline-offset: 2px;
 }
-#spec-discovery a:hover {
-  text-decoration-color: var(--g-30);
-}
 #spec-discovery code {
   font-family: var(--mono);
   font-size: 12px;
@@ -754,9 +772,6 @@ a.spec-link {
   padding: var(--s-5);
   margin-bottom: var(--s-2);
   background: var(--w);
-}
-a.spec-link:hover {
-  border-color: var(--g-12);
 }
 .spec-link-title {
   font-size: 17px;
@@ -1269,9 +1284,6 @@ a.spec-link:hover {
   text-decoration: none;
   transition: background-color 0.15s ease;
 }
-.gh-btn:hover {
-  background: var(--g-06);
-}
 
 /* The lede sits one step under the wordmark; the rest of the rhythm is owned by
  * the .zone-label margins below (this overrides the earlier .gallery-lede). */
@@ -1346,9 +1358,6 @@ a.spec-link:hover {
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
 }
-.spec-input:hover {
-  border-color: var(--g-30);
-}
 .spec-url {
   flex: 1 1 auto;
   min-width: 0;
@@ -1388,11 +1397,18 @@ a.spec-link:hover {
 /* Trailing action on a zone label (e.g. "Hide" on `~/ older` once expanded).
  * Mono, quiet by default, darkens on hover. */
 .zone-action {
+  /* At rest this was the "~/ older" label's exact type one ink step apart, in
+   * the same flex row: a control styled like the static text beside it does
+   * not read as a control, and it was an ~30x14 target. A quiet bordered
+   * shape and a real hit area fix both. */
+  padding: 4px var(--s-2);
+  min-height: 28px;
+  border: 1px solid var(--rule-hairline);
+  border-radius: 999px;
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  border: 0;
   background: transparent;
   font-family: var(--mono);
   font-size: 11px;
@@ -1402,10 +1418,7 @@ a.spec-link:hover {
   text-transform: uppercase;
   color: var(--text-label);
   cursor: pointer;
-  transition: color 0.15s ease;
-}
-.zone-action:hover {
-  color: var(--k);
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
 /* Toast-style archive: a masked card-edge peeks above a dashed reveal button;
@@ -1429,7 +1442,10 @@ a.spec-link:hover {
   justify-content: center;
   gap: var(--s-1);
   width: 100%;
-  height: 44px;
+  /* min-height, not height: the label is a sentence with a count in it, and a
+   * fixed row clips it the moment it wraps. */
+  min-height: 44px;
+  padding: var(--s-1) var(--s-3);
   border: 1px dashed var(--g-30);
   border-radius: 999px;
   background: var(--w);
@@ -1439,10 +1455,6 @@ a.spec-link:hover {
   color: var(--text-label);
   cursor: pointer;
   transition: color 0.15s ease, border-color 0.15s ease;
-}
-.older-toggle:hover {
-  color: var(--k);
-  border-color: var(--g-60);
 }
 .older-list {
   display: flex;
@@ -1480,9 +1492,6 @@ a.spec-link:hover {
   border-radius: 16px;
   padding: 18px 18px 0;
   transition: border-color 0.15s ease;
-}
-.sample-card:hover {
-  border-color: var(--g-30);
 }
 /* Subtle topical eyebrow above the title — same muted mono language as the
  * `~/ zone` labels, so every card carries a one-glance bit of context. */
@@ -1548,10 +1557,6 @@ a.spec-link:hover {
 /* The whole card is the link, so on card hover the chevron fills a step
  * (g-06 -> g-12) and drops its ring (border hidden) — a quiet fill-in rather
  * than a heavier outline. */
-.sample-card:hover .sample-open {
-  background: var(--g-12);
-  border-color: transparent;
-}
 .sample-meta {
   padding-top: 6px;
   font-family: var(--mono);
@@ -1592,10 +1597,6 @@ a.spec-link:hover {
   background: var(--g-06);
   color: var(--ink);
   transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-.back-btn:hover {
-  background: var(--g-12);
-  border-color: var(--g-30);
 }
 
 /* ----------------------------------------------------------------------- *
@@ -1771,6 +1772,64 @@ a.spec-link:hover {
   border-bottom: none;
   padding: 2px 0;
 }
+
+/* ----------------------------------------------------------------------- *
+ * Hover, behind a capability query.
+ *
+ * The canvas is 393pt because it is built for a phone, and on a touch screen
+ * :hover latches after a tap and stays until the next one somewhere else, so
+ * a card the reader has finished with keeps its hover border. Every hover
+ * state in this stylesheet lives here; the selectors are unchanged, and the
+ * block sits at the end so specificity ties resolve as they did. Press
+ * feedback (:active) stays outside: that one is direct manipulation and
+ * belongs on every input.
+ * ----------------------------------------------------------------------- */
+@media (hover: hover) {
+  a.card-link:hover {
+    /* --rule-hairline IS --g-12, so setting the hover border to --g-12 declared
+     * a state and rendered none. One step up the ramp, matching the gallery's
+     * own copy of this rule, which had it right. */
+    border-color: var(--g-30);
+  }
+  .back-link:hover {
+    color: var(--k);
+  }
+  .repo-link:hover {
+    color: var(--k);
+  }
+  #spec-discovery a:hover {
+    text-decoration-color: var(--g-30);
+  }
+  a.spec-link:hover {
+    /* Was --g-12, the colour it already had at rest. Same no-op as
+     * a.card-link carried. */
+    border-color: var(--g-30);
+  }
+  .gh-btn:hover {
+    background: var(--fill-chip);
+  }
+  .spec-input:hover {
+    border-color: var(--g-30);
+  }
+  .zone-action:hover {
+    color: var(--k);
+  }
+  .older-toggle:hover {
+    color: var(--k);
+    border-color: var(--g-60);
+  }
+  .sample-card:hover {
+    border-color: var(--g-30);
+  }
+  .sample-card:hover .sample-open {
+    background: var(--fill-select);
+    border-color: transparent;
+  }
+  .back-btn:hover {
+    background: var(--fill-select);
+    border-color: var(--g-30);
+  }
+}
 </style>
 </head>
 <body>
@@ -1845,6 +1904,6 @@ a.spec-link:hover {
     </section>
 
   </main>
-  <div class="glyph">✦ berafoot.com</div>
+  <footer class="glyph">✦ berafoot.com</footer>
 </body>
 </html>
