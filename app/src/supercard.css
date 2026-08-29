@@ -62,8 +62,15 @@
    * The split they encode is R-20's: ink carries glyphs, the g-ramp draws
    * rules and fills. Every ink role clears 4.5:1 on white; no g-ramp step
    * above --g-60 does, which is exactly why a rule token must never end up
-   * on a `color`. The V3.5 canvas redefines --ink/--ink-2/--ink-3, so
-   * these roles follow the card's own ladder without being restated.
+   * on a `color`.
+   *
+   * An alias is computed where it is DECLARED, not where it is used: a
+   * `--text-body: var(--ink-2)` written here resolves against this element's
+   * --ink-2 and inherits that literal downward, so redefining --ink-2 on a
+   * later canvas layer does not move it. Every layer that redefines a
+   * primitive therefore redeclares the roles that point at it (see
+   * .canvas.v3-5 below). Without that the ink roles would silently freeze at
+   * the V3.0 ladder on every V3.5+ card.
    * ------------------------------------------------------------------- */
 
   /* Ink — anything that renders a character. */
@@ -120,7 +127,7 @@ a {
 .canvas {
   width: 393px;
   margin: 0 auto;
-  background: var(--w);
+  background: var(--surface-page);
   min-height: 100vh;
   padding: 0 16px var(--s-8);
   /* V3.9 (R-34) — long-token insurance, inherited by every text element: a
@@ -179,7 +186,7 @@ p {
   line-height: 24px;
   font-weight: 400;
   letter-spacing: -0.008em;
-  color: var(--ink-2);
+  color: var(--text-body);
   margin-bottom: var(--s-2);
 }
 p:last-child {
@@ -200,7 +207,7 @@ em {
 /* Beat 1 — anchor hero. V3.6 (R-22): flat, no elevation. Set apart by border +
  * radius + padding, not a shadow. */
 .hero {
-  background: var(--w);
+  background: var(--surface-page);
   border-radius: 16px;
   border: 1px solid var(--rule-hairline);
   padding: var(--s-5);
@@ -226,7 +233,7 @@ li {
   font-size: 17px;
   line-height: 24px;
   letter-spacing: -0.008em;
-  color: var(--ink-2);
+  color: var(--text-body);
   padding: var(--s-1) 0;
   border-bottom: 0.5px solid var(--rule-hairline);
   display: flex;
@@ -392,7 +399,7 @@ section.divider h2 {
   line-height: 30px;
   font-weight: 600;
   letter-spacing: -0.012em;
-  color: var(--ink);
+  color: var(--text-emphasis);
 }
 
 /* focal stat — the reserved hero-number metrics (stat-callout). Reads at
@@ -764,6 +771,12 @@ a.spec-link:hover {
 /* Surface-tinted card variant (R-16) — replaces the hairline-bordered
  * variant. Mutually exclusive per card. */
 .canvas.v3-4 .tint-card {
+  /* Measured: --ink-3 #767676 is 4.54:1 on white but 4.31:1 on the tinted
+   * ground, so tertiary text inside a tint card misses the 4.5:1 floor R-20
+   * promises. The ground is darker, so the quiet role steps up one rung on
+   * it. Stating the role rather than the value is what makes this one
+   * declaration instead of an audit of every caption. */
+  --text-quiet: var(--ink-2);
   background: var(--surface-tint);
   border-radius: 18px;
   border: 0;
@@ -815,6 +828,12 @@ a.spec-link:hover {
   --ink: #1a1a1a;
   --ink-2: #595959;
   --ink-3: #767676;
+  /* R-39 — the ink roles are redeclared with the ladder they name, because a
+   * role alias resolves at the element that declares it. Omit these and every
+   * V3.5+ card would draw its role-token text from the V3.0 ladder. */
+  --text-emphasis: var(--ink);
+  --text-body: var(--ink-2);
+  --text-quiet: var(--ink-3);
 }
 
 /* Primary essence — bold lead-clauses, headers, focal stats read at --ink

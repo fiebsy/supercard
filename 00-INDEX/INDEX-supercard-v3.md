@@ -5,9 +5,9 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.9.0 |
+| version | 3.10.0 |
 | owner | derick |
-| updated | 2026-07-03 |
+| updated | 2026-08-29 |
 
 The canonical entry point. If you're a new Claude session reading this, start here.
 
@@ -116,14 +116,17 @@ ls docs/cards/
 | 0010 | Deterministic renderer (`render-card.mjs`) | Accepted | 2026-06-25 |
 | 0011 | V3.6 surface refinement (R-22/R-23/R-24, retroactive) | Accepted | 2026-06-25 |
 | 0012 | Single self-contained `llms.txt` spec (supersedes 0008) | Accepted | 2026-06-25 |
-| 0013 | Sentence-case labels, centered separators, editorial eyebrows (R-25/R-26) | Accepted | 2026-06-25 |
+| 0013 | Distinct editorial eyebrows, centered separators (R-25/R-26) | Accepted | 2026-06-25 |
 | 0014 | V3.7 — cover eyebrow, alignment hygiene, real data-viz blocks (R-27–R-31) | Accepted | 2026-06-27 |
 | 0015 | V3.8 — build the catalogued `flashcard-list` block (R-32) | Accepted | 2026-06-28 |
 | 0016 | V3.9 — rendering robustness: faithful markdown, mobile fit, completed charts (R-33–R-35) | Accepted | 2026-07-03 |
+| 0017 | V3.10 — the interface-skills cut: structure, legibility, roles (R-36–R-43) | Accepted | 2026-08-29 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.10.0** — The interface-skills cut. V3.10 is the first version audited against a standard from outside the system: the eleven `jakubkrehel/skills` interface skills, vendored into `.claude/skills/` and mapped to Supercard's own rules in `SKILLS-interface-map.md`. What the audit found was that the worst defects were all failures to keep promises the spec had already made. R-36 (subheads are headings — a `### ` renders as `<h2 class="tile">`, so a card stops presenting one `<h1>` and nothing else, and a pre-3.4 subhead stops falling back to unstyled 16px browser default). R-37 (every rendered glyph clears 4.5:1 — the list marker, the source bullet, the divider label, the gallery meta line and the corner mark were drawn at `--g-30`, 2.10:1, which R-20 already classed as non-text). R-38 (a chart names its data, not the shape it draws). R-39 (role tokens name the job, over the value-named ramp). R-40 (the card is a document: `<main>`, real headings, `th scope`, logical properties — and the gallery gets landmarks, focus rings, 44pt controls and an unclipped spec URL). R-41 (display type wraps balanced), R-42 (smart punctuation) and R-43's grouping corrections are scoped to the new `.canvas.v3-10` layer; the rest are base-level and retroactive on the ADR-0011 precedent, because a subhead rendering as body text and a marker at 2.10:1 are defects, not period design. Also enforces two rules that had shipped as CSS and nothing else: R-24's em-dash ban never ran on the V3.0 cards it was made retroactive for, and R-29's `td.num` styling had no render path emitting the class. (ADR-0017.)
 
 **v3.9.0** — Rendering robustness. A measured Chromium audit of the published renders found the HTML renderer mis-rendering much of the catalogued grammar; V3.9 fixes the render layer end to end. R-33 (faithful markdown rendering — real blockquotes with attribution, fenced code as `<pre>`, list treatment by block id with ✓/✗/numeral markers, dividers and timelines styled, authoring-notes scaffold never rendered, identity-only corner glyph), R-34 (mobile fit and rhythm — `width=393` viewport, base-level fixed tables + overflow-wrap, one measured beat gap, R-13-exact cover joins, chart text clamped inside the viewBox), R-35 (chart family completed — `column-chart` + `area-chart` built, all four charts drawing from one shared `chart-geometry.mjs` both render paths import). R-33/R-34 are base-level and retroactive (ADR-0011 precedent — defect repair, not design drift); card sources are untouched. Also repairs the spec's own stale surfaces (ADHD gate vs. R-24, decision-tree asterism branch, glossary loft definition). (ADR-0016.)
 
@@ -133,7 +136,7 @@ The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most r
 
 **v3.6.2** — Delivery format. The public spec is now one self-contained `llms.txt` at `https://berafoot.com/llms.txt`, replacing the V3.1–V3.6 progressive-disclosure JSON tree at `docs/spec/`. No content rule changed; `app/scripts/build-spec.mjs` inlines and normalizes the canonical markdown into one file, still drift-checked in CI. Old `/spec/*.json` URLs 301-redirect to `/llms.txt`. (ADR-0012, superseding ADR-0008.)
 
-**v3.6.1** — Label-and-separator refinement. Added R-25 (sentence-case labels — eyebrow / `th` / divider / gallery section-label drop UPPERCASE, tracking returns to 0) and R-26 (centered separators — symmetric `section` padding). The React render path stops stamping the beat name on every block, adopting content-naming editorial eyebrows. Retroactive like V3.6.0. (ADR-0013.)
+**v3.6.1** — Label-and-separator refinement. Added R-25 (distinct editorial eyebrows — an eyebrow names the block's content, never the beat, and is distinct from its neighbours; casing is unchanged, UPPERCASE at +0.08em) and R-26 (centered separators — symmetric `section` padding). The React render path stops stamping the beat name on every block, adopting content-naming editorial eyebrows. Retroactive like V3.6.0. (ADR-0013.)
 
 **v3.6.0** — Surface refinement. Added R-22 (flat surfaces — shadows retired system-wide; the `--shadow-*` tokens are deleted and an anchor card is bounded by border + radius + padding), R-23 (heavier hairline — borders step from `--g-06` to `--g-12`, anchor cards to 1px), R-24 (no em dash in reader-visible card content; asterism rest retired — supersedes R-11/G-10). Amended Principle 4 ("bounded," not "lofted") and R-13. **Not backwards-compatible by design:** unlike every prior version, R-22/R-23/R-24's visual rules apply to every card on re-render regardless of `frozen_at_version` (the CSS lives at base level), and em dashes are stripped from all existing sources — the deliberate exception to the frozen-at-version guarantee (ADR-0011). The reading-layer rules (R-9/R-19, R-20, R-21) remain frozen and untouched. (ADR-0011.)
 
@@ -152,6 +155,7 @@ The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most r
 ## Quick links
 
 - Pipeline → `10-GOVERNANCE/PIPELINE-card-assembly` (operational manual)
+- Interface skills → `10-GOVERNANCE/SKILLS-interface-map` (what each vendored skill owns here, and what the spec overrides)
 - Grammar → `10-GOVERNANCE/GRAMMAR-block-composition` (block selection procedure)
 - Lengths → `10-GOVERNANCE/LENGTHS-mini-standard-xl`
 - Rendering → `10-GOVERNANCE/RENDERING-spec`

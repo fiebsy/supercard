@@ -7,7 +7,7 @@ description: Build a Supercard from a topic — runs the dynamic assembly pipeli
 
 Runs the card assembly pipeline defined in `10-GOVERNANCE/PIPELINE-card-assembly.md`.
 The pipeline shape: **Request → Mode → Check research store → Deep research →
-Breakdown MD → Supercard MD → Render → Publish**.
+Breakdown MD → Supercard MD → Gates → Design review → Render → Publish**.
 
 The breakdown MD is the uncompressed deep-research report and source of truth;
 it lives in `60-RESEARCH/` and is registered in `INDEX-research-reports.md`. The
@@ -26,8 +26,8 @@ Read, in order:
 
 Keep handy: `10-GOVERNANCE/LENGTHS-mini-standard-xl.md`,
 `10-GOVERNANCE/RENDERING-spec.md`, `00-INDEX/INDEX-block-library.md`,
-`50-TEMPLATES/TEMPLATE-breakdown.md`, `60-RESEARCH/INDEX-research-reports.md`,
-`docs/README.md`.
+`10-GOVERNANCE/SKILLS-interface-map.md`, `50-TEMPLATES/TEMPLATE-breakdown.md`,
+`60-RESEARCH/INDEX-research-reports.md`, `docs/README.md`.
 
 If this skill runs outside the Supercard repo, clone or fetch those docs first
 from the `fiebsy/supercard` repository.
@@ -51,11 +51,13 @@ choice in one line before proceeding.
 3. **Research → breakdown** — deep research first, always, even in `summary` mode. User sources → web → prior `60-RESEARCH/` reports and `30-CARDS/` / `90-ARCHIVE/` cards. Every fact carries its source and confidence. Write `60-RESEARCH/BREAKDOWN-{slug}.md` from `50-TEMPLATES/TEMPLATE-breakdown.md`: the full uncompressed deep-research report — research brief, research log, all 7 beats, and the full research apparatus (source register, quotes bank, numbers bank, contested claims, open questions, confidence). **No length budget — maximize completeness.** Then register it: add/update its row in `60-RESEARCH/INDEX-research-reports.md`.
 4. **Convert** — for each content unit: run the GRAMMAR decision tree → block type; check `length_variants` + `lifecycle` in `INDEX-block-library`; apply the mode's length bias; author each block with single emphasis. Write `30-CARDS/CARD-{YYYY-MM-DD}-{slug}--draft.md` (or `-part-N` if a `deep-dive` exceeds 25 blocks) from the matching `TEMPLATE-supercard-*`. Set the card's `research_report` frontmatter, and append a card derivation log entry to the breakdown.
 5. **Gates** — run all seven constraint gates (length, single emphasis, loft, redundancy, screenshot test, grayscale/type, frozen-at-version). Fix and re-run any failure.
+5b. **Design review** (Stage 4b) — with the gates passing, read the card against the vendored interface skills: invoke `better-interface` for a routed review across typography, layout, colour, writing and accessibility, or read the domains you touched. Check every finding against the **Overridden** table in `10-GOVERNANCE/SKILLS-interface-map.md` first: a finding that lands there is answered, not open. Fix what survives at the card level; a finding about the *system* becomes an R-rule and an ADR, never a patch to one card. No `HIGH` finding survives into a render.
 6. **Render and publish** — mandatory (ADR-0007), and **run the renderer; never hand-author the HTML** (ADR-0010). Run `npm --prefix app run render -- 30-CARDS/CARD-{YYYY-MM-DD}-{slug}--draft.md` — it writes the standalone `docs/cards/CARD-{YYYY-MM-DD}-{slug}.html` (inlining `supercard.css` resolved to `frozen_at_version`, with `<meta>` provenance + `sc:content_hash`) and upserts the `docs/index.html` gallery entry. Then run `npm --prefix app run validate` and confirm **G10 (render-freshness)** passes. Commit and push so the card is viewable online.
 
 ## Notes
 
 - Use Core/Stable blocks only unless the user explicitly asks for Experimental.
+- Author a beat's claim as a `### ` subhead where it has one: the renderer turns it into a real `<h2>`, which is what gives the card an outline (R-36). A card with ten beats and one heading is a card nothing but a screenshot can read.
 - `deep-dive` must be long *without* being repetitive — length comes from breadth of distinct content, never restatement. The redundancy filter runs hardest here.
 - The breakdown is kept, not discarded — it is the genealogy of the card (PRINCIPLES 10) and lives in the dedicated `60-RESEARCH/` store (ADR-0006).
 - Never re-research a topic that already has a report — that is the costliest duplication. Check the registry first.
