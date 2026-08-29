@@ -1518,6 +1518,7 @@ hierarchy:
 | Role | Size / leading | Weight | Tracking | Note |
 |---|---|---|---|---|
 | Lead / quote *(reserved)* | 19 / 26 | 500 | −0.005em | the hero `.hook` and `blockquote` only, never a general subhead step |
+| Pull quote *(reserved)* | 24 / 30 | 600 | −0.012em | `blockquote.pull` only. It is the old Section-header step, kept for the one block that is a display moment rather than a heading |
 
 **Note on the eyebrow row.** The eyebrow is the one positively-tracked role
 (+0.08em) — UPPERCASE caps have no word-shape to break, so opening their tight
@@ -2478,7 +2479,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.10.0 · era atlas
-- **Revision:** `7ab4a549b40a` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `f652b8b51be1` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-08-29
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -2494,7 +2495,7 @@ Source files (the canonical markdown this view is generated from):
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-07-03 — sha256 `0190e168406594039ca3e773866d9282695e663be7a0ff014bf406015f26eb95`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-08-29 — sha256 `3cf0a916e4f69a3e55787a12c4f35d2ab759ed3bfd5f446b96bc18fbb8e9e303`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-08-29 — sha256 `fa9aba2bc29ecc831f69c4e3965c47c42271173fd8fab129007134d20ab6e29e`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-08-29 — sha256 `0fc064b8b692fc1fa1118079c844a001e28de2ac63f52f10c82baea915b44fde`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `9bbb7552abe25d0de1e0308ea92d7766bb3949a9a9b6a52b18cc0d1c1ff22a69`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 

@@ -1512,9 +1512,8 @@ a.spec-link:hover {
   min-width: 0;
 }
 .sample-title {
-  /* block so overflow/ellipsis apply — an inline span ignores them, letting a
-   * long title run full-width straight under the chevron instead of clipping */
-  display: block;
+  /* min-width: 0 so the flex item can shrink to the lane the chevron leaves
+   * instead of running full-width under it. */
   min-width: 0;
   font-size: 22px;
   line-height: 28px;

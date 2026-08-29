@@ -118,6 +118,7 @@ hierarchy:
 | Role | Size / leading | Weight | Tracking | Note |
 |---|---|---|---|---|
 | Lead / quote *(reserved)* | 19 / 26 | 500 | −0.005em | the hero `.hook` and `blockquote` only, never a general subhead step |
+| Pull quote *(reserved)* | 24 / 30 | 600 | −0.012em | `blockquote.pull` only. It is the old Section-header step, kept for the one block that is a display moment rather than a heading |
 
 **Note on the eyebrow row.** The eyebrow is the one positively-tracked role
 (+0.08em) — UPPERCASE caps have no word-shape to break, so opening their tight
