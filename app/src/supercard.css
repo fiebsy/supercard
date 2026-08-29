@@ -328,7 +328,25 @@ pre {
   border-radius: 8px;
   padding: var(--s-2) var(--s-3);
   margin: var(--s-2) 0;
+  /* `white-space: pre` opts out of the canvas-wide overflow-wrap, so a long
+   * equation or code line is the one thing on the card that can still run
+   * past the column. It scrolls rather than overflowing, and the mask is the
+   * cue that it does: without one, content hidden with no affordance may as
+   * well not be there, and a screenshot silently loses the tail. */
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
 }
 
 /* quote-as-evidence + pull-quote */
@@ -338,7 +356,7 @@ blockquote {
   font-weight: 500;
   letter-spacing: -0.005em;
   color: var(--ink);
-  border-left: 2px solid var(--k);
+  border-inline-start: 2px solid var(--k);
   padding-inline-start: var(--s-3);
   margin: var(--s-1) 0 var(--s-3);
 }
@@ -424,7 +442,9 @@ section.divider h2 {
   position: fixed;
   bottom: 16px;
   left: 50%;
-  transform: translateX(calc(196px - 100% - 4px));
+  /* 196px is half the 393pt column. Below a 393px viewport that pushed the
+   * mark off the trailing edge, so the offset clamps to the viewport. */
+  transform: translateX(calc(min(196px, 50vw) - 100% - 4px));
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.04em;
@@ -945,7 +965,7 @@ a.spec-link:hover {
 }
 .canvas.v3-7 td.num,
 .canvas.v3-7 th.num {
-  text-align: right;
+  text-align: end;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1581,4 +1601,29 @@ a.spec-link:hover {
 .canvas.v3-10 .dek,
 .canvas.v3-10 blockquote {
   text-wrap: balance;
+}
+
+/* R-43 — a quote and its attribution are one group.
+ *
+ * The joins ran the wrong way round: 16pt from the quote down to the line
+ * naming its source, then 12pt from there to the commentary that follows. The
+ * gap inside the group was larger than the gap around it, so the attribution
+ * read as belonging to the paragraph below it. Between-group space is now 3x
+ * the within-group space, which is what makes the pair read as a pair. */
+.canvas.v3-10 blockquote {
+  margin-bottom: var(--s-1);
+}
+.canvas.v3-10 p.attrib {
+  margin-bottom: var(--s-4);
+}
+
+/* R-43 — the footnote list is a list of sources, not a ruled row list.
+ *
+ * `.sources li` overrides the row list's font, colour, marker and padding but
+ * inherited its hairline, so every source line carried a separator the 13pt
+ * leading had already made unnecessary. Space does the grouping; a rule is
+ * for where space alone cannot. */
+.canvas.v3-10 .sources li {
+  border-bottom: none;
+  padding: 2px 0;
 }

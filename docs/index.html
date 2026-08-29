@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- width=393, not device-width. The column is a fixed 393px, so on a 375 or
+     390 CSS-px phone device-width lays the page out narrower than its own
+     content and the reader gets a horizontal scrollbar. R-34 settled this for
+     the standalone card renders; the site pages had kept device-width. -->
+<meta name="viewport" content="width=393, initial-scale=1">
 <meta name="color-scheme" content="only light">
 <title>Supercard · one URL, the whole spec</title>
 <meta name="description" content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. The complete spec for agents lives in one self-contained file: /llms.txt. Plus a gallery of published cards.">
@@ -240,7 +244,9 @@
     position: fixed;
     bottom: 16px;
     left: 50%;
-    transform: translateX(calc(196px - 100% - 4px));
+    /* 196px is half the 393pt column; below a 393px viewport that pushed the
+     * mark past the trailing edge, so the offset clamps to the viewport. */
+    transform: translateX(calc(min(196px, 50vw) - 100% - 4px));
     font-family: var(--mono);
     font-size: 10px;
     letter-spacing: 0.04em;
