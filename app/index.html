@@ -33,7 +33,11 @@
     <meta name="sc:type" content="react-app" />
     <meta name="sc:era" content="atlas" />
   </head>
-  <body>
+  <!-- ontouchstart is empty on purpose and is not script: its presence is what
+       makes Mobile Safari deliver :active to the control under the finger, and
+       :active is the whole of this page's press feedback now that the UA's own
+       tap rectangle is off (R-44). -->
+  <body ontouchstart="">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

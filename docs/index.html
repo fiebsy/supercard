@@ -197,13 +197,31 @@
     padding: 10px var(--s-3);
     min-height: 44px;
     cursor: pointer;
-    transition: opacity 0.15s ease;
   }
-  .copy-btn:hover { opacity: 0.82; }
-  /* Press feedback: better-ui's exact 0.96, the same figure on every control. */
-  .copy-btn:active, a.card-link:active { scale: 0.96; }
-  a.card-link { transition: scale 0.15s ease-out, border-color 0.15s ease-out; }
   .copy-btn.copied { background: var(--ink-2); }
+
+  /* R-44 — one interaction layer, mirroring app/src/supercard.css.
+   * The UA paints its own translucent rectangle over a pressed link, which on
+   * a card-sized target reads as a grey shadow dropped over the whole card —
+   * the last shadow in a system that retired them in V3.6 (R-22). It comes
+   * off, and the canvas draws its own press instead: scale(0.96) in fast,
+   * out slower so the release settles rather than snapping back. */
+  html { -webkit-tap-highlight-color: transparent; }
+  .copy-btn, a.card-link {
+    transition-property: scale, background-color, border-color, color, opacity;
+    transition-duration: 0.24s;
+    transition-timing-function: cubic-bezier(0.22, 0.61, 0.24, 1);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  .copy-btn:active, a.card-link:active { scale: 0.96; transition-duration: 0.09s; }
+
+  /* Hover is a pointer state. A touch browser fakes it on tap and then leaves
+   * it applied, so the card you last opened stays lit after you come back. */
+  @media (hover: hover) and (pointer: fine) {
+    .copy-btn:hover { opacity: 0.82; }
+    a.card-link:hover { border-color: var(--g-30); }
+  }
 
   a.card-link {
     display: block;
@@ -215,7 +233,6 @@
     margin-bottom: var(--s-2);
     background: var(--w);
   }
-  a.card-link:hover { border-color: var(--g-30); }
 
   .card-title {
     font-size: 24px;
@@ -266,7 +283,9 @@
   }
 </style>
 </head>
-<body>
+<!-- ontouchstart is empty on purpose and is not script: its presence is what
+     makes Mobile Safari deliver :active to the control under the finger (R-44). -->
+<body ontouchstart="">
   <main class="canvas">
 
     <div class="eyebrow">Supercard · v3.10 Atlas</div>

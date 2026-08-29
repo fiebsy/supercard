@@ -27,6 +27,13 @@ const REPO_URL = "https://github.com/fiebsy/supercard";
  * earns its chrome once there's enough to be worth hiding. */
 const COLLAPSE_OLDER_AT = 3;
 
+/* Whether the archive was open, at module scope so it outlives the Gallery
+ * unmounting on a route change. Opening a card and coming back used to
+ * re-collapse the list the reader had just expanded, which — paired with the
+ * restored scroll offset (R-44, App.tsx) — would have returned them to an
+ * offset the page no longer had. The two belong together. */
+let olderWasOpen = false;
+
 /* A mono path label (`~/ spec`) trailed by a hairline rule — the device that
  * separates the lander's zones in this vertical, mobile layout. */
 function ZoneLabel({ children, id }: { children: string; id?: string }) {
@@ -43,6 +50,32 @@ function ZoneLabel({ children, id }: { children: string; id?: string }) {
   );
 }
 
+/* The execCommand fallback. The async Clipboard API is missing or refused in
+ * more places than it looks — an insecure origin, an in-app webview, a
+ * browser whose privacy mode declines the write — and the button used to
+ * report "Copied" in every one of them without copying anything (R-44). A
+ * control that lies about what it did is worse than one that visibly fails,
+ * so this runs for real and its return value is what the check reports. */
+function copyBySelection(text: string): boolean {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  // Off-screen, not hidden: a display:none or zero-size field is not
+  // selectable, and iOS scrolls to a focused field it can see.
+  ta.style.cssText = "position:fixed;top:0;left:-9999px;opacity:0";
+  document.body.appendChild(ta);
+  ta.select();
+  ta.setSelectionRange(0, text.length);
+  let ok = false;
+  try {
+    ok = document.execCommand("copy");
+  } catch {
+    ok = false;
+  }
+  ta.remove();
+  return ok;
+}
+
 /* The spec input is itself the copy button — the whole field is clickable, so
  * the copy glyph is just a quiet indicator (no fill). The glyph swaps to a
  * check for a moment after a successful copy (monochrome — readable on the
@@ -50,14 +83,18 @@ function ZoneLabel({ children, id }: { children: string; id?: string }) {
 function SpecInput() {
   const [copied, setCopied] = useState(false);
   const copy = () => {
-    const done = () => {
+    const settle = (ok: boolean) => {
+      if (!ok) return;
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     };
     if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(SPEC_URL).then(done, done);
+      navigator.clipboard
+        .writeText(SPEC_URL)
+        .then(() => settle(true))
+        .catch(() => settle(copyBySelection(SPEC_URL)));
     } else {
-      done();
+      settle(copyBySelection(SPEC_URL));
     }
   };
   return (
@@ -118,7 +155,7 @@ function SampleCard({ entry }: { entry: CardEntry }) {
 
 export function Gallery() {
   const [current, ...older] = cards;
-  const [showOlder, setShowOlder] = useState(false);
+  const [showOlder, setShowOlder] = useState(olderWasOpen);
   // Expanding swaps the reveal button out of the tree and collapsing swaps the
   // Hide button out, so without this a keyboard reader is returned to the top
   // of the document by whichever control they just used.
@@ -131,6 +168,7 @@ export function Gallery() {
   }, [showOlder]);
   const toggle = (next: boolean) => {
     moved.current = true;
+    olderWasOpen = next;
     setShowOlder(next);
   };
 
@@ -188,7 +226,10 @@ export function Gallery() {
               Hide
             </button>
           </div>
-          <div className="older-list" id="older-cards">
+          <div
+            className={`older-list${moved.current ? " is-revealing" : ""}`}
+            id="older-cards"
+          >
             {older.map((c) => (
               <SampleCard key={c.slug} entry={c} />
             ))}
