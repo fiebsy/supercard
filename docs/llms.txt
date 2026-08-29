@@ -108,6 +108,11 @@ this page.
    parentheses, or two sentences. Set real punctuation in the rendered HTML
    (R-42): curly quotes and apostrophes, the single ellipsis character, an en
    dash for a numeric range. Straight quotes stay inside `<code>` and `<pre>`.
+   **Cash out what a headline coins** (G-17): a metaphor or term of art in a
+   title, subhead, or eyebrow is stated literally in the first sentence under
+   it. **And keep the through-line** (G-18): order each beat claim → proof →
+   consequence, and let its last sentence plant the noun the next beat's
+   eyebrow picks up — a content echo, never "next we'll look at…".
 6. **Assemble the HTML** from the skeleton + per-block patterns below.
 7. **Run the self-check** at the end of this section. Fix every "no" before you
    ship.
@@ -485,6 +490,7 @@ Tool-less version of the gates. Any "no" means fix it, not ship it.
 10. **Fit** — nothing escapes the 393px canvas: tables keep the fixed grid, long tokens wrap, chart text stays inside its `viewBox` (anchor edge labels inward), and every beat gap is the same height.
 11. **Structure** — one `<h1>`, an `<h2 class="tile">` for every subhead, `<main>` on the canvas, `scope="col"` on column headers, and an `aria-label` on every chart built from its own rows. Read the headings alone: they should outline the card (R-36, R-38, R-40).
 12. **Legibility** — every glyph a reader is meant to read, markers and the corner mark included, comes from the ink ladder (`--text-emphasis` / `--text-body` / `--text-quiet`), never from `--g-30`, which measures 2.10:1 and is a rule colour (R-37, R-39).
+13. **Flow** — every term a headline introduces is stated literally in the section under it (G-17)? Each beat reads claim → proof → consequence, and no block could be shuffled away without loss (G-18)?
 
 Everything below this section — Principles, Grammar, Lengths, the Block library —
 is the reasoning and the full rule set behind these steps. Read on when you need
@@ -624,9 +630,9 @@ Bridges between sections are named by content, never by position. The reader nav
 
 If you can only remember one rule from this doc, remember this: **every visible region must convey one complete idea, traceable back to the system via the corner glyph.** Everything else flows from that.
 
-### The ADHD scan-ability gate (V3.1+, twelve questions on V3.4+)
+### The ADHD scan-ability gate (V3.1+, twelve questions on V3.4+, thirteen on V3.11+)
 
-Runs alongside the screenshot test on every V3.1+ card before publication. Ten questions for V3.1–V3.3; twelve for V3.4+. Binary Y/N. Any "no" blocks the render.
+Runs alongside the screenshot test on every V3.1+ card before publication. Ten questions for V3.1–V3.3; twelve for V3.4+; thirteen for V3.11+. Binary Y/N. Any "no" blocks the render.
 
 1. Does every `standard-text` block open with a bolded 2–6-word lead-clause?
 2. Does no block contain more than one bolded run?
@@ -640,8 +646,9 @@ Runs alongside the screenshot test on every V3.1+ card before publication. Ten q
 10. Does body text render at 17pt SF Pro Rounded, 26pt leading, left-aligned ragged-right, with no italic-for-emphasis runs — tracking per the card's frozen version (R-9 for V3.1–V3.4, R-19's −0.01em for V3.5+)?
 11. **(V3.4+)** Does every prose block clear the readability floor — Flesch–Kincaid grade ≤ 9, average sentence ≤ 20 words?
 12. **(V3.4+)** Does every prose block sit at or below the mobile paragraph cap — ≤ 3 sentences and ≤ 60 words?
+13. **(V3.11+)** Does every term a headline surface introduces — a coinage, a metaphor, a term of art in the title, dek, a subhead, or an eyebrow — get stated literally in that section's first sentence, an appositive, or an opening `definition` block (G-17)?
 
-V3.0 cards are exempt — they're frozen at their authored version per ADR-0003. The gate applies only to cards with `frozen_at_version: 3.1.0` or higher. Questions 11–12 apply only to cards with `frozen_at_version: 3.4.0` or higher; V3.1–V3.3 cards stay on the ten-question form.
+V3.0 cards are exempt — they're frozen at their authored version per ADR-0003. The gate applies only to cards with `frozen_at_version: 3.1.0` or higher. Questions 11–12 apply only to cards with `frozen_at_version: 3.4.0` or higher; question 13 only to `frozen_at_version: 3.11.0` or higher; earlier cards stay on their version's form.
 
 ---
 
@@ -934,6 +941,54 @@ lists *actions*, a flashcard list lists *the things worth remembering*.
   new syntax, selects the `<dl>` render (the R-30 convention shared with the
   charts and stat-grid). Render contract: RENDERING § R-32.
 
+### G-17. Define what you name (V3.11+)
+
+A headline surface — the cover title, the dek, a `### ` tile subhead, an
+eyebrow — may **introduce** a term: a coinage, a metaphor, a term of art, a
+name the reader has not met. Whatever a headline introduces, the section under
+it **cashes out before using it to argue**:
+
+- **A figurative or coined headline** is stated literally in the first
+  sentence beneath it. *"Outside Eyes"* earns its keep only if the next line
+  says what the outside standard is. The reader should never finish a section
+  still guessing what its headline meant.
+- **A term of art** gets an appositive on first use (*"the beat gap, the
+  fixed space between sections,"*) or, when the term is itself the point, a
+  `definition` block as the section's opening content block.
+- **P13 already requires jargon defined on first use in prose.** G-17 extends
+  the same duty to the headline layer, which P13 never covered — and headlines
+  are exactly where coinages concentrate.
+
+The redundancy filter still governs: a definition of a term the audience
+plainly knows is filler (the existing anti-pattern), and a body sentence that
+merely *restates* a literal headline fails P9. G-17 fires only where the
+headline **introduces** something; introduced-and-never-defined is the defect.
+This is the scan-and-dive contract (P11) at the naming layer: the headline is
+the scan, the cash-out is the first thing the dive hits.
+
+### G-18. The through-line (V3.11+)
+
+A card is one argument, not a stack of exhibits. Two rules of order, both
+SHOULD (the validator cannot check meaning; the steward can):
+
+- **Between beats — plant the handoff.** A beat's final sentence should leave
+  on the table the specific noun, number, or question that the next beat's
+  eyebrow or tagline picks up. This is a content echo, not a pointer: each
+  side still reads complete on its own (P1 — either side of the seam survives
+  a crop), and G-14's forbidden list still bans every form of "next we will…".
+  The echo is how a reader who *is* scrolling feels the card flow while a
+  reader who screenshots one beat loses nothing.
+- **Within a beat — claim, proof, consequence.** Order a multi-block beat so
+  the anchor states the claim, the content blocks supply the proof, and the
+  last block lands what follows from it. A beat whose blocks could be
+  shuffled without loss is a pile, not an argument; re-order or cut
+  (P9 — a block that merely coexists restates nothing *and* adds nothing).
+
+G-18 is why a longer card can read *smoother* than a short one rather than
+merely bigger: the beat gap does the resting, the handoff does the pulling,
+and no connective scaffold ever appears (P14 — the flow lives in the content,
+never in meta-language).
+
 ### Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -997,6 +1052,8 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Meta-language transition between beats (`In the following section`, `Let's look at…`, `As mentioned above`) (V3.4+) | The reader doesn't need to be told that the author is about to make a point — they need the point |
 | Transition eyebrow or tagline that paraphrases the body below it (V3.4+) | Redundancy filter (P9) at the section seam — the bridge must add a frame, not restate the claim |
 | Flashcard list longer than ten pairs, or with paragraph-length answers (V3.8+) | A study list is the ten highest-yield recall items in few words each — past ten, or once an answer needs a paragraph, it is a glossary dump or a `faq`, not a flashcard (G-16) |
+| A headline that introduces a coinage, metaphor, or term of art the section never states literally (V3.11+) | The reader finishes the section still guessing what its own headline meant — cash the term out in the first sentence beneath it, an appositive, or an opening `definition` block (G-17) |
+| A multi-block beat whose blocks could be shuffled without loss (V3.11+) | A pile of exhibits, not an argument — order as claim → proof → consequence, or cut to the blocks that argue (G-18) |
 
 ---
 
@@ -1318,17 +1375,22 @@ A **mode** is the *intent* of the request. It is not a length — it *biases* re
 |---|---|---|---|---|---|
 | `summary` | "Give me the gist." Reductive quick breakdown of an event, book, or concept. | Light | Mini (5–8), sometimes Standard | key-takeaway, stat-callout, definition, checklist | Aggressive — cut anything not load-bearing |
 | `briefing` | "Give me a complete, balanced understanding." The default. | Moderate | Standard (10–14) | Full 7-beat, ~one block per beat | Standard |
-| `deep-dive` | "I want to fully understand this." Exhaustive but never repetitive. | Heavy | XL (18–25) or multi-part | All beats multi-block; Comparison + Counter mandatory | Hardest — length comes from breadth of distinct content, never restatement |
+| `deep-dive` | "I want to fully understand this." Exhaustive but never repetitive. | Heavy | XL (18–25) or multi-part | All beats multi-block and prose-led (anchor opens, connected `standard-text` carries — see *On `deep-dive` and flow*); Comparison + Counter mandatory | Hardest — length comes from breadth of distinct content, never restatement |
 | `reference` | "Something I'll return to and navigate." | Heavy | XL or multi-part | table, FAQ, numbered-principle, section-divider, definition | Standard, but parallel structural repetition is allowed where it aids navigation |
 
 **On `deep-dive` and length.** GRAMMAR caps a single card at 25 blocks. `deep-dive` is the mode most likely to exceed that — when it does, **split into a multi-part series** (`CARD-...-part-1`, `-part-2`) sharing one breakdown. A longer card is never an excuse for a repetitive one: the defining property of `deep-dive` is *full understanding without redundancy or restatement*.
 
+**On `deep-dive` and flow (V3.11+).** A deep-dive's multi-block beats are **prose-led**: the beat opens on its anchor, then carries two or three `standard-text` blocks that read *consecutively* — each with its own bold lead-clause (G-7), ordered claim → proof → consequence, closing on the handoff the next beat's eyebrow picks up (G-18). The result reads as a flowing long-form essay that happens to be scannable, not a deck of captioned exhibits. The staccato all-anchor register belongs to `summary`; reaching for a chart or stat where connected prose would carry the argument is the false-precision anti-pattern wearing a length excuse.
+
+**When a card "doesn't say enough."** The fix is never to pad the card in place — it is to **re-run Stage 3 from the same breakdown at the next deeper mode** (`summary` → `briefing` → `deep-dive`). The breakdown already holds the material (it has no length budget); depth is a property of the *view*, and the mode ladder is how the same research yields a gist, a briefing, or the full story without any card carrying filler.
+
 **Inferring the mode.** If the user doesn't name one, infer it from the request verb:
 
 - "summarize / TL;DR / quick / gist" → `summary`
-- "explain / brief me / break down" → `briefing`
-- "deep dive / fully understand / master / everything about" → `deep-dive`
+- "explain / brief me / break down / analyze / why did / how does" → `briefing`
+- "deep dive / fully understand / master / everything about / the full story / in depth / long form" → `deep-dive`
 - "reference / cheat sheet / I'll come back to this" → `reference`
+- Feedback on a delivered card — "more information", "not enough detail", "longer" → the same topic one mode deeper, re-run from the existing breakdown (never padded in place; see *When a card "doesn't say enough"* above)
 
 State the chosen mode back to the user in one line before proceeding.
 
@@ -1393,7 +1455,7 @@ Two categories of check, both must pass. **Gates** are binary pass/fail rules an
 | G5 | Screenshot test | Five questions on every section, including the header | GRAMMAR pre-publication test |
 | G6 | Frozen-at-version | Frontmatter declares `frozen_at_version` | ADR-0003 |
 | G7 | Density budget (V3.1+) | Anchor-to-content ratio per beat between 1:2 and 1:4; ≤ 2 same-type consecutive anchors; ≤ 4 consecutive content blocks | GRAMMAR § G-9 |
-| G8 | ADHD scan-ability gate (V3.1+) | The 10-item Y/N checklist in PRINCIPLES; any "no" blocks the render. V3.4+ cards run the twelve-question form. | PRINCIPLES § ADHD gate |
+| G8 | ADHD scan-ability gate (V3.1+) | The 10-item Y/N checklist in PRINCIPLES; any "no" blocks the render. V3.4+ cards run the twelve-question form; V3.11+ cards the thirteen-question form (Q13: every term a headline introduces is cashed out — G-17). | PRINCIPLES § ADHD gate |
 | G9 | Readability gate (V3.4+) | Computes Flesch–Kincaid grade level and Flesch Reading Ease across every prose block. Fails when grade level exceeds 9 on more than 30% of prose blocks or when reading ease drops below 60 on any single block. | GRAMMAR § G-13, PRINCIPLES 13 |
 
 #### Identity invariants (always on; not "passed" — held)
@@ -2530,8 +2592,8 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 ## Provenance
 
-- **Spec:** supercard · version 3.10.2 · era atlas
-- **Revision:** `4d53ad04128d` — a hash of the source markdown; changes iff a source changes.
+- **Spec:** supercard · version 3.11.0 · era atlas
+- **Revision:** `02c76604f4e2` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-08-29
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -2540,13 +2602,13 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 Source files (the canonical markdown this view is generated from):
 
-- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-08-29 — sha256 `a094558a6f781ab81c8b9dfaddb0e977cc83897707ebb1e138a95e95da13e05d`
-- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `c5fc0f26251fc907021ddd17c811215b182204ec92a09ed68ae4002f79ba1001`
-- `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-07-03 — sha256 `47cb3d24a86289df28363171a47afdd41458d2640d90a977da26caf92fd19a0c`
-- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-07-03 — sha256 `8953c6834bbff3d8e76ae6ae71d825c06919380009d8e2765531a06598c41296`
+- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-08-29 — sha256 `48f9f829fd15fa626eafe42f0bca0a21dc633365d14e7545bff61803ccb8686d`
+- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `4f00ae0f5ce7865549f634246ef47236178d9273233443f68aeaf51ba721ae80`
+- `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-08-29 — sha256 `f4a378f36938308c8311dbed9c3a3dc259024dcf83487374e4b7a43e08de42ed`
+- `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-08-29 — sha256 `1f14e8948e4af500af6a75750d096f3d6b2e61e13deca87532f9818c1f7efed4`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-07-03 — sha256 `0190e168406594039ca3e773866d9282695e663be7a0ff014bf406015f26eb95`
-- `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-08-29 — sha256 `3cf0a916e4f69a3e55787a12c4f35d2ab759ed3bfd5f446b96bc18fbb8e9e303`
+- `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-08-29 — sha256 `d4948f5be48615ace6196a4879282ca33541d5bf0a4928e94485fd060e228caf`
 - `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-08-29 — sha256 `24e4735b7a5f5e3cd6a2c61f12b8cb552f2d0a0d94ed038d2671a35ea2bb6e9c`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `9bbb7552abe25d0de1e0308ea92d7766bb3949a9a9b6a52b18cc0d1c1ff22a69`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`

@@ -15,6 +15,34 @@ Append entries via SupercardOps `logStewardEntry()` or directly.
 
 ---
 
+## 2026-08-29 — claude (for derick) — [foundation]
+
+**Context.** Derick's read on the recent cards, in his own register: they
+break things down well but don't say enough; the headlines coin phrases the
+card never defines; and the whole reads less fluid than it should — he wanted
+"a more fluid and longer form breakdown" without losing the scannability that
+is the format's entire point. The tempting fixes were all wrong in familiar
+ways: pad the card (P7/P9 say no), add connective scaffold (P14 banned the
+vocabulary), bolt a glossary under every title (the context-obvious-definition
+anti-pattern).
+
+**The noticing.** All three complaints are the depth axis showing up in
+different clothes. The format's MUSTs guarantee every block survives *alone* —
+that is P1 and it works — but nothing ever obliged adjacent blocks to *add
+up*, and nothing obliged a headline to cash out what it coins. Meanwhile the
+mode ladder already held the honest answer to "not enough information": the
+breakdown has no length budget, so depth belongs to the view, and the re-run
+at a deeper mode was always the design — it was just never written down as
+the response to that exact complaint.
+
+**Action.** V3.11 (ADR-0020): G-17 define-what-you-name (gate Q13), G-18 the
+through-line (SHOULD — deliberately, so it cannot become another rule that
+ships as text and is never kept), deep-dive goes prose-led, and the pipeline
+states the re-run rule. Content layer only; no card re-rendered.
+
+**Follow-up.** The next card authored should be a `deep-dive` under 3.11.0 —
+the prose-led register has a spec now and zero cards exercising it.
+
 ## 2026-08-29 — claude (for derick) — [drift]
 
 **Context.** Derick reported cards clipping on phones after the V3.10 cut, and

@@ -56,6 +56,11 @@ this page.
    parentheses, or two sentences. Set real punctuation in the rendered HTML
    (R-42): curly quotes and apostrophes, the single ellipsis character, an en
    dash for a numeric range. Straight quotes stay inside `<code>` and `<pre>`.
+   **Cash out what a headline coins** (G-17): a metaphor or term of art in a
+   title, subhead, or eyebrow is stated literally in the first sentence under
+   it. **And keep the through-line** (G-18): order each beat claim → proof →
+   consequence, and let its last sentence plant the noun the next beat's
+   eyebrow picks up — a content echo, never "next we'll look at…".
 6. **Assemble the HTML** from the skeleton + per-block patterns below.
 7. **Run the self-check** at the end of this section. Fix every "no" before you
    ship.
@@ -433,6 +438,7 @@ Tool-less version of the gates. Any "no" means fix it, not ship it.
 10. **Fit** — nothing escapes the 393px canvas: tables keep the fixed grid, long tokens wrap, chart text stays inside its `viewBox` (anchor edge labels inward), and every beat gap is the same height.
 11. **Structure** — one `<h1>`, an `<h2 class="tile">` for every subhead, `<main>` on the canvas, `scope="col"` on column headers, and an `aria-label` on every chart built from its own rows. Read the headings alone: they should outline the card (R-36, R-38, R-40).
 12. **Legibility** — every glyph a reader is meant to read, markers and the corner mark included, comes from the ink ladder (`--text-emphasis` / `--text-body` / `--text-quiet`), never from `--g-30`, which measures 2.10:1 and is a rule colour (R-37, R-39).
+13. **Flow** — every term a headline introduces is stated literally in the section under it (G-17)? Each beat reads claim → proof → consequence, and no block could be shuffled away without loss (G-18)?
 
 Everything below this section — Principles, Grammar, Lengths, the Block library —
 is the reasoning and the full rule set behind these steps. Read on when you need

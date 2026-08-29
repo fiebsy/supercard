@@ -5,13 +5,57 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.10.2 |
+| version | 3.11.0 |
 | owner | derick |
 | updated | 2026-08-29 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
 
 ---
+
+## [3.11.0] — "Atlas" — 2026-08-29
+
+The reading-flow cut. Three steward complaints that are really one: cards land
+thin, headlines coin terms nothing ever defines, and a scroll reads as a deck
+of captioned exhibits rather than an argument. The wrong fixes — padding,
+connective scaffold, a glossary under every title — stay refused; the depth
+axis moves into the grammar and the mode ladder instead. Content-layer only:
+no render path changes, no re-render, every existing card exempt. (ADR-0020.)
+
+### Added
+
+- GRAMMAR § G-17 — **Define what you name** (V3.11+). Whatever a headline
+  surface introduces (a coinage, a metaphor, a term of art in the title, dek,
+  a subhead, or an eyebrow), the section under it cashes out before arguing
+  with it: first sentence states it literally, or an appositive, or an
+  opening `definition` block. P13 covered prose; this covers the headline
+  layer, where coinages concentrate. Enforced as ADHD-gate question 13.
+- GRAMMAR § G-18 — **The through-line** (V3.11+, SHOULD). Between beats, the
+  final sentence plants the noun, number, or question the next beat's eyebrow
+  picks up — a content echo, crop-safe on both sides, with G-14's ban on
+  meta-language untouched. Within a beat, blocks order claim → proof →
+  consequence; a beat whose blocks shuffle without loss is a pile, not an
+  argument.
+- PRINCIPLES — the ADHD gate takes its thirteenth question (V3.11+ cards
+  only); earlier cards stay on their version's form.
+- Two anti-pattern rows: a headline term never cashed out (G-17); a
+  shuffle-proof multi-block beat (G-18).
+
+### Changed
+
+- PIPELINE — **`deep-dive` is prose-led** (V3.11+): multi-block beats open on
+  their anchor and are carried by consecutive `standard-text` blocks with
+  their own lead-clauses, so an XL card reads as a flowing long-form essay
+  that happens to be scannable. The staccato all-anchor register belongs to
+  `summary`.
+- PIPELINE — **the re-run rule**: when a delivered card "doesn't say enough,"
+  re-run Stage 3 from the same breakdown one mode deeper
+  (`summary` → `briefing` → `deep-dive`); never pad a card in place. Mode
+  inference gains the missing verbs ("analyze", "in depth", "the full story",
+  "long form") and the feedback route ("more information" → deeper mode).
+- BUILD-card-no-tools — step 5 teaches G-17/G-18 and the self-check gains
+  question 13, so cards built from a paste of `llms.txt` inherit the flow
+  rules.
 
 ## [3.10.2] — "Atlas" — 2026-08-29
 

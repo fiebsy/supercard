@@ -5,7 +5,7 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.10.2 |
+| version | 3.11.0 |
 | owner | derick |
 | updated | 2026-08-29 |
 
@@ -123,10 +123,13 @@ ls docs/cards/
 | 0017 | V3.10 — the interface-skills cut: structure, legibility, roles (R-36–R-43) | Accepted | 2026-08-29 |
 | 0018 | V3.10.1 — the interaction layer: press, hover, hit area, scroll (R-44) | Accepted | 2026-08-29 |
 | 0019 | V3.10.2 — the viewport keeps R-34's promise: fit to the phone, measured | Accepted | 2026-08-29 |
+| 0020 | V3.11 — the reading-flow cut: G-17 define what you name, G-18 through-line, prose-led deep-dive | Accepted | 2026-08-29 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.11.0** — The reading-flow cut. Three steward complaints that are one: cards land thin, headlines coin terms nothing defines, and a scroll reads as a deck of captioned exhibits. G-17 (define what you name): whatever a headline introduces, the section under it states literally in its first sentence, an appositive, or an opening definition block — ADHD-gate question 13. G-18 (the through-line, SHOULD): between beats the last sentence plants the noun the next eyebrow picks up, a crop-safe content echo; within a beat, claim → proof → consequence. And the depth axis moves to the mode ladder: `deep-dive` is prose-led (an anchor opens, consecutive lead-claused `standard-text` carries, an XL reads as a flowing essay that happens to be scannable), and a card that "doesn't say enough" is re-run from its breakdown one mode deeper, never padded. Content-layer only; existing cards exempt, no re-render. (ADR-0020.)
 
 **v3.10.2** — The viewport keeps R-34's promise. R-34 said `width=393` scales the canvas to the device; every page actually shipped `width=393, initial-scale=1`, and the pinned scale defeated the fit — 18px of every card offscreen on a 375px iPhone, 33px on a 360px Android, 74px at 320, with the spec's own no-tools section teaching the same broken tag to every LLM-built card. The pinned scale is dropped on all four surfaces (renderer, spec examples, lander, gallery), R-34 now says "never pin `initial-scale`" in as many words, and the fit is measured under mobile emulation at 393/375/360/320. A patch: one `<meta>` byte-range per page; no card's pixels or frozen version move. (ADR-0019.)
 

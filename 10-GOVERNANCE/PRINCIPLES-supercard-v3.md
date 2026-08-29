@@ -5,9 +5,9 @@
 | id | PRINCIPLES-supercard-v3 |
 | type | governance |
 | era | atlas |
-| version | 3.9.0 |
+| version | 3.11.0 |
 | owner | derick |
-| updated | 2026-07-03 |
+| updated | 2026-08-29 |
 
 The 14 foundational principles of the Supercard format (10 V3.0 + 2 V3.1 + 2 V3.4). PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble it*. When in doubt, this doc is the identity anchor — anything that violates these is by definition not a Supercard.
 
@@ -139,9 +139,9 @@ Bridges between sections are named by content, never by position. The reader nav
 
 If you can only remember one rule from this doc, remember this: **every visible region must convey one complete idea, traceable back to the system via the corner glyph.** Everything else flows from that.
 
-## The ADHD scan-ability gate (V3.1+, twelve questions on V3.4+)
+## The ADHD scan-ability gate (V3.1+, twelve questions on V3.4+, thirteen on V3.11+)
 
-Runs alongside the screenshot test on every V3.1+ card before publication. Ten questions for V3.1–V3.3; twelve for V3.4+. Binary Y/N. Any "no" blocks the render.
+Runs alongside the screenshot test on every V3.1+ card before publication. Ten questions for V3.1–V3.3; twelve for V3.4+; thirteen for V3.11+. Binary Y/N. Any "no" blocks the render.
 
 1. Does every `standard-text` block open with a bolded 2–6-word lead-clause?
 2. Does no block contain more than one bolded run?
@@ -155,5 +155,6 @@ Runs alongside the screenshot test on every V3.1+ card before publication. Ten q
 10. Does body text render at 17pt SF Pro Rounded, 26pt leading, left-aligned ragged-right, with no italic-for-emphasis runs — tracking per the card's frozen version (R-9 for V3.1–V3.4, R-19's −0.01em for V3.5+)?
 11. **(V3.4+)** Does every prose block clear the readability floor — Flesch–Kincaid grade ≤ 9, average sentence ≤ 20 words?
 12. **(V3.4+)** Does every prose block sit at or below the mobile paragraph cap — ≤ 3 sentences and ≤ 60 words?
+13. **(V3.11+)** Does every term a headline surface introduces — a coinage, a metaphor, a term of art in the title, dek, a subhead, or an eyebrow — get stated literally in that section's first sentence, an appositive, or an opening `definition` block (G-17)?
 
-V3.0 cards are exempt — they're frozen at their authored version per ADR-0003. The gate applies only to cards with `frozen_at_version: 3.1.0` or higher. Questions 11–12 apply only to cards with `frozen_at_version: 3.4.0` or higher; V3.1–V3.3 cards stay on the ten-question form.
+V3.0 cards are exempt — they're frozen at their authored version per ADR-0003. The gate applies only to cards with `frozen_at_version: 3.1.0` or higher. Questions 11–12 apply only to cards with `frozen_at_version: 3.4.0` or higher; question 13 only to `frozen_at_version: 3.11.0` or higher; earlier cards stay on their version's form.

@@ -5,9 +5,9 @@
 | id | GRAMMAR-block-composition |
 | type | governance |
 | era | atlas |
-| version | 3.9.0 |
+| version | 3.11.0 |
 | owner | derick |
-| updated | 2026-07-03 |
+| updated | 2026-08-29 |
 
 How blocks combine into a Supercard. PRINCIPLES says *what we're doing*; this doc says *how to assemble it*. The block-selection procedure (below) is the single composed routine an agent walks for every section.
 
@@ -300,6 +300,54 @@ lists *actions*, a flashcard list lists *the things worth remembering*.
   new syntax, selects the `<dl>` render (the R-30 convention shared with the
   charts and stat-grid). Render contract: RENDERING § R-32.
 
+## G-17. Define what you name (V3.11+)
+
+A headline surface — the cover title, the dek, a `### ` tile subhead, an
+eyebrow — may **introduce** a term: a coinage, a metaphor, a term of art, a
+name the reader has not met. Whatever a headline introduces, the section under
+it **cashes out before using it to argue**:
+
+- **A figurative or coined headline** is stated literally in the first
+  sentence beneath it. *"Outside Eyes"* earns its keep only if the next line
+  says what the outside standard is. The reader should never finish a section
+  still guessing what its headline meant.
+- **A term of art** gets an appositive on first use (*"the beat gap, the
+  fixed space between sections,"*) or, when the term is itself the point, a
+  `definition` block as the section's opening content block.
+- **P13 already requires jargon defined on first use in prose.** G-17 extends
+  the same duty to the headline layer, which P13 never covered — and headlines
+  are exactly where coinages concentrate.
+
+The redundancy filter still governs: a definition of a term the audience
+plainly knows is filler (the existing anti-pattern), and a body sentence that
+merely *restates* a literal headline fails P9. G-17 fires only where the
+headline **introduces** something; introduced-and-never-defined is the defect.
+This is the scan-and-dive contract (P11) at the naming layer: the headline is
+the scan, the cash-out is the first thing the dive hits.
+
+## G-18. The through-line (V3.11+)
+
+A card is one argument, not a stack of exhibits. Two rules of order, both
+SHOULD (the validator cannot check meaning; the steward can):
+
+- **Between beats — plant the handoff.** A beat's final sentence should leave
+  on the table the specific noun, number, or question that the next beat's
+  eyebrow or tagline picks up. This is a content echo, not a pointer: each
+  side still reads complete on its own (P1 — either side of the seam survives
+  a crop), and G-14's forbidden list still bans every form of "next we will…".
+  The echo is how a reader who *is* scrolling feels the card flow while a
+  reader who screenshots one beat loses nothing.
+- **Within a beat — claim, proof, consequence.** Order a multi-block beat so
+  the anchor states the claim, the content blocks supply the proof, and the
+  last block lands what follows from it. A beat whose blocks could be
+  shuffled without loss is a pile, not an argument; re-order or cut
+  (P9 — a block that merely coexists restates nothing *and* adds nothing).
+
+G-18 is why a longer card can read *smoother* than a short one rather than
+merely bigger: the beat gap does the resting, the handoff does the pulling,
+and no connective scaffold ever appears (P14 — the flow lives in the content,
+never in meta-language).
+
 ## Length budgets
 
 | Variant | Total blocks | Total scroll | Block height (typ.) | Hero card height |
@@ -363,3 +411,5 @@ Run on every section, including the header. Five questions per section. Any "no"
 | Meta-language transition between beats (`In the following section`, `Let's look at…`, `As mentioned above`) (V3.4+) | The reader doesn't need to be told that the author is about to make a point — they need the point |
 | Transition eyebrow or tagline that paraphrases the body below it (V3.4+) | Redundancy filter (P9) at the section seam — the bridge must add a frame, not restate the claim |
 | Flashcard list longer than ten pairs, or with paragraph-length answers (V3.8+) | A study list is the ten highest-yield recall items in few words each — past ten, or once an answer needs a paragraph, it is a glossary dump or a `faq`, not a flashcard (G-16) |
+| A headline that introduces a coinage, metaphor, or term of art the section never states literally (V3.11+) | The reader finishes the section still guessing what its own headline meant — cash the term out in the first sentence beneath it, an appositive, or an opening `definition` block (G-17) |
+| A multi-block beat whose blocks could be shuffled without loss (V3.11+) | A pile of exhibits, not an argument — order as claim → proof → consequence, or cut to the blocks that argue (G-18) |
