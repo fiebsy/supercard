@@ -1,6 +1,6 @@
 # Supercard
 
-The Supercard system — V3, "Atlas" era (3.0.0).
+The Supercard system — V3, "Atlas" era (3.10.0).
 
 A Supercard is a screenshot-shareable, single-emphasis-per-block knowledge
 artifact built as a cognitive prosthesis for ADHD readers. Every visible region
@@ -26,6 +26,7 @@ versioned, and rendered.
 | `60-RESEARCH/` | The deep-research-report store — breakdowns + their registry (ADR-0006) |
 | `90-ARCHIVE/` | Frozen V1/V2 era + retired V3 minor versions |
 | `docs/` | Published Supercard renders — the gallery + one HTML per card, viewable online (ADR-0007) |
+| `.claude/skills/` | The `supercard` build skill, plus the eleven vendored `jakubkrehel/skills` interface skills the design review runs (ADR-0017) |
 | `docs/llms.txt` | The public spec — one self-contained file generated from the canonical markdown (`app/scripts/build-spec.mjs`). Served at `/llms.txt`; the single URL an agent needs (ADR-0012) |
 
 ## Start here
@@ -36,7 +37,9 @@ If you're a new Claude session, read in this order before any card work:
 2. [`10-GOVERNANCE/PRINCIPLES-supercard-v3.md`](10-GOVERNANCE/PRINCIPLES-supercard-v3.md) — the 10 cognitive-prosthesis principles
 3. [`10-GOVERNANCE/GRAMMAR-block-composition.md`](10-GOVERNANCE/GRAMMAR-block-composition.md) — how blocks combine
 
-For deeper questions: `LENGTHS`, `RENDERING`, the ADRs, `CHANGELOG`. For the
+For deeper questions: `LENGTHS`, `RENDERING`, the ADRs, `CHANGELOG`. For what
+the vendored interface skills own on a card and what the spec overrides, see
+[`10-GOVERNANCE/SKILLS-interface-map.md`](10-GOVERNANCE/SKILLS-interface-map.md). For the
 agent working convention — including the git workflow (commit straight to
 `main`, no PRs) — see [`CLAUDE.md`](CLAUDE.md).
 
