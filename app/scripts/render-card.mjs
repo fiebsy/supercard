@@ -320,9 +320,25 @@ function emitTable(block, cls = "") {
   const data = rows.filter((r) => !r.every((c) => /^:?-+:?$/.test(c)));
   if (!data.length) return "";
   const [head, ...body] = data;
+  // R-29 — a data column whose body cells are all numeric renders tabular and
+  // right-aligned. The CSS for `td.num` / `th.num` has shipped since V3.7, but
+  // nothing ever emitted the class in the HTML path, so every percentage and
+  // multiple went out in proportional figures and the digits did not line up
+  // down the column. The first column is the label lane and is never numeric.
+  const isNumericCell = (c) =>
+    /^[^\w]*[\d.,]+\s*(?:%|×|x|k|m|b|bn|pt|px|s|ms)?[^\w]*$/i.test(c.replace(/\*/g, "").trim());
+  const numericCols = head.map((_, i) => {
+    if (i === 0) return false;
+    const cells = body
+      .filter((r) => r.length === head.length)
+      .map((r) => (r[i] || "").trim())
+      .filter(Boolean);
+    return cells.length > 0 && cells.every(isNumericCell);
+  });
+  const numAttr = (i) => (numericCols[i] ? ' class="num"' : "");
   const attr = cls ? ` class="${cls}"` : "";
   let html = `      <table${attr}>\n        <thead>\n          <tr>`;
-  html += head.map((h) => `<th scope="col">${inlineMd(h)}</th>`).join("");
+  html += head.map((h, i) => `<th scope="col"${numAttr(i)}>${inlineMd(h)}</th>`).join("");
   html += "</tr>\n        </thead>\n        <tbody>\n";
   for (const r of body) {
     const isTakeaway = /takeaway/i.test(r[0].replace(/\*/g, ""));
@@ -338,7 +354,7 @@ function emitTable(block, cls = "") {
       html += `          <tr${tag}><td colspan="${head.length}"><strong>${verdict}</strong></td></tr>\n`;
       continue;
     }
-    html += `          <tr${tag}>` + r.map((c) => `<td>${inlineMd(c)}</td>`).join("") + "</tr>\n";
+    html += `          <tr${tag}>` + r.map((c, i) => `<td${numAttr(i)}>${inlineMd(c)}</td>`).join("") + "</tr>\n";
   }
   html += "        </tbody>\n      </table>\n";
   return html;
@@ -744,7 +760,7 @@ function renderCard(cardPath) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=393, initial-scale=1">
 <meta name="color-scheme" content="only light">
-<title>${escapeHtml(title)} — Supercard ${ver.toUpperCase()}</title>
+<title>${escapeHtml(title)} · Supercard ${ver.toUpperCase()}</title>
 ${meta}
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this

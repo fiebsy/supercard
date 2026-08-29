@@ -198,6 +198,16 @@ function parseBlocks(raw) {
       };
       continue;
     }
+    // Any other `## ` heading ends the current block. Without this the last
+    // beat ran to end-of-file and swallowed `## Authoring notes`, `## Sources`
+    // and the `## — Section divider —` headings, so every gate on that block
+    // scanned production scaffold the renderer never emits (R-10 / R-33) and
+    // reported violations the reader could not possibly see.
+    if (/^##\s+/.test(line)) {
+      if (cur) blocks.push(cur);
+      cur = null;
+      continue;
+    }
     if (cur) {
       cur.lines.push(line);
       const t = /`BLOCK-([\w-]+)`/.exec(line);
@@ -500,6 +510,21 @@ function validateCard(path, raw) {
     return { skipped: true, reason: "no frozen_at_version", errors, warnings };
   }
   if (compareVersion(fav, "3.1.0") < 0) {
+    // A V3.0 card is governed by V3.0 rules (ADR-0003) and skips the V3.1+
+    // gates — but R-24 is the one rule ADR-0011 made retroactive to EVERY
+    // card regardless of frozen_at_version, and skipping the whole card
+    // skipped that gate too. The V3.6 changelog records em dashes as stripped
+    // from all existing sources; one V3.0 card still carried eighteen of
+    // them into its published render, because nothing ever checked.
+    for (const b of parseBlocks(raw)) {
+      if (hasEmDash(b.bodyText)) {
+        push(errors, b, `em dash (—) in card content — R-24 bans the em dash in reader-visible prose on every card, including this one (retroactive, ADR-0011); recast with a comma, colon, parentheses, or two sentences`);
+      }
+      if (hasAsterism(b.bodyText)) {
+        push(errors, b, `asterism rest (⁂ / "* * *") in card content — retired in V3.6 on every card (retroactive, ADR-0011); macro-spacing between beats does the rest-the-eye work (R-24)`);
+      }
+    }
+    if (errors.length) return { skipped: false, reason: "", errors, warnings };
     return { skipped: true, reason: `frozen at ${fav} (< 3.1.0)`, errors, warnings };
   }
 

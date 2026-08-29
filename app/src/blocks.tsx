@@ -599,7 +599,10 @@ export function SectionDivider({
 }) {
   return (
     <section className="divider">
-      <div className="rule">— {rule} —</div>
+      {/* R-24: no em dash renders on the canvas, as furniture or in prose.
+          The divider's hairlines and its 64pt symmetric gap already do the
+          dividing, so the label needs no frame at all. */}
+      <div className="rule">{rule}</div>
       <h2>{heading}</h2>
       {children ? <p>{children}</p> : null}
     </section>

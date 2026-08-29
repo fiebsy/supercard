@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=393, initial-scale=1">
 <meta name="color-scheme" content="only light">
-<title>Gestalt Principles — Supercard V3.0</title>
+<title>Gestalt Principles · Supercard V3.0</title>
 <meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-gestalt-principles--draft.md">
 <meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-gestalt-principles.md">
 <meta name="sc:renderer_version" content="v3.9">
@@ -119,6 +119,19 @@ body {
 
 a {
   color: inherit;
+}
+
+/* V3.10 — the selection highlight is on the ramp.
+ *
+ * Every browser paints an unstyled ::selection in a saturated blue, so the one
+ * hue that reaches a strict-grayscale canvas arrives the moment a reader drags
+ * across a sentence, and it lands on the text they are paying most attention
+ * to. The system already refuses UA colour decisions elsewhere (`color-scheme:
+ * only light` exists for exactly that reason); this closes the other door.
+ * --g-12 keeps every ink step legible through the highlight. */
+::selection {
+  background: var(--rule-hairline);
+  color: var(--ink);
 }
 
 .canvas {
@@ -396,6 +409,10 @@ section.divider h2 {
 .sources li {
   font-size: 13px;
   line-height: 18px;
+  /* Caption role: tracking 0. letter-spacing inherits, so without this the
+   * 13px source lines picked up the body track set on `li` — negative
+   * tracking is a display and body setting, never a caption one (R-19). */
+  letter-spacing: 0;
   color: var(--g-60);
   display: list-item;
   padding-inline-start: 0;
@@ -434,7 +451,6 @@ section.divider h2 {
   padding: 4px 7px;
   border-radius: 6px;
   border: 1px solid var(--rule-hairline);
-  user-select: none;
 }
 
 /* gallery — mirrors docs/index.html */
