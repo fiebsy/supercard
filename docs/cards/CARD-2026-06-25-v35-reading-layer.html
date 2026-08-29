@@ -462,6 +462,22 @@ section.divider h2 {
   margin-inline-end: var(--s-1);
 }
 
+/* Visually hidden, still announced. Used for the copy status and anywhere a
+ * name has to exist for a reader who cannot see the visual cue carrying it.
+ * `clip-path` plus a 1px box, not `display: none`, which would remove it from
+ * the accessibility tree along with the screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* corner glyph — present on every section's screenshot.
  *
  * V3.10 (R-37): the mark's whole job is that a stranger holding a cropped
@@ -1152,7 +1168,12 @@ a.spec-link:hover {
   justify-content: space-between;
   padding-top: var(--s-6);
 }
-.wordmark {
+/* `.canvas .wordmark`, not `.wordmark`: the lander root is a .canvas, so the
+ * R-34 cover join `.canvas h1 { margin-bottom }` reaches this element now that
+ * it is an h1 for the outline (R-40). Its 40/44 metrics and its cover margin
+ * belong to a card title, not a wordmark in a flex row. */
+.canvas .wordmark {
+  margin: 0;
   font-family: var(--mono);
   font-size: 28px;
   line-height: 34px;
@@ -1200,6 +1221,9 @@ a.spec-link:hover {
   margin: var(--s-7) 0 var(--s-3);
 }
 .zone-label-text {
+  /* An h2 for the outline; the base heading margin would push it off the
+   * hairline it is centred against. */
+  margin: 0;
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 11px;
@@ -1680,8 +1704,8 @@ a.spec-link:hover {
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
   <main class="canvas v3-1 v3-4 v3-5">
 
-    <section>
-      <div class="eyebrow">The cut</div>
+    <section aria-labelledby="beat-the-cut">
+      <div class="eyebrow" id="beat-the-cut">The cut</div>
       <h1>The Reading Layer, Refined</h1>
       <p class="dek">V3.5 tunes how a card reads: strict grayscale, SF Pro Rounded, no color.</p>
       <div class="hero">
@@ -1690,16 +1714,16 @@ a.spec-link:hover {
       <p class="lede">The words stay the same. The page just reads easier.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">The tracking</div>
+    <section aria-labelledby="beat-the-tracking">
+      <div class="eyebrow" id="beat-the-tracking">The tracking</div>
       <h2 class="tile">Body tracking flips negative.</h2>
       <p>R-9 spaced body text out with positive tracking. That broke the word shapes fast readers rely on. V3.5 retunes body letter-spacing to:</p>
       <div class="stat">−0.01em</div>
       <p>with word spacing back to normal. The UPPERCASE eyebrow stays the only positively-tracked role.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">The ink</div>
+    <section aria-labelledby="beat-the-ink">
+      <div class="eyebrow" id="beat-the-ink">The ink</div>
       <h2 class="tile">Three steps, all readable.</h2>
       <table>
         <thead>
@@ -1715,30 +1739,30 @@ a.spec-link:hover {
       <p>Every text step clears the WCAG 4.5:1 floor. De-emphasis is a tonal step down, never a step below readable.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">The sizes</div>
+    <section aria-labelledby="beat-the-sizes">
+      <div class="eyebrow" id="beat-the-sizes">The sizes</div>
       <p><strong>Three sizes carry the whole card.</strong> Header, subhead, and body do the work. Weight, ink, and space set the rest, not a fourth size.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">The spacing</div>
+    <section aria-labelledby="beat-the-spacing">
+      <div class="eyebrow" id="beat-the-spacing">The spacing</div>
       <p><strong>Beats sit further apart now.</strong> The default gap grows from 48 to 64 points. More space between ideas reads as more separate ideas.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">The guarantee</div>
+    <section aria-labelledby="beat-the-guarantee">
+      <div class="eyebrow" id="beat-the-guarantee">The guarantee</div>
       <p><strong>Old cards never change.</strong> Every card built before this keeps its first look. The new rules touch only the newest cards.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">The bottom line</div>
+    <section aria-labelledby="beat-the-bottom-line">
+      <div class="eyebrow" id="beat-the-bottom-line">The bottom line</div>
       <p class="takeaway"><strong>Hierarchy from weight, ink, and space, not from more sizes.</strong></p>
       <p>Read it once, and the system fits in your head.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">Sources</div>
-      <ul class="sources">
+    <section aria-labelledby="beat-sources">
+      <div class="eyebrow" id="beat-sources">Sources</div>
+      <ul class="sources" role="list" aria-label="Sources">
         <li>Apple: SF Pro tracking table and HIG Writing guidelines</li>
         <li>WCAG 2.2: SC 1.4.3 (contrast) and SC 1.4.12 (text spacing)</li>
         <li>Vignelli, "A Few Basic Typefaces"; Müller-Brockmann, grid systems</li>

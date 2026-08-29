@@ -462,6 +462,22 @@ section.divider h2 {
   margin-inline-end: var(--s-1);
 }
 
+/* Visually hidden, still announced. Used for the copy status and anywhere a
+ * name has to exist for a reader who cannot see the visual cue carrying it.
+ * `clip-path` plus a 1px box, not `display: none`, which would remove it from
+ * the accessibility tree along with the screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* corner glyph — present on every section's screenshot.
  *
  * V3.10 (R-37): the mark's whole job is that a stranger holding a cropped
@@ -1152,7 +1168,12 @@ a.spec-link:hover {
   justify-content: space-between;
   padding-top: var(--s-6);
 }
-.wordmark {
+/* `.canvas .wordmark`, not `.wordmark`: the lander root is a .canvas, so the
+ * R-34 cover join `.canvas h1 { margin-bottom }` reaches this element now that
+ * it is an h1 for the outline (R-40). Its 40/44 metrics and its cover margin
+ * belong to a card title, not a wordmark in a flex row. */
+.canvas .wordmark {
+  margin: 0;
   font-family: var(--mono);
   font-size: 28px;
   line-height: 34px;
@@ -1200,6 +1221,9 @@ a.spec-link:hover {
   margin: var(--s-7) 0 var(--s-3);
 }
 .zone-label-text {
+  /* An h2 for the outline; the base heading margin would push it off the
+   * hairline it is centred against. */
+  margin: 0;
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 11px;
@@ -1680,8 +1704,8 @@ a.spec-link:hover {
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
   <main class="canvas v3-1 v3-4 beat-gap-64">
 
-    <section>
-      <div class="eyebrow">the one elevated element on this card</div>
+    <section aria-labelledby="beat-the-one-elevated-element-on-this-card">
+      <div class="eyebrow" id="beat-the-one-elevated-element-on-this-card">the one elevated element on this card</div>
       <h1>Plain Language as Substance</h1>
       <div class="hero">
         <p class="hook"><strong>The substance survives the simplicity.</strong> A reader with no context should still get the gist of the card.</p>
@@ -1689,25 +1713,25 @@ a.spec-link:hover {
       <p class="lede">Short words carry real reasoning when the thinking is clear. That is the V3.4 readability cut in one line.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">single focal number, surface-tinted per R-16</div>
+    <section aria-labelledby="beat-single-focal-number-surface-tinted-per-r-16">
+      <div class="eyebrow" id="beat-single-focal-number-surface-tinted-per-r-16">single focal number, surface-tinted per R-16</div>
       <p>Most mobile readers stop reading at the third sentence. The research is consistent:</p>
       <div class="stat">60 words</div>
       <p>is the soft cap a paragraph should target on a phone. Past sixty, eye-tracking studies show the reader gives up before the period.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">the bridge vocabulary, opening</div>
+    <section aria-labelledby="beat-the-bridge-vocabulary-opening">
+      <div class="eyebrow" id="beat-the-bridge-vocabulary-opening">the bridge vocabulary, opening</div>
       <p><strong>Five bridge patterns.</strong> A V3.4 card bridges its sections with one of five named shapes. The dominant form is an eyebrow plus tagline pair, in which the eyebrow names the topic and the tagline lands the claim.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">the bridge vocabulary, the other four</div>
+    <section aria-labelledby="beat-the-bridge-vocabulary-the-other-four">
+      <div class="eyebrow" id="beat-the-bridge-vocabulary-the-other-four">the bridge vocabulary, the other four</div>
       <p><strong>The other four shapes.</strong> They are the two-sentence haiku, the "Built / Designed / Engineered" imperative, the inline "Now you can…" kicker, and the single-word eyebrow. All five name the content; none of them name the position.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">two things on the same axis</div>
+    <section aria-labelledby="beat-two-things-on-the-same-axis">
+      <div class="eyebrow" id="beat-two-things-on-the-same-axis">two things on the same axis</div>
       <table>
         <thead>
           <tr><th scope="col"></th><th scope="col">Before V3.4</th><th scope="col">After V3.4</th></tr>
@@ -1722,14 +1746,14 @@ a.spec-link:hover {
       <p>The cap drops from seventy-five to sixty words. The grade target moves from implicit to measured.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">the honest steelman</div>
+    <section aria-labelledby="beat-the-honest-steelman">
+      <div class="eyebrow" id="beat-the-honest-steelman">the honest steelman</div>
       <p><strong>Plain is not thin.</strong> Hemingway's prose tests at grade five because it carries real weight in plain words, not because the words are plain. The discipline is shorter words for the same reasoning: never shorter reasoning for shorter words.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">so what / how to act</div>
-      <ul class="checklist">
+    <section aria-labelledby="beat-so-what-how-to-act">
+      <div class="eyebrow" id="beat-so-what-how-to-act">so what / how to act</div>
+      <ul class="checklist" role="list">
         <li><span class="marker">✓</span><span>Draft each block's content first; ignore the bolded lead-clause until the prose is real</span></li>
         <li><span class="marker">✓</span><span>Run the validator's readability check on every prose block (grade level, reading ease)</span></li>
         <li><span class="marker">✓</span><span>Count sentences (≤ 3) and words (≤ 60) per block; split when you are over</span></li>
@@ -1738,13 +1762,13 @@ a.spec-link:hover {
       </ul>
     </section>
 
-    <section>
-      <div class="eyebrow">bottom line</div>
+    <section aria-labelledby="beat-bottom-line">
+      <div class="eyebrow" id="beat-bottom-line">bottom line</div>
       <p><strong>Clarity of writing follows clarity of thought.</strong> Same hours, same material; the difference is whether the reader still has it in six months.</p>
     </section>
 
     <section>
-      <ul class="sources">
+      <ul class="sources" role="list" aria-label="Sources">
         <li>Apple HIG: Writing guidelines (Choose simple, plain language. Prioritize clarity.)</li>
         <li>The Economist Style Guide: five rules for plain English (Orwell heritage)</li>
         <li>Nielsen Norman Group: Eye-tracking studies on mobile paragraph length (2018, 2021)</li>

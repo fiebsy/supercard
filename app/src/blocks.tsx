@@ -39,12 +39,28 @@ type Beat =
   | "Beat 7 · Close"
   | "Sources";
 
+// R-40 — the eyebrow is a beat's visible label, and R-25 already requires it
+// to be distinct within a card, so it is a stable name for the section to
+// point at. Matches eyebrowId() in app/scripts/render-card.mjs.
+export function eyebrowId(text: string) {
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 48);
+  return slug ? `beat-${slug}` : undefined;
+}
+
 export function Eyebrow({ label }: { label: string }) {
   // The eyebrow is a short editorial label that names the block's CONTENT
   // (e.g. "The founding experiment"), NOT the beat name. The beat is authoring
   // metadata and is never rendered (R-10, R-14, I7). Sentence case + the
   // first-letter cap are handled in CSS; the source string is authored as-is.
-  return <div className="eyebrow">{label}</div>;
+  return (
+    <div className="eyebrow" id={eyebrowId(label)}>
+      {label}
+    </div>
+  );
 }
 
 export function Section({
@@ -61,7 +77,7 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section>
+    <section aria-labelledby={eyebrow ? eyebrowId(eyebrow) : undefined}>
       {eyebrow ? <Eyebrow label={eyebrow} /> : null}
       {children}
     </section>
@@ -77,8 +93,10 @@ export function Canvas({
   v31?: boolean;
   children: ReactNode;
 }) {
+  // R-40 — the canvas is the card's one primary landmark, matching the
+  // standalone renderer's <main class="canvas …">.
   return (
-    <div className={v31 ? "canvas v3-1" : "canvas"}>{children}</div>
+    <main className={v31 ? "canvas v3-1" : "canvas"}>{children}</main>
   );
 }
 
@@ -179,7 +197,7 @@ export function NumberedList({
   return (
     <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2 className="tile">{heading}</h2> : null}
-      <ol>
+      <ol role="list">
         {steps.map((s, i) => (
           <li key={i}>
             <span className="marker">{i + 1}</span>
@@ -219,7 +237,7 @@ export function MarkerList({
     <Section beat={beat} eyebrow={eyebrow}>
       {heading ? <h2 className="tile">{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
-      <ul>
+      <ul role="list">
         {items.map((it, i) => (
           <li key={i}>
             <span className="marker">{marker}</span>
@@ -266,7 +284,9 @@ export function DataTable({
           <thead>
             <tr>
               {head.map((h, i) => (
-                <th key={i}>{h}</th>
+                <th key={i} scope="col">
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
@@ -633,7 +653,7 @@ export function KeyTakeaway({
 export function Sources({ items }: { items: ReactNode[] }) {
   return (
     <Section beat="Sources" eyebrow="Sources">
-      <ul className="sources">
+      <ul className="sources" role="list" aria-label="Sources">
         {items.map((s, i) => (
           <li key={i}>{s}</li>
         ))}

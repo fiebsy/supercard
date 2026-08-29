@@ -462,6 +462,22 @@ section.divider h2 {
   margin-inline-end: var(--s-1);
 }
 
+/* Visually hidden, still announced. Used for the copy status and anywhere a
+ * name has to exist for a reader who cannot see the visual cue carrying it.
+ * `clip-path` plus a 1px box, not `display: none`, which would remove it from
+ * the accessibility tree along with the screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* corner glyph — present on every section's screenshot.
  *
  * V3.10 (R-37): the mark's whole job is that a stranger holding a cropped
@@ -1152,7 +1168,12 @@ a.spec-link:hover {
   justify-content: space-between;
   padding-top: var(--s-6);
 }
-.wordmark {
+/* `.canvas .wordmark`, not `.wordmark`: the lander root is a .canvas, so the
+ * R-34 cover join `.canvas h1 { margin-bottom }` reaches this element now that
+ * it is an h1 for the outline (R-40). Its 40/44 metrics and its cover margin
+ * belong to a card title, not a wordmark in a flex row. */
+.canvas .wordmark {
+  margin: 0;
   font-family: var(--mono);
   font-size: 28px;
   line-height: 34px;
@@ -1200,6 +1221,9 @@ a.spec-link:hover {
   margin: var(--s-7) 0 var(--s-3);
 }
 .zone-label-text {
+  /* An h2 for the outline; the base heading margin would push it off the
+   * hairline it is centred against. */
+  margin: 0;
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 11px;
@@ -1680,8 +1704,8 @@ a.spec-link:hover {
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
   <main class="canvas">
 
-    <section>
-      <div class="eyebrow">the one elevated element on this card</div>
+    <section aria-labelledby="beat-the-one-elevated-element-on-this-card">
+      <div class="eyebrow" id="beat-the-one-elevated-element-on-this-card">the one elevated element on this card</div>
       <h1>Spaced Repetition</h1>
       <div class="hero">
         <p class="hook">Reviewing material at widening intervals beats cramming: not by a little, by <strong>roughly double the long-term retention</strong> for the same total study time.</p>
@@ -1689,16 +1713,16 @@ a.spec-link:hover {
       <p class="lede"><strong>Lede.</strong> Spaced repetition schedules each review just before you'd forget, so every recall is effortful enough to strengthen the memory and cheap enough to be worth doing.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">single focal number</div>
+    <section aria-labelledby="beat-single-focal-number">
+      <div class="eyebrow" id="beat-single-focal-number">single focal number</div>
       <p>Without review, the forgetting curve is steep: people lose an estimated</p>
       <div class="stat">~70%</div>
       <p>of newly learned material within 24 hours. Spacing is the cheapest known intervention against that decay.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">how it works</div>
-      <ol>
+    <section aria-labelledby="beat-how-it-works">
+      <div class="eyebrow" id="beat-how-it-works">how it works</div>
+      <ol role="list">
         <li><span class="marker">1</span><span><strong>Learn</strong>: encode the item once. Encoding alone fades fast.</span></li>
         <li><span class="marker">2</span><span><strong>Wait</strong>: let partial forgetting set in. The gap is the active ingredient.</span></li>
         <li><span class="marker">3</span><span><strong>Recall</strong>: retrieve from memory, not recognition. The effort is what consolidates.</span></li>
@@ -1707,8 +1731,8 @@ a.spec-link:hover {
       <p>The lever is step 3: <strong>retrieval difficulty, timed to the edge of forgetting</strong>, is what converts a fragile trace into a durable one.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">two things on the same axis</div>
+    <section aria-labelledby="beat-two-things-on-the-same-axis">
+      <div class="eyebrow" id="beat-two-things-on-the-same-axis">two things on the same axis</div>
       <table>
         <thead>
           <tr><th scope="col"></th><th scope="col">Massed practice (cramming)</th><th scope="col">Spaced practice</th></tr>
@@ -1723,10 +1747,10 @@ a.spec-link:hover {
       <p>Cramming wins the rehearsal and loses the exam. The feeling of fluency is the trap: it is <strong>not</strong> evidence of durable learning.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">the honest steelman</div>
+    <section aria-labelledby="beat-the-honest-steelman">
+      <div class="eyebrow" id="beat-the-honest-steelman">the honest steelman</div>
       <p>Spaced repetition fails when it is run as a to-do list instead of a learning tool:</p>
-      <ul class="antipattern">
+      <ul class="antipattern" role="list">
         <li><span class="marker">✗</span><span><strong>Cards you don't understand</strong>: SRS schedules recall, it can't manufacture comprehension. Garbage in, garbage scheduled forever.</span></li>
         <li><span class="marker">✗</span><span><strong>Over-long decks</strong>: a daily queue you can't clear becomes a guilt engine, and you quit.</span></li>
         <li><span class="marker">✗</span><span><strong>Recognition dressed as recall</strong>: cloze deletions so easy the answer is obvious teach nothing.</span></li>
@@ -1734,9 +1758,9 @@ a.spec-link:hover {
       <p>The system is <strong>only as good as the cards you feed it</strong>: authoring is the real work.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">so what / how to act</div>
-      <ul class="checklist">
+    <section aria-labelledby="beat-so-what-how-to-act">
+      <div class="eyebrow" id="beat-so-what-how-to-act">so what / how to act</div>
+      <ul class="checklist" role="list">
         <li><span class="marker">✓</span><span>One idea per card: atomic, unambiguous, answerable from memory</span></li>
         <li><span class="marker">✓</span><span>Write cards in your own words, after you understand the source</span></li>
         <li><span class="marker">✓</span><span>Review daily, but cap new cards so the queue stays clearable</span></li>
@@ -1745,13 +1769,13 @@ a.spec-link:hover {
       </ul>
     </section>
 
-    <section>
-      <div class="eyebrow">bottom line</div>
+    <section aria-labelledby="beat-bottom-line">
+      <div class="eyebrow" id="beat-bottom-line">bottom line</div>
       <p><strong>Spacing doesn't make learning faster. It makes it stick.</strong> Same hours, same material; the difference is whether you still have it in six months.</p>
     </section>
 
     <section>
-      <ul class="sources">
+      <ul class="sources" role="list" aria-label="Sources">
         <li>Cepeda, N.J. et al. "Distributed practice in verbal recall tasks: A review and quantitative synthesis." <em>Psychological Bulletin</em>, 2006</li>
         <li>Ebbinghaus, H. <em>Memory: A Contribution to Experimental Psychology.</em> 1885</li>
         <li>Roediger, H.L. &amp; Karpicke, J.D. "The power of testing memory." <em>Perspectives on Psychological Science</em>, 2006</li>

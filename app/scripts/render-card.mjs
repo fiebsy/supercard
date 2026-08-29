@@ -287,8 +287,34 @@ function chunk(lines) {
 
 /* ---- inline-content emitters ------------------------------------------- */
 
+// R-40 — a beat is a named region. The eyebrow is already the beat's visible
+// label and R-25 requires it to be distinct within a card, so it is a stable
+// name to point at: the section carries aria-labelledby and the eyebrow an id.
+// Without it every <section> is anonymous, and a reader navigating by region
+// gets ten identical "region" entries for a card whose first principle is that
+// every visible region stands on its own.
+function eyebrowId(text) {
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 48);
+  return slug ? `beat-${slug}` : "";
+}
+
 function emitEyebrow(text) {
-  return text ? `      <div class="eyebrow">${inlineMd(text)}</div>\n` : "";
+  if (!text) return "";
+  const id = eyebrowId(text);
+  const attr = id ? ` id="${id}"` : "";
+  return `      <div class="eyebrow"${attr}>${inlineMd(text)}</div>\n`;
+}
+
+// The section open tag, named by its eyebrow where it has one.
+function openSection(sec, cls = "") {
+  const id = eyebrowId(sec.eyebrow || "");
+  const c = cls ? ` class="${cls}"` : "";
+  const label = id ? ` aria-labelledby="${id}"` : "";
+  return `    <section${c}${label}>\n`;
 }
 
 function takeLeadingTile(chunks) {
@@ -458,7 +484,7 @@ function areaChartSvg(items) {
 
 function emitChartSection(sec, kind) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {
@@ -481,7 +507,7 @@ function emitChartSection(sec, kind) {
 
 function emitStatGrid(sec) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {
@@ -514,7 +540,7 @@ function emitStatGrid(sec) {
  * contract). */
 function emitFlashcards(sec) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {
@@ -578,12 +604,20 @@ function emitList(block, blockId) {
   if (!items.length) return "";
   const style = LIST_STYLES[blockId] || { tag: "ul" };
   const cls = style.cls ? ` class="${style.cls}"` : "";
+  // R-40 — `list-style: none` plus `display: flex` on the row strips the list
+  // role in WebKit, so the one structure a checklist has (it is a list of N
+  // things) disappears for exactly the readers who cannot see the ✓ column.
+  // The explicit role restores it; it changes nothing visually.
+  // The source list also carries its own name: the markdown says "## Sources"
+  // and the render deliberately drops that heading, so nothing else says what
+  // the fine print under the last hairline is.
+  const named = style.cls === "sources" ? ' aria-label="Sources"' : "";
   const li = (it, i) =>
     style.marker
       ? `        <li><span class="marker">${style.marker(i)}</span><span>${inlineMd(it)}</span></li>`
       : `        <li>${inlineMd(it)}</li>`;
   return (
-    `      <${style.tag}${cls}>\n` +
+    `      <${style.tag}${cls} role="list"${named}>\n` +
     items.map(li).join("\n") +
     `\n      </${style.tag}>\n`
   );
@@ -628,7 +662,7 @@ function emitHero(title, sec) {
     else if (/^HERO-CARD:/i.test(c)) continue; // template scaffold, never rendered (I7)
     else rest.push(c);
   }
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += `      <h1>${inlineMd(title)}</h1>\n`;
   if (dek) html += `      <p class="dek">${inlineMd(dek)}</p>\n`;
@@ -643,7 +677,7 @@ function emitHero(title, sec) {
 
 function emitGeneric(sec, { statMode = false, takeawayMode = false } = {}) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   let usedTakeaway = false;
@@ -682,7 +716,7 @@ function emitGeneric(sec, { statMode = false, takeawayMode = false } = {}) {
 // padding applies; the content is the divider's one orienting line.
 function emitDivider(sec) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = '    <section class="divider">\n';
+  let html = openSection(sec, "divider");
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {

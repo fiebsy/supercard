@@ -462,6 +462,22 @@ section.divider h2 {
   margin-inline-end: var(--s-1);
 }
 
+/* Visually hidden, still announced. Used for the copy status and anywhere a
+ * name has to exist for a reader who cannot see the visual cue carrying it.
+ * `clip-path` plus a 1px box, not `display: none`, which would remove it from
+ * the accessibility tree along with the screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* corner glyph — present on every section's screenshot.
  *
  * V3.10 (R-37): the mark's whole job is that a stranger holding a cropped
@@ -1152,7 +1168,12 @@ a.spec-link:hover {
   justify-content: space-between;
   padding-top: var(--s-6);
 }
-.wordmark {
+/* `.canvas .wordmark`, not `.wordmark`: the lander root is a .canvas, so the
+ * R-34 cover join `.canvas h1 { margin-bottom }` reaches this element now that
+ * it is an h1 for the outline (R-40). Its 40/44 metrics and its cover margin
+ * belong to a card title, not a wordmark in a flex row. */
+.canvas .wordmark {
+  margin: 0;
   font-family: var(--mono);
   font-size: 28px;
   line-height: 34px;
@@ -1200,6 +1221,9 @@ a.spec-link:hover {
   margin: var(--s-7) 0 var(--s-3);
 }
 .zone-label-text {
+  /* An h2 for the outline; the base heading margin would push it off the
+   * hairline it is centred against. */
+  margin: 0;
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 11px;
@@ -1680,8 +1704,8 @@ a.spec-link:hover {
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
   <main class="canvas v3-1 v3-4 v3-5 v3-6 v3-7">
 
-    <section>
-      <div class="eyebrow">The variety release</div>
+    <section aria-labelledby="beat-the-variety-release">
+      <div class="eyebrow" id="beat-the-variety-release">The variety release</div>
       <h1>Data, Aligned</h1>
       <p class="dek">V3.7 gives every card more ways to fill the same grid: charts, numbers, and a cover that can open with an eyebrow.</p>
       <div class="hero">
@@ -1690,8 +1714,8 @@ a.spec-link:hover {
       <p class="lede">The chart blocks were catalogued for a year. Now they actually render, in both paths, on the same gray ramp as everything else.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">The system in four numbers</div>
+    <section aria-labelledby="beat-the-system-in-four-numbers">
+      <div class="eyebrow" id="beat-the-system-in-four-numbers">The system in four numbers</div>
       <h2 class="tile">One grammar, many parts.</h2>
       <div class="stat-grid">
         <div class="cell"><div class="num">39</div><div class="cap">blocks</div></div>
@@ -1701,26 +1725,26 @@ a.spec-link:hover {
       </div>
     </section>
 
-    <section>
-      <div class="eyebrow">Where the blocks live</div>
+    <section aria-labelledby="beat-where-the-blocks-live">
+      <div class="eyebrow" id="beat-where-the-blocks-live">Where the blocks live</div>
       <h2 class="tile">Editorial carries the most weight.</h2>
       <div class="chart"><svg viewBox="0 0 361 242" role="img" aria-label="Bar chart. Editorial 11, Comparative 7, Numeric 5, Sequential 4, Definitional 4, Distributional 4, Structural 4. Editorial is the focal value."><text class="c-label" x="0" y="17" dominant-baseline="middle">Editorial</text><rect class="bar focal" x="120" y="7" width="195" height="20" rx="3"/><text class="c-value focal" x="321" y="17" dominant-baseline="middle">11</text><text class="c-label" x="0" y="51" dominant-baseline="middle">Comparative</text><rect class="bar" x="120" y="41" width="124.1" height="20" rx="3"/><text class="c-value" x="250.1" y="51" dominant-baseline="middle">7</text><text class="c-label" x="0" y="85" dominant-baseline="middle">Numeric</text><rect class="bar" x="120" y="75" width="88.6" height="20" rx="3"/><text class="c-value" x="214.6" y="85" dominant-baseline="middle">5</text><text class="c-label" x="0" y="119" dominant-baseline="middle">Sequential</text><rect class="bar" x="120" y="109" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="119" dominant-baseline="middle">4</text><text class="c-label" x="0" y="153" dominant-baseline="middle">Definitional</text><rect class="bar" x="120" y="143" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="153" dominant-baseline="middle">4</text><text class="c-label" x="0" y="187" dominant-baseline="middle">Distributional</text><rect class="bar" x="120" y="177" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="187" dominant-baseline="middle">4</text><text class="c-label" x="0" y="221" dominant-baseline="middle">Structural</text><rect class="bar" x="120" y="211" width="70.9" height="20" rx="3"/><text class="c-value" x="196.9" y="221" dominant-baseline="middle">4</text></svg></div>
       <p>One bar goes full-ink: the family a card reaches for most.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">How a chart stays on brand</div>
+    <section aria-labelledby="beat-how-a-chart-stays-on-brand">
+      <div class="eyebrow" id="beat-how-a-chart-stays-on-brand">How a chart stays on brand</div>
       <p><strong>Grayscale, single emphasis.</strong> A chart obeys the same rules as prose: every bar and line sits on the gray ramp, and exactly one element goes full-ink to carry the focus. No color, no second highlight.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">Rules per release</div>
+    <section aria-labelledby="beat-rules-per-release">
+      <div class="eyebrow" id="beat-rules-per-release">Rules per release</div>
       <h2 class="tile">The spec grows in small, deliberate cuts.</h2>
       <div class="chart"><svg viewBox="0 0 361 168" role="img" aria-label="Line chart. v3.1 6, v3.4 4, v3.5 3, v3.6 3, v3.6.1 2, v3.7 5. v3.7 is the focal value."><line class="grid" x1="10" y1="22" x2="351" y2="22"/><line class="grid" x1="10" y1="80" x2="351" y2="80"/><line class="grid" x1="10" y1="138" x2="351" y2="138"/><polyline class="series" points="10,22 78.2,80 146.4,109 214.6,109 282.8,138 351,51"/><circle class="dot" cx="10" cy="22" r="4"/><text class="c-value" x="10" y="13" text-anchor="start">6</text><text class="c-label" x="10" y="160" text-anchor="start">v3.1</text><circle class="dot" cx="78.2" cy="80" r="4"/><text class="c-value" x="78.2" y="71" text-anchor="middle">4</text><text class="c-label" x="78.2" y="160" text-anchor="middle">v3.4</text><circle class="dot" cx="146.4" cy="109" r="4"/><text class="c-value" x="146.4" y="100" text-anchor="middle">3</text><text class="c-label" x="146.4" y="160" text-anchor="middle">v3.5</text><circle class="dot" cx="214.6" cy="109" r="4"/><text class="c-value" x="214.6" y="100" text-anchor="middle">3</text><text class="c-label" x="214.6" y="160" text-anchor="middle">v3.6</text><circle class="dot" cx="282.8" cy="138" r="4"/><text class="c-value" x="282.8" y="129" text-anchor="middle">2</text><text class="c-label" x="282.8" y="160" text-anchor="middle">v3.6.1</text><circle class="dot focal" cx="351" cy="51" r="5"/><text class="c-value focal" x="351" y="42" text-anchor="end">5</text><text class="c-label" x="351" y="160" text-anchor="end">v3.7</text></svg></div>
     </section>
 
-    <section>
-      <div class="eyebrow">Table or chart</div>
+    <section aria-labelledby="beat-table-or-chart">
+      <div class="eyebrow" id="beat-table-or-chart">Table or chart</div>
       <h2 class="tile">Pick by what the reader extracts.</h2>
       <table>
         <thead>
@@ -1734,16 +1758,16 @@ a.spec-link:hover {
       </table>
     </section>
 
-    <section>
-      <div class="eyebrow">Colors on the canvas</div>
+    <section aria-labelledby="beat-colors-on-the-canvas">
+      <div class="eyebrow" id="beat-colors-on-the-canvas">Colors on the canvas</div>
       <h2 class="tile">The ramp is the whole palette.</h2>
       <p>Charts changed nothing about the rule that has held since v3.0:</p>
       <div class="stat">0</div>
       <p>colors. Every bar, line, and number stays on the gray ramp, and one focal element per chart carries the emphasis.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">Reach for the right one</div>
+    <section aria-labelledby="beat-reach-for-the-right-one">
+      <div class="eyebrow" id="beat-reach-for-the-right-one">Reach for the right one</div>
       <h2 class="tile">What you have decides the block.</h2>
       <table>
         <thead>
@@ -1759,14 +1783,14 @@ a.spec-link:hover {
       </table>
     </section>
 
-    <section>
-      <div class="eyebrow">Bottom line</div>
+    <section aria-labelledby="beat-bottom-line">
+      <div class="eyebrow" id="beat-bottom-line">Bottom line</div>
       <p class="takeaway"><strong>More range, one grammar.</strong></p>
       <p>V3.7 adds charts, numbers, and a cover eyebrow without a single color or a broken grid. The system gets more expressive the same way it got quieter: by rule, on the ramp, one emphasis at a time.</p>
     </section>
 
     <section>
-      <ul class="sources">
+      <ul class="sources" role="list" aria-label="Sources">
         <li>Supercard <code>RENDERING-spec</code> § R-27 to R-31 (V3.7 rules)</li>
         <li>Supercard <code>ADR-0014</code>: V3.7 header eyebrow, alignment, data-viz</li>
         <li>Supercard <code>INDEX-block-library</code>: 39 blocks across 7 families</li>

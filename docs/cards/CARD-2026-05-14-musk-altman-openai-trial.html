@@ -462,6 +462,22 @@ section.divider h2 {
   margin-inline-end: var(--s-1);
 }
 
+/* Visually hidden, still announced. Used for the copy status and anywhere a
+ * name has to exist for a reader who cannot see the visual cue carrying it.
+ * `clip-path` plus a 1px box, not `display: none`, which would remove it from
+ * the accessibility tree along with the screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* corner glyph — present on every section's screenshot.
  *
  * V3.10 (R-37): the mark's whole job is that a stranger holding a cropped
@@ -1152,7 +1168,12 @@ a.spec-link:hover {
   justify-content: space-between;
   padding-top: var(--s-6);
 }
-.wordmark {
+/* `.canvas .wordmark`, not `.wordmark`: the lander root is a .canvas, so the
+ * R-34 cover join `.canvas h1 { margin-bottom }` reaches this element now that
+ * it is an h1 for the outline (R-40). Its 40/44 metrics and its cover margin
+ * belong to a card title, not a wordmark in a flex row. */
+.canvas .wordmark {
+  margin: 0;
   font-family: var(--mono);
   font-size: 28px;
   line-height: 34px;
@@ -1200,6 +1221,9 @@ a.spec-link:hover {
   margin: var(--s-7) 0 var(--s-3);
 }
 .zone-label-text {
+  /* An h2 for the outline; the base heading margin would push it off the
+   * hairline it is centred against. */
+  margin: 0;
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 11px;
@@ -1680,8 +1704,8 @@ a.spec-link:hover {
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
   <main class="canvas">
 
-    <section>
-      <div class="eyebrow">the one elevated element on this card</div>
+    <section aria-labelledby="beat-the-one-elevated-element-on-this-card">
+      <div class="eyebrow" id="beat-the-one-elevated-element-on-this-card">the one elevated element on this card</div>
       <h1>Musk v. Altman: the OpenAI Trial</h1>
       <div class="hero">
         <p class="hook">Two men co-founded OpenAI as a nonprofit in 2015. A decade later they are in federal court over one question: did Elon Musk's early donation <strong>legally bind OpenAI to stay a nonprofit forever?</strong></p>
@@ -1691,8 +1715,8 @@ an ~$800B company; OpenAI says no such promise was ever made and Musk is a rival
 with regrets. As of mid-May 2026 the trial is in closing arguments in Oakland.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">single focal number</div>
+    <section aria-labelledby="beat-single-focal-number">
+      <div class="eyebrow" id="beat-single-focal-number">single focal number</div>
       <p>Musk told the jury he handed OpenAI "essentially free funding" in its earliest
 years, roughly</p>
       <div class="stat">$38M</div>
@@ -1700,8 +1724,8 @@ years, roughly</p>
 than $850 billion. That asymmetry is the engine of the entire case.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">the legal crux</div>
+    <section aria-labelledby="beat-the-legal-crux">
+      <div class="eyebrow" id="beat-the-legal-crux">the legal crux</div>
       <p><strong>Charitable trust</strong> is the legal theory the whole trial turns on. Musk argues
 his donation created a binding obligation forcing OpenAI to remain a nonprofit
 serving its founding mission; OpenAI argues no enforceable promise ever existed.
@@ -1709,24 +1733,24 @@ The jury weighs only two surviving claims, fraud and unjust enrichment, and
 even then <strong>only as advice</strong>.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">how to read the outcome</div>
-      <ul class="checklist">
+    <section aria-labelledby="beat-how-to-read-the-outcome">
+      <div class="eyebrow" id="beat-how-to-read-the-outcome">how to read the outcome</div>
+      <ul class="checklist" role="list">
         <li><span class="marker">✓</span><span>Watch the two phases separately: a liability finding is not the same as a $130B award or a corporate unwind</span></li>
         <li><span class="marker">✓</span><span>Treat the jury verdict as advisory: Judge Gonzalez Rogers can override it and decides remedies alone</span></li>
         <li><span class="marker">✓</span><span>Track the real stakes: Musk wants the for-profit conversion reversed and Altman ousted, not just damages</span></li>
       </ul>
     </section>
 
-    <section>
-      <div class="eyebrow">bottom line</div>
+    <section aria-labelledby="beat-bottom-line">
+      <div class="eyebrow" id="beat-bottom-line">bottom line</div>
       <p><strong>This was never really about the money. It is about whether a donation can
 freeze a company's mission forever.</strong> The verdict will be loud; with an advisory
 jury and a judge holding the final word, it won't be the last word.</p>
     </section>
 
     <section>
-      <ul class="sources">
+      <ul class="sources" role="list" aria-label="Sources">
         <li>Wikipedia, "Musk v. Altman": case timeline, parties, claims, restructuring</li>
         <li>CNBC, Musk v. Altman trial coverage, Apr–May 2026: jury, testimony, structure</li>
         <li>MIT Technology Review, "Musk v. Altman week 1 &amp; 2", May 2026: testimony</li>
