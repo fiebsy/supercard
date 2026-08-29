@@ -200,6 +200,9 @@
     transition: opacity 0.15s ease;
   }
   .copy-btn:hover { opacity: 0.82; }
+  /* Press feedback: better-ui's exact 0.96, the same figure on every control. */
+  .copy-btn:active, a.card-link:active { scale: 0.96; }
+  a.card-link { transition: scale 0.15s ease-out, border-color 0.15s ease-out; }
   .copy-btn.copied { background: var(--ink-2); }
 
   a.card-link {

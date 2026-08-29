@@ -348,6 +348,30 @@ table tr:last-child td {
 }
 
 /* equation / code block */
+/* Inline code. The gray ramp has named --g-06 "code-chip fills" since V3.0 and
+ * nothing on the canvas ever drew one: an inline `code` fell through to the
+ * UA default, which is generic `monospace` at the browser's 0.8x shrink, so a
+ * card's `RENDERING-spec` rendered in a font the system does not specify at a
+ * size it does not have. 0.9em keeps the chip on the line it sits in rather
+ * than fixing it to a size the surrounding body may not be. */
+code {
+  font-family: var(--mono);
+  /* 0.9em optically matches the surrounding line, and the 13px floor keeps a
+   * chip inside the 13/18 source list from shrinking to 11.7px, which is under
+   * every size floor the system holds elsewhere. */
+  font-size: max(13px, 0.9em);
+  background: var(--fill-chip);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+/* A fenced block is one surface, so its lines do not each get a chip. */
+pre code {
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
 pre {
   font-family: var(--mono);
   font-size: 14px;
@@ -462,6 +486,46 @@ section.divider h2 {
   margin-inline-end: var(--s-1);
 }
 
+/* Press feedback. The site is a touch-first 393pt column and not one control
+ * acknowledged a press: on a slow connection a tap on a card was silent until
+ * the next page painted. scale(0.96) is better-ui's exact figure, and it is
+ * the same figure for every control so one shape means one behaviour. The
+ * reduced-motion block flattens the transition; the state itself stays, since
+ * it is direct manipulation rather than decoration. */
+.copy-btn:active,
+.spec-input:active,
+.older-toggle:active,
+.zone-action:active,
+.sample-card:active,
+a.card-link:active,
+.back-btn:active,
+.gh-btn:active,
+.icon-btn:active {
+  scale: 0.96;
+}
+.copy-btn,
+.spec-input,
+.older-toggle,
+.zone-action,
+.sample-card,
+a.card-link,
+.back-btn,
+.gh-btn,
+.icon-btn {
+  transition-property: scale, background-color, border-color, color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
 /* Visually hidden, still announced. Used for the copy status and anywhere a
  * name has to exist for a reader who cannot see the visual cue carrying it.
  * `clip-path` plus a 1px box, not `display: none`, which would remove it from
@@ -561,7 +625,10 @@ a.card-link {
   background: var(--w);
 }
 a.card-link:hover {
-  border-color: var(--g-12);
+  /* --rule-hairline IS --g-12, so setting the hover border to --g-12 declared
+   * a state and rendered none. One step up the ramp, matching the gallery's
+   * own copy of this rule, which had it right. */
+  border-color: var(--g-30);
 }
 .card-title {
   font-size: 24px;
@@ -1200,7 +1267,7 @@ a.spec-link:hover {
   background: transparent;
   color: var(--ink);
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 .gh-btn:hover {
   background: var(--g-06);
@@ -1477,7 +1544,7 @@ a.spec-link:hover {
   background: var(--g-06);
   border: 1px solid var(--rule-hairline);
   color: var(--ink);
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 /* The whole card is the link, so on card hover the chevron fills a step
  * (g-06 -> g-12) and drops its ring (border hidden) — a quiet fill-in rather
@@ -1525,7 +1592,7 @@ a.spec-link:hover {
   border-radius: 999px;
   background: var(--g-06);
   color: var(--ink);
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 .back-btn:hover {
   background: var(--g-12);
