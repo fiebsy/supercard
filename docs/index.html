@@ -254,8 +254,9 @@
      * cropped screenshot can trace it back to the system, which it cannot do
      * if it cannot be read. */
     color: var(--text-quiet);
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(4px);
+    /* Opaque, not an 85% scrim: the mark is fixed, so content scrolls under
+     * it, and a translucent ground has no single pair to measure. */
+    background: var(--surface-page);
     padding: 4px 7px;
     border-radius: 6px;
     border: 1px solid var(--rule-hairline);
