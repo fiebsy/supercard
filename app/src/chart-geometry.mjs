@@ -147,3 +147,40 @@ export function areaChartGeometry(items) {
     : "";
   return { ...g, baseY, areaPath };
 }
+
+/* ---- accessible chart names (V3.10, R-38) ------------------------------ *
+ * A chart's accessible name used to be its chart type ("column chart"),
+ * which names the picture and withholds the point. The numbers are the
+ * block's content, so they belong in the name. Lives here, beside the
+ * geometry, so both render paths build the same string from the same rows
+ * (the parity contract, R-35).
+ * ----------------------------------------------------------------------- */
+
+const CHART_NOUN = {
+  bar: "Bar chart",
+  line: "Line chart",
+  column: "Column chart",
+  area: "Area chart",
+};
+
+/**
+ * The accessible name for one chart, built from its own rows.
+ *
+ * "Column chart. R-33 6, R-34 6, R-35 2. R-33 is the focal value."
+ *
+ * Every label/value pair a sighted reader can see is in the string, in the
+ * order they are drawn, and the single focal element (P2's one emphasis) is
+ * named last so a listener hears which one the block is about. Truncated
+ * labels are announced in full: the ellipsis is a drawing constraint, not
+ * part of the content.
+ */
+export function chartDescription(kind, items) {
+  const noun = CHART_NOUN[kind] || "Chart";
+  if (!items || !items.length) return noun;
+  const pairs = items
+    .map((it) => `${it.label} ${it.display ?? it.value}`)
+    .join(", ");
+  const focal = items.find((it) => it.focal);
+  const emphasis = focal ? ` ${focal.label} is the focal value.` : "";
+  return `${noun}. ${pairs}.${emphasis}`;
+}

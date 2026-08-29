@@ -7,11 +7,61 @@
 | era | atlas |
 | version | 3.0.0 |
 | owner | derick |
-| updated | 2026-06-25 |
+| updated | 2026-08-29 |
 
 The design diary. Append-only, newest at top. Captures **the noticing** — patterns observed, temptations resisted, blocks that almost made it in, shifts in taste. Distinct from the CHANGELOG (what changed) and ADRs (why a single thing was decided).
 
 Append entries via SupercardOps `logStewardEntry()` or directly.
+
+---
+
+## 2026-08-29 — claude (for derick) — [outside eyes]
+
+**Context.** Every version cut so far was written from inside: read the cards,
+notice a defect, name a rule. V3.10 pointed a standard from outside the system
+at it — the eleven `jakubkrehel/skills` interface skills — and the interesting
+result is not the list of findings. It is that nearly every finding was the
+system failing a promise it had already made in writing.
+
+R-20 says `--g-30` is non-text. Five glyphs a reader has to read were drawn in
+it, at 2.10:1. ADR-0011 made the em-dash ban retroactive to every card and the
+V3.6 changelog recorded the sources as cleaned; the validator skipped every
+V3.0 card, so one of them shipped eighteen of them. R-29's `td.num` styling has
+been in the stylesheet since V3.7 and no render path ever emitted the class.
+The subhead was catalogued, styled, authored as `### ` in every card, and
+rendered as a `<div>`.
+
+**The noticing.** These are all the same failure, and it is a specific one: the
+spec is checked against the *screenshot*, and the screenshot cannot show you
+the layer underneath it. A `<div>` styled as a heading photographs exactly like
+a heading. A gate that never runs looks identical to a gate that passes. A
+token used out of role renders the colour it was borrowed for. V3.9 caught the
+defects a camera could see, because it used a camera. V3.10 caught the ones it
+could not, because it read the HTML and measured the pairs.
+
+**The temptation resisted.** The obvious move, holding eleven skills full of
+exact values, is to apply them. Concentric radius everywhere, shadows for
+elevation, an accent ramp, a 60-character measure, `text-box` trimming. Most of
+that would have made the cards worse, and `SKILLS-interface-map.md` exists so
+the next steward does not have to relitigate it: shadows were retired on
+purpose in V3.6, there is no hue and never will be, the measure is a
+consequence of the canvas being the format. A standard that cannot lose an
+argument is a template, not a standard.
+
+**The line that held.** R-36 and R-37 change the archive, and they were argued
+hard both ways. The test from ADR-0011 is: broken markup, overflow, a wobbling
+gap. A subhead rendering at 16px browser default is broken markup. A marker at
+2.10:1 is a marker nobody can read. Neither is a period design choice, and
+calling them one would be the rationalization the V3.9 card warned about. R-41
+and R-42 change where lines break and which glyph a quote opens with — those
+*are* design, so they went in `.canvas.v3-10` and the archive keeps its rag.
+
+**What to watch.** The design review is Stage 4b now, which means the next
+card's authoring notes will carry a findings list. If those lists start reading
+the same way every time — the same three nits, no system-level findings — the
+stage has become a ritual and should be either sharpened or dropped. The signal
+to watch for the opposite failure: a system-level finding getting patched into
+one card instead of becoming a rule. That is how an archive stops being true.
 
 ---
 

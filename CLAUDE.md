@@ -28,6 +28,25 @@ New session? Read, in order, before touching a card:
 To build a card from a topic, run `10-GOVERNANCE/PIPELINE-card-assembly.md` or
 invoke the `supercard` skill. See `README.md` for the folder map.
 
+## Design review (Stage 4b)
+
+After the constraint gates pass and before the render, run the design review:
+invoke `better-interface` (or the `better-*` domain skills directly) against the
+card. They are vendored in `.claude/skills/`.
+
+Check every finding against the **Overridden** table in
+`10-GOVERNANCE/SKILLS-interface-map.md` before acting on it. That table records
+where a skill rule loses to a Supercard rule and why: shadows are retired
+(R-22), there is no accent hue, the measure is short because the canvas is a
+fixed 393pt, the page is light-only on purpose. A finding that lands in that
+table is answered, not open.
+
+A finding about *this card* is fixed here. A finding about the *system* — a
+token used out of role, a block that renders without structure, a rule with no
+render path emitting it — becomes a numbered R-rule in an ADR, applied in the
+stylesheet or a render path, with every card re-rendered from its frozen
+source. Never patch a system finding into one card.
+
 ## Before spec work (editing the published spec)
 
 `docs/llms.txt` is the published spec — the thing people paste into a chat LLM to

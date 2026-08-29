@@ -34,6 +34,19 @@ export type CardEntry = {
 
 export const cards: CardEntry[] = [
   {
+    slug: "v310-outside-eyes",
+    id: "CARD-2026-08-29-v310-outside-eyes",
+    title: "Outside Eyes",
+    length: "standard",
+    mode: "briefing",
+    eyebrow: "Skills",
+    version: "v3.10",
+    desc: "First card frozen at 3.10.0: the R-36 subheads that are real headings, the R-37 contrast floor on every rendered glyph, the R-38 charts named by their own rows, the R-39 role tokens and the R-41 balanced display wrapping.",
+    preview:
+      "A system checked only against itself cannot find the questions it never asked. Every version so far was audited from a screenshot, and a screenshot cannot show you the layer underneath it. V3.10 read the HTML instead, and measured the colours.",
+    htmlRender: "html/cards/CARD-2026-08-29-v310-outside-eyes.html",
+  },
+  {
     slug: "v39-rendering-robustness",
     id: "CARD-2026-07-03-v39-rendering-robustness",
     title: "Rendered as Written",

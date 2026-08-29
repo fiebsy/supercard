@@ -5,9 +5,9 @@
 | id | RENDERING-spec |
 | type | governance |
 | era | atlas |
-| version | 3.9.0 |
+| version | 3.10.0 |
 | owner | derick |
-| updated | 2026-07-03 |
+| updated | 2026-08-29 |
 
 How a Supercard source becomes a rendered HTML artifact, and how that artifact is published so it can be viewed online. Tokens, type scale, spacing, shadows, canvas, publishing.
 
@@ -70,7 +70,7 @@ The `Card radius: 16pt` below applies **only** to the 1–3 bounded anchor cards
 - **Mobile portrait:** 393 × 852pt (iPhone 15/16 Pro)
 - **Outer gutter:** 16pt
 - **Content width:** 361pt
-- **Internal card pad:** 24pt
+- **Internal card pad:** 32pt (`--s-5`; the 24pt figure predates the V3.6 flat-surface cut, where the pad took over the separation a shadow used to do)
 - **Card radius:** 16pt (concentric with iOS 26) — *bounded anchor cards only, not the page*
 - **Hairline:** 0.5px solid rgba(0,0,0,0.06)
 
@@ -82,10 +82,10 @@ The `Card radius: 16pt` below applies **only** to the 1–3 bounded anchor cards
 | 6% | --g-06 | rgba(0,0,0,0.06) | Code-chip fills, faint backgrounds (V3.6 R-23: **no longer used for borders** — too faint at mobile density) |
 | 12% | --g-12 | rgba(0,0,0,0.12) | **Hairline borders and card outlines** (V3.6 R-23, stepped up from --g-06), gridlines, subtle backgrounds |
 | 30% | --g-30 | rgba(0,0,0,0.30) | Deemphasized data, gridlines (V3.5+ R-20: **non-text only**) |
-| 60% | --g-60 | rgba(0,0,0,0.60) | Secondary text, axis labels, footnotes |
+| 60% | --g-60 | rgba(0,0,0,0.60) | Non-text rules and marks. It composites to #666666 (5.74:1) and stays legal as ink where a pre-V3.5 card already uses it, but V3.5+ text comes from the R-20 ink ladder and new work states a role token (R-39), never a ramp step |
 | 100% | --k | #000000 | Body text, primary, focal data |
 
-**Text vs. non-text split (read with R-20).** The ramp serves two jobs — *text ink* and *non-text rules/fills* — and the contrast floor differs. Body text uses #111111 (`--ink`), never pure black. The per-block ink layers `--ink-2` (#333), `--ink-3` (#555), `--ink-4` (#888), `--ink-5` (#BBB) are the **V3.0–V3.4** ramp and stay frozen for those cards. **V3.5+ cards render text from the R-20 three-step ink ladder** (`--ink` #1A1A1A, `--ink-2` #595959, `--ink-3` #767676 — every step clears WCAG 2.2 SC 1.4.3); `#888` / `#BBB` / `--g-30` are demoted to **non-text only** (hairlines, gridlines, disabled, decorative rules) and are permitted for *large* text (≥ 24px, 3:1 floor) only. See R-20.
+**Text vs. non-text split (read with R-20).** The ramp serves two jobs — *text ink* and *non-text rules/fills* — and the contrast floor differs. Body text uses #111111 (`--ink`), never pure black. The per-block ink layers `--ink-2`, `--ink-3`, `--ink-4` (#888) and `--ink-5` (#BBB) are the **V3.0–V3.4** ramp. Only `--ink-2` and `--ink-3` are declared in the stylesheet (at #6b6b6b / #767676); `--ink-4` and `--ink-5` are named here and in the validator's contrast report but are not tokens and are never emitted. **V3.5+ cards render text from the R-20 three-step ink ladder** (`--ink` #1A1A1A, `--ink-2` #595959, `--ink-3` #767676 — every step clears WCAG 2.2 SC 1.4.3); `#888` / `#BBB` / `--g-30` are demoted to **non-text only** (hairlines, gridlines, disabled, decorative rules) and are permitted for *large* text (≥ 24px, 3:1 floor) only. See R-20.
 
 **Surface tint (V3.4+, optional).** A `--surface-tint: rgba(0,0,0,0.025)` (alternately `#F7F7F7`) is permitted as a card background under R-16. It is **not** a seventh step in the ramp; it is a single off-white that sits between `--w` and `--g-06` for the specific purpose of replacing a hairline border with a tonal-contrast affordance. Cards using `--surface-tint` MUST omit the hairline; cards using the hairline MUST use `--w`. Mixing both on the same card is forbidden.
 
@@ -110,7 +110,15 @@ space doing the differentiation. Body metrics are R-19; text ink is R-20.
 
 **The dek is not its own size.** Render it at body size (17 / 26) in a lighter
 weight or secondary ink — weight and ink set it apart from the title, not a
-fourth step (R-13 / R-21). The 19pt subtitle step is retired for current cards.
+fourth step (R-13 / R-21). The 19pt step is retired **as a subtitle**; it
+survives as a reserved lead role on exactly two blocks, the hero `.hook` and
+`blockquote`, each of which is a card anchor rather than a step in its heading
+hierarchy:
+
+| Role | Size / leading | Weight | Tracking | Note |
+|---|---|---|---|---|
+| Lead / quote *(reserved)* | 19 / 26 | 500 | −0.005em | the hero `.hook` and `blockquote` only, never a general subhead step |
+| Pull quote *(reserved)* | 24 / 30 | 600 | −0.012em | `blockquote.pull` only. It is the old Section-header step, kept for the one block that is a display moment rather than a heading |
 
 **Note on the eyebrow row.** The eyebrow is the one positively-tracked role
 (+0.08em) — UPPERCASE caps have no word-shape to break, so opening their tight
@@ -151,11 +159,12 @@ CSS stack:
 
 `ui-rounded` first — standardized CSS keyword that resolves to SF Pro Rounded on Apple platforms. `Inter` is the preferred fallback where SF Pro Rounded isn't available (non-Apple platforms, when locally installed), ahead of the generic system stack.
 
+**`<em>` is a synthesized slant, not an italic face.** SF Pro Rounded ships no italic, so `font-style: italic` on this stack is the browser mechanically shearing the upright glyphs. That is acceptable for the two things R-19 permits italics for — a title and a foreign term, a word or two at a time — and it is why emphasis is `<strong>` and never `<em>`: a synthesized slant across a clause reads as a rendering artifact, not as emphasis. Never set `font-synthesis: none` here; it would erase the slant rather than fix it, and the two permitted uses would silently lose their only visual mark.
+
 ## Spacing tokens (8pt baseline)
 
 | Token | px | Use |
 |---|---|---|
-| --s-0 | 4 | Tightest (sub-element gaps) |
 | --s-1 | 8 | Tight |
 | --s-2 | 12 | Comfortable |
 | --s-3 | 16 | Default block padding |
@@ -668,6 +677,160 @@ its scope). Same contract throughout:
   extraction the stewards' log called for when a third chart type landed. The
   parity contract is now structural, not copy-discipline: the HTML twin and
   the React card serialize the same numbers.
+
+## R-36. Subheads are headings (V3.10+, retroactive)
+
+**A `### ` subhead renders as `<h2 class="tile">`, in both render paths.**
+Through V3.9 the HTML renderer emitted a bare `<div class="tile">`, so every
+published card presented exactly one heading (its cover `h1`) and nothing else.
+The beat structure the source markdown describes was invisible to assistive
+technology, to in-page navigation, and to anything reading the HTML rather than
+the screenshot. On a card frozen below 3.4.0 the `.tile` class had no rule at
+all, so the subhead fell to 16px browser default with `line-height: normal` and
+no weight, tracking or margin — indistinguishable from body prose.
+
+- **The class carries the metric, the element carries the structure.** No new
+  CSS: the cascade already resolves the version-correct step. Base `h2` is the
+  V3.0 Section-header 24/30; `.canvas.v3-4 .tile` is the 28/32 Tile head;
+  `.canvas.v3-5 h2, .tile` is the 26/32 Subhead (R-21).
+- **Base level and retroactive** (ADR-0011 precedent). A subhead rendering as
+  unstyled body text is a defect of the same class R-33 repaired, not a period
+  design choice. The V3.7 and V3.9 renders screenshot byte-identical before and
+  after; the pre-3.4 cards gain the subhead they were authored to have.
+- The card canvas is `<main>`, and a table's column headers carry
+  `scope="col"` (R-40).
+
+## R-37. Every rendered glyph clears 4.5:1 (V3.10+, retroactive)
+
+**Anything that draws a character takes its colour from the text-ink ladder.**
+R-20 already classified `--g-30` as non-text; three elements were drawn in it
+anyway, at a measured 2.10:1 on white:
+
+| Element | Was | Is | Why it is content |
+|---|---|---|---|
+| `.marker` | `--g-30` (2.10:1) | `--text-quiet` (4.54:1) | The ✓, the ✗ and the numeral are the difference between a checklist, an anti-pattern list and a numbered process |
+| `.sources li::before` | `--g-30` | `--text-quiet` | The middle dot is R-24's replacement list marker |
+| `.glyph` | `--g-30` | `--text-quiet` | The corner mark exists so a stranger with a cropped screenshot can trace it back to the system, which it cannot do unread |
+| `section.divider .rule` | `--g-30` | `--text-quiet` | A divider's orienting label is text |
+| `.card-meta` (gallery) | `--g-30` | `--text-quiet` | The card's id, length and version, and the only place a reader can read them |
+
+Base level and retroactive: a glyph the reader cannot resolve is a defect. The
+ink steps themselves are unchanged, so no reading-layer rule moves.
+
+## R-38. A chart names its data (V3.10+, retroactive)
+
+**A chart's accessible name is built from its own rows, not from the shape it
+draws.** `aria-label="column chart"` told a listener the picture and withheld
+the point. It now reads:
+
+```
+Column chart. R-33 6, R-34 6, R-35 2. R-33 is the focal value.
+```
+
+Every label/value pair a sighted reader can see, in drawing order, with the
+single focal element (P2's one emphasis) named last. A truncated label is
+announced in full: the ellipsis is a drawing constraint, not content.
+`chartDescription()` lives in `app/src/chart-geometry.mjs` beside the geometry,
+so both render paths build the same string from the same rows (the R-35 parity
+contract). Markup only, no pixels.
+
+## R-39. Role tokens name the job (V3.10+)
+
+**A block references a role, not a ramp step.** `--g-12` names a value and says
+nothing about where it belongs, which is how one ramp ended up carrying both
+hairlines and text. A role tier now sits over the primitives:
+
+| Role token | Points at | Use |
+|---|---|---|
+| `--text-emphasis` | `--ink` | The one bold run, headings, focal data |
+| `--text-body` | `--ink-2` | Prose, list rows, the dek |
+| `--text-quiet` | `--ink-3` | Captions, eyebrows, table cells, markers |
+| `--rule-hairline` | `--g-12` | Borders, separators, anchor-card outlines |
+| `--rule-grid` | `--g-12` | Chart axes and gridlines |
+| `--fill-chip` | `--g-06` | Code-chip ground, the area chart's one fill |
+| `--surface-page` | `--w` | The canvas and every anchor card |
+| `--surface-quiet` | `--surface-tint` | The R-16 tinted card, alternately |
+
+The split they encode is R-20's: **ink carries glyphs, the g-ramp draws rules
+and fills.** Every ink role clears 4.5:1 on white and no g-ramp step above
+`--g-60` does, which is why a rule token must never end up on a `color`. The
+V3.5 canvas redefines `--ink` / `--ink-2` / `--ink-3`, so the roles follow each
+card's own ladder without being restated. The primitives stay: they are the
+values, and the roles are the vocabulary.
+
+## R-40. The card is a document (V3.10+, retroactive)
+
+**The render is legible to a reader who never sees the pixels.** A Supercard is
+built to be screenshotted, and that has never been a reason for the HTML under
+it to be a pile of divs. The render now carries: `<main>` on the canvas,
+`<h1>` for the cover title and `<h2>` for every subhead (R-36), `scope="col"`
+on a table's column headers, a data-built name on every chart (R-38), and
+logical CSS properties (`text-align: start`, `margin-inline-end`,
+`padding-inline-start`, `border-inline-start`) in place of physical ones.
+Identical in LTR, correct in principle.
+
+The same holds for the gallery, which is ordinary web UI and gets no
+print-artifact exemptions: `<main>`, `<footer>`, an `<h2>` per card entry, one
+visible `:focus-visible` ring in ink on every control, a 44pt minimum control
+height, `prefers-reduced-motion` honoured, and `width=393` in the viewport meta
+so the fixed column never overflows a 375 or 390 CSS-px phone (the ruling R-34
+made for card renders, applied to the site pages).
+
+## R-41. Display type wraps balanced (V3.10+)
+
+**`text-wrap: balance` on display type, `text-wrap: pretty` on prose.** A 40/44
+title in a 361pt column runs to two or three lines more often than not, and the
+browser's greedy line-breaker fills the first line and drops the remainder on
+the last. `balance` lays out a short run at once and evens the lines, which is
+the whole reason the property exists and the whole reason it is capped at a few
+lines. Applies to `h1`, `h2` / `.tile`, `.takeaway`, `.dek` and `blockquote`.
+
+Prose keeps `pretty`, which optimises only the last line — what long text needs
+and all a long paragraph can afford. The two are not interchangeable: `balance`
+on body copy is ignored past the browser's line cap, and `pretty` on a two-line
+heading does nothing about a lopsided first line.
+
+Scoped to `.canvas.v3-10` because it changes where lines break: an earlier card
+keeps the rag it was authored against (ADR-0003).
+
+## R-42. Smart punctuation (V3.10+)
+
+**Rendered prose takes real quotation marks, real apostrophes and the ellipsis
+character.** Straight quotes and three periods are typewriter artifacts, and a
+pull quote is exactly where a reader looks closest. The renderer transforms the
+assembled section HTML, so it sees whole sentences rather than inline
+fragments, and it walks tags and text alternately: a tag name, an attribute
+value, an entity and the contents of `<code>` and `<pre>` come through
+untouched. Code takes straight quotes by rule.
+
+No em dash is ever produced — R-24 still bans it, in prose and as furniture.
+Gated on `frozen_at_version >= 3.10.0`; an earlier card keeps the glyphs it was
+published with.
+
+## R-43. Grouping, cues and fit (V3.10+)
+
+**Space groups before lines do, and the gap around a group beats the gap inside
+it.**
+
+- **Quote and attribution are one group.** The joins ran backwards: 16pt from
+  the quote down to the line naming its source, then 12pt from there to the
+  commentary after it, so the attribution read as belonging to the paragraph
+  below. It is 8pt in and 24pt out now.
+- **The footnote list is not a ruled row list.** `.sources li` overrides the
+  row list's font, colour, marker and padding but inherited its hairline, so
+  every source line carried a separator its 13/18 leading had already made
+  unnecessary.
+- **A scrollable panel says it scrolls.** `white-space: pre` opts out of the
+  canvas-wide `overflow-wrap`, so a long equation or code line is the one thing
+  on a card that can still run past the column. It scrolls rather than
+  overflowing, and a 24px trailing mask is the cue that it does: without one a
+  screenshot loses the tail with nothing to say so.
+- **The corner mark stays in the viewport.** Its offset was computed from a
+  hardcoded half-column (196px = 393/2), which pushed it past the trailing edge
+  below a 393px viewport. The offset clamps to the viewport.
+
+The first two are scoped to `.canvas.v3-10`; the last two are base-level defect
+repairs.
 
 ## Block compatibility
 

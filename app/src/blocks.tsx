@@ -24,6 +24,7 @@ import {
   lineChartGeometry,
   columnChartGeometry,
   areaChartGeometry,
+  chartDescription,
 } from "./chart-geometry.mjs";
 
 /* ---- section scaffold -------------------------------------------------- */
@@ -38,12 +39,28 @@ type Beat =
   | "Beat 7 · Close"
   | "Sources";
 
+// R-40 — the eyebrow is a beat's visible label, and R-25 already requires it
+// to be distinct within a card, so it is a stable name for the section to
+// point at. Matches eyebrowId() in app/scripts/render-card.mjs.
+export function eyebrowId(text: string) {
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 48);
+  return slug ? `beat-${slug}` : undefined;
+}
+
 export function Eyebrow({ label }: { label: string }) {
   // The eyebrow is a short editorial label that names the block's CONTENT
   // (e.g. "The founding experiment"), NOT the beat name. The beat is authoring
   // metadata and is never rendered (R-10, R-14, I7). Sentence case + the
   // first-letter cap are handled in CSS; the source string is authored as-is.
-  return <div className="eyebrow">{label}</div>;
+  return (
+    <div className="eyebrow" id={eyebrowId(label)}>
+      {label}
+    </div>
+  );
 }
 
 export function Section({
@@ -60,7 +77,7 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section>
+    <section aria-labelledby={eyebrow ? eyebrowId(eyebrow) : undefined}>
       {eyebrow ? <Eyebrow label={eyebrow} /> : null}
       {children}
     </section>
@@ -76,8 +93,10 @@ export function Canvas({
   v31?: boolean;
   children: ReactNode;
 }) {
+  // R-40 — the canvas is the card's one primary landmark, matching the
+  // standalone renderer's <main class="canvas …">.
   return (
-    <div className={v31 ? "canvas v3-1" : "canvas"}>{children}</div>
+    <main className={v31 ? "canvas v3-1" : "canvas"}>{children}</main>
   );
 }
 
@@ -124,7 +143,7 @@ export function StandardText({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       {lead ? (
         <p>
           <strong className="lead">{lead}</strong> {children}
@@ -177,8 +196,8 @@ export function NumberedList({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
-      <ol>
+      {heading ? <h2 className="tile">{heading}</h2> : null}
+      <ol role="list">
         {steps.map((s, i) => (
           <li key={i}>
             <span className="marker">{i + 1}</span>
@@ -214,11 +233,19 @@ export function MarkerList({
   intro?: ReactNode;
   closer?: ReactNode;
 }) {
+  // The HTML renderer stamps `checklist` / `antipattern` on the list, and
+  // `.canvas ul.checklist .marker` widens the marker lane from 18px to 22px so
+  // a ✓ or ✗ sits on the same edge a numeral does. This path stamped nothing,
+  // so the same card rendered with a 4px narrower lane here than in its HTML
+  // twin — a parity break the R-35 contract does not allow. Derived from the
+  // marker so a caller cannot get it wrong.
+  const variant =
+    marker === "✓" ? "checklist" : marker === "✗" ? "antipattern" : undefined;
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
-      <ul>
+      <ul className={variant} role="list">
         {items.map((it, i) => (
           <li key={i}>
             <span className="marker">{marker}</span>
@@ -259,13 +286,15 @@ export function DataTable({
   const span = head?.length ?? rows[0]?.cells.length ?? 1;
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <table className={className}>
         {head ? (
           <thead>
             <tr>
               {head.map((h, i) => (
-                <th key={i}>{h}</th>
+                <th key={i} scope="col">
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
@@ -319,9 +348,9 @@ export function BarChart({ beat, eyebrow, heading, items, closer }: ChartBlockPr
   const g = barChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="bar chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("bar", items)}>
           {g.rows.map((r, i) => {
             const f = r.focal ? " focal" : "";
             return (
@@ -347,9 +376,9 @@ export function LineChart({ beat, eyebrow, heading, items, closer }: ChartBlockP
   const g = lineChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="line chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("line", items)}>
           {g.grid.map((gl, i) => (
             <line key={i} className="grid" x1={gl.x1} y1={gl.y} x2={gl.x2} y2={gl.y} />
           ))}
@@ -381,9 +410,9 @@ export function ColumnChart({ beat, eyebrow, heading, items, closer }: ChartBloc
   const g = columnChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="column chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("column", items)}>
           <line className="axis" x1={0} y1={g.baseY} x2={g.W} y2={g.baseY} />
           {g.cols.map((c, i) => {
             const f = c.focal ? " focal" : "";
@@ -412,9 +441,9 @@ export function AreaChart({ beat, eyebrow, heading, items, closer }: ChartBlockP
   const g = areaChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="area chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("area", items)}>
           {g.grid.map((gl, i) => (
             <line key={i} className="grid" x1={gl.x1} y1={gl.y} x2={gl.x2} y2={gl.y} />
           ))}
@@ -459,7 +488,7 @@ export function StatGrid({
   const cls = metrics.length % 3 === 0 ? "stat-grid cols-3" : "stat-grid";
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className={cls}>
         {metrics.map((m, i) => (
           <div className="cell" key={i}>
@@ -516,7 +545,7 @@ export function Flashcards({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <dl className="flashcards">
         {cards.map((c, i) => (
           <div className="fc" key={i}>
@@ -548,7 +577,7 @@ export function Equation({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
       <pre>{formula}</pre>
       {closer ? <p>{closer}</p> : null}
@@ -598,7 +627,10 @@ export function SectionDivider({
 }) {
   return (
     <section className="divider">
-      <div className="rule">— {rule} —</div>
+      {/* R-24: no em dash renders on the canvas, as furniture or in prose.
+          The divider's hairlines and its 64pt symmetric gap already do the
+          dividing, so the label needs no frame at all. */}
+      <div className="rule">{rule}</div>
       <h2>{heading}</h2>
       {children ? <p>{children}</p> : null}
     </section>
@@ -629,7 +661,7 @@ export function KeyTakeaway({
 export function Sources({ items }: { items: ReactNode[] }) {
   return (
     <Section beat="Sources" eyebrow="Sources">
-      <ul className="sources">
+      <ul className="sources" role="list" aria-label="Sources">
         {items.map((s, i) => (
           <li key={i}>{s}</li>
         ))}

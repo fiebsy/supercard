@@ -5,11 +5,129 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.9.0 |
+| version | 3.10.0 |
 | owner | derick |
-| updated | 2026-07-03 |
+| updated | 2026-08-29 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
+
+---
+
+## [3.10.0] — "Atlas" — 2026-08-29
+
+The interface-skills cut. Every prior version was written from inside the
+system: a steward read the cards, noticed a defect, named a rule. V3.10 audits
+the system against an outside standard instead — the eleven
+`jakubkrehel/skills` interface skills (typography, colour, layout, UI polish,
+writing, accessibility), vendored into `.claude/skills/` at commit `267330e`
+and mapped to Supercard's own rules in `SKILLS-interface-map.md`. Where a skill
+rule and a Supercard rule genuinely disagreed the Supercard rule usually won,
+and the map records each ruling: shadows stay retired, the measure stays under
+the skill's target, no hue enters, the canvas stays light-only and fixed-width.
+
+What the audit found is that **the worst defects were failures to keep promises
+the spec had already made**, and that they all lived in the layer under the
+picture where a steward reading a screenshot could not see them. Strict
+grayscale, single emphasis and frozen-at-version content are intact.
+(ADR-0017.)
+
+### Added
+
+- RENDERING § R-36 — **Subheads are headings** (V3.10+, retroactive). A `### `
+  subhead renders as `<h2 class="tile">` in both paths. Through V3.9 it was a
+  bare `<div>`, so every published card presented one `<h1>` and nothing else:
+  the beat structure was invisible to assistive technology, to in-page
+  navigation and to any agent reading the HTML. On a card frozen below 3.4.0
+  the subhead had no rule at all and fell to 16px browser default with
+  `line-height: normal`. The class carries the metric and the element carries
+  the structure, so no new CSS was needed and the V3.7 and V3.9 renders
+  screenshot byte-identical.
+- RENDERING § R-37 — **Every rendered glyph clears 4.5:1** (V3.10+,
+  retroactive). The list marker, the source bullet, the divider label, the
+  gallery meta line and the corner mark were drawn at `--g-30`, a measured
+  2.10:1 that R-20 already classified as non-text. All move to `--text-quiet`
+  (4.54:1).
+- RENDERING § R-38 — **A chart names its data** (V3.10+, retroactive).
+  `aria-label="column chart"` becomes "Column chart. R-33 6, R-34 6, R-35 2.
+  R-33 is the focal value." `chartDescription()` lives in `chart-geometry.mjs`
+  so both render paths build it from the same rows (R-35 parity).
+- RENDERING § R-39 — **Role tokens name the job** (V3.10+). A role tier over
+  the value-named ramp: `--text-emphasis` / `--text-body` / `--text-quiet` for
+  glyphs, `--rule-hairline` / `--rule-grid` / `--fill-chip` / `--surface-page`
+  / `--surface-quiet` for everything else. A role alias resolves where it is
+  declared, so `.canvas.v3-5` redeclares the ink roles with its own ladder.
+- RENDERING § R-40 — **The card is a document** (V3.10+, retroactive).
+  `<main>`, real headings, `th scope="col"`, logical CSS properties. The
+  gallery gets the same plus landmarks, one `:focus-visible` ring in ink, 44pt
+  controls, `prefers-reduced-motion` and `width=393`.
+- RENDERING § R-41 — **Display type wraps balanced** (`.canvas.v3-10`).
+  `text-wrap: balance` on headings, subheads, takeaway, dek and blockquote;
+  prose keeps `pretty`.
+- RENDERING § R-42 — **Smart punctuation** (V3.10+ renderer). Curly quotes,
+  real apostrophes, the ellipsis character; `<code>` and `<pre>` keep ASCII. No
+  em dash is ever produced (R-24 stands).
+- RENDERING § R-43 — **Grouping, cues and fit.** The quote-to-attribution join
+  was larger than the gap around the pair; the footnote list inherited the
+  ruled row list's hairline; a scrollable code panel had no cue; the corner
+  mark's offset left the viewport below 393px.
+- `10-GOVERNANCE/SKILLS-interface-map.md` — what each vendored skill owns on a
+  Supercard, what the spec overrides and why, and how a build uses both.
+- `.claude/skills/` — the eleven interface skills, vendored with provenance.
+
+### Fixed
+
+- **R-24 was never enforced on the cards it was written for.** ADR-0011 made
+  the em-dash ban retroactive to every card and the V3.6 changelog recorded the
+  sources as cleaned, but the validator returns early on any card frozen below
+  3.1.0, so the gate never ran on the three V3.0 cards. One shipped eighteen
+  reader-visible em dashes into its published render. The gate now runs on
+  every card before the version skip, and that card's prose is recast.
+- **`parseBlocks` read scaffold as content.** The last beat ran to
+  end-of-file, folding `## Sources` and `## Authoring notes` into the final
+  block, so every gate had been scanning production notes the renderer
+  explicitly never emits (R-10, R-33).
+- **R-29 had shipped its CSS and nothing else.** `td.num` / `th.num` have been
+  styled since V3.7 and no render path emitted the class, so comparison-table
+  figures went out proportional and left-aligned. The renderer now marks a data
+  column numeric when every body cell in it is a number.
+- **The documented render command failed as written.** `npm --prefix app run
+  render -- 30-CARDS/…` runs with the cwd set to `app/`, so a repo-relative
+  card path only ever resolved under `app/`. Card paths resolve against the cwd
+  first, then the repo root.
+- The React section divider framed its label in em dashes; the published card
+  `<title>` used one as a separator. Both are reader-visible and R-24 covers
+  both.
+- Spec-versus-code drift: `--s-0` documented and never declared; `--ink-4` /
+  `--ink-5` named as tokens and never emitted; the internal card pad given as
+  24pt where the stylesheet uses 32; the 19pt step called retired while the
+  hero hook and blockquote still render at it; the gray-ramp table still
+  calling `--g-60` a text colour after R-20 demoted it; the canonical INDEX
+  describing R-25 as "sentence-case labels, tracking returns to 0" when R-25
+  says the opposite in its own text.
+- Tertiary ink measured 4.31:1 on the R-16 tinted ground, under the 4.5:1 floor
+  R-20 promises. `.tint-card` redeclares `--text-quiet` one rung up, which is
+  the argument for role tokens in one declaration.
+
+### Changed
+
+- `app/src/supercard.css` — role tier on `:root` and redeclared on
+  `.canvas.v3-5` and `.tint-card`; `.marker`, `.sources li::before`,
+  `.glyph` and `section.divider .rule` on the ink ladder; `::selection` on the
+  ramp; `-moz-osx-font-smoothing`; logical properties throughout; the
+  `.canvas.v3-10` layer.
+- `app/scripts/render-card.mjs` — `<h2 class="tile">`, `<main>`, `th scope`,
+  data-built chart names, the `num` column detector, the R-42 punctuation
+  transform, `v3-10` in the class chain, repo-root card-path resolution.
+- `app/src/blocks.tsx`, `app/src/cards/*.tsx` — the same heading and chart-name
+  changes, for parity.
+- `app/scripts/validate-v3-1.mjs` — retroactive R-24 gate, block parsing stops
+  at non-beat headings.
+- `docs/index.html` — headings per card, landmarks, focus rings, 44pt controls,
+  unclipped spec URL, white ground in place of the off-ramp `#E8E8E8` moat,
+  R-19 tracking, `width=393`.
+- `10-GOVERNANCE/BUILD-card-no-tools.md` — the published no-tools recipe
+  carries every V3.10 rule, so a chat LLM with only this page builds the same
+  card the renderer does.
 
 ---
 

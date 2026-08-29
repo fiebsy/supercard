@@ -18,7 +18,7 @@
 | related | |
 
 > **Summary-mode Mini.** A reductive 5-block view of
-> `40-LAB/BREAKDOWN-musk-altman-openai-trial.md` — Beats 1, 2, 3, 6, 7 only.
+> `40-LAB/BREAKDOWN-musk-altman-openai-trial.md`, Beats 1, 2, 3, 6, 7 only.
 > The breakdown holds the full timeline, the side-by-side comparison, witness
 > testimony, and the steelman; this card holds only what the gist requires.
 
@@ -45,11 +45,11 @@ with regrets. As of mid-May 2026 the trial is in closing arguments in Oakland.
 `BLOCK-stat-callout` · single focal number
 
 Musk told the jury he handed OpenAI "essentially free funding" in its earliest
-years — roughly
+years, roughly
 
 **$38M**
 
-— money he says helped build a company later valued by its own president at more
+Money he says helped build a company later valued by its own president at more
 than $850 billion. That asymmetry is the engine of the entire case.
 
 ---
@@ -58,10 +58,10 @@ than $850 billion. That asymmetry is the engine of the entire case.
 
 `BLOCK-definition` · the legal crux
 
-**Charitable trust** — the legal theory the whole trial turns on. Musk argues
+**Charitable trust** is the legal theory the whole trial turns on. Musk argues
 his donation created a binding obligation forcing OpenAI to remain a nonprofit
 serving its founding mission; OpenAI argues no enforceable promise ever existed.
-The jury weighs only two surviving claims, fraud and unjust enrichment — and
+The jury weighs only two surviving claims, fraud and unjust enrichment, and
 even then **only as advice**.
 
 ---
@@ -70,9 +70,9 @@ even then **only as advice**.
 
 `BLOCK-checklist` · how to read the outcome
 
-- [ ] Watch the two phases separately — a liability finding is not the same as a $130B award or a corporate unwind
-- [ ] Treat the jury verdict as advisory — Judge Gonzalez Rogers can override it and decides remedies alone
-- [ ] Track the real stakes — Musk wants the for-profit conversion reversed and Altman ousted, not just damages
+- [ ] Watch the two phases separately: a liability finding is not the same as a $130B award or a corporate unwind
+- [ ] Treat the jury verdict as advisory: Judge Gonzalez Rogers can override it and decides remedies alone
+- [ ] Track the real stakes: Musk wants the for-profit conversion reversed and Altman ousted, not just damages
 
 ---
 
@@ -80,7 +80,7 @@ even then **only as advice**.
 
 `BLOCK-key-takeaway` · bottom line
 
-**This was never really about the money — it's about whether a donation can
+**This was never really about the money. It is about whether a donation can
 freeze a company's mission forever.** The verdict will be loud; with an advisory
 jury and a judge holding the final word, it won't be the last word.
 
@@ -88,10 +88,10 @@ jury and a judge holding the final word, it won't be the last word.
 
 ## Sources
 
-- Wikipedia — "Musk v. Altman" — case timeline, parties, claims, restructuring
-- CNBC — Musk v. Altman trial coverage — Apr–May 2026 — jury, testimony, structure
-- MIT Technology Review — "Musk v. Altman week 1 & 2" — May 2026 — testimony
-- NPR — "Sam Altman takes the stand" — 2026-05-12
+- Wikipedia, "Musk v. Altman": case timeline, parties, claims, restructuring
+- CNBC, Musk v. Altman trial coverage, Apr–May 2026: jury, testimony, structure
+- MIT Technology Review, "Musk v. Altman week 1 & 2", May 2026: testimony
+- NPR, "Sam Altman takes the stand", 2026-05-12
 
 Full sourcing in `40-LAB/BREAKDOWN-musk-altman-openai-trial.md`.
 

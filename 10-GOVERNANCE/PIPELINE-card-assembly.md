@@ -5,9 +5,9 @@
 | id | PIPELINE-card-assembly |
 | type | governance |
 | era | atlas |
-| version | 3.4.0 |
+| version | 3.10.0 |
 | owner | derick |
-| updated | 2026-05-16 |
+| updated | 2026-08-29 |
 
 The dynamic assembly pipeline. PRINCIPLES says *what we're doing*; GRAMMAR says *how to assemble blocks*; this doc says *how to get from a request to a finished card* — research, the intermediate breakdown, mode-driven adaptation, and the published render. This is the **operational manual**; `agent-guide` is a thin router that points here for the build sequence.
 
@@ -130,6 +130,19 @@ Two categories of check, both must pass. **Gates** are binary pass/fail rules an
 | I8 | Plain-language readability (V3.4+) — every prose block in a V3.4+ card targets Flesch–Kincaid grade ≤ 9 and Flesch Reading Ease ≥ 60. The validator enforces this with a warning at the per-block level and an error at the per-card level (two warnings escalate). Inherits from PRINCIPLES 13. | PRINCIPLES 13, GRAMMAR § G-13 |
 
 Any gate failure → fix, then re-run the gate. Any invariant violation → the artifact is by definition not a Supercard; restart from the violated layer.
+
+## Stage 4b — Design review (V3.10+)
+
+- **Do.** Read the card against the vendored interface skills, after the gates pass and before the render. Invoke `better-interface`, which routes to `better-typography`, `better-layout`, `better-colors`, `better-writing` and `better-accessibility` and returns one ranked verdict; or read the domains you touched individually. Check every finding against the **Overridden** table in `SKILLS-interface-map.md` before acting on it.
+- **Produce.** A short findings list, each with a `path:line` and a fix that can be pasted in as written. Attach it to the card's `Authoring notes` alongside the gate results.
+- **Check.** No `HIGH` finding survives. Every finding is either fixed, or answered by a rule in the Overridden table with that rule named.
+- **Layers consulted.** `SKILLS-interface-map`, `rendering`, and the skills in `.claude/skills/`.
+
+The gates in Stage 4 test whether the artifact is a Supercard. This stage tests whether it is a good one, against a standard written outside the system. The two do not overlap and the order matters: the gates are identity and nothing in a skill supersedes them, so a skill finding that would break a gate is answered by the gate.
+
+**Card-level or system-level.** A finding about this card is fixed here and the gates re-run. A finding about the *system* — a token used out of role, a block that renders without structure, a rule with no render path emitting it — is not patched into one card. It becomes a numbered R-rule in an ADR, applied in the stylesheet or a render path, with every card re-rendered from its frozen source. That is how V3.10 happened, and it is the only way a rule ends up true of the archive rather than of the newest card.
+
+**Calibration.** A finding with no `path:line` is not a finding. A fix that cannot be pasted in as written is not a fix. Where a skill rule and a Supercard rule genuinely disagree, and `SKILLS-interface-map` has not already ruled, the Supercard rule wins and the disagreement goes in the map.
 
 ## Stage 5 — Render and publish (mandatory)
 

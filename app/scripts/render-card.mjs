@@ -27,7 +27,7 @@
  *
  * The grammar it parses is documented in 50-TEMPLATES/TEMPLATE-supercard-*.md.
  */
-import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative, basename } from "node:path";
@@ -36,6 +36,7 @@ import {
   lineChartGeometry,
   columnChartGeometry,
   areaChartGeometry,
+  chartDescription,
 } from "../src/chart-geometry.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -70,6 +71,60 @@ function inlineMd(s) {
 }
 
 const isBlank = (l) => l.trim() === "";
+
+/* ---- R-42: smart punctuation (V3.10+) ---------------------------------- *
+ * Straight quotes and three periods are typewriter artifacts. On a page this
+ * carefully set they read as a mistake, and a pulled quote is exactly where
+ * a reader looks closest. The transform runs over the assembled section HTML
+ * so it sees whole sentences rather than one inline fragment at a time, and
+ * it runs only for cards frozen at 3.10.0 or later: an older card keeps the
+ * glyphs it was authored and rendered with (ADR-0003).
+ *
+ * It walks tags and text alternately and only ever rewrites text, so a tag
+ * name, an attribute value, an entity, and the contents of <code> and <pre>
+ * come through untouched. Code takes straight quotes by rule
+ * (better-typography, "Write copy naturally, style with CSS").
+ * ----------------------------------------------------------------------- */
+
+function smartPunctuationText(t) {
+  return t
+    // Ellipsis before quote handling, so "word..." closes correctly.
+    .replace(/\.\.\./g, "\u2026")
+    // Double quotes: opening after start, whitespace or an opening bracket.
+    .replace(/(^|[\s([{\u2014\u2013>])"/g, "$1\u201c")
+    .replace(/"/g, "\u201d")
+    // Apostrophes inside and after a word: it's, readers', 90s.
+    .replace(/(\w)'(\w)/g, "$1\u2019$2")
+    .replace(/(\w)'/g, "$1\u2019")
+    // A remaining leading single quote opens a quotation.
+    .replace(/(^|[\s([{>])'/g, "$1\u2018");
+}
+
+function smartPunctuation(html) {
+  let out = "";
+  let i = 0;
+  let literal = 0; // depth inside <code> / <pre>
+  while (i < html.length) {
+    const lt = html.indexOf("<", i);
+    if (lt === -1) {
+      out += literal ? html.slice(i) : smartPunctuationText(html.slice(i));
+      break;
+    }
+    const text = html.slice(i, lt);
+    out += literal ? text : smartPunctuationText(text);
+    const gt = html.indexOf(">", lt);
+    if (gt === -1) {
+      out += html.slice(lt);
+      break;
+    }
+    const tag = html.slice(lt, gt + 1);
+    if (/^<(code|pre)\b/i.test(tag)) literal++;
+    else if (/^<\/(code|pre)\s*>$/i.test(tag) && literal) literal--;
+    out += tag;
+    i = gt + 1;
+  }
+  return out;
+}
 
 /* ---- frontmatter + title ----------------------------------------------- */
 
@@ -106,6 +161,15 @@ function parseCard(raw) {
 
 /* ---- canvas class chain by frozen_at_version --------------------------- */
 
+// True when the card's frozen_at_version is at or past maj.min. The one place
+// a version comparison is spelled out, so the class chain and the rules keyed
+// on a version cannot drift apart.
+function atLeast(fm, maj, min) {
+  const frozen = fm.frozen_at_version || fm.version || "3.0.0";
+  const [a, b] = frozen.split(".").map((n) => parseInt(n, 10));
+  return a > maj || (a === maj && b >= min);
+}
+
 function canvasClasses(fm) {
   const frozen = fm.frozen_at_version || fm.version || "3.0.0";
   const [maj, min] = frozen.split(".").map((n) => parseInt(n, 10));
@@ -117,6 +181,7 @@ function canvasClasses(fm) {
   if (maj > 3 || (maj === 3 && min >= 7)) cls.push("v3-7");
   if (maj > 3 || (maj === 3 && min >= 8)) cls.push("v3-8");
   if (maj > 3 || (maj === 3 && min >= 9)) cls.push("v3-9");
+  if (maj > 3 || (maj === 3 && min >= 10)) cls.push("v3-10");
 
   // Beat-gap opt-outs/ins relative to the version default (R-15).
   const gap = (fm.beat_gap || "").trim();
@@ -222,15 +287,46 @@ function chunk(lines) {
 
 /* ---- inline-content emitters ------------------------------------------- */
 
+// R-40 — a beat is a named region. The eyebrow is already the beat's visible
+// label and R-25 requires it to be distinct within a card, so it is a stable
+// name to point at: the section carries aria-labelledby and the eyebrow an id.
+// Without it every <section> is anonymous, and a reader navigating by region
+// gets ten identical "region" entries for a card whose first principle is that
+// every visible region stands on its own.
+function eyebrowId(text) {
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 48);
+  return slug ? `beat-${slug}` : "";
+}
+
 function emitEyebrow(text) {
-  return text ? `      <div class="eyebrow">${inlineMd(text)}</div>\n` : "";
+  if (!text) return "";
+  const id = eyebrowId(text);
+  const attr = id ? ` id="${id}"` : "";
+  return `      <div class="eyebrow"${attr}>${inlineMd(text)}</div>\n`;
+}
+
+// The section open tag, named by its eyebrow where it has one.
+function openSection(sec, cls = "") {
+  const id = eyebrowId(sec.eyebrow || "");
+  const c = cls ? ` class="${cls}"` : "";
+  const label = id ? ` aria-labelledby="${id}"` : "";
+  return `    <section${c}${label}>\n`;
 }
 
 function takeLeadingTile(chunks) {
-  // A leading "### …" line is the section subhead (R-21 26/32 .tile).
+  // A leading "### …" line is the section subhead. It emits an <h2> carrying
+  // the .tile class (R-36): the class keeps the version-correct metric the
+  // cascade already resolves, and the element restores the document outline
+  // the source markdown always described. Through V3.9 this was a bare <div>,
+  // so every card presented one <h1> and nothing else, and on a pre-3.4 card
+  // the subhead fell all the way back to unstyled 16px browser default.
   if (chunks.length && /^###\s+/.test(chunks[0])) {
     const tile = chunks[0].replace(/^###\s+/, "").trim();
-    return [`      <div class="tile">${inlineMd(tile)}</div>\n`, chunks.slice(1)];
+    return [`      <h2 class="tile">${inlineMd(tile)}</h2>\n`, chunks.slice(1)];
   }
   return ["", chunks];
 }
@@ -250,9 +346,25 @@ function emitTable(block, cls = "") {
   const data = rows.filter((r) => !r.every((c) => /^:?-+:?$/.test(c)));
   if (!data.length) return "";
   const [head, ...body] = data;
+  // R-29 — a data column whose body cells are all numeric renders tabular and
+  // right-aligned. The CSS for `td.num` / `th.num` has shipped since V3.7, but
+  // nothing ever emitted the class in the HTML path, so every percentage and
+  // multiple went out in proportional figures and the digits did not line up
+  // down the column. The first column is the label lane and is never numeric.
+  const isNumericCell = (c) =>
+    /^[^\w]*[\d.,]+\s*(?:%|×|x|k|m|b|bn|pt|px|s|ms)?[^\w]*$/i.test(c.replace(/\*/g, "").trim());
+  const numericCols = head.map((_, i) => {
+    if (i === 0) return false;
+    const cells = body
+      .filter((r) => r.length === head.length)
+      .map((r) => (r[i] || "").trim())
+      .filter(Boolean);
+    return cells.length > 0 && cells.every(isNumericCell);
+  });
+  const numAttr = (i) => (numericCols[i] ? ' class="num"' : "");
   const attr = cls ? ` class="${cls}"` : "";
   let html = `      <table${attr}>\n        <thead>\n          <tr>`;
-  html += head.map((h) => `<th>${inlineMd(h)}</th>`).join("");
+  html += head.map((h, i) => `<th scope="col"${numAttr(i)}>${inlineMd(h)}</th>`).join("");
   html += "</tr>\n        </thead>\n        <tbody>\n";
   for (const r of body) {
     const isTakeaway = /takeaway/i.test(r[0].replace(/\*/g, ""));
@@ -268,7 +380,7 @@ function emitTable(block, cls = "") {
       html += `          <tr${tag}><td colspan="${head.length}"><strong>${verdict}</strong></td></tr>\n`;
       continue;
     }
-    html += `          <tr${tag}>` + r.map((c) => `<td>${inlineMd(c)}</td>`).join("") + "</tr>\n";
+    html += `          <tr${tag}>` + r.map((c, i) => `<td${numAttr(i)}>${inlineMd(c)}</td>`).join("") + "</tr>\n";
   }
   html += "        </tbody>\n      </table>\n";
   return html;
@@ -314,7 +426,7 @@ function chartItems(block) {
 
 function barChartSvg(items) {
   const g = barChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="bar chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("bar", items))}">`;
   for (const r of g.rows) {
     const f = r.focal ? " focal" : "";
     s += `<text class="c-label" x="${r.labelX}" y="${r.cy}" dominant-baseline="middle">${escapeHtml(r.label)}</text>`;
@@ -326,7 +438,7 @@ function barChartSvg(items) {
 
 function lineChartSvg(items) {
   const g = lineChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="line chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("line", items))}">`;
   for (const gl of g.grid) {
     s += `<line class="grid" x1="${gl.x1}" y1="${gl.y}" x2="${gl.x2}" y2="${gl.y}"/>`;
   }
@@ -342,7 +454,7 @@ function lineChartSvg(items) {
 
 function columnChartSvg(items) {
   const g = columnChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="column chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("column", items))}">`;
   s += `<line class="axis" x1="0" y1="${g.baseY}" x2="${g.W}" y2="${g.baseY}"/>`;
   for (const c of g.cols) {
     const f = c.focal ? " focal" : "";
@@ -355,7 +467,7 @@ function columnChartSvg(items) {
 
 function areaChartSvg(items) {
   const g = areaChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="area chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("area", items))}">`;
   for (const gl of g.grid) {
     s += `<line class="grid" x1="${gl.x1}" y1="${gl.y}" x2="${gl.x2}" y2="${gl.y}"/>`;
   }
@@ -372,7 +484,7 @@ function areaChartSvg(items) {
 
 function emitChartSection(sec, kind) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {
@@ -395,7 +507,7 @@ function emitChartSection(sec, kind) {
 
 function emitStatGrid(sec) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {
@@ -428,7 +540,7 @@ function emitStatGrid(sec) {
  * contract). */
 function emitFlashcards(sec) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {
@@ -492,12 +604,20 @@ function emitList(block, blockId) {
   if (!items.length) return "";
   const style = LIST_STYLES[blockId] || { tag: "ul" };
   const cls = style.cls ? ` class="${style.cls}"` : "";
+  // R-40 — `list-style: none` plus `display: flex` on the row strips the list
+  // role in WebKit, so the one structure a checklist has (it is a list of N
+  // things) disappears for exactly the readers who cannot see the ✓ column.
+  // The explicit role restores it; it changes nothing visually.
+  // The source list also carries its own name: the markdown says "## Sources"
+  // and the render deliberately drops that heading, so nothing else says what
+  // the fine print under the last hairline is.
+  const named = style.cls === "sources" ? ' aria-label="Sources"' : "";
   const li = (it, i) =>
     style.marker
       ? `        <li><span class="marker">${style.marker(i)}</span><span>${inlineMd(it)}</span></li>`
       : `        <li>${inlineMd(it)}</li>`;
   return (
-    `      <${style.tag}${cls}>\n` +
+    `      <${style.tag}${cls} role="list"${named}>\n` +
     items.map(li).join("\n") +
     `\n      </${style.tag}>\n`
   );
@@ -542,7 +662,7 @@ function emitHero(title, sec) {
     else if (/^HERO-CARD:/i.test(c)) continue; // template scaffold, never rendered (I7)
     else rest.push(c);
   }
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += `      <h1>${inlineMd(title)}</h1>\n`;
   if (dek) html += `      <p class="dek">${inlineMd(dek)}</p>\n`;
@@ -557,7 +677,7 @@ function emitHero(title, sec) {
 
 function emitGeneric(sec, { statMode = false, takeawayMode = false } = {}) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = "    <section>\n";
+  let html = openSection(sec);
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   let usedTakeaway = false;
@@ -596,7 +716,7 @@ function emitGeneric(sec, { statMode = false, takeawayMode = false } = {}) {
 // padding applies; the content is the divider's one orienting line.
 function emitDivider(sec) {
   let [tileHtml, chunks] = takeLeadingTile(chunk(sec.lines));
-  let html = '    <section class="divider">\n';
+  let html = openSection(sec, "divider");
   html += emitEyebrow(sec.eyebrow);
   html += tileHtml;
   for (const c of chunks) {
@@ -651,10 +771,13 @@ function renderCard(cardPath) {
   for (const s of skipped) {
     console.log(`[render]   scaffold section skipped (never rendered): "## ${s.header}"`);
   }
-  const sections = allSections
+  const rawSections = allSections
     .filter(isRenderableSection)
     .map((sec) => emitSection(title, parseSection(sec)))
     .join("\n");
+  // R-42 — V3.10 cards render smart punctuation; earlier cards keep the
+  // glyphs they were authored and published with (ADR-0003).
+  const sections = atLeast(fm, 3, 10) ? smartPunctuation(rawSections) : rawSections;
 
   const meta = [
     `<meta name="sc:source_file" content="${escapeHtml(sourceRel)}">`,
@@ -671,7 +794,7 @@ function renderCard(cardPath) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=393, initial-scale=1">
 <meta name="color-scheme" content="only light">
-<title>${escapeHtml(title)} — Supercard ${ver.toUpperCase()}</title>
+<title>${escapeHtml(title)} · Supercard ${ver.toUpperCase()}</title>
 ${meta}
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this
@@ -682,10 +805,10 @@ ${css.trim()}
 </head>
 <body>
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
-  <div class="${canvasClasses(fm)}">
+  <main class="${canvasClasses(fm)}">
 
 ${sections}
-  </div>
+  </main>
   <div class="glyph">✦ berafoot.com</div>
 </body>
 </html>
@@ -702,8 +825,11 @@ function galleryEntry(slug, title, fm, prevDesc) {
   // Prefer an authored one-line `summary`; preserve a curated desc on
   // re-render; fall back to tags only if nothing better exists.
   const desc = (fm.summary || prevDesc || fm.tags || "").trim();
+  // A heading, not a styled div: the gallery lists every published card, and
+  // through V3.9 it offered a screen reader or an outline view exactly one
+  // heading (its own <h1>) for the whole list (R-36).
   return `    <a class="card-link" href="cards/${slug}.html">
-      <div class="card-title">${escapeHtml(title)}</div>
+      <h2 class="card-title">${escapeHtml(title)}</h2>
       <div class="card-meta">${escapeHtml(meta)}</div>
       ${desc ? `<div class="card-desc">${escapeHtml(desc)}</div>` : ""}
     </a>`;
@@ -731,8 +857,21 @@ function upsertGallery(slug, title, fm) {
 
 /* ---- main -------------------------------------------------------------- */
 
+// A card path is resolved against the cwd first, then against the repo root.
+// The documented invocation is `npm --prefix app run render -- 30-CARDS/…`,
+// and `--prefix` runs the script with the cwd set to `app/`, so a repo-relative
+// path only ever resolved under `app/` and the command in the spec, the skill
+// and the pipeline failed with ENOENT as written.
+function resolveCard(p) {
+  const fromCwd = resolve(process.cwd(), p);
+  if (existsSync(fromCwd)) return fromCwd;
+  const fromRepo = resolve(repo, p);
+  if (existsSync(fromRepo)) return fromRepo;
+  return fromCwd;
+}
+
 function cardList(argv) {
-  if (argv.length) return argv.map((p) => resolve(process.cwd(), p));
+  if (argv.length) return argv.map(resolveCard);
   return readdirSync(CARDS_DIR)
     .filter((f) => /^CARD-.*\.md$/.test(f))
     .map((f) => resolve(CARDS_DIR, f));

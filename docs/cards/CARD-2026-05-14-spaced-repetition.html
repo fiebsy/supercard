@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=393, initial-scale=1">
 <meta name="color-scheme" content="only light">
-<title>Spaced Repetition — Supercard V3.0</title>
+<title>Spaced Repetition · Supercard V3.0</title>
 <meta name="sc:source_file" content="30-CARDS/CARD-2026-05-14-spaced-repetition--draft.md">
 <meta name="sc:research_report" content="60-RESEARCH/BREAKDOWN-spaced-repetition.md">
 <meta name="sc:renderer_version" content="v3.9">
 <meta name="sc:frozen_at_version" content="3.0.0">
-<meta name="sc:rendered_at" content="2026-07-03">
+<meta name="sc:rendered_at" content="2026-08-29">
 <meta name="sc:content_hash" content="3b66feda5302f470171065d08c88027c7bfc3ff1b76ddc596e1f17ad8b352254">
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this
@@ -67,6 +67,46 @@
   /* V3.6 — shadows retired (R-22, flat surfaces). The hero and any anchor card
    * are now set apart by border + radius + padding, never elevation. No
    * --shadow-* token exists; box-shadow is not used anywhere in the system. */
+
+  /* ------------------------------------------------------------------- *
+   * V3.10 (R-39) — role tokens. The tokens above name a VALUE: --g-12 is
+   * "12% black" and says nothing about where it belongs. The tokens below
+   * name a JOB, and they are the tier a block should reference, so the
+   * question "which gray?" has one answer per role instead of a ramp to
+   * pick from by eye. They point at the primitives above and add no new
+   * value, so nothing renders differently.
+   *
+   * The split they encode is R-20's: ink carries glyphs, the g-ramp draws
+   * rules and fills. Every ink role clears 4.5:1 on white; no g-ramp step
+   * above --g-60 does, which is exactly why a rule token must never end up
+   * on a `color`.
+   *
+   * An alias is computed where it is DECLARED, not where it is used: a
+   * `--text-body: var(--ink-2)` written here resolves against this element's
+   * --ink-2 and inherits that literal downward, so redefining --ink-2 on a
+   * later canvas layer does not move it. Every layer that redefines a
+   * primitive therefore redeclares the roles that point at it (see
+   * .canvas.v3-5 below). Without that the ink roles would silently freeze at
+   * the V3.0 ladder on every V3.5+ card.
+   * ------------------------------------------------------------------- */
+
+  /* Ink — anything that renders a character. */
+  --text-emphasis: var(--ink); /* the one bold run, headings, focal data */
+  --text-body: var(--ink-2); /* prose, list rows, the dek */
+  --text-quiet: var(--ink-3); /* captions, eyebrows, table cells, markers */
+  /* The V3.0–V3.4 label ink. --g-60 is the one ramp step that is never a rule
+   * or a fill: it composites to #666666 (5.74:1) and is used only as a
+   * `color`, which is what an ink step is. Naming it keeps the ramp out of
+   * `color` declarations without repainting three frozen cards. V3.5+ cards
+   * label in --text-quiet; nothing new should reach for this. */
+  --text-label: var(--g-60);
+
+  /* Non-text — rules, fills and marks. Never a `color` on a text node. */
+  --rule-hairline: var(--g-12); /* borders, separators, anchor-card outlines */
+  --rule-grid: var(--g-12); /* chart axes and gridlines */
+  --fill-chip: var(--g-06); /* code-chip ground, the area chart's one fill */
+  --surface-page: var(--w); /* the canvas and every anchor card */
+  --surface-quiet: var(--surface-tint); /* the R-16 tinted card, alternately */
 }
 
 * {
@@ -83,17 +123,34 @@ body {
   background: var(--w);
   font-family: var(--rounded);
   color: var(--ink);
+  /* Both halves, once on the root. -webkit- alone leaves Firefox on macOS
+   * rendering a heavier face than the design (better-typography, "Font
+   * smoothing on the root"). */
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
   color: inherit;
 }
 
+/* V3.10 — the selection highlight is on the ramp.
+ *
+ * Every browser paints an unstyled ::selection in a saturated blue, so the one
+ * hue that reaches a strict-grayscale canvas arrives the moment a reader drags
+ * across a sentence, and it lands on the text they are paying most attention
+ * to. The system already refuses UA colour decisions elsewhere (`color-scheme:
+ * only light` exists for exactly that reason); this closes the other door.
+ * --g-12 keeps every ink step legible through the highlight. */
+::selection {
+  background: var(--rule-hairline);
+  color: var(--ink);
+}
+
 .canvas {
   width: 393px;
   margin: 0 auto;
-  background: var(--w);
+  background: var(--surface-page);
   min-height: 100vh;
   padding: 0 16px var(--s-8);
   /* V3.9 (R-34) — long-token insurance, inherited by every text element: a
@@ -102,8 +159,8 @@ a {
   /* Designer column guides — faint dotted rules at the left/right boundary of
    * the 393pt column, running the full content height. They replace the old
    * grey body moat: the surface is now flush white and these mark the edge. */
-  border-left: 1px dotted var(--g-12);
-  border-right: 1px dotted var(--g-12);
+  border-left: 1px dotted var(--rule-hairline);
+  border-right: 1px dotted var(--rule-hairline);
 }
 
 /* V3.6.1 (ADR-0013): section vertical padding is symmetric so the bottom
@@ -111,7 +168,7 @@ a {
  * hugs the section above. */
 section {
   padding: var(--s-6) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
 }
 section:last-of-type {
   border-bottom: none;
@@ -128,7 +185,7 @@ section:last-of-type {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--g-60);
+  color: var(--text-label);
   margin-bottom: var(--s-3);
 }
 
@@ -152,7 +209,7 @@ p {
   line-height: 24px;
   font-weight: 400;
   letter-spacing: -0.008em;
-  color: var(--ink-2);
+  color: var(--text-body);
   margin-bottom: var(--s-2);
 }
 p:last-child {
@@ -173,9 +230,9 @@ em {
 /* Beat 1 — anchor hero. V3.6 (R-22): flat, no elevation. Set apart by border +
  * radius + padding, not a shadow. */
 .hero {
-  background: var(--w);
+  background: var(--surface-page);
   border-radius: 16px;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   padding: var(--s-5);
   margin: var(--s-2) 0 var(--s-3);
 }
@@ -199,18 +256,26 @@ li {
   font-size: 17px;
   line-height: 24px;
   letter-spacing: -0.008em;
-  color: var(--ink-2);
+  color: var(--text-body);
   padding: var(--s-1) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
   display: flex;
   gap: var(--s-2);
 }
 li:last-child {
   border-bottom: none;
 }
+/* V3.10 (R-37) — the marker is content, not furniture. A checkmark, a cross
+ * and a numeral are the difference between a checklist, an anti-pattern list
+ * and a numbered process; read the markers alone and you still know which
+ * list you are looking at. Through V3.9 they were drawn at --g-30, which
+ * measures 2.10:1 on white and which R-20 itself classifies as non-text.
+ * --text-quiet measures 4.54:1 and keeps the marker subordinate to the row it
+ * numbers. Base level and retroactive: a glyph the reader cannot resolve is a
+ * defect, not a period design choice (ADR-0011 precedent). */
 .marker {
   font-variant-numeric: tabular-nums;
-  color: var(--g-30);
+  color: var(--text-quiet);
   font-weight: 600;
   flex-shrink: 0;
   min-width: 18px;
@@ -232,9 +297,9 @@ table {
 }
 th,
 td {
-  text-align: left;
+  text-align: start;
   padding: var(--s-2) var(--s-1);
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
   line-height: 20px;
   color: var(--ink-2);
   vertical-align: top;
@@ -244,11 +309,11 @@ th {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--g-60);
+  color: var(--text-label);
   font-weight: 600;
 }
 td:first-child {
-  color: var(--g-60);
+  color: var(--text-label);
 }
 tr.focal td {
   color: var(--k);
@@ -283,17 +348,61 @@ table tr:last-child td {
 }
 
 /* equation / code block */
+/* Inline code. The gray ramp has named --g-06 "code-chip fills" since V3.0 and
+ * nothing on the canvas ever drew one: an inline `code` fell through to the
+ * UA default, which is generic `monospace` at the browser's 0.8x shrink, so a
+ * card's `RENDERING-spec` rendered in a font the system does not specify at a
+ * size it does not have. 0.9em keeps the chip on the line it sits in rather
+ * than fixing it to a size the surrounding body may not be. */
+code {
+  font-family: var(--mono);
+  /* 0.9em optically matches the surrounding line, and the 13px floor keeps a
+   * chip inside the 13/18 source list from shrinking to 11.7px, which is under
+   * every size floor the system holds elsewhere. */
+  font-size: max(13px, 0.9em);
+  background: var(--fill-chip);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+/* A fenced block is one surface, so its lines do not each get a chip. */
+pre code {
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
 pre {
   font-family: var(--mono);
   font-size: 14px;
   line-height: 22px;
-  color: var(--k);
+  /* --text-emphasis, not --k: `strong` is the canvas's darkest ink, and a code
+   * panel reading pure black put a second maximum on the page. */
+  color: var(--text-emphasis);
   background: rgba(0, 0, 0, 0.03);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 8px;
   padding: var(--s-2) var(--s-3);
   margin: var(--s-2) 0;
+  /* `white-space: pre` opts out of the canvas-wide overflow-wrap, so a long
+   * equation or code line is the one thing on the card that can still run
+   * past the column. It scrolls rather than overflowing, and the mask is the
+   * cue that it does: without one, content hidden with no affordance may as
+   * well not be there, and a screenshot silently loses the tail. */
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 0,
+    #000 calc(100% - 24px),
+    transparent 100%
+  );
 }
 
 /* quote-as-evidence + pull-quote */
@@ -303,8 +412,8 @@ blockquote {
   font-weight: 500;
   letter-spacing: -0.005em;
   color: var(--ink);
-  border-left: 2px solid var(--k);
-  padding-left: var(--s-3);
+  border-inline-start: 2px solid var(--k);
+  padding-inline-start: var(--s-3);
   margin: var(--s-1) 0 var(--s-3);
 }
 blockquote.pull {
@@ -319,14 +428,15 @@ blockquote.pull {
  * both sides of its hairlines). */
 section.divider {
   padding: var(--s-7) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
 }
 section.divider .rule {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--g-30);
+  /* R-37 — was --g-30 (2.10:1). A divider's orienting label is text. */
+  color: var(--text-quiet);
   margin-bottom: var(--s-2);
 }
 section.divider h2 {
@@ -338,7 +448,7 @@ section.divider h2 {
   line-height: 30px;
   font-weight: 600;
   letter-spacing: -0.012em;
-  color: var(--ink);
+  color: var(--text-emphasis);
 }
 
 /* focal stat — the reserved hero-number metrics (stat-callout). Reads at
@@ -356,38 +466,109 @@ section.divider h2 {
 .sources li {
   font-size: 13px;
   line-height: 18px;
-  color: var(--g-60);
+  /* Caption role: tracking 0. letter-spacing inherits, so without this the
+   * 13px source lines picked up the body track set on `li` — negative
+   * tracking is a display and body setting, never a caption one (R-19). */
+  letter-spacing: 0;
+  color: var(--text-label);
   display: list-item;
-  padding-left: 0;
+  padding-inline-start: 0;
   list-style: none;
 }
 .sources {
-  padding-left: var(--s-3);
+  padding-inline-start: var(--s-3);
 }
 .sources li::before {
   /* V3.6 (R-24): the list marker is a middle dot, not an em dash — no em dash
    * renders anywhere on the canvas, in prose or as furniture. */
   content: "·";
-  color: var(--g-30);
-  margin-right: var(--s-1);
+  color: var(--text-quiet); /* R-37 — a rendered glyph takes text ink */
+  margin-inline-end: var(--s-1);
 }
 
-/* corner glyph — present on every section's screenshot */
+/* Press feedback. The site is a touch-first 393pt column and not one control
+ * acknowledged a press: on a slow connection a tap on a card was silent until
+ * the next page painted. scale(0.96) is better-ui's exact figure, and it is
+ * the same figure for every control so one shape means one behaviour. The
+ * reduced-motion block flattens the transition; the state itself stays, since
+ * it is direct manipulation rather than decoration. */
+.copy-btn:active,
+.spec-input:active,
+.older-toggle:active,
+.zone-action:active,
+.sample-card:active,
+a.card-link:active,
+.back-btn:active,
+.gh-btn:active,
+.icon-btn:active {
+  scale: 0.96;
+}
+.copy-btn,
+.spec-input,
+.older-toggle,
+.zone-action,
+.sample-card,
+a.card-link,
+.back-btn,
+.gh-btn,
+.icon-btn {
+  transition-property: scale, background-color, border-color, color;
+  transition-duration: 0.15s;
+  transition-timing-function: ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Visually hidden, still announced. Used for the copy status and anywhere a
+ * name has to exist for a reader who cannot see the visual cue carrying it.
+ * `clip-path` plus a 1px box, not `display: none`, which would remove it from
+ * the accessibility tree along with the screen. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* corner glyph — present on every section's screenshot.
+ *
+ * V3.10 (R-37): the mark's whole job is that a stranger holding a cropped
+ * screenshot can trace it back to the system. Drawn at --g-30 it measured
+ * 2.10:1 on white at 10px, which is not a legible mark; it is a smudge that
+ * happens to be shaped like one. --text-quiet measures 4.54:1 and is still
+ * the quietest ink on the canvas. Base level and retroactive: a mark that
+ * cannot be read cannot do the job the principles give it. */
 .glyph {
   position: fixed;
   bottom: 16px;
   left: 50%;
-  transform: translateX(calc(196px - 100% - 4px));
+  /* 196px is half the 393pt column. Below a 393px viewport that pushed the
+   * mark off the trailing edge, so the offset clamps to the viewport. */
+  transform: translateX(calc(min(196px, 50vw) - 100% - 4px));
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.04em;
-  color: var(--g-30);
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(4px);
+  color: var(--text-quiet);
+  /* Opaque, not an 85% scrim. The mark is position:fixed, so a 56pt stat or a
+   * focal chart bar scrolls under it: measured, the pair holds 4.54:1 over
+   * white and drops to 3.22:1 over black through the old scrim. A translucent
+   * surface has no single background, so it cannot be measured once. */
+  background: var(--surface-page);
   padding: 4px 7px;
   border-radius: 6px;
-  border: 1px solid var(--g-12);
-  user-select: none;
+  border: 1px solid var(--rule-hairline);
 }
 
 /* gallery — mirrors docs/index.html */
@@ -407,7 +588,7 @@ section.divider h2 {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--g-60);
+  color: var(--text-label);
   margin: var(--s-5) 0 var(--s-2);
 }
 /* Hairline above the sample card — replaces the standalone "Sample" label,
@@ -415,7 +596,7 @@ section.divider h2 {
  * spec→sample gap on the same rhythm as the lede→spec gap. */
 .sample-divider {
   border: 0;
-  border-top: 0.5px solid var(--g-12);
+  border-top: 0.5px solid var(--rule-hairline);
   margin: var(--s-5) 0;
 }
 /* The "Sample" tag, moved inside the card's top-left as a subtle pill. */
@@ -426,9 +607,9 @@ section.divider h2 {
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--g-60);
+  color: var(--text-label);
   background: var(--surface-tint);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 999px;
   padding: 3px 9px;
   margin-bottom: var(--s-3);
@@ -437,14 +618,17 @@ a.card-link {
   display: block;
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 16px;
   padding: var(--s-4);
   margin-bottom: var(--s-2);
   background: var(--w);
 }
 a.card-link:hover {
-  border-color: var(--g-12);
+  /* --rule-hairline IS --g-12, so setting the hover border to --g-12 declared
+   * a state and rendered none. One step up the ramp, matching the gallery's
+   * own copy of this rule, which had it right. */
+  border-color: var(--g-30);
 }
 .card-title {
   font-size: 24px;
@@ -475,14 +659,14 @@ a.card-link:hover {
   max-width: 100%;
   margin: 0 auto;
   padding: var(--s-4) 16px 0;
-  border-left: 1px dotted var(--g-12);
-  border-right: 1px dotted var(--g-12);
+  border-left: 1px dotted var(--rule-hairline);
+  border-right: 1px dotted var(--rule-hairline);
 }
 .back-link {
   display: inline-block;
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--g-60);
+  color: var(--text-label);
   text-decoration: none;
   padding: var(--s-5) 0 0;
 }
@@ -495,7 +679,7 @@ a.card-link:hover {
   display: inline-block;
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--g-60);
+  color: var(--text-label);
   text-decoration: none;
   margin-top: var(--s-5);
 }
@@ -565,7 +749,7 @@ a.spec-link {
   display: block;
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 16px;
   padding: var(--s-5);
   margin-bottom: var(--s-2);
@@ -584,7 +768,7 @@ a.spec-link:hover {
 .spec-link-url {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--g-60);
+  color: var(--text-label);
   word-break: break-all;
 }
 
@@ -598,7 +782,7 @@ a.spec-link:hover {
   line-height: 26px;
   letter-spacing: 0.03em;
   word-spacing: 0.06em;
-  text-align: left;
+  text-align: start;
 }
 
 .canvas.v3-1 p {
@@ -650,7 +834,7 @@ a.spec-link:hover {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--g-60);
+  color: var(--text-label);
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
@@ -698,6 +882,12 @@ a.spec-link:hover {
 /* Surface-tinted card variant (R-16) — replaces the hairline-bordered
  * variant. Mutually exclusive per card. */
 .canvas.v3-4 .tint-card {
+  /* Measured: --ink-3 #767676 is 4.54:1 on white but 4.31:1 on the tinted
+   * ground, so tertiary text inside a tint card misses the 4.5:1 floor R-20
+   * promises. The ground is darker, so the quiet role steps up one rung on
+   * it. Stating the role rather than the value is what makes this one
+   * declaration instead of an audit of every caption. */
+  --text-quiet: var(--ink-2);
   background: var(--surface-tint);
   border-radius: 18px;
   border: 0;
@@ -749,6 +939,12 @@ a.spec-link:hover {
   --ink: #1a1a1a;
   --ink-2: #595959;
   --ink-3: #767676;
+  /* R-39 — the ink roles are redeclared with the ladder they name, because a
+   * role alias resolves at the element that declares it. Omit these and every
+   * V3.5+ card would draw its role-token text from the V3.0 ladder. */
+  --text-emphasis: var(--ink);
+  --text-body: var(--ink-2);
+  --text-quiet: var(--ink-3);
 }
 
 /* Primary essence — bold lead-clauses, headers, focal stats read at --ink
@@ -771,7 +967,7 @@ a.spec-link:hover {
   line-height: 26px;
   letter-spacing: -0.01em;
   word-spacing: normal;
-  text-align: left;
+  text-align: start;
 }
 .canvas.v3-5 p {
   text-wrap: pretty;
@@ -899,7 +1095,7 @@ a.spec-link:hover {
 }
 .canvas.v3-7 td.num,
 .canvas.v3-7 th.num {
-  text-align: right;
+  text-align: end;
   font-variant-numeric: tabular-nums;
 }
 
@@ -919,7 +1115,7 @@ a.spec-link:hover {
 }
 .canvas.v3-7 .chart .axis,
 .canvas.v3-7 .chart .grid {
-  stroke: var(--g-12);
+  stroke: var(--rule-grid);
   stroke-width: 1;
 }
 .canvas.v3-7 .chart .bar {
@@ -1017,9 +1213,9 @@ a.spec-link:hover {
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--g-60);
+  color: var(--text-label);
   background: var(--w);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 999px;
   padding: 3px 9px;
   margin-bottom: var(--s-3);
@@ -1039,7 +1235,12 @@ a.spec-link:hover {
   justify-content: space-between;
   padding-top: var(--s-6);
 }
-.wordmark {
+/* `.canvas .wordmark`, not `.wordmark`: the lander root is a .canvas, so the
+ * R-34 cover join `.canvas h1 { margin-bottom }` reaches this element now that
+ * it is an h1 for the outline (R-40). Its 40/44 metrics and its cover margin
+ * belong to a card title, not a wordmark in a flex row. */
+.canvas .wordmark {
+  margin: 0;
   font-family: var(--mono);
   font-size: 28px;
   line-height: 34px;
@@ -1066,7 +1267,7 @@ a.spec-link:hover {
   background: transparent;
   color: var(--ink);
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition: background-color 0.15s ease;
 }
 .gh-btn:hover {
   background: var(--g-06);
@@ -1087,6 +1288,9 @@ a.spec-link:hover {
   margin: var(--s-7) 0 var(--s-3);
 }
 .zone-label-text {
+  /* An h2 for the outline; the base heading margin would push it off the
+   * hairline it is centred against. */
+  margin: 0;
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 11px;
@@ -1155,7 +1359,7 @@ a.spec-link:hover {
   /* Left-aligned: a URL is a read-left-to-right link, not display text. The
    * copy button stays pinned to the right edge (the canonical copy-field
    * pattern), so reserve its lane here so a long URL never runs under it. */
-  text-align: left;
+  text-align: start;
   padding-right: var(--s-5);
   white-space: nowrap;
   overflow: hidden;
@@ -1174,7 +1378,7 @@ a.spec-link:hover {
   justify-content: center;
   width: 32px;
   height: 32px;
-  color: var(--g-60);
+  color: var(--text-label);
 }
 /* Copy-success: the glyph swaps to a check and darkens to --ink. Monochrome. */
 .spec-copy.copied {
@@ -1196,7 +1400,7 @@ a.spec-link:hover {
   font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--g-60);
+  color: var(--text-label);
   cursor: pointer;
   transition: color 0.15s ease;
 }
@@ -1214,7 +1418,7 @@ a.spec-link:hover {
   align-self: center;
   width: 88%;
   height: 16px;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-bottom: none;
   border-radius: 16px 16px 0 0;
   background: var(--surface-tint);
@@ -1232,7 +1436,7 @@ a.spec-link:hover {
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.02em;
-  color: var(--g-60);
+  color: var(--text-label);
   cursor: pointer;
   transition: color 0.15s ease, border-color 0.15s ease;
 }
@@ -1272,7 +1476,7 @@ a.spec-link:hover {
   text-decoration: none;
   color: inherit;
   background: var(--w);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 16px;
   padding: 18px 18px 0;
   transition: border-color 0.15s ease;
@@ -1308,18 +1512,24 @@ a.spec-link:hover {
   min-width: 0;
 }
 .sample-title {
-  /* block so overflow/ellipsis apply — an inline span ignores them, letting a
-   * long title run full-width straight under the chevron instead of clipping */
-  display: block;
+  /* min-width: 0 so the flex item can shrink to the lane the chevron leaves
+   * instead of running full-width under it. */
   min-width: 0;
   font-size: 22px;
   line-height: 28px;
   font-weight: 600;
   letter-spacing: -0.012em;
   color: var(--ink);
-  white-space: nowrap;
+  /* Two lines, then clamp. On one nowrap line, three of the seven real titles
+   * ellipsized inside the ~277pt the chevron leaves — "The Reading Layer,
+   * Refin…", "Plain Language as Subst…", "Musk v. Altman: the Ope…" — and the
+   * title is what a reader chooses a card by. `balance` evens the two lines
+   * (R-41). */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-wrap: balance;
 }
 /* Ghost open-chevron — non-black, matching the lander's button language. */
 .sample-open {
@@ -1331,9 +1541,9 @@ a.spec-link:hover {
   height: 32px;
   border-radius: 999px;
   background: var(--g-06);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   color: var(--ink);
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 /* The whole card is the link, so on card hover the chevron fills a step
  * (g-06 -> g-12) and drops its ring (border hidden) — a quiet fill-in rather
@@ -1377,11 +1587,11 @@ a.spec-link:hover {
   justify-content: center;
   width: 32px;
   height: 32px;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 999px;
   background: var(--g-06);
   color: var(--ink);
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 .back-btn:hover {
   background: var(--g-12);
@@ -1406,7 +1616,7 @@ a.spec-link:hover {
 }
 .canvas.v3-8 .flashcards .fc {
   padding: var(--s-2) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
 }
 .canvas.v3-8 .flashcards .fc:first-child {
   padding-top: 0;
@@ -1503,16 +1713,72 @@ a.spec-link:hover {
  * 6% step: the grayscale contract allows no fill above 12% (R-30). Scoped to
  * the same .chart contract the v3-7 charts use. */
 .canvas.v3-7 .chart .area {
-  fill: var(--g-06);
+  fill: var(--fill-chip);
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.10 — the reading surface. R-41 (balanced display wrapping). Scoped to
+ * .canvas.v3-10 because it changes where lines break: a card frozen at an
+ * earlier version keeps the rag it was authored against (ADR-0003). The
+ * V3.10 rules that repair defects — R-36 headings, R-37 legible glyphs,
+ * R-38 chart names, R-39 role tokens, R-40 document structure — live at
+ * base level instead, on the ADR-0011 precedent.
+ * ----------------------------------------------------------------------- */
+
+/* R-41 — display type wraps balanced, prose wraps pretty.
+ *
+ * A 40/44 title in a 361pt column is two or three lines more often than not,
+ * and the browser's greedy line-breaker fills the first line and drops what
+ * is left on the last: "Chart blocks that actually" / "render." A heading is
+ * short enough for `balance` to lay out every line at once and even them up,
+ * which is the whole reason the property is capped at a few lines.
+ *
+ * Prose keeps `pretty` (already set from V3.1): it optimises only the last
+ * line, which is what long text needs and all a long paragraph can afford.
+ * The two are not interchangeable — `balance` on body copy is ignored past
+ * the browser's line cap, and `pretty` on a two-line heading does nothing
+ * about the lopsided first line. */
+.canvas.v3-10 h1,
+.canvas.v3-10 h2,
+.canvas.v3-10 .tile,
+.canvas.v3-10 .takeaway,
+.canvas.v3-10 .dek,
+.canvas.v3-10 blockquote {
+  text-wrap: balance;
+}
+
+/* R-43 — a quote and its attribution are one group.
+ *
+ * The joins ran the wrong way round: 16pt from the quote down to the line
+ * naming its source, then 12pt from there to the commentary that follows. The
+ * gap inside the group was larger than the gap around it, so the attribution
+ * read as belonging to the paragraph below it. Between-group space is now 3x
+ * the within-group space, which is what makes the pair read as a pair. */
+.canvas.v3-10 blockquote {
+  margin-bottom: var(--s-1);
+}
+.canvas.v3-10 p.attrib {
+  margin-bottom: var(--s-4);
+}
+
+/* R-43 — the footnote list is a list of sources, not a ruled row list.
+ *
+ * `.sources li` overrides the row list's font, colour, marker and padding but
+ * inherited its hairline, so every source line carried a separator the 13pt
+ * leading had already made unnecessary. Space does the grouping; a rule is
+ * for where space alone cannot. */
+.canvas.v3-10 .sources li {
+  border-bottom: none;
+  padding: 2px 0;
 }
 </style>
 </head>
 <body>
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
-  <div class="canvas">
+  <main class="canvas">
 
-    <section>
-      <div class="eyebrow">the one elevated element on this card</div>
+    <section aria-labelledby="beat-the-one-elevated-element-on-this-card">
+      <div class="eyebrow" id="beat-the-one-elevated-element-on-this-card">the one elevated element on this card</div>
       <h1>Spaced Repetition</h1>
       <div class="hero">
         <p class="hook">Reviewing material at widening intervals beats cramming: not by a little, by <strong>roughly double the long-term retention</strong> for the same total study time.</p>
@@ -1520,16 +1786,16 @@ a.spec-link:hover {
       <p class="lede"><strong>Lede.</strong> Spaced repetition schedules each review just before you'd forget, so every recall is effortful enough to strengthen the memory and cheap enough to be worth doing.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">single focal number</div>
+    <section aria-labelledby="beat-single-focal-number">
+      <div class="eyebrow" id="beat-single-focal-number">single focal number</div>
       <p>Without review, the forgetting curve is steep: people lose an estimated</p>
       <div class="stat">~70%</div>
       <p>of newly learned material within 24 hours. Spacing is the cheapest known intervention against that decay.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">how it works</div>
-      <ol>
+    <section aria-labelledby="beat-how-it-works">
+      <div class="eyebrow" id="beat-how-it-works">how it works</div>
+      <ol role="list">
         <li><span class="marker">1</span><span><strong>Learn</strong>: encode the item once. Encoding alone fades fast.</span></li>
         <li><span class="marker">2</span><span><strong>Wait</strong>: let partial forgetting set in. The gap is the active ingredient.</span></li>
         <li><span class="marker">3</span><span><strong>Recall</strong>: retrieve from memory, not recognition. The effort is what consolidates.</span></li>
@@ -1538,11 +1804,11 @@ a.spec-link:hover {
       <p>The lever is step 3: <strong>retrieval difficulty, timed to the edge of forgetting</strong>, is what converts a fragile trace into a durable one.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">two things on the same axis</div>
+    <section aria-labelledby="beat-two-things-on-the-same-axis">
+      <div class="eyebrow" id="beat-two-things-on-the-same-axis">two things on the same axis</div>
       <table>
         <thead>
-          <tr><th></th><th>Massed practice (cramming)</th><th>Spaced practice</th></tr>
+          <tr><th scope="col"></th><th scope="col">Massed practice (cramming)</th><th scope="col">Spaced practice</th></tr>
         </thead>
         <tbody>
           <tr><td>Feels like</td><td>Fluent, fast, confident</td><td>Effortful, slow, uncertain</td></tr>
@@ -1554,10 +1820,10 @@ a.spec-link:hover {
       <p>Cramming wins the rehearsal and loses the exam. The feeling of fluency is the trap: it is <strong>not</strong> evidence of durable learning.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">the honest steelman</div>
+    <section aria-labelledby="beat-the-honest-steelman">
+      <div class="eyebrow" id="beat-the-honest-steelman">the honest steelman</div>
       <p>Spaced repetition fails when it is run as a to-do list instead of a learning tool:</p>
-      <ul class="antipattern">
+      <ul class="antipattern" role="list">
         <li><span class="marker">✗</span><span><strong>Cards you don't understand</strong>: SRS schedules recall, it can't manufacture comprehension. Garbage in, garbage scheduled forever.</span></li>
         <li><span class="marker">✗</span><span><strong>Over-long decks</strong>: a daily queue you can't clear becomes a guilt engine, and you quit.</span></li>
         <li><span class="marker">✗</span><span><strong>Recognition dressed as recall</strong>: cloze deletions so easy the answer is obvious teach nothing.</span></li>
@@ -1565,9 +1831,9 @@ a.spec-link:hover {
       <p>The system is <strong>only as good as the cards you feed it</strong>: authoring is the real work.</p>
     </section>
 
-    <section>
-      <div class="eyebrow">so what / how to act</div>
-      <ul class="checklist">
+    <section aria-labelledby="beat-so-what-how-to-act">
+      <div class="eyebrow" id="beat-so-what-how-to-act">so what / how to act</div>
+      <ul class="checklist" role="list">
         <li><span class="marker">✓</span><span>One idea per card: atomic, unambiguous, answerable from memory</span></li>
         <li><span class="marker">✓</span><span>Write cards in your own words, after you understand the source</span></li>
         <li><span class="marker">✓</span><span>Review daily, but cap new cards so the queue stays clearable</span></li>
@@ -1576,20 +1842,20 @@ a.spec-link:hover {
       </ul>
     </section>
 
-    <section>
-      <div class="eyebrow">bottom line</div>
+    <section aria-labelledby="beat-bottom-line">
+      <div class="eyebrow" id="beat-bottom-line">bottom line</div>
       <p><strong>Spacing doesn't make learning faster. It makes it stick.</strong> Same hours, same material; the difference is whether you still have it in six months.</p>
     </section>
 
     <section>
-      <ul class="sources">
+      <ul class="sources" role="list" aria-label="Sources">
         <li>Cepeda, N.J. et al. "Distributed practice in verbal recall tasks: A review and quantitative synthesis." <em>Psychological Bulletin</em>, 2006</li>
         <li>Ebbinghaus, H. <em>Memory: A Contribution to Experimental Psychology.</em> 1885</li>
         <li>Roediger, H.L. &amp; Karpicke, J.D. "The power of testing memory." <em>Perspectives on Psychological Science</em>, 2006</li>
       </ul>
     </section>
 
-  </div>
+  </main>
   <div class="glyph">✦ berafoot.com</div>
 </body>
 </html>
