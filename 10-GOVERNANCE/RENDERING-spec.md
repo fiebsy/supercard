@@ -633,6 +633,12 @@ corrects rendering defects, not period design choices. The reading-layer rules
   (not `device-width`): the canvas is a fixed 393pt column, and on narrower
   phones (375/390 CSS px) `device-width` made it overflow with a horizontal
   scroll. `width=393` scales the whole canvas to the device instead.
+  **Never pin `initial-scale`.** An explicit `initial-scale=1` beside
+  `width=393` defeats the fit — the browser keeps the scale at 1 and a 360px
+  phone shows 393px of layout with 33px hanging off the screen. Both render
+  paths and the site pages shipped exactly that tag from V3.9 through V3.10.1
+  (a rule stated here and never kept — the V3.10 defect class); v3.10.2
+  repaired them, measured at 375/360/320 under mobile emulation (ADR-0019).
 - **Tables.** `table-layout: fixed` and cell `overflow-wrap` move from the
   V3.7 scope to base level — under auto layout a four-column table of
   unbreakable tokens summed past the content column and overflowed the canvas.

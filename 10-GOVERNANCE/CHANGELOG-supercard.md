@@ -5,13 +5,38 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.10.1 |
+| version | 3.10.2 |
 | owner | derick |
 | updated | 2026-08-29 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
 
 ---
+
+## [3.10.2] — "Atlas" — 2026-08-29
+
+The viewport keeps R-34's promise. R-34 says `width=393` scales the whole
+canvas to the device; what every page actually shipped, from V3.9 through
+V3.10.1, was `width=393, initial-scale=1` — and the pinned scale defeats the
+fit. On a 375px iPhone 18px of every card hung off the screen; on a 360px
+Android, 33px; at 320, 74px. The spec's own no-tools build section taught the
+same broken tag, so every card built from a paste of `llms.txt` inherited the
+clip. (ADR-0019.)
+
+### Fixed
+
+- **`initial-scale=1` dropped everywhere `width=393` is declared** — the card
+  renderer, both examples in *Build a card with no tools*, the lander and the
+  gallery. The browser now computes the fit-to-width scale (375 → 0.954,
+  360 → 0.916, 320 → 0.814), so the whole canvas is on the glass at every
+  device width; user zoom stays available. Measured under Chromium mobile
+  emulation at all four widths, before and after.
+- **R-34's viewport bullet states the negative half explicitly** — never pin
+  `initial-scale` — so the rule that was silently contradicted for three
+  versions now names the contradiction.
+- All eight published renders regenerated from their frozen sources; the only
+  byte that changes per card is the viewport `<meta>`. `llms.txt`
+  regenerated. No card's pixels or `frozen_at_version` move.
 
 ## [3.10.1] — "Atlas" — 2026-08-29
 

@@ -5,7 +5,7 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.10.1 |
+| version | 3.10.2 |
 | owner | derick |
 | updated | 2026-08-29 |
 
@@ -121,10 +121,14 @@ ls docs/cards/
 | 0015 | V3.8 — build the catalogued `flashcard-list` block (R-32) | Accepted | 2026-06-28 |
 | 0016 | V3.9 — rendering robustness: faithful markdown, mobile fit, completed charts (R-33–R-35) | Accepted | 2026-07-03 |
 | 0017 | V3.10 — the interface-skills cut: structure, legibility, roles (R-36–R-43) | Accepted | 2026-08-29 |
+| 0018 | V3.10.1 — the interaction layer: press, hover, hit area, scroll (R-44) | Accepted | 2026-08-29 |
+| 0019 | V3.10.2 — the viewport keeps R-34's promise: fit to the phone, measured | Accepted | 2026-08-29 |
 
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.10.2** — The viewport keeps R-34's promise. R-34 said `width=393` scales the canvas to the device; every page actually shipped `width=393, initial-scale=1`, and the pinned scale defeated the fit — 18px of every card offscreen on a 375px iPhone, 33px on a 360px Android, 74px at 320, with the spec's own no-tools section teaching the same broken tag to every LLM-built card. The pinned scale is dropped on all four surfaces (renderer, spec examples, lander, gallery), R-34 now says "never pin `initial-scale`" in as many words, and the fit is measured under mobile emulation at 393/375/360/320. A patch: one `<meta>` byte-range per page; no card's pixels or frozen version move. (ADR-0019.)
 
 **v3.10.1** — The interaction layer. V3.10 read the HTML and did not press anything; a reader on a phone reported that the buttons did not work and that press painted weird shadows, and both were true. R-44 (touch is the primary input): the user agent's tap rectangle comes off, and the canvas draws its own press — `scale: 0.96`, in fast and out slower, with the transition declared once for every control instead of being silently dropped by seven per-control `transition:` shorthands that replaced the property list; hover is gated on a real pointer, so a tapped card stops staying lit; a link is the size of its button, where the card-view back bar had been a full-width anchor that navigated away on any tap along the top of a card; the touch target is 44pt around a 32 or 36pt drawn circle; and a route change lands the reader somewhere deliberate — a card at its cover rather than 770pt down it with the back button off-screen, the gallery back at the row they left. A patch: no card's pixels or frozen version move. (ADR-0018.)
 

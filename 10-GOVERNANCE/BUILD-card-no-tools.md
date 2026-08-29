@@ -73,7 +73,7 @@ fill the slots, and drop the per-block patterns into the sections.
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=393, initial-scale=1">
+<meta name="viewport" content="width=393">
 <meta name="color-scheme" content="only light">
 <title>CARD TITLE</title>
 <style>/* paste the stylesheet here */</style>
@@ -368,7 +368,7 @@ Copy its shape.
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=393, initial-scale=1">
+<meta name="viewport" content="width=393">
 <meta name="color-scheme" content="only light">
 <title>Spaced repetition</title>
 <style>/* paste the stylesheet above, verbatim */</style>

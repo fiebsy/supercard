@@ -125,7 +125,7 @@ fill the slots, and drop the per-block patterns into the sections.
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=393, initial-scale=1">
+<meta name="viewport" content="width=393">
 <meta name="color-scheme" content="only light">
 <title>CARD TITLE</title>
 <style>/* paste the stylesheet here */</style>
@@ -420,7 +420,7 @@ Copy its shape.
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=393, initial-scale=1">
+<meta name="viewport" content="width=393">
 <meta name="color-scheme" content="only light">
 <title>Spaced repetition</title>
 <style>/* paste the stylesheet above, verbatim */</style>
@@ -1954,6 +1954,12 @@ corrects rendering defects, not period design choices. The reading-layer rules
   (not `device-width`): the canvas is a fixed 393pt column, and on narrower
   phones (375/390 CSS px) `device-width` made it overflow with a horizontal
   scroll. `width=393` scales the whole canvas to the device instead.
+  **Never pin `initial-scale`.** An explicit `initial-scale=1` beside
+  `width=393` defeats the fit — the browser keeps the scale at 1 and a 360px
+  phone shows 393px of layout with 33px hanging off the screen. Both render
+  paths and the site pages shipped exactly that tag from V3.9 through V3.10.1
+  (a rule stated here and never kept — the V3.10 defect class); v3.10.2
+  repaired them, measured at 375/360/320 under mobile emulation (ADR-0019).
 - **Tables.** `table-layout: fixed` and cell `overflow-wrap` move from the
   V3.7 scope to base level — under auto layout a four-column table of
   unbreakable tokens summed past the content column and overflowed the canvas.
@@ -2524,8 +2530,8 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 ## Provenance
 
-- **Spec:** supercard · version 3.10.1 · era atlas
-- **Revision:** `470a75b8a2c5` — a hash of the source markdown; changes iff a source changes.
+- **Spec:** supercard · version 3.10.2 · era atlas
+- **Revision:** `4d53ad04128d` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-08-29
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -2534,14 +2540,14 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 Source files (the canonical markdown this view is generated from):
 
-- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-08-29 — sha256 `aa0b3850b301c38594c192f637932682d416d78f26bad44227744add5f2968d9`
-- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `b9b1d24c08ebab313b3b2c131efbe02b6607c297f509b7a22b0317ecf6cc743a`
+- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-08-29 — sha256 `a094558a6f781ab81c8b9dfaddb0e977cc83897707ebb1e138a95e95da13e05d`
+- `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `c5fc0f26251fc907021ddd17c811215b182204ec92a09ed68ae4002f79ba1001`
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-07-03 — sha256 `47cb3d24a86289df28363171a47afdd41458d2640d90a977da26caf92fd19a0c`
 - `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-07-03 — sha256 `8953c6834bbff3d8e76ae6ae71d825c06919380009d8e2765531a06598c41296`
 - `10-GOVERNANCE/LENGTHS-mini-standard-xl.md` — updated 2026-05-16 — sha256 `edb6eecc40c6eb5c10ce6bcd4daf72422f958b6518c2d81e5a7808e0787c65ff`
 - `00-INDEX/INDEX-block-library.md` — updated 2026-07-03 — sha256 `0190e168406594039ca3e773866d9282695e663be7a0ff014bf406015f26eb95`
 - `10-GOVERNANCE/PIPELINE-card-assembly.md` — updated 2026-08-29 — sha256 `3cf0a916e4f69a3e55787a12c4f35d2ab759ed3bfd5f446b96bc18fbb8e9e303`
-- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-08-29 — sha256 `e1f46262577666269dc860f531fb3ce111c23bae821f16484894ed081644cd5e`
+- `10-GOVERNANCE/RENDERING-spec.md` — updated 2026-08-29 — sha256 `24e4735b7a5f5e3cd6a2c61f12b8cb552f2d0a0d94ed038d2671a35ea2bb6e9c`
 - `10-GOVERNANCE/GLOSSARY-supercard.md` — updated 2026-05-16 — sha256 `9bbb7552abe25d0de1e0308ea92d7766bb3949a9a9b6a52b18cc0d1c1ff22a69`
 - `10-GOVERNANCE/EXAMPLE-mini-supercard.md` — updated 2026-05-16 — sha256 `19943e64ced24165cecd5dfd98a161c7f4600630c6deb2ba830a44d2ab7bdfad`
 
