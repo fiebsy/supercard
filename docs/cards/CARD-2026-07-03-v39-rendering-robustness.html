@@ -9,7 +9,7 @@
 <meta name="sc:research_report" content="10-GOVERNANCE/ADR/ADR-0016-v39-rendering-robustness--accepted.md">
 <meta name="sc:renderer_version" content="v3.9">
 <meta name="sc:frozen_at_version" content="3.9.0">
-<meta name="sc:rendered_at" content="2026-07-03">
+<meta name="sc:rendered_at" content="2026-08-29">
 <meta name="sc:content_hash" content="41eaa64b6608f0840e1c01309586306aa26fe54e88b6ab2c4f8165b378fe30fd">
 <!-- Styles inlined verbatim from app/src/supercard.css — the single source of
      truth for layout/type/colour. The .canvas class chain below resolves this
@@ -1523,22 +1523,22 @@ a.spec-link:hover {
 
     <section>
       <div class="eyebrow">The width that holds</div>
-      <div class="tile">One number, checked on every card.</div>
+      <h2 class="tile">One number, checked on every card.</h2>
       <div class="stat">393</div>
       <p>Every published card now measures exactly 393 pixels wide in a headless browser: no table, chart label, or long token escapes the column on any phone.</p>
     </section>
 
     <section>
       <div class="eyebrow">Defects fixed by rule</div>
-      <div class="tile">Fourteen fixes, three rules.</div>
-      <div class="chart"><svg viewBox="0 0 361 180" role="img" aria-label="column chart"><line class="axis" x1="0" y1="156" x2="361" y2="156"/><rect class="bar focal" x="84.5" y="16" width="56" height="140" rx="3"/><text class="c-value focal" x="112.5" y="10" text-anchor="middle">6</text><text class="c-label" x="112.5" y="174" text-anchor="middle">R-33</text><rect class="bar" x="152.5" y="16" width="56" height="140" rx="3"/><text class="c-value" x="180.5" y="10" text-anchor="middle">6</text><text class="c-label" x="180.5" y="174" text-anchor="middle">R-34</text><rect class="bar" x="220.5" y="109.3" width="56" height="46.7" rx="3"/><text class="c-value" x="248.5" y="103.3" text-anchor="middle">2</text><text class="c-label" x="248.5" y="174" text-anchor="middle">R-35</text></svg></div>
+      <h2 class="tile">Fourteen fixes, three rules.</h2>
+      <div class="chart"><svg viewBox="0 0 361 180" role="img" aria-label="Column chart. R-33 6, R-34 6, R-35 2. R-33 is the focal value."><line class="axis" x1="0" y1="156" x2="361" y2="156"/><rect class="bar focal" x="84.5" y="16" width="56" height="140" rx="3"/><text class="c-value focal" x="112.5" y="10" text-anchor="middle">6</text><text class="c-label" x="112.5" y="174" text-anchor="middle">R-33</text><rect class="bar" x="152.5" y="16" width="56" height="140" rx="3"/><text class="c-value" x="180.5" y="10" text-anchor="middle">6</text><text class="c-label" x="180.5" y="174" text-anchor="middle">R-34</text><rect class="bar" x="220.5" y="109.3" width="56" height="46.7" rx="3"/><text class="c-value" x="248.5" y="103.3" text-anchor="middle">2</text><text class="c-label" x="248.5" y="174" text-anchor="middle">R-35</text></svg></div>
       <p>R-33 makes markdown render faithfully, R-34 makes the canvas fit and the rhythm uniform, and R-35 finishes the chart family.</p>
     </section>
 
     <section>
       <div class="eyebrow">The catalogue, honoured</div>
-      <div class="tile">Chart blocks that actually render.</div>
-      <div class="chart"><svg viewBox="0 0 361 168" role="img" aria-label="area chart"><line class="grid" x1="10" y1="22" x2="351" y2="22"/><line class="grid" x1="10" y1="80" x2="351" y2="80"/><line class="grid" x1="10" y1="138" x2="351" y2="138"/><path class="area" d="M 10 138 L 10 138 L 123.7 80 L 237.3 80 L 351 22 L 351 138 Z"/><polyline class="series" points="10,138 123.7,80 237.3,80 351,22"/><circle class="dot" cx="10" cy="138" r="4"/><text class="c-value" x="10" y="129" text-anchor="start">0</text><text class="c-label" x="10" y="160" text-anchor="start">v3.6</text><circle class="dot" cx="123.7" cy="80" r="4"/><text class="c-value" x="123.7" y="71" text-anchor="middle">2</text><text class="c-label" x="123.7" y="160" text-anchor="middle">v3.7</text><circle class="dot" cx="237.3" cy="80" r="4"/><text class="c-value" x="237.3" y="71" text-anchor="middle">2</text><text class="c-label" x="237.3" y="160" text-anchor="middle">v3.8</text><circle class="dot focal" cx="351" cy="22" r="5"/><text class="c-value focal" x="351" y="13" text-anchor="end">4</text><text class="c-label" x="351" y="160" text-anchor="end">v3.9</text></svg></div>
+      <h2 class="tile">Chart blocks that actually render.</h2>
+      <div class="chart"><svg viewBox="0 0 361 168" role="img" aria-label="Area chart. v3.6 0, v3.7 2, v3.8 2, v3.9 4. v3.9 is the focal value."><line class="grid" x1="10" y1="22" x2="351" y2="22"/><line class="grid" x1="10" y1="80" x2="351" y2="80"/><line class="grid" x1="10" y1="138" x2="351" y2="138"/><path class="area" d="M 10 138 L 10 138 L 123.7 80 L 237.3 80 L 351 22 L 351 138 Z"/><polyline class="series" points="10,138 123.7,80 237.3,80 351,22"/><circle class="dot" cx="10" cy="138" r="4"/><text class="c-value" x="10" y="129" text-anchor="start">0</text><text class="c-label" x="10" y="160" text-anchor="start">v3.6</text><circle class="dot" cx="123.7" cy="80" r="4"/><text class="c-value" x="123.7" y="71" text-anchor="middle">2</text><text class="c-label" x="123.7" y="160" text-anchor="middle">v3.7</text><circle class="dot" cx="237.3" cy="80" r="4"/><text class="c-value" x="237.3" y="71" text-anchor="middle">2</text><text class="c-label" x="237.3" y="160" text-anchor="middle">v3.8</text><circle class="dot focal" cx="351" cy="22" r="5"/><text class="c-value focal" x="351" y="13" text-anchor="end">4</text><text class="c-label" x="351" y="160" text-anchor="end">v3.9</text></svg></div>
       <p>Four catalogued chart ids, four render contracts: the gap between what the library advertises and what the renderer draws is closed.</p>
     </section>
 
@@ -1549,7 +1549,7 @@ a.spec-link:hover {
 
     <section>
       <div class="eyebrow">From defect to rule</div>
-      <div class="tile">Five steps, one loop.</div>
+      <h2 class="tile">Five steps, one loop.</h2>
       <ol>
         <li><span class="marker">1</span><span>Measure the published renders in a real browser.</span></li>
         <li><span class="marker">2</span><span>Name each failure as a numbered rule.</span></li>
@@ -1561,7 +1561,7 @@ a.spec-link:hover {
 
     <section>
       <div class="eyebrow">The same markdown, twice</div>
-      <div class="tile">What a block used to become.</div>
+      <h2 class="tile">What a block used to become.</h2>
       <table>
         <thead>
           <tr><th>block</th><th>through v3.8</th><th>v3.9</th></tr>

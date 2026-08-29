@@ -122,7 +122,7 @@ export function V37DataAndAlignment() {
       {/* Beat 5 — Counter: stat-callout (focal hero number + verbal anchor) */}
       <section>
         <div className="eyebrow">Colors on the canvas</div>
-        <div className="tile">The ramp is the whole palette.</div>
+        <h2 className="tile">The ramp is the whole palette.</h2>
         <p>Charts changed nothing about the rule that has held since v3.0:</p>
         <div className="stat">0</div>
         <p>

@@ -27,7 +27,7 @@
  *
  * The grammar it parses is documented in 50-TEMPLATES/TEMPLATE-supercard-*.md.
  */
-import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, relative, basename } from "node:path";
@@ -36,6 +36,7 @@ import {
   lineChartGeometry,
   columnChartGeometry,
   areaChartGeometry,
+  chartDescription,
 } from "../src/chart-geometry.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -227,10 +228,15 @@ function emitEyebrow(text) {
 }
 
 function takeLeadingTile(chunks) {
-  // A leading "### …" line is the section subhead (R-21 26/32 .tile).
+  // A leading "### …" line is the section subhead. It emits an <h2> carrying
+  // the .tile class (R-36): the class keeps the version-correct metric the
+  // cascade already resolves, and the element restores the document outline
+  // the source markdown always described. Through V3.9 this was a bare <div>,
+  // so every card presented one <h1> and nothing else, and on a pre-3.4 card
+  // the subhead fell all the way back to unstyled 16px browser default.
   if (chunks.length && /^###\s+/.test(chunks[0])) {
     const tile = chunks[0].replace(/^###\s+/, "").trim();
-    return [`      <div class="tile">${inlineMd(tile)}</div>\n`, chunks.slice(1)];
+    return [`      <h2 class="tile">${inlineMd(tile)}</h2>\n`, chunks.slice(1)];
   }
   return ["", chunks];
 }
@@ -314,7 +320,7 @@ function chartItems(block) {
 
 function barChartSvg(items) {
   const g = barChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="bar chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("bar", items))}">`;
   for (const r of g.rows) {
     const f = r.focal ? " focal" : "";
     s += `<text class="c-label" x="${r.labelX}" y="${r.cy}" dominant-baseline="middle">${escapeHtml(r.label)}</text>`;
@@ -326,7 +332,7 @@ function barChartSvg(items) {
 
 function lineChartSvg(items) {
   const g = lineChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="line chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("line", items))}">`;
   for (const gl of g.grid) {
     s += `<line class="grid" x1="${gl.x1}" y1="${gl.y}" x2="${gl.x2}" y2="${gl.y}"/>`;
   }
@@ -342,7 +348,7 @@ function lineChartSvg(items) {
 
 function columnChartSvg(items) {
   const g = columnChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="column chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("column", items))}">`;
   s += `<line class="axis" x1="0" y1="${g.baseY}" x2="${g.W}" y2="${g.baseY}"/>`;
   for (const c of g.cols) {
     const f = c.focal ? " focal" : "";
@@ -355,7 +361,7 @@ function columnChartSvg(items) {
 
 function areaChartSvg(items) {
   const g = areaChartGeometry(items);
-  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="area chart">`;
+  let s = `<svg viewBox="0 0 ${g.W} ${g.H}" role="img" aria-label="${escapeHtml(chartDescription("area", items))}">`;
   for (const gl of g.grid) {
     s += `<line class="grid" x1="${gl.x1}" y1="${gl.y}" x2="${gl.x2}" y2="${gl.y}"/>`;
   }
@@ -731,8 +737,21 @@ function upsertGallery(slug, title, fm) {
 
 /* ---- main -------------------------------------------------------------- */
 
+// A card path is resolved against the cwd first, then against the repo root.
+// The documented invocation is `npm --prefix app run render -- 30-CARDS/…`,
+// and `--prefix` runs the script with the cwd set to `app/`, so a repo-relative
+// path only ever resolved under `app/` and the command in the spec, the skill
+// and the pipeline failed with ENOENT as written.
+function resolveCard(p) {
+  const fromCwd = resolve(process.cwd(), p);
+  if (existsSync(fromCwd)) return fromCwd;
+  const fromRepo = resolve(repo, p);
+  if (existsSync(fromRepo)) return fromRepo;
+  return fromCwd;
+}
+
 function cardList(argv) {
-  if (argv.length) return argv.map((p) => resolve(process.cwd(), p));
+  if (argv.length) return argv.map(resolveCard);
   return readdirSync(CARDS_DIR)
     .filter((f) => /^CARD-.*\.md$/.test(f))
     .map((f) => resolve(CARDS_DIR, f));

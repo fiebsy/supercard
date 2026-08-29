@@ -81,3 +81,8 @@ export function areaChartGeometry(items: ChartDatum[]): {
   baseY: number;
   areaPath: string;
 };
+
+export function chartDescription(
+  kind: "bar" | "line" | "column" | "area",
+  items: ChartDatum[],
+): string;

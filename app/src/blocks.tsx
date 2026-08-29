@@ -24,6 +24,7 @@ import {
   lineChartGeometry,
   columnChartGeometry,
   areaChartGeometry,
+  chartDescription,
 } from "./chart-geometry.mjs";
 
 /* ---- section scaffold -------------------------------------------------- */
@@ -124,7 +125,7 @@ export function StandardText({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       {lead ? (
         <p>
           <strong className="lead">{lead}</strong> {children}
@@ -177,7 +178,7 @@ export function NumberedList({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <ol>
         {steps.map((s, i) => (
           <li key={i}>
@@ -216,7 +217,7 @@ export function MarkerList({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
       <ul>
         {items.map((it, i) => (
@@ -259,7 +260,7 @@ export function DataTable({
   const span = head?.length ?? rows[0]?.cells.length ?? 1;
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <table className={className}>
         {head ? (
           <thead>
@@ -319,9 +320,9 @@ export function BarChart({ beat, eyebrow, heading, items, closer }: ChartBlockPr
   const g = barChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="bar chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("bar", items)}>
           {g.rows.map((r, i) => {
             const f = r.focal ? " focal" : "";
             return (
@@ -347,9 +348,9 @@ export function LineChart({ beat, eyebrow, heading, items, closer }: ChartBlockP
   const g = lineChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="line chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("line", items)}>
           {g.grid.map((gl, i) => (
             <line key={i} className="grid" x1={gl.x1} y1={gl.y} x2={gl.x2} y2={gl.y} />
           ))}
@@ -381,9 +382,9 @@ export function ColumnChart({ beat, eyebrow, heading, items, closer }: ChartBloc
   const g = columnChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="column chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("column", items)}>
           <line className="axis" x1={0} y1={g.baseY} x2={g.W} y2={g.baseY} />
           {g.cols.map((c, i) => {
             const f = c.focal ? " focal" : "";
@@ -412,9 +413,9 @@ export function AreaChart({ beat, eyebrow, heading, items, closer }: ChartBlockP
   const g = areaChartGeometry(items);
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className="chart">
-        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label="area chart">
+        <svg viewBox={`0 0 ${g.W} ${g.H}`} role="img" aria-label={chartDescription("area", items)}>
           {g.grid.map((gl, i) => (
             <line key={i} className="grid" x1={gl.x1} y1={gl.y} x2={gl.x2} y2={gl.y} />
           ))}
@@ -459,7 +460,7 @@ export function StatGrid({
   const cls = metrics.length % 3 === 0 ? "stat-grid cols-3" : "stat-grid";
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <div className={cls}>
         {metrics.map((m, i) => (
           <div className="cell" key={i}>
@@ -516,7 +517,7 @@ export function Flashcards({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <div className="tile">{heading}</div> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       <dl className="flashcards">
         {cards.map((c, i) => (
           <div className="fc" key={i}>
@@ -548,7 +549,7 @@ export function Equation({
 }) {
   return (
     <Section beat={beat} eyebrow={eyebrow}>
-      {heading ? <h2>{heading}</h2> : null}
+      {heading ? <h2 className="tile">{heading}</h2> : null}
       {intro ? <p>{intro}</p> : null}
       <pre>{formula}</pre>
       {closer ? <p>{closer}</p> : null}
