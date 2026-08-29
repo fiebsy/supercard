@@ -5,11 +5,64 @@
 | id | CHANGELOG-supercard |
 | type | governance |
 | era | atlas |
-| version | 3.10.0 |
+| version | 3.10.1 |
 | owner | derick |
 | updated | 2026-08-29 |
 
 All notable changes to the Supercard system. Format adapted from Keep a Changelog 1.1.0. Versioning: SemVer with named eras.
+
+---
+
+## [3.10.1] — "Atlas" — 2026-08-29
+
+The interaction layer. V3.10 read the HTML and did not press anything. The
+report that opened this patch was one sentence from a reader on a phone — the
+buttons don't work and there are weird shadows on press — and both halves were
+true in a way no screenshot and no markup audit could show. (ADR-0018.)
+
+### Added
+
+- RENDERING § R-44 — **Touch is the primary input** (V3.10.1+, base-level).
+  The canvas draws its own press feedback and the user agent draws none; the
+  transition that animates it is declared once for every control; hover is
+  gated on a real pointer; a link is the size of its button, with a 44pt
+  target around a 32 or 36pt circle; and a route change lands the reader
+  somewhere deliberate.
+
+### Fixed
+
+- **The grey shadow on press was the browser's.** Mobile Safari and Chrome
+  paint a translucent rectangle over a pressed link, and nothing ever turned
+  it off — so the one shadow left in a system that retired them in V3.6
+  (R-22) was the UA's, on every tap, sized to the whole sample card.
+  `-webkit-tap-highlight-color: transparent`.
+- **The press feedback had shipped without its motion.** V3.10 declared
+  `scale: 0.96` and its transition once; seven controls below then restated
+  `transition:` for their own colours, and the shorthand replaces
+  `transition-property`, so each silently dropped `scale`. Measured on the
+  built site, not one control had `scale` in its computed transition — the
+  state was real and the animation had never run. One interaction group now
+  owns it, and nothing below redeclares it.
+- **Sticky hover on touch.** A touch browser synthesises `:hover` on tap and
+  leaves it applied, so the card you came back from stayed lit. Every hover
+  rule moves inside `@media (hover: hover) and (pointer: fine)`.
+- **The card-view back bar was the link.** `.card-back` was an `<a>` at
+  `display: block` across the full 393pt column, so a tap anywhere along the
+  top of a card left the page. The bar is a plain block, the link is the
+  button, and the button carries a 44pt target around its 32pt circle.
+  `RENDERER_VERSION` v3.10; all eight cards re-rendered, canvas byte-identical.
+- **A route change kept the old scroll offset.** Opening a card from the
+  bottom of the expanded archive left the reader ~770pt down it, below the
+  cover, with the back button off-screen above them. A card opens at its
+  cover; the gallery returns to the row the reader left from, archive still
+  open.
+- **The copy button reported copies it had not made.** The fallback branch —
+  taken on any insecure origin and in several in-app webviews — set the check
+  glyph and the live region without copying. It runs `execCommand("copy")`
+  against an off-screen field and reports what that returns.
+- The archive rises into place over 0.3s instead of appearing between two
+  frames, and the copy glyph scales up as it swaps rather than hard-cutting.
+  Both flatten under `prefers-reduced-motion`.
 
 ---
 

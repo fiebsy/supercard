@@ -5,7 +5,7 @@
 | id | INDEX-supercard-v3 |
 | type | index |
 | era | atlas |
-| version | 3.10.0 |
+| version | 3.10.1 |
 | owner | derick |
 | updated | 2026-08-29 |
 
@@ -125,6 +125,8 @@ ls docs/cards/
 ## Change-log pointer
 
 The full version history lives in `10-GOVERNANCE/CHANGELOG-supercard.md`. Most recent entries:
+
+**v3.10.1** — The interaction layer. V3.10 read the HTML and did not press anything; a reader on a phone reported that the buttons did not work and that press painted weird shadows, and both were true. R-44 (touch is the primary input): the user agent's tap rectangle comes off, and the canvas draws its own press — `scale: 0.96`, in fast and out slower, with the transition declared once for every control instead of being silently dropped by seven per-control `transition:` shorthands that replaced the property list; hover is gated on a real pointer, so a tapped card stops staying lit; a link is the size of its button, where the card-view back bar had been a full-width anchor that navigated away on any tap along the top of a card; the touch target is 44pt around a 32 or 36pt drawn circle; and a route change lands the reader somewhere deliberate — a card at its cover rather than 770pt down it with the back button off-screen, the gallery back at the row they left. A patch: no card's pixels or frozen version move. (ADR-0018.)
 
 **v3.10.0** — The interface-skills cut. V3.10 is the first version audited against a standard from outside the system: the eleven `jakubkrehel/skills` interface skills, vendored into `.claude/skills/` and mapped to Supercard's own rules in `SKILLS-interface-map.md`. What the audit found was that the worst defects were all failures to keep promises the spec had already made. R-36 (subheads are headings — a `### ` renders as `<h2 class="tile">`, so a card stops presenting one `<h1>` and nothing else, and a pre-3.4 subhead stops falling back to unstyled 16px browser default). R-37 (every rendered glyph clears 4.5:1 — the list marker, the source bullet, the divider label, the gallery meta line and the corner mark were drawn at `--g-30`, 2.10:1, which R-20 already classed as non-text). R-38 (a chart names its data, not the shape it draws). R-39 (role tokens name the job, over the value-named ramp). R-40 (the card is a document: `<main>`, real headings, `th scope`, logical properties — and the gallery gets landmarks, focus rings, 44pt controls and an unclipped spec URL). R-41 (display type wraps balanced), R-42 (smart punctuation) and R-43's grouping corrections are scoped to the new `.canvas.v3-10` layer; the rest are base-level and retroactive on the ADR-0011 precedent, because a subhead rendering as body text and a marker at 2.10:1 are defects, not period design. Also enforces two rules that had shipped as CSS and nothing else: R-24's em-dash ban never ran on the V3.0 cards it was made retroactive for, and R-29's `td.num` styling had no render path emitting the class. (ADR-0017.)
 

@@ -5,7 +5,7 @@
 | id | RENDERING-spec |
 | type | governance |
 | era | atlas |
-| version | 3.10.0 |
+| version | 3.10.1 |
 | owner | derick |
 | updated | 2026-08-29 |
 
@@ -831,6 +831,52 @@ it.**
 
 The first two are scoped to `.canvas.v3-10`; the last two are base-level defect
 repairs.
+
+## R-44. Touch is the primary input (V3.10.1+, base-level)
+
+**Every control draws its own press, the UA draws none, and hover is a
+pointer state.** The canvas is a 393pt column read on a phone. Three defects
+made the site feel broken there, and all three were in the interaction layer
+rather than in any card.
+
+- **The UA's tap rectangle is off.** Mobile Safari and Chrome paint a
+  translucent rectangle over a pressed link. On a 232pt sample card that is a
+  grey shadow dropped across the whole card — the last shadow in a system that
+  retired them in V3.6 (R-22), and the only one the stylesheet never owned.
+  `-webkit-tap-highlight-color: transparent` on `html` retires it too.
+- **The press that replaces it actually animates.** V3.10 declared
+  `scale: 0.96` once and then let each control restate `transition:` further
+  down the sheet. The shorthand *replaces* `transition-property`, so every one
+  of those later rules silently dropped `scale` and the press snapped in and
+  out with no animation at all — the state shipped, the motion never did. The
+  transition is declared once, for every control, and nothing below
+  redeclares it: in at `--press-in` (0.09s — the finger is already there), out
+  at `--press-out` (0.24s, so the release settles rather than snaps back).
+  `<body ontouchstart="">` is what makes Mobile Safari deliver `:active` at
+  all; it is an empty attribute, not script.
+- **Hover is gated on a real pointer.** A touch browser fakes `:hover` on tap
+  and then leaves it applied, so the card you last opened stays lit after you
+  navigate back. Every hover rule sits inside
+  `@media (hover: hover) and (pointer: fine)`; touch gets `:active`.
+
+Two navigation defects go with them, because a control that does the wrong
+thing reads exactly like one that does nothing:
+
+- **A link is the size of its button.** The card-view back bar was itself the
+  anchor, `display: block` across the full 393pt column, so a tap anywhere
+  along the top of a card left the page. The bar is a plain block now and the
+  link is the button. The touch target is 44pt where the drawn circle is 32
+  or 36 — grown with a transparent pseudo-element or a negative margin, never
+  by growing the drawn box, which would move the layout.
+- **A route change lands somewhere deliberate.** A hash change does not reset
+  the scroll position. Opening a card from the bottom of the archive dropped
+  the reader two-thirds of the way down it, with the back button off-screen
+  above them. A card opens at its cover; coming back, the gallery returns to
+  the row the reader left from, with the archive still open.
+
+Base-level, not scoped to a canvas layer: this is chrome around the card, and
+a press that does not animate is a defect at every frozen version (the
+ADR-0011 precedent). No card's pixels change. (ADR-0018.)
 
 ## Block compatibility
 

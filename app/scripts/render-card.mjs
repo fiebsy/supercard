@@ -48,7 +48,7 @@ const CSS_PATH = resolve(repo, "app/src/supercard.css");
 
 // The renderer's own version — emitted as sc:renderer_version. Bump when the
 // emitted markup changes shape (not when a card's frozen_at_version changes).
-const RENDERER_VERSION = "v3.9";
+const RENDERER_VERSION = "v3.10";
 
 /* ---- small helpers ----------------------------------------------------- */
 
@@ -803,8 +803,12 @@ ${meta}
 ${css.trim()}
 </style>
 </head>
-<body>
-  <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
+<!-- ontouchstart is empty on purpose and is not script: its presence is what
+     makes Mobile Safari deliver :active to the control under the finger, and
+     :active is the whole of this page's press feedback now that the UA's own
+     tap rectangle is off (R-44). -->
+<body ontouchstart="">
+  <div class="card-back"><a class="card-back-link" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a></div>
   <main class="${canvasClasses(fm)}">
 
 ${sections}

@@ -7,7 +7,7 @@
 <title>Data, Aligned · Supercard V3.7</title>
 <meta name="sc:source_file" content="30-CARDS/CARD-2026-06-27-v37-data-and-alignment--draft.md">
 <meta name="sc:research_report" content="10-GOVERNANCE/ADR/ADR-0014-v37-header-eyebrow-alignment-dataviz--accepted.md">
-<meta name="sc:renderer_version" content="v3.9">
+<meta name="sc:renderer_version" content="v3.10">
 <meta name="sc:frozen_at_version" content="3.7.0">
 <meta name="sc:rendered_at" content="2026-08-29">
 <meta name="sc:content_hash" content="40dcbbcf36b3ab5bf47ad90f0740470699d751158140278fc2d7048756670b6a">
@@ -486,35 +486,144 @@ section.divider h2 {
   margin-inline-end: var(--s-1);
 }
 
-/* Press feedback. The site is a touch-first 393pt column and not one control
- * acknowledged a press: on a slow connection a tap on a card was silent until
- * the next page painted. scale(0.96) is better-ui's exact figure, and it is
- * the same figure for every control so one shape means one behaviour. The
- * reduced-motion block flattens the transition; the state itself stays, since
- * it is direct manipulation rather than decoration. */
+/* ----------------------------------------------------------------------- *
+ * R-44 — one interaction layer for every control.
+ *
+ * V3.10 introduced the scale(0.96) press but declared it in one place and
+ * then let each control restate `transition:` further down the sheet. A
+ * shorthand REPLACES transition-property, so every one of those later rules
+ * silently dropped `scale` from the list and the press snapped in and out
+ * with no animation at all. The transition now lives here, once, and no
+ * control below redeclares it — `--press-*` is the only knob.
+ *
+ * Three things a touch control owes the reader, in one group:
+ *   1. no UA tap flash. Mobile Safari and Chrome paint their own translucent
+ *      rectangle over a pressed link, which on a 232pt card reads as a grey
+ *      shadow dropped over the whole card. The system retired shadows in
+ *      V3.6 (R-22); this is the last one, and it belongs to the UA.
+ *   2. a press state of its own, since (1) removes the only feedback most of
+ *      these controls had on touch.
+ *   3. a press that eases. In at --press-in (fast — the finger is already
+ *      there), out at --press-out (slower, so the release reads as a settle
+ *      rather than a snap-back).
+ * ----------------------------------------------------------------------- */
+:root {
+  --press-scale: 0.96;
+  --press-in: 0.09s;
+  --press-out: 0.24s;
+  /* An ease-out curve with a long tail — the release decelerates instead of
+   * stopping dead. Not a spring: nothing on this canvas overshoots. */
+  --press-ease: cubic-bezier(0.22, 0.61, 0.24, 1);
+}
+
+/* The whole page opts out of the UA tap rectangle: it lands on anything
+ * clickable, including the prose links inside a card, and the canvas draws
+ * its own feedback everywhere it wants any. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* One visible focus ring for every control, drawn in ink rather than the UA's
+ * blue, and only for keyboard focus. Mirrors docs/index.html, which has had
+ * this since V3.10 while this sheet — the one both the React lander and every
+ * rendered card read — was still taking the UA default. Touch gets `:active`,
+ * a pointer gets `:hover`, a keyboard gets this. */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.copy-btn,
+.spec-input,
+.older-toggle,
+.zone-action,
+.sample-card,
+.sample-open,
+a.card-link,
+.card-back-link,
+.back-btn,
+.back-link,
+.gh-btn,
+.repo-link,
+.icon-btn {
+  transition-property: scale, background-color, border-color, color, opacity;
+  transition-duration: var(--press-out);
+  transition-timing-function: var(--press-ease);
+  /* Belt and braces on iOS, where the rectangle is painted from the element
+   * rather than the document in some in-app browsers. */
+  -webkit-tap-highlight-color: transparent;
+  /* A pressed control must not also select its own label or fire the
+   * long-press callout — both are what a "button that does nothing" feels
+   * like when the tap is read as a text gesture instead. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* scale(0.96) is better-ui's exact figure, and it is the same figure for
+ * every control so one shape means one behaviour. */
 .copy-btn:active,
 .spec-input:active,
 .older-toggle:active,
 .zone-action:active,
 .sample-card:active,
 a.card-link:active,
-.back-btn:active,
+.card-back-link:active,
 .gh-btn:active,
 .icon-btn:active {
-  scale: 0.96;
+  scale: var(--press-scale);
+  transition-duration: var(--press-in);
 }
-.copy-btn,
-.spec-input,
-.older-toggle,
-.zone-action,
-.sample-card,
-a.card-link,
-.back-btn,
-.gh-btn,
-.icon-btn {
-  transition-property: scale, background-color, border-color, color;
-  transition-duration: 0.15s;
-  transition-timing-function: ease-out;
+/* The chevrons are painted inside a link that is already scaling, so they
+ * take the fill step instead of a second scale on top of the first. */
+.sample-card:active .sample-open,
+.card-back-link:active .back-btn {
+  background: var(--g-12);
+  border-color: transparent;
+  transition-duration: var(--press-in);
+}
+
+/* Hover is a pointer state. A touch browser fakes it on tap and then LEAVES
+ * it applied — the card you last opened stays lit after you navigate back,
+ * which is the same "did that do anything?" confusion in reverse. Every
+ * hover rule in this sheet is gated on a device that really has a pointer;
+ * the `:active` rules above are what touch gets. */
+@media (hover: hover) and (pointer: fine) {
+  a.card-link:hover {
+    /* --rule-hairline IS --g-12, so setting the hover border to --g-12
+     * declared a state and rendered none. One step up the ramp. */
+    border-color: var(--g-30);
+  }
+  .back-link:hover,
+  .repo-link:hover,
+  .zone-action:hover {
+    color: var(--k);
+  }
+  .gh-btn:hover {
+    background: var(--g-06);
+  }
+  .spec-input:hover {
+    border-color: var(--g-30);
+  }
+  .older-toggle:hover {
+    color: var(--k);
+    border-color: var(--g-60);
+  }
+  .sample-card:hover {
+    border-color: var(--g-30);
+  }
+  /* The whole card is the link, so on card hover the chevron fills a step
+   * (g-06 -> g-12) and drops its ring — a quiet fill-in rather than a
+   * heavier outline. */
+  .sample-card:hover .sample-open {
+    background: var(--g-12);
+    border-color: transparent;
+  }
+  .back-btn:hover {
+    background: var(--g-12);
+    border-color: var(--g-30);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -624,12 +733,6 @@ a.card-link {
   margin-bottom: var(--s-2);
   background: var(--w);
 }
-a.card-link:hover {
-  /* --rule-hairline IS --g-12, so setting the hover border to --g-12 declared
-   * a state and rendered none. One step up the ramp, matching the gallery's
-   * own copy of this rule, which had it right. */
-  border-color: var(--g-30);
-}
 .card-title {
   font-size: 24px;
   line-height: 30px;
@@ -649,11 +752,17 @@ a.card-link:hover {
   margin-top: var(--s-1);
 }
 /* A small chevron back button on a card view — mirrors the gallery sample
- * card's forward chevron (same 34px circle). Carries the canvas's dotted side
+ * card's forward chevron (same 32px circle). Carries the canvas's dotted side
  * guides so the 393px column reads as one continuous run from the very top
- * rather than starting abruptly at the card title. */
+ * rather than starting abruptly at the card title.
+ *
+ * R-44 — the bar is a plain block, not the link. It used to BE the anchor:
+ * `display: block` across the full 393pt column, so the whole top band of
+ * every card navigated away, and a tap anywhere near the title left the page.
+ * The link is now the button and nothing else. */
 .card-back {
-  display: block;
+  display: flex;
+  align-items: flex-start;
   box-sizing: border-box;
   width: 393px;
   max-width: 100%;
@@ -662,6 +771,21 @@ a.card-link:hover {
   border-left: 1px dotted var(--rule-hairline);
   border-right: 1px dotted var(--rule-hairline);
 }
+/* R-44 — the touch target is 44pt, the drawn circle stays 32pt. The 6pt
+ * overhang on each side is pulled back with a negative margin, so the circle
+ * still sits on the 16pt content margin and the bar keeps its 56pt height
+ * (24 top pad + 44 − 6 − 6). */
+.card-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -6px 0 -6px -6px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: inherit;
+}
 .back-link {
   display: inline-block;
   font-family: var(--mono);
@@ -669,9 +793,6 @@ a.card-link:hover {
   color: var(--text-label);
   text-decoration: none;
   padding: var(--s-5) 0 0;
-}
-.back-link:hover {
-  color: var(--k);
 }
 
 /* gallery — repo link on the minimalist landing (below the spec block) */
@@ -682,9 +803,6 @@ a.card-link:hover {
   color: var(--text-label);
   text-decoration: none;
   margin-top: var(--s-5);
-}
-.repo-link:hover {
-  color: var(--k);
 }
 
 /*
@@ -1251,11 +1369,17 @@ a.spec-link:hover {
 }
 /* GitHub icon button — top-right, ghost circle. The mark inherits --g-60 via
  * currentColor (see GitHubIcon in ui.tsx). */
-/* GitHub — just the icon (no ring). The hover target is a 36px circle, but the
- * 18px glyph is centered in it, so a negative right margin pulls the glyph's
- * edge flush with the content edge (symmetric with the wordmark on the left).
- * A subtle gray circle appears behind it on hover. */
+/* GitHub — just the icon (no ring). The drawn circle is 36px, but the 18px
+ * glyph is centered in it, so a negative right margin pulls the glyph's edge
+ * flush with the content edge (symmetric with the wordmark on the left).
+ * A subtle gray circle appears behind it on hover.
+ *
+ * R-44 — the TOUCH target is 44pt, drawn by a transparent pseudo-element
+ * rather than by growing the box: an 8pt-larger circle in the header row
+ * would push the whole lander down a step. The one control in the corner of
+ * the screen is the one that most needs the extra 4pt on each side. */
 .gh-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1267,10 +1391,12 @@ a.spec-link:hover {
   background: transparent;
   color: var(--ink);
   text-decoration: none;
-  transition: background-color 0.15s ease;
 }
-.gh-btn:hover {
-  background: var(--g-06);
+.gh-btn::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
 }
 
 /* The lede sits one step under the wordmark; the rest of the rhythm is owned by
@@ -1344,10 +1470,6 @@ a.spec-link:hover {
   font-family: inherit;
   color: inherit;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
-}
-.spec-input:hover {
-  border-color: var(--g-30);
 }
 .spec-url {
   flex: 1 1 auto;
@@ -1380,9 +1502,23 @@ a.spec-link:hover {
   height: 32px;
   color: var(--text-label);
 }
-/* Copy-success: the glyph swaps to a check and darkens to --ink. Monochrome. */
+/* Copy-success: the glyph swaps to a check and darkens to --ink. Monochrome.
+ * R-44 — the swap used to be a hard cut between two different SVGs, which at
+ * 17px reads as a flicker rather than a confirmation. The check scales up
+ * from 0.7 as it fades in, so the one action on the page answers. */
 .spec-copy.copied {
   color: var(--ink);
+  animation: glyph-in var(--press-out) var(--press-ease) both;
+}
+@keyframes glyph-in {
+  from {
+    opacity: 0;
+    scale: 0.7;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
 }
 
 /* Trailing action on a zone label (e.g. "Hide" on `~/ older` once expanded).
@@ -1402,10 +1538,6 @@ a.spec-link:hover {
   text-transform: uppercase;
   color: var(--text-label);
   cursor: pointer;
-  transition: color 0.15s ease;
-}
-.zone-action:hover {
-  color: var(--k);
 }
 
 /* Toast-style archive: a masked card-edge peeks above a dashed reveal button;
@@ -1438,16 +1570,29 @@ a.spec-link:hover {
   letter-spacing: 0.02em;
   color: var(--text-label);
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
-}
-.older-toggle:hover {
-  color: var(--k);
-  border-color: var(--g-60);
 }
 .older-list {
   display: flex;
   flex-direction: column;
   gap: var(--s-2);
+}
+/* R-44 — the archive used to appear between two frames, seven cards at once,
+ * with the reveal button gone from under the finger. It rises into place
+ * instead. Only on the reveal itself (`is-revealing`) — a gallery restored
+ * with the archive already open is not a reveal, and would fade in under a
+ * reader who never asked for it. The reduced-motion block flattens it. */
+.older-list.is-revealing {
+  animation: older-in 0.3s var(--press-ease) both;
+}
+@keyframes older-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 
 /* Footer glyph line, in the column flow (not the fixed corner mark). */
@@ -1479,10 +1624,6 @@ a.spec-link:hover {
   border: 1px solid var(--rule-hairline);
   border-radius: 16px;
   padding: 18px 18px 0;
-  transition: border-color 0.15s ease;
-}
-.sample-card:hover {
-  border-color: var(--g-30);
 }
 /* Subtle topical eyebrow above the title — same muted mono language as the
  * `~/ zone` labels, so every card carries a one-glance bit of context. */
@@ -1543,14 +1684,6 @@ a.spec-link:hover {
   background: var(--g-06);
   border: 1px solid var(--rule-hairline);
   color: var(--ink);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-/* The whole card is the link, so on card hover the chevron fills a step
- * (g-06 -> g-12) and drops its ring (border hidden) — a quiet fill-in rather
- * than a heavier outline. */
-.sample-card:hover .sample-open {
-  background: var(--g-12);
-  border-color: transparent;
 }
 .sample-meta {
   padding-top: 6px;
@@ -1591,11 +1724,6 @@ a.spec-link:hover {
   border-radius: 999px;
   background: var(--g-06);
   color: var(--ink);
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-}
-.back-btn:hover {
-  background: var(--g-12);
-  border-color: var(--g-30);
 }
 
 /* ----------------------------------------------------------------------- *
@@ -1773,8 +1901,12 @@ a.spec-link:hover {
 }
 </style>
 </head>
-<body>
-  <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
+<!-- ontouchstart is empty on purpose and is not script: its presence is what
+     makes Mobile Safari deliver :active to the control under the finger, and
+     :active is the whole of this page's press feedback now that the UA's own
+     tap rectangle is off (R-44). -->
+<body ontouchstart="">
+  <div class="card-back"><a class="card-back-link" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a></div>
   <main class="canvas v3-1 v3-4 v3-5 v3-6 v3-7">
 
     <section aria-labelledby="beat-the-variety-release">
