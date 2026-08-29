@@ -72,6 +72,60 @@ function inlineMd(s) {
 
 const isBlank = (l) => l.trim() === "";
 
+/* ---- R-42: smart punctuation (V3.10+) ---------------------------------- *
+ * Straight quotes and three periods are typewriter artifacts. On a page this
+ * carefully set they read as a mistake, and a pulled quote is exactly where
+ * a reader looks closest. The transform runs over the assembled section HTML
+ * so it sees whole sentences rather than one inline fragment at a time, and
+ * it runs only for cards frozen at 3.10.0 or later: an older card keeps the
+ * glyphs it was authored and rendered with (ADR-0003).
+ *
+ * It walks tags and text alternately and only ever rewrites text, so a tag
+ * name, an attribute value, an entity, and the contents of <code> and <pre>
+ * come through untouched. Code takes straight quotes by rule
+ * (better-typography, "Write copy naturally, style with CSS").
+ * ----------------------------------------------------------------------- */
+
+function smartPunctuationText(t) {
+  return t
+    // Ellipsis before quote handling, so "word..." closes correctly.
+    .replace(/\.\.\./g, "\u2026")
+    // Double quotes: opening after start, whitespace or an opening bracket.
+    .replace(/(^|[\s([{\u2014\u2013>])"/g, "$1\u201c")
+    .replace(/"/g, "\u201d")
+    // Apostrophes inside and after a word: it's, readers', 90s.
+    .replace(/(\w)'(\w)/g, "$1\u2019$2")
+    .replace(/(\w)'/g, "$1\u2019")
+    // A remaining leading single quote opens a quotation.
+    .replace(/(^|[\s([{>])'/g, "$1\u2018");
+}
+
+function smartPunctuation(html) {
+  let out = "";
+  let i = 0;
+  let literal = 0; // depth inside <code> / <pre>
+  while (i < html.length) {
+    const lt = html.indexOf("<", i);
+    if (lt === -1) {
+      out += literal ? html.slice(i) : smartPunctuationText(html.slice(i));
+      break;
+    }
+    const text = html.slice(i, lt);
+    out += literal ? text : smartPunctuationText(text);
+    const gt = html.indexOf(">", lt);
+    if (gt === -1) {
+      out += html.slice(lt);
+      break;
+    }
+    const tag = html.slice(lt, gt + 1);
+    if (/^<(code|pre)\b/i.test(tag)) literal++;
+    else if (/^<\/(code|pre)\s*>$/i.test(tag) && literal) literal--;
+    out += tag;
+    i = gt + 1;
+  }
+  return out;
+}
+
 /* ---- frontmatter + title ----------------------------------------------- */
 
 // Cards carry their frontmatter as the first | key | value | table, not YAML.
@@ -107,6 +161,15 @@ function parseCard(raw) {
 
 /* ---- canvas class chain by frozen_at_version --------------------------- */
 
+// True when the card's frozen_at_version is at or past maj.min. The one place
+// a version comparison is spelled out, so the class chain and the rules keyed
+// on a version cannot drift apart.
+function atLeast(fm, maj, min) {
+  const frozen = fm.frozen_at_version || fm.version || "3.0.0";
+  const [a, b] = frozen.split(".").map((n) => parseInt(n, 10));
+  return a > maj || (a === maj && b >= min);
+}
+
 function canvasClasses(fm) {
   const frozen = fm.frozen_at_version || fm.version || "3.0.0";
   const [maj, min] = frozen.split(".").map((n) => parseInt(n, 10));
@@ -118,6 +181,7 @@ function canvasClasses(fm) {
   if (maj > 3 || (maj === 3 && min >= 7)) cls.push("v3-7");
   if (maj > 3 || (maj === 3 && min >= 8)) cls.push("v3-8");
   if (maj > 3 || (maj === 3 && min >= 9)) cls.push("v3-9");
+  if (maj > 3 || (maj === 3 && min >= 10)) cls.push("v3-10");
 
   // Beat-gap opt-outs/ins relative to the version default (R-15).
   const gap = (fm.beat_gap || "").trim();
@@ -258,7 +322,7 @@ function emitTable(block, cls = "") {
   const [head, ...body] = data;
   const attr = cls ? ` class="${cls}"` : "";
   let html = `      <table${attr}>\n        <thead>\n          <tr>`;
-  html += head.map((h) => `<th>${inlineMd(h)}</th>`).join("");
+  html += head.map((h) => `<th scope="col">${inlineMd(h)}</th>`).join("");
   html += "</tr>\n        </thead>\n        <tbody>\n";
   for (const r of body) {
     const isTakeaway = /takeaway/i.test(r[0].replace(/\*/g, ""));
@@ -657,10 +721,13 @@ function renderCard(cardPath) {
   for (const s of skipped) {
     console.log(`[render]   scaffold section skipped (never rendered): "## ${s.header}"`);
   }
-  const sections = allSections
+  const rawSections = allSections
     .filter(isRenderableSection)
     .map((sec) => emitSection(title, parseSection(sec)))
     .join("\n");
+  // R-42 — V3.10 cards render smart punctuation; earlier cards keep the
+  // glyphs they were authored and published with (ADR-0003).
+  const sections = atLeast(fm, 3, 10) ? smartPunctuation(rawSections) : rawSections;
 
   const meta = [
     `<meta name="sc:source_file" content="${escapeHtml(sourceRel)}">`,
@@ -688,10 +755,10 @@ ${css.trim()}
 </head>
 <body>
   <a class="card-back" href="../../" aria-label="Back to gallery"><span class="back-btn"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span></a>
-  <div class="${canvasClasses(fm)}">
+  <main class="${canvasClasses(fm)}">
 
 ${sections}
-  </div>
+  </main>
   <div class="glyph">✦ berafoot.com</div>
 </body>
 </html>

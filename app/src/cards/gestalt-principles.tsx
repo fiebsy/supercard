@@ -26,7 +26,7 @@ import {
 
 export function GestaltPrinciples() {
   return (
-    <div className="canvas">
+    <main className="canvas">
       {/* Beat 1 - Hook */}
       <Hero
         title="Gestalt Principles"
@@ -582,6 +582,6 @@ export function GestaltPrinciples() {
       />
 
       <Glyph />
-    </div>
+    </main>
   );
 }

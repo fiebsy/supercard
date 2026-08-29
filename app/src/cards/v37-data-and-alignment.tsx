@@ -22,7 +22,7 @@ import {
 
 export function V37DataAndAlignment() {
   return (
-    <div className="canvas v3-1 v3-4 v3-5 v3-6 v3-7">
+    <main className="canvas v3-1 v3-4 v3-5 v3-6 v3-7">
       {/* Beat 1 — Hook (loft-card). Raw section: the cover now opens with an
           eyebrow above the title (R-27), then dek, then the hero card. */}
       <section>
@@ -176,6 +176,6 @@ export function V37DataAndAlignment() {
       />
 
       <Glyph version="v3.7" />
-    </div>
+    </main>
   );
 }

@@ -50,6 +50,33 @@
   /* V3.6 — shadows retired (R-22, flat surfaces). The hero and any anchor card
    * are now set apart by border + radius + padding, never elevation. No
    * --shadow-* token exists; box-shadow is not used anywhere in the system. */
+
+  /* ------------------------------------------------------------------- *
+   * V3.10 (R-39) — role tokens. The tokens above name a VALUE: --g-12 is
+   * "12% black" and says nothing about where it belongs. The tokens below
+   * name a JOB, and they are the tier a block should reference, so the
+   * question "which gray?" has one answer per role instead of a ramp to
+   * pick from by eye. They point at the primitives above and add no new
+   * value, so nothing renders differently.
+   *
+   * The split they encode is R-20's: ink carries glyphs, the g-ramp draws
+   * rules and fills. Every ink role clears 4.5:1 on white; no g-ramp step
+   * above --g-60 does, which is exactly why a rule token must never end up
+   * on a `color`. The V3.5 canvas redefines --ink/--ink-2/--ink-3, so
+   * these roles follow the card's own ladder without being restated.
+   * ------------------------------------------------------------------- */
+
+  /* Ink — anything that renders a character. */
+  --text-emphasis: var(--ink); /* the one bold run, headings, focal data */
+  --text-body: var(--ink-2); /* prose, list rows, the dek */
+  --text-quiet: var(--ink-3); /* captions, eyebrows, table cells, markers */
+
+  /* Non-text — rules, fills and marks. Never a `color` on a text node. */
+  --rule-hairline: var(--g-12); /* borders, separators, anchor-card outlines */
+  --rule-grid: var(--g-12); /* chart axes and gridlines */
+  --fill-chip: var(--g-06); /* code-chip ground, the area chart's one fill */
+  --surface-page: var(--w); /* the canvas and every anchor card */
+  --surface-quiet: var(--surface-tint); /* the R-16 tinted card, alternately */
 }
 
 * {
@@ -66,7 +93,11 @@ body {
   background: var(--w);
   font-family: var(--rounded);
   color: var(--ink);
+  /* Both halves, once on the root. -webkit- alone leaves Firefox on macOS
+   * rendering a heavier face than the design (better-typography, "Font
+   * smoothing on the root"). */
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -85,8 +116,8 @@ a {
   /* Designer column guides — faint dotted rules at the left/right boundary of
    * the 393pt column, running the full content height. They replace the old
    * grey body moat: the surface is now flush white and these mark the edge. */
-  border-left: 1px dotted var(--g-12);
-  border-right: 1px dotted var(--g-12);
+  border-left: 1px dotted var(--rule-hairline);
+  border-right: 1px dotted var(--rule-hairline);
 }
 
 /* V3.6.1 (ADR-0013): section vertical padding is symmetric so the bottom
@@ -94,7 +125,7 @@ a {
  * hugs the section above. */
 section {
   padding: var(--s-6) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
 }
 section:last-of-type {
   border-bottom: none;
@@ -158,7 +189,7 @@ em {
 .hero {
   background: var(--w);
   border-radius: 16px;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   padding: var(--s-5);
   margin: var(--s-2) 0 var(--s-3);
 }
@@ -184,16 +215,24 @@ li {
   letter-spacing: -0.008em;
   color: var(--ink-2);
   padding: var(--s-1) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
   display: flex;
   gap: var(--s-2);
 }
 li:last-child {
   border-bottom: none;
 }
+/* V3.10 (R-37) — the marker is content, not furniture. A checkmark, a cross
+ * and a numeral are the difference between a checklist, an anti-pattern list
+ * and a numbered process; read the markers alone and you still know which
+ * list you are looking at. Through V3.9 they were drawn at --g-30, which
+ * measures 2.10:1 on white and which R-20 itself classifies as non-text.
+ * --text-quiet measures 4.54:1 and keeps the marker subordinate to the row it
+ * numbers. Base level and retroactive: a glyph the reader cannot resolve is a
+ * defect, not a period design choice (ADR-0011 precedent). */
 .marker {
   font-variant-numeric: tabular-nums;
-  color: var(--g-30);
+  color: var(--text-quiet);
   font-weight: 600;
   flex-shrink: 0;
   min-width: 18px;
@@ -215,9 +254,9 @@ table {
 }
 th,
 td {
-  text-align: left;
+  text-align: start;
   padding: var(--s-2) var(--s-1);
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
   line-height: 20px;
   color: var(--ink-2);
   vertical-align: top;
@@ -272,7 +311,7 @@ pre {
   line-height: 22px;
   color: var(--k);
   background: rgba(0, 0, 0, 0.03);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 8px;
   padding: var(--s-2) var(--s-3);
   margin: var(--s-2) 0;
@@ -287,7 +326,7 @@ blockquote {
   letter-spacing: -0.005em;
   color: var(--ink);
   border-left: 2px solid var(--k);
-  padding-left: var(--s-3);
+  padding-inline-start: var(--s-3);
   margin: var(--s-1) 0 var(--s-3);
 }
 blockquote.pull {
@@ -302,14 +341,15 @@ blockquote.pull {
  * both sides of its hairlines). */
 section.divider {
   padding: var(--s-7) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
 }
 section.divider .rule {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--g-30);
+  /* R-37 — was --g-30 (2.10:1). A divider's orienting label is text. */
+  color: var(--text-quiet);
   margin-bottom: var(--s-2);
 }
 section.divider h2 {
@@ -341,21 +381,28 @@ section.divider h2 {
   line-height: 18px;
   color: var(--g-60);
   display: list-item;
-  padding-left: 0;
+  padding-inline-start: 0;
   list-style: none;
 }
 .sources {
-  padding-left: var(--s-3);
+  padding-inline-start: var(--s-3);
 }
 .sources li::before {
   /* V3.6 (R-24): the list marker is a middle dot, not an em dash — no em dash
    * renders anywhere on the canvas, in prose or as furniture. */
   content: "·";
-  color: var(--g-30);
-  margin-right: var(--s-1);
+  color: var(--text-quiet); /* R-37 — a rendered glyph takes text ink */
+  margin-inline-end: var(--s-1);
 }
 
-/* corner glyph — present on every section's screenshot */
+/* corner glyph — present on every section's screenshot.
+ *
+ * V3.10 (R-37): the mark's whole job is that a stranger holding a cropped
+ * screenshot can trace it back to the system. Drawn at --g-30 it measured
+ * 2.10:1 on white at 10px, which is not a legible mark; it is a smudge that
+ * happens to be shaped like one. --text-quiet measures 4.54:1 and is still
+ * the quietest ink on the canvas. Base level and retroactive: a mark that
+ * cannot be read cannot do the job the principles give it. */
 .glyph {
   position: fixed;
   bottom: 16px;
@@ -364,12 +411,12 @@ section.divider h2 {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.04em;
-  color: var(--g-30);
+  color: var(--text-quiet);
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(4px);
   padding: 4px 7px;
   border-radius: 6px;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   user-select: none;
 }
 
@@ -398,7 +445,7 @@ section.divider h2 {
  * spec→sample gap on the same rhythm as the lede→spec gap. */
 .sample-divider {
   border: 0;
-  border-top: 0.5px solid var(--g-12);
+  border-top: 0.5px solid var(--rule-hairline);
   margin: var(--s-5) 0;
 }
 /* The "Sample" tag, moved inside the card's top-left as a subtle pill. */
@@ -411,7 +458,7 @@ section.divider h2 {
   text-transform: uppercase;
   color: var(--g-60);
   background: var(--surface-tint);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 999px;
   padding: 3px 9px;
   margin-bottom: var(--s-3);
@@ -420,7 +467,7 @@ a.card-link {
   display: block;
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 16px;
   padding: var(--s-4);
   margin-bottom: var(--s-2);
@@ -458,8 +505,8 @@ a.card-link:hover {
   max-width: 100%;
   margin: 0 auto;
   padding: var(--s-4) 16px 0;
-  border-left: 1px dotted var(--g-12);
-  border-right: 1px dotted var(--g-12);
+  border-left: 1px dotted var(--rule-hairline);
+  border-right: 1px dotted var(--rule-hairline);
 }
 .back-link {
   display: inline-block;
@@ -548,7 +595,7 @@ a.spec-link {
   display: block;
   text-decoration: none;
   color: inherit;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 16px;
   padding: var(--s-5);
   margin-bottom: var(--s-2);
@@ -581,7 +628,7 @@ a.spec-link:hover {
   line-height: 26px;
   letter-spacing: 0.03em;
   word-spacing: 0.06em;
-  text-align: left;
+  text-align: start;
 }
 
 .canvas.v3-1 p {
@@ -754,7 +801,7 @@ a.spec-link:hover {
   line-height: 26px;
   letter-spacing: -0.01em;
   word-spacing: normal;
-  text-align: left;
+  text-align: start;
 }
 .canvas.v3-5 p {
   text-wrap: pretty;
@@ -902,7 +949,7 @@ a.spec-link:hover {
 }
 .canvas.v3-7 .chart .axis,
 .canvas.v3-7 .chart .grid {
-  stroke: var(--g-12);
+  stroke: var(--rule-grid);
   stroke-width: 1;
 }
 .canvas.v3-7 .chart .bar {
@@ -1002,7 +1049,7 @@ a.spec-link:hover {
   text-transform: uppercase;
   color: var(--g-60);
   background: var(--w);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 999px;
   padding: 3px 9px;
   margin-bottom: var(--s-3);
@@ -1138,7 +1185,7 @@ a.spec-link:hover {
   /* Left-aligned: a URL is a read-left-to-right link, not display text. The
    * copy button stays pinned to the right edge (the canonical copy-field
    * pattern), so reserve its lane here so a long URL never runs under it. */
-  text-align: left;
+  text-align: start;
   padding-right: var(--s-5);
   white-space: nowrap;
   overflow: hidden;
@@ -1197,7 +1244,7 @@ a.spec-link:hover {
   align-self: center;
   width: 88%;
   height: 16px;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-bottom: none;
   border-radius: 16px 16px 0 0;
   background: var(--surface-tint);
@@ -1255,7 +1302,7 @@ a.spec-link:hover {
   text-decoration: none;
   color: inherit;
   background: var(--w);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 16px;
   padding: 18px 18px 0;
   transition: border-color 0.15s ease;
@@ -1314,7 +1361,7 @@ a.spec-link:hover {
   height: 32px;
   border-radius: 999px;
   background: var(--g-06);
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   color: var(--ink);
   transition: background 0.15s ease, border-color 0.15s ease;
 }
@@ -1360,7 +1407,7 @@ a.spec-link:hover {
   justify-content: center;
   width: 32px;
   height: 32px;
-  border: 1px solid var(--g-12);
+  border: 1px solid var(--rule-hairline);
   border-radius: 999px;
   background: var(--g-06);
   color: var(--ink);
@@ -1389,7 +1436,7 @@ a.spec-link:hover {
 }
 .canvas.v3-8 .flashcards .fc {
   padding: var(--s-2) 0;
-  border-bottom: 0.5px solid var(--g-12);
+  border-bottom: 0.5px solid var(--rule-hairline);
 }
 .canvas.v3-8 .flashcards .fc:first-child {
   padding-top: 0;
@@ -1486,5 +1533,36 @@ a.spec-link:hover {
  * 6% step: the grayscale contract allows no fill above 12% (R-30). Scoped to
  * the same .chart contract the v3-7 charts use. */
 .canvas.v3-7 .chart .area {
-  fill: var(--g-06);
+  fill: var(--fill-chip);
+}
+
+/* ----------------------------------------------------------------------- *
+ * V3.10 — the reading surface. R-41 (balanced display wrapping). Scoped to
+ * .canvas.v3-10 because it changes where lines break: a card frozen at an
+ * earlier version keeps the rag it was authored against (ADR-0003). The
+ * V3.10 rules that repair defects — R-36 headings, R-37 legible glyphs,
+ * R-38 chart names, R-39 role tokens, R-40 document structure — live at
+ * base level instead, on the ADR-0011 precedent.
+ * ----------------------------------------------------------------------- */
+
+/* R-41 — display type wraps balanced, prose wraps pretty.
+ *
+ * A 40/44 title in a 361pt column is two or three lines more often than not,
+ * and the browser's greedy line-breaker fills the first line and drops what
+ * is left on the last: "Chart blocks that actually" / "render." A heading is
+ * short enough for `balance` to lay out every line at once and even them up,
+ * which is the whole reason the property is capped at a few lines.
+ *
+ * Prose keeps `pretty` (already set from V3.1): it optimises only the last
+ * line, which is what long text needs and all a long paragraph can afford.
+ * The two are not interchangeable — `balance` on body copy is ignored past
+ * the browser's line cap, and `pretty` on a two-line heading does nothing
+ * about the lopsided first line. */
+.canvas.v3-10 h1,
+.canvas.v3-10 h2,
+.canvas.v3-10 .tile,
+.canvas.v3-10 .takeaway,
+.canvas.v3-10 .dek,
+.canvas.v3-10 blockquote {
+  text-wrap: balance;
 }
