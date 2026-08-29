@@ -791,8 +791,11 @@ function galleryEntry(slug, title, fm, prevDesc) {
   // Prefer an authored one-line `summary`; preserve a curated desc on
   // re-render; fall back to tags only if nothing better exists.
   const desc = (fm.summary || prevDesc || fm.tags || "").trim();
+  // A heading, not a styled div: the gallery lists every published card, and
+  // through V3.9 it offered a screen reader or an outline view exactly one
+  // heading (its own <h1>) for the whole list (R-36).
   return `    <a class="card-link" href="cards/${slug}.html">
-      <div class="card-title">${escapeHtml(title)}</div>
+      <h2 class="card-title">${escapeHtml(title)}</h2>
       <div class="card-meta">${escapeHtml(meta)}</div>
       ${desc ? `<div class="card-desc">${escapeHtml(desc)}</div>` : ""}
     </a>`;
