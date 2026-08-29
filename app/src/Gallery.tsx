@@ -50,13 +50,17 @@ function ZoneLabel({ children, id }: { children: string; id?: string }) {
   );
 }
 
-/* The execCommand fallback. The async Clipboard API is missing or refused in
+/* The in-gesture copy path. The async Clipboard API is missing or refused in
  * more places than it looks — an insecure origin, an in-app webview, a
  * browser whose privacy mode declines the write — and the button used to
  * report "Copied" in every one of them without copying anything (R-44). A
  * control that lies about what it did is worse than one that visibly fails,
  * so this runs for real and its return value is what the check reports. */
 function copyBySelection(text: string): boolean {
+  // Selecting the off-screen field moves focus; hand it back afterwards so a
+  // keyboard reader is not dropped to the top of the document by copying.
+  const active =
+    document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const ta = document.createElement("textarea");
   ta.value = text;
   ta.setAttribute("readonly", "");
@@ -73,6 +77,7 @@ function copyBySelection(text: string): boolean {
     ok = false;
   }
   ta.remove();
+  active?.focus();
   return ok;
 }
 
@@ -88,13 +93,20 @@ function SpecInput() {
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     };
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard
-        .writeText(SPEC_URL)
-        .then(() => settle(true))
-        .catch(() => settle(copyBySelection(SPEC_URL)));
-    } else {
-      settle(copyBySelection(SPEC_URL));
+    // execCommand("copy") only works inside the click's own call stack. The
+    // old order — async Clipboard API first, selection copy in its .catch —
+    // ran the fallback after the user gesture had expired, so exactly where
+    // the API refuses (iOS Safari denials, in-app webviews, embedded frames)
+    // the fallback returned false too: no copy and no check. So the
+    // in-gesture path goes first, and the async API is the fallback for
+    // whatever eventually drops execCommand.
+    if (copyBySelection(SPEC_URL)) {
+      settle(true);
+    } else if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(SPEC_URL).then(
+        () => settle(true),
+        () => settle(false)
+      );
     }
   };
   return (
