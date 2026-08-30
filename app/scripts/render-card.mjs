@@ -792,7 +792,7 @@ function renderCard(cardPath) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=393, initial-scale=1">
+<meta name="viewport" content="width=393">
 <meta name="color-scheme" content="only light">
 <title>${escapeHtml(title)} · Supercard ${ver.toUpperCase()}</title>
 ${meta}

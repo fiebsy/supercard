@@ -15,6 +15,59 @@ Append entries via SupercardOps `logStewardEntry()` or directly.
 
 ---
 
+## 2026-08-29 — claude (for derick) — [foundation]
+
+**Context.** Derick's read on the recent cards, in his own register: they
+break things down well but don't say enough; the headlines coin phrases the
+card never defines; and the whole reads less fluid than it should — he wanted
+"a more fluid and longer form breakdown" without losing the scannability that
+is the format's entire point. The tempting fixes were all wrong in familiar
+ways: pad the card (P7/P9 say no), add connective scaffold (P14 banned the
+vocabulary), bolt a glossary under every title (the context-obvious-definition
+anti-pattern).
+
+**The noticing.** All three complaints are the depth axis showing up in
+different clothes. The format's MUSTs guarantee every block survives *alone* —
+that is P1 and it works — but nothing ever obliged adjacent blocks to *add
+up*, and nothing obliged a headline to cash out what it coins. Meanwhile the
+mode ladder already held the honest answer to "not enough information": the
+breakdown has no length budget, so depth belongs to the view, and the re-run
+at a deeper mode was always the design — it was just never written down as
+the response to that exact complaint.
+
+**Action.** V3.11 (ADR-0020): G-17 define-what-you-name (gate Q13), G-18 the
+through-line (SHOULD — deliberately, so it cannot become another rule that
+ships as text and is never kept), deep-dive goes prose-led, and the pipeline
+states the re-run rule. Content layer only; no card re-rendered.
+
+**Follow-up.** The next card authored should be a `deep-dive` under 3.11.0 —
+the prose-led register has a spec now and zero cards exercising it.
+
+## 2026-08-29 — claude (for derick) — [drift]
+
+**Context.** Derick reported cards clipping on phones after the V3.10 cut, and
+an audit pass confirmed it — but not where the report pointed. The skills cut
+did not break the canvas: every frozen card renders byte-identical, the type
+inventory per card is unchanged (measured, pre and post), and the three-size
+reading core holds. The clip was older and quieter. R-34 (V3.9) prescribes
+`width=393` *so the canvas scales to the device*; every page since V3.9 has
+emitted `width=393, initial-scale=1`, and the pinned scale defeats the fit —
+18px of every card offscreen at 375, 33px at 360. V3.10's R-43 commit then
+copied the same tag onto the site pages and verified only the layout viewport,
+so the "fix" institutionalized the defect. Worst of all, the no-tools build
+section teaches the tag, so every card built from a paste of `llms.txt`
+inherits the clip.
+
+**Action.** v3.10.2 (ADR-0019): the pinned scale is dropped on all four
+surfaces, R-34 now says "never pin `initial-scale`" in as many words, all
+eight renders regenerated, `llms.txt` regenerated, and the fit is *measured*
+at 393/375/360/320 under mobile emulation — the V3.10 lesson applied to
+V3.10's own patch: verify the visual viewport, not the layout one.
+
+**Follow-up.** The full audit is in `40-LAB/AUDIT-2026-08-29--draft.md`,
+including the type-inventory measurements that clear the skills cut of the
+weight-proliferation charge, and where the perception actually comes from.
+
 ## 2026-08-29 — claude (for derick) — [outside eyes]
 
 **Context.** Every version cut so far was written from inside: read the cards,

@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- width=393, not device-width. The column is a fixed 393px, so on a 375 or
-     390 CSS-px phone device-width lays the page out narrower than its own
-     content and the reader gets a horizontal scrollbar. R-34 settled this for
-     the standalone card renders; the site pages had kept device-width. -->
-<meta name="viewport" content="width=393, initial-scale=1">
+<!-- width=393, not device-width, and no pinned initial-scale. The column is a
+     fixed 393px, so on a narrower phone device-width overflowed it and a
+     pinned initial-scale=1 clipped it; width=393 alone lets the browser
+     compute the fit-to-width scale, exactly as R-34 prescribes. -->
+<meta name="viewport" content="width=393">
 <meta name="color-scheme" content="only light">
 <title>Supercard · one URL, the whole spec</title>
 <meta name="description" content="Supercard is a screenshot-shareable, single-emphasis-per-block knowledge artifact built as a cognitive prosthesis. The complete spec for agents lives in one self-contained file: /llms.txt. Plus a gallery of published cards.">

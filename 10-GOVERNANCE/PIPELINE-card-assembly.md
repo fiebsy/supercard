@@ -5,7 +5,7 @@
 | id | PIPELINE-card-assembly |
 | type | governance |
 | era | atlas |
-| version | 3.10.0 |
+| version | 3.11.0 |
 | owner | derick |
 | updated | 2026-08-29 |
 
@@ -38,17 +38,22 @@ A **mode** is the *intent* of the request. It is not a length — it *biases* re
 |---|---|---|---|---|---|
 | `summary` | "Give me the gist." Reductive quick breakdown of an event, book, or concept. | Light | Mini (5–8), sometimes Standard | key-takeaway, stat-callout, definition, checklist | Aggressive — cut anything not load-bearing |
 | `briefing` | "Give me a complete, balanced understanding." The default. | Moderate | Standard (10–14) | Full 7-beat, ~one block per beat | Standard |
-| `deep-dive` | "I want to fully understand this." Exhaustive but never repetitive. | Heavy | XL (18–25) or multi-part | All beats multi-block; Comparison + Counter mandatory | Hardest — length comes from breadth of distinct content, never restatement |
+| `deep-dive` | "I want to fully understand this." Exhaustive but never repetitive. | Heavy | XL (18–25) or multi-part | All beats multi-block and prose-led (anchor opens, connected `standard-text` carries — see *On `deep-dive` and flow*); Comparison + Counter mandatory | Hardest — length comes from breadth of distinct content, never restatement |
 | `reference` | "Something I'll return to and navigate." | Heavy | XL or multi-part | table, FAQ, numbered-principle, section-divider, definition | Standard, but parallel structural repetition is allowed where it aids navigation |
 
 **On `deep-dive` and length.** GRAMMAR caps a single card at 25 blocks. `deep-dive` is the mode most likely to exceed that — when it does, **split into a multi-part series** (`CARD-...-part-1`, `-part-2`) sharing one breakdown. A longer card is never an excuse for a repetitive one: the defining property of `deep-dive` is *full understanding without redundancy or restatement*.
 
+**On `deep-dive` and flow (V3.11+).** A deep-dive's multi-block beats are **prose-led**: the beat opens on its anchor, then carries two or three `standard-text` blocks that read *consecutively* — each with its own bold lead-clause (G-7), ordered claim → proof → consequence, closing on the handoff the next beat's eyebrow picks up (G-18). The result reads as a flowing long-form essay that happens to be scannable, not a deck of captioned exhibits. The staccato all-anchor register belongs to `summary`; reaching for a chart or stat where connected prose would carry the argument is the false-precision anti-pattern wearing a length excuse.
+
+**When a card "doesn't say enough."** The fix is never to pad the card in place — it is to **re-run Stage 3 from the same breakdown at the next deeper mode** (`summary` → `briefing` → `deep-dive`). The breakdown already holds the material (it has no length budget); depth is a property of the *view*, and the mode ladder is how the same research yields a gist, a briefing, or the full story without any card carrying filler.
+
 **Inferring the mode.** If the user doesn't name one, infer it from the request verb:
 
 - "summarize / TL;DR / quick / gist" → `summary`
-- "explain / brief me / break down" → `briefing`
-- "deep dive / fully understand / master / everything about" → `deep-dive`
+- "explain / brief me / break down / analyze / why did / how does" → `briefing`
+- "deep dive / fully understand / master / everything about / the full story / in depth / long form" → `deep-dive`
 - "reference / cheat sheet / I'll come back to this" → `reference`
+- Feedback on a delivered card — "more information", "not enough detail", "longer" → the same topic one mode deeper, re-run from the existing breakdown (never padded in place; see *When a card "doesn't say enough"* above)
 
 State the chosen mode back to the user in one line before proceeding.
 
@@ -113,7 +118,7 @@ Two categories of check, both must pass. **Gates** are binary pass/fail rules an
 | G5 | Screenshot test | Five questions on every section, including the header | GRAMMAR pre-publication test |
 | G6 | Frozen-at-version | Frontmatter declares `frozen_at_version` | ADR-0003 |
 | G7 | Density budget (V3.1+) | Anchor-to-content ratio per beat between 1:2 and 1:4; ≤ 2 same-type consecutive anchors; ≤ 4 consecutive content blocks | GRAMMAR § G-9 |
-| G8 | ADHD scan-ability gate (V3.1+) | The 10-item Y/N checklist in PRINCIPLES; any "no" blocks the render. V3.4+ cards run the twelve-question form. | PRINCIPLES § ADHD gate |
+| G8 | ADHD scan-ability gate (V3.1+) | The 10-item Y/N checklist in PRINCIPLES; any "no" blocks the render. V3.4+ cards run the twelve-question form; V3.11+ cards the thirteen-question form (Q13: every term a headline introduces is cashed out — G-17). | PRINCIPLES § ADHD gate |
 | G9 | Readability gate (V3.4+) | Computes Flesch–Kincaid grade level and Flesch Reading Ease across every prose block. Fails when grade level exceeds 9 on more than 30% of prose blocks or when reading ease drops below 60 on any single block. | GRAMMAR § G-13, PRINCIPLES 13 |
 
 ### Identity invariants (always on; not "passed" — held)
