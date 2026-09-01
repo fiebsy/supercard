@@ -124,6 +124,7 @@ ls docs/cards/
 | 0018 | V3.10.1 — the interaction layer: press, hover, hit area, scroll (R-44) | Accepted | 2026-08-29 |
 | 0019 | V3.10.2 — the viewport keeps R-34's promise: fit to the phone, measured | Accepted | 2026-08-29 |
 | 0020 | V3.11 — the reading-flow cut: G-17 define what you name, G-18 through-line, prose-led deep-dive | Accepted | 2026-08-29 |
+| 0021 | The Superdoc engine — the Supercard soul beyond the card; the invoice as its first format | Accepted | 2026-09-01 |
 
 ## Change-log pointer
 

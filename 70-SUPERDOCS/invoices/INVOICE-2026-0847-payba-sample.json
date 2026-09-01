@@ -1,0 +1,62 @@
+{
+  "id": "INVOICE-2026-0847-payba-sample",
+  "type": "invoice",
+  "status": "sample",
+  "title": "Payba · Invoice INV-2026-0847",
+  "description": "Sample Superdoc invoice: Payba, Inc. billing a customer for a creator membership product. Grayscale, hairline, three type sizes.",
+  "number": "INV-2026-0847",
+  "currency": "USD",
+  "due_line": "Due October 1, 2026 · Net 30",
+  "issuer": {
+    "wordmark": "Payba",
+    "party": {
+      "name": "Payba, Inc.",
+      "rows": [
+        "2261 Market Street, Suite 4858",
+        "San Francisco, CA 94114",
+        "billing@payba.com"
+      ]
+    }
+  },
+  "bill_to": {
+    "name": "Halcyon Studio LLC",
+    "rows": [
+      "Attn: Jordan Avery, Accounts Payable",
+      "548 Vine Street, Floor 2",
+      "Cincinnati, OH 45202",
+      "ap@halcyonstudio.co"
+    ]
+  },
+  "meta": [
+    { "label": "Invoice no.", "value": "INV-2026-0847", "mono": true },
+    { "label": "Issued", "value": "September 1, 2026" },
+    { "label": "Due", "value": "October 1, 2026" },
+    { "label": "PO number", "value": "HS-2214", "mono": true }
+  ],
+  "lines": [
+    {
+      "description": "All-Access membership · Maren Cole Studio",
+      "detail": "Annual plan · Sep 1, 2026 – Aug 31, 2027",
+      "qty": 1,
+      "unit_price": 290.0
+    },
+    {
+      "description": "Member seats · All-Access add-on",
+      "detail": "Per seat · Sep 1, 2026 – Aug 31, 2027",
+      "qty": 2,
+      "unit_price": 48.0
+    }
+  ],
+  "tax": { "label": "Sales tax", "rate": 0 },
+  "payment": [
+    { "method": "Pay online", "detail": "payba.com/pay/INV-2026-0847" },
+    { "method": "Bank transfer", "detail": "ACH details at billing@payba.com" },
+    { "method": "Check", "detail": "payable to Payba, Inc." }
+  ],
+  "payment_note": "Reference INV-2026-0847 with your payment.",
+  "notes": "The All-Access membership renews automatically on September 1, 2027; the renewal invoice is issued 30 days ahead. Questions? billing@payba.com.",
+  "footer": {
+    "left": "Payba, Inc. · 2261 Market Street, Suite 4858 · San Francisco, CA 94114",
+    "right": "INV-2026-0847 · Page 1 of 1"
+  }
+}

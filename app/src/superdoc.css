@@ -1,0 +1,443 @@
+/*
+ * Superdoc — the Supercard design soul on a document canvas.
+ *
+ * This is the token layer for print-shaped Super artifacts (invoices first;
+ * statements, receipts, one-pagers later). It inherits the system verbatim
+ * where the system is canvas-independent — the gray ramp, the R-20 ink
+ * ladder, the R-39 role tokens, the ui-rounded stack, flat surfaces (R-22),
+ * the --g-12 hairline (R-23) — and re-derives only what a US Letter page
+ * changes: the type scale and the spacing grid, both stated in pt because
+ * the artifact's terminal form is a PDF.
+ *
+ * Governance: 70-SUPERDOCS/GOV-superdoc-engine--draft.md (D-rules) and
+ * GOV-invoice-format--draft.md (N-rules). ADR-0021.
+ */
+
+/* Inter is the system's preferred fallback where SF Pro Rounded isn't
+ * available (P6). The card canvas ships no webfont (its output contract is
+ * one file, no network) — but a document's terminal form is a PDF printed
+ * server-side, where only DejaVu exists and the 500/600 weight ladder
+ * collapses. So the document layer vendors Inter (variable, latin subset,
+ * SIL OFL — license alongside the file) and prefers any local install. */
+@font-face {
+  font-family: "Inter Web";
+  src: local("Inter"), url("fonts/InterVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Light-only, same as the card canvas and for the same reason: an invoice's
+   * ink ladder is tuned for white, and a force-darkened invoice is unreadable
+   * in exactly the places that matter (RENDERING-spec, gray ramp). */
+  color-scheme: only light;
+
+  /* --- The ramp and inks: identical to supercard.css (V3.5 / R-20 ladder). */
+  --w: #ffffff;
+  --g-06: rgba(0, 0, 0, 0.06);
+  --g-12: rgba(0, 0, 0, 0.12);
+  --g-30: rgba(0, 0, 0, 0.3);
+  --g-60: rgba(0, 0, 0, 0.6);
+  --k: #000000;
+  --ink: #1a1a1a;   /* primary — ≈17.6:1 on white */
+  --ink-2: #595959; /* secondary — ≈7:1 */
+  --ink-3: #767676; /* tertiary — 4.54:1, the floor */
+
+  /* --- R-39 role tokens: ink carries glyphs, the ramp draws rules/fills. */
+  --text-emphasis: var(--ink);
+  --text-body: var(--ink-2);
+  --text-quiet: var(--ink-3);
+  --rule-hairline: var(--g-12);
+  --fill-chip: var(--g-06);
+  --surface-page: var(--w);
+
+  /* --- Type: same stacks as the card. */
+  --rounded: ui-rounded, "SF Pro Rounded", "SF Pro", Inter, "Inter Web",
+    -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* --- The document type scale (D-3): three sizes, like the card's
+   * three-size reading core (R-21), scaled to a page held at arm's length.
+   * Weight and ink do the hierarchy inside each size; a fourth size is the
+   * last lever, not the first. */
+  --t-display: 22pt; --lh-display: 26pt; /* the title and the one hero figure */
+  --t-body: 10pt;    --lh-body: 15pt;    /* everything that is content */
+  --t-label: 8pt;    --lh-label: 11pt;   /* the micro-label utility role */
+  --t-mono: 9pt;     --lh-mono: 15pt;    /* identifiers only */
+
+  /* --- Spacing (D-4): the 8pt grid restated in pt for the page. */
+  --d-1: 4pt;
+  --d-2: 8pt;
+  --d-3: 12pt;
+  --d-4: 16pt;
+  --d-5: 24pt;
+  --d-6: 32pt;
+  --d-7: 48pt;
+
+  /* --- The page (D-2): US Letter, 48pt margins on the grid. */
+  --page-w: 612pt;
+  --page-h: 792pt;
+  --page-margin: 48pt;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Print: the .page element is the sheet; @page owns nothing but size. */
+@page {
+  size: letter;
+  margin: 0;
+}
+
+html,
+body {
+  background: var(--surface-page);
+  font-family: var(--rounded);
+  color: var(--text-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+::selection {
+  background: var(--rule-hairline);
+  color: var(--ink);
+}
+
+/* The sheet. On screen it is a bounded surface centered on the page (the
+ * gallery treatment); in print the border and centering come off and the
+ * sheet is the paper. */
+.page {
+  width: var(--page-w);
+  min-height: var(--page-h);
+  margin: 0 auto;
+  padding: var(--page-margin);
+  background: var(--surface-page);
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: break-word;
+}
+@media screen {
+  body {
+    padding: 24px 0 96px;
+  }
+  .page {
+    border: 1px solid var(--rule-hairline);
+    border-radius: 2px;
+  }
+}
+@media print {
+  body {
+    padding: 0;
+  }
+  .page {
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+/* Screen-only viewer bar above the sheet: the way back to the gallery and
+ * the PDF twin. Never printed — the sheet is the artifact and carries no
+ * chrome. Interaction per the site rules (R-40/R-44): 44px targets, ink
+ * focus ring, own press state, hover gated on a real pointer. */
+.viewer {
+  width: var(--page-w);
+  margin: 0 auto 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.viewer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  text-decoration: none;
+  border-radius: 8px;
+  transition-property: scale, color, opacity;
+  transition-duration: 0.24s;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.24, 1);
+  -webkit-tap-highlight-color: transparent;
+}
+.viewer a:active {
+  scale: 0.96;
+  transition-duration: 0.09s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .viewer a:hover {
+    color: var(--text-emphasis);
+  }
+}
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* After the .viewer base rules, so the cascade cannot resurrect the bar in
+ * print — the sheet is the artifact and carries no chrome. */
+@media print {
+  .viewer {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Roles. Every glyph on the page is one of: display, body, label, mono.
+ * ------------------------------------------------------------------ */
+
+/* Display — the document title and the one hero figure (D-3, N-2). */
+.display {
+  font-size: var(--t-display);
+  line-height: var(--lh-display);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-emphasis);
+  text-wrap: balance;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Motion here is decoration on a static state change — safe to drop
+ * entirely for a reader who asked for less of it (the gallery's rule). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Micro-label — the eyebrow role at page scale: UPPERCASE, the one
+ * positively-tracked role (caps have no word-shape to break). A zone label
+ * is a real heading (`<h2 class="label">`, the R-36 pattern: the element
+ * carries the structure, the class carries the metric) so the document has
+ * an outline for a reader who never sees the pixels. */
+.label {
+  font-size: var(--t-label);
+  line-height: var(--lh-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-quiet);
+}
+
+/* Identifiers — invoice number, PO, account tails. Mono so a human keying
+ * the number into an AP system can read it digit by digit. */
+.id {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0;
+}
+
+/* Numerals — every figure on the page is tabular and lining so columns of
+ * money align digit-for-digit (N-6). */
+.num,
+td.num,
+th.num {
+  font-variant-numeric: tabular-nums lining-nums;
+  text-align: right;
+}
+
+strong {
+  font-weight: 600;
+  color: var(--text-emphasis);
+}
+
+.quiet {
+  color: var(--text-quiet);
+}
+
+/* ------------------------------------------------------------------ *
+ * Structure.
+ * ------------------------------------------------------------------ */
+
+/* Hairline separators: 0.5pt at --g-12 (R-23). One hairline per boundary
+ * (R-28) — a table's last row never stacks its rule on a section rule. */
+.rule {
+  border: 0;
+  border-top: 0.5pt solid var(--rule-hairline);
+}
+
+/* The one bounded surface per page (D-6): border + radius + padding, never
+ * a shadow (R-22). On the invoice it is the amount-due card (N-2). */
+.card {
+  border: 1pt solid var(--rule-hairline);
+  border-radius: 8pt;
+  padding: var(--d-3) var(--d-5) var(--d-4);
+}
+
+/* The amount card lays out as one band: label-over-figure left, the due
+ * line seated on the figure's bottom edge right — the whole scan answer
+ * ("how much, by when") in one screenshot-shaped region. */
+.card.amount {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--d-4);
+}
+
+/* Header band: wordmark left, doc meta right. */
+.doc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.wordmark {
+  font-weight: 700;
+  font-size: var(--t-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-emphasis);
+}
+
+/* Meta grid: label-over-value pairs in one row (N-4). */
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--d-4);
+}
+.meta-grid .label {
+  margin-bottom: var(--d-1);
+}
+.meta-grid .value {
+  color: var(--text-emphasis);
+  font-weight: 500;
+}
+
+/* Party columns (From / Bill to). */
+.parties {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--d-4);
+}
+.party .label {
+  margin-bottom: var(--d-1);
+}
+.party p {
+  color: var(--text-body);
+}
+.party .name {
+  color: var(--text-emphasis);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------ *
+ * The line-item table (N-5, N-6).
+ * ------------------------------------------------------------------ */
+table.lines {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+table.lines caption {
+  /* The caption names the table for a reader who never sees the pixels
+   * (R-38/R-40); visually the section label above does that job. */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+table.lines th {
+  font-size: var(--t-label);
+  line-height: var(--lh-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-quiet);
+  text-align: start;
+  padding: 0 0 var(--d-2);
+  border-bottom: 0.5pt solid var(--rule-hairline);
+}
+table.lines td {
+  vertical-align: top;
+  padding: var(--d-2) 0;
+  border-bottom: 0.5pt solid var(--rule-hairline);
+}
+table.lines tr:last-child td {
+  border-bottom: 0; /* R-28 — the totals rule below closes the table */
+}
+table.lines .desc {
+  color: var(--text-emphasis);
+  font-weight: 500;
+}
+table.lines .detail {
+  color: var(--text-quiet);
+  margin-top: 1pt;
+}
+table.lines th.num {
+  text-align: right;
+}
+table.lines td + td,
+table.lines th + th {
+  padding-inline-start: var(--d-4);
+}
+
+/* Totals: a right-hand ladder; the final row is the page's second-loudest
+ * element — full ink, semibold, but body-sized (the hero figure at the top
+ * is the only display-sized number: single emphasis, P2 → N-2). */
+table.totals {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+table.totals th {
+  font-weight: 400;
+  text-align: right;
+  color: var(--text-body);
+  padding: var(--d-1) 0;
+}
+table.totals td {
+  padding: var(--d-1) 0 var(--d-1) var(--d-4);
+  width: 96pt;
+}
+table.totals tr.due th,
+table.totals tr.due td {
+  font-weight: 600;
+  color: var(--text-emphasis);
+  padding-top: var(--d-2);
+}
+table.totals tr.due th {
+  border-top: 0.5pt solid var(--rule-hairline);
+}
+table.totals tr.due td {
+  border-top: 0.5pt solid var(--rule-hairline);
+}
+
+/* Bottom zone: payment and notes side by side — two short columns instead
+ * of two stacked sections, so the sheet keeps its one-page promise (N-10). */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--d-4);
+  align-items: start;
+  /* Keeps a real gap above the pinned footer even on a full sheet, where
+   * the footer's auto margin collapses toward zero. */
+  margin-bottom: var(--d-4);
+}
+
+/* Footer: pinned to the sheet's bottom margin by the flex column (the
+ * `auto` margin absorbs the sheet's slack; it never shrinks below the
+ * zone gap because the sheet is sized to hold its content, N-10). */
+.doc-foot {
+  margin-top: auto;
+  padding-top: var(--d-3);
+  border-top: 0.5pt solid var(--rule-hairline);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--d-4);
+  color: var(--text-quiet);
+}

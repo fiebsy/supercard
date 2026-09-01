@@ -24,8 +24,9 @@ versioned, and rendered.
 | `40-LAB/` | Experiments, RFC proposals, audit reports |
 | `50-TEMPLATES/` | Golden templates for new artifacts |
 | `60-RESEARCH/` | The deep-research-report store — breakdowns + their registry (ADR-0006) |
+| `70-SUPERDOCS/` | The Superdoc engine — the Supercard soul on document canvases: engine + format specs (invoice first) and document sources (ADR-0021) |
 | `90-ARCHIVE/` | Frozen V1/V2 era + retired V3 minor versions |
-| `docs/` | Published Supercard renders — the gallery + one HTML per card, viewable online (ADR-0007) |
+| `docs/` | Published Supercard renders — the gallery + one HTML per card, viewable online (ADR-0007); `docs/pdf/` holds the Superdoc renders + their PDF twins |
 | `.claude/skills/` | The `supercard` build skill, plus the eleven vendored `jakubkrehel/skills` interface skills the design review runs (ADR-0017) |
 | `docs/llms.txt` | The public spec — one self-contained file generated from the canonical markdown (`app/scripts/build-spec.mjs`). Served at `/llms.txt`; the single URL an agent needs (ADR-0012) |
 

@@ -15,6 +15,32 @@ Append entries via SupercardOps `logStewardEntry()` or directly.
 
 ---
 
+## 2026-09-01 — claude (for derick) — [foundation]
+
+**Context.** The system left the card for the first time. Derick's intent was
+always bigger than the 393pt canvas: the same soul — grayscale, weight-and-ink
+hierarchy, hairlines, few sizes — injected into any artifact he needs. The
+working need arrived as an invoice for Payba (a company billing a customer
+for a creator membership product), and the temptation was to just design one
+in place: copy some styles, tweak by eye, ship a PDF.
+
+**Action.** Resisted the one-off and built the extension the way the system
+builds anything: researched first (`BREAKDOWN-financial-invoice-design`,
+registered under a new `format-engine` mode), then split the system into
+what is canvas-independent and what is not (`70-SUPERDOCS/`, engine D-rules),
+then specified the invoice as twelve N-rules distilled from the research,
+then rendered it deterministically (source JSON → inlined-token HTML →
+tagged-PDF twin, every number computed in integer cents). ADR-0021 records
+the decision; the gallery gained a Documents section. The card spec is
+untouched — no version bump, because no card rule moved. One taste note
+worth keeping: the invoice reads as three sizes (22 display / 10 body /
+8 label), and every moment it seemed to need a fourth, weight or ink turned
+out to be the right lever — R-21's claim, proven on a second canvas.
+
+**Follow-up.** Next formats (statement, receipt, one-pager) should stand up
+via the engine recipe, not by copying the invoice. And Chromium's tagged PDF
+is not certified PDF/UA; revisit if Payba needs conformance.
+
 ## 2026-08-29 — claude (for derick) — [foundation]
 
 **Context.** Derick's read on the recent cards, in his own register: they

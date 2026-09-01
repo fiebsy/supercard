@@ -9,6 +9,8 @@
     "spec": "node scripts/build-spec.mjs",
     "spec:check": "node scripts/build-spec.mjs --check",
     "render": "node scripts/render-card.mjs",
+    "invoice": "node scripts/render-invoice.mjs",
+    "invoice:pdf": "node scripts/make-pdf.mjs",
     "validate": "node scripts/validate-v3-1.mjs",
     "build": "node scripts/build-spec.mjs && tsc && vite build && node scripts/copy-renders.mjs",
     "preview": "vite preview"

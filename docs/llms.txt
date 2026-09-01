@@ -2593,7 +2593,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 ## Provenance
 
 - **Spec:** supercard · version 3.11.0 · era atlas
-- **Revision:** `02c76604f4e2` — a hash of the source markdown; changes iff a source changes.
+- **Revision:** `b3964ecd9e94` — a hash of the source markdown; changes iff a source changes.
 - **Sources last updated:** 2026-08-29
 - **Canonical URL:** https://berafoot.com/llms.txt
 - **Mirror (fallback host):** https://supercard-seven.vercel.app/llms.txt
@@ -2602,7 +2602,7 @@ of aggressive, and the per-length anchor budget moves to 3–5 anchors (L-5).
 
 Source files (the canonical markdown this view is generated from):
 
-- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-08-29 — sha256 `48f9f829fd15fa626eafe42f0bca0a21dc633365d14e7545bff61803ccb8686d`
+- `00-INDEX/INDEX-supercard-v3.md` — updated 2026-08-29 — sha256 `49cbbd32aa95d9fe0563829b39f929884b0432027ab7958c4f7e6b92ff6eaf3d`
 - `10-GOVERNANCE/BUILD-card-no-tools.md` — updated 2026-07-03 — sha256 `4f00ae0f5ce7865549f634246ef47236178d9273233443f68aeaf51ba721ae80`
 - `10-GOVERNANCE/PRINCIPLES-supercard-v3.md` — updated 2026-08-29 — sha256 `f4a378f36938308c8311dbed9c3a3dc259024dcf83487374e4b7a43e08de42ed`
 - `10-GOVERNANCE/GRAMMAR-block-composition.md` — updated 2026-08-29 — sha256 `1f14e8948e4af500af6a75750d096f3d6b2e61e13deca87532f9818c1f7efed4`

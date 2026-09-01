@@ -8,8 +8,9 @@ so they can be viewed online** (ADR-0004, ADR-0007). When a card request says
 
 | path | what it is |
 |---|---|
-| `index.html` | The **gallery** — lists every published card render, links to each. Newest at top. |
+| `index.html` | The **gallery** — lists every published card render, links to each. Newest at top. Also carries the **Documents** section (Superdoc renders). |
 | `cards/CARD-{YYYY-MM-DD}-{slug}.html` | One **standalone render** per card, per `RENDERING-spec`. |
+| `pdf/{DOC-ID}.html` + `pdf/{DOC-ID}.pdf` | One **Superdoc render** per document (invoices first) and its print twin, per `70-SUPERDOCS/` (ADR-0021). Rendered by `app/scripts/render-invoice.mjs` + `make-pdf.mjs`; `pdf/fonts/` vendors Inter (SIL OFL) so the PDF twin keeps the weight ladder off-Apple. |
 
 ## How a card gets here
 
