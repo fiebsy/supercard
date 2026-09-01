@@ -27,6 +27,7 @@ breakdowns must agree.
 |---|---|---|---|---|---|---|---|---|
 | BREAKDOWN-spaced-repetition | Spaced repetition as a learning method | spaced-repetition | briefing | active | 6 | CARD-2026-05-14-spaced-repetition | 2026-05-14 | 2026-05-14 |
 | BREAKDOWN-gestalt-principles | The Gestalt principles of perceptual organization | gestalt-principles | deep-dive | active | 10 | CARD-2026-05-14-gestalt-principles | 2026-05-14 | 2026-05-14 |
+| BREAKDOWN-financial-invoice-design | How to construct a financial invoice (content, layout, typography, accessibility) | financial-invoice-design | format-engine | active | 30 | (feeds GOV-invoice-format + the PAYBA sample, not a card) | 2026-09-01 | 2026-09-01 |
 
 ---
 
